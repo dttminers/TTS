@@ -1,19 +1,12 @@
 <resources>
 
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-
     <string name="app_name">Read It</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="str_send">Send</string>
     <string name="str_camera">Camera</string>
-    <string name="str_moreOption">str_setting</string>
+    <string name="str_setting">str_setting</string>
+    <string name="str_skip">skip</string>
 
-
-</resources><!--%USERPROFILE%\AppData\Local\Temp
+</resources>
+    <!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
-
 -->
