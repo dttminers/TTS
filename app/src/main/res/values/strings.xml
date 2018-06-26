@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TTS</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources><!--%USERPROFILE%\AppData\Local\Temp
+https://github.com/watson-developer-cloud/speech-android-sdk
+
+-->
