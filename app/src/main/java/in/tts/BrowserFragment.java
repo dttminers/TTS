@@ -34,7 +34,7 @@ public class BrowserFragment extends Fragment {
         WebView webView = getActivity().findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();
 //        webSettings.setJavaScriptEnabled(true);
-        webView.loadUrl("http://google.com");
+        webView.loadUrl("http://www.google.com");
 
         TextView tv = getActivity().findViewById(R.id.tvurl);
         tv.setText(webView.getUrl());

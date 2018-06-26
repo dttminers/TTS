@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         replacePage(new CameraFragment());
                         break;
                     case 3:
-                        replacePage(new com.example.sis_001.myapplication.GalleryFragment());
+                        replacePage(new GalleryFragment());
                         break;
                     default:
                         replacePage(new DocumentsFragment());
