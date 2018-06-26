@@ -1,4 +1,4 @@
-package in.tts;
+package in.tts.fragments;
 
 
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import in.tts.R;
 
 
 public class BrowserFragment extends Fragment {
