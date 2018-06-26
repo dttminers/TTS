@@ -1,97 +1,106 @@
 package in.tts;
 
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
-
-//    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-//            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-//
-//        @Override
-//        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//            switch (item.getItemId()) {
-//                case R.id.navigation_home:
-//                    mTextMessage.setText(R.string.title_home);
-//                    return true;
-//                case R.id.navigation_dashboard:
-//                    mTextMessage.setText(R.string.title_dashboard);
-//                    return true;
-//                case R.id.navigation_notifications:
-//                    mTextMessage.setText(R.string.title_notifications);
-//                    return true;
-//            }
-//            return false;
-//        }
-//    };
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        walkdir(Environment.getExternalStorageDirectory());
-    }
-
-/*public void textfrom pdf(File dir) {
-PDDocument pd;
- BufferedWriter wr;
- try {
-         File input = new File("C:\\Invoice.pdf");  // The PDF file from where you would like to extract
-         File output = new File("C:\\SampleText.txt"); // The text file where you are going to store the extracted data
-         pd = PDDocument.load(input);
-         System.out.println(pd.getNumberOfPages());
-         System.out.println(pd.isEncrypted());
-         pd.save("CopyOfInvoice.pdf"); // Creates a copy called "CopyOfInvoice.pdf"
-         PDFTextStripper stripper = new PDFTextStripper();
-         stripper.setStartPage(3); //Start extracting from page 3
-         stripper.setEndPage(5); //Extract till page 5
-         wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)));
-         stripper.writeText(pd, wr);
-         if (pd != null) {
-             pd.close();
-         }
-        // I use close() to flush the stream.
-        wr.close();
- } catch (Exception e){
-         e.printStackTrace();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().show();
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }else{
+            getSupportActionBar().setTitle(R.string.app_name);
         }
-     }
 
-*/
-    public void walkdir(File dir) {
-        String pdfPattern = ".pdf";
 
-        File listFile[] = dir.listFiles();
-
-        if (listFile != null) {
-            for (File aListFile : listFile) {
-
-                if (aListFile.isDirectory()) {
-                    walkdir(aListFile);
-                } else {
-                    if (aListFile.getName().endsWith(pdfPattern)) {
-                        //Do what ever u want
-                        Log.d("TAG", "IS PDF  " + aListFile.getName() + ":" + aListFile.canWrite());
-                    } else {
-                        Log.d("TAG", "NO PDF  " + aListFile.getName() + ":" + aListFile.canWrite());
-                    }
+        tabLayout = findViewById(R.id.tabs);
+        replacePage(new DocumentsFragment());
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        replacePage(new BrowserFragment());
+                        break;
+                    case 1:
+                        replacePage(new DocumentsFragment());
+                        break;
+                    case 2:
+                        replacePage(new CameraFragment());
+                        break;
+                    case 3:
+                        replacePage(new com.example.sis_001.myapplication.GalleryFragment());
+                        break;
+                    default:
+                        replacePage(new DocumentsFragment());
+                        break;
                 }
             }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionCamera:
+
+                break;
+
+            case R.id.actionSearch:
+
+                break;
+
+            case R.id.actionSetting:
+
+                break;
+            default:
+                break;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void replacePage(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .addToBackStack(fragment.getClass().getName())
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .commit();
     }
 }
+
