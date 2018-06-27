@@ -1,5 +1,4 @@
-package in.tts;
-
+package in.tts.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +10,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import in.tts.R;
 
 
 public class BrowserFragment extends Fragment {
@@ -28,7 +28,7 @@ public class BrowserFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated( Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         WebView webView = getActivity().findViewById(R.id.webView);
@@ -38,6 +38,6 @@ public class BrowserFragment extends Fragment {
 
         TextView tv = getActivity().findViewById(R.id.tvurl);
         tv.setText(webView.getUrl());
-        Log.d("Tag", " f " +webView.getProgress());
+        Log.d("Tag", " f " + webView.getProgress());
     }
 }

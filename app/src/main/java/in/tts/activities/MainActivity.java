@@ -1,19 +1,22 @@
 package in.tts.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import in.tts.BrowserFragment;
-import in.tts.CameraFragment;
-import in.tts.DocumentsFragment;
-import in.tts.GalleryFragment;
+import in.tts.fragment.BrowserFragment;
+import in.tts.fragment.CameraFragment;
+import in.tts.fragment.DocumentsFragment;
+import in.tts.fragment.GalleryFragment;
 import in.tts.R;
+import in.tts.model.PrefManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,10 +34,16 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-        }else{
+        } else {
             getSupportActionBar().setTitle(R.string.app_name);
         }
 
+
+        PrefManager prefManager = new PrefManager(this);
+        Log.d("TAG", "prefManager " + prefManager.isFirstTimeLaunch());
+        if (prefManager.isFirstTimeLaunch()) {
+            startActivity(new Intent(MainActivity.this, TutorialActivity.class));
+        }
 
         tabLayout = findViewById(R.id.tabs);
         replacePage(new DocumentsFragment());

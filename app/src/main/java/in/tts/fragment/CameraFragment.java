@@ -1,4 +1,4 @@
-package in.tts;
+package in.tts.fragment;
 
 
 
@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import in.tts.R;
 
 /**
  * A simple {@link Fragment} subclass.
