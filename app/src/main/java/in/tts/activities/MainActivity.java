@@ -15,6 +15,8 @@ import in.tts.fragments.CameraFragment;
 import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
+import in.tts.fragments.LoginFragment;
+import in.tts.fragments.RegisterFragment;
 import in.tts.model.PrefManager;
 
 
@@ -54,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
                         replacePage(new BrowserFragment());
                         break;
                     case 1:
-                        replacePage(new DocumentsFragment());
+                        replacePage(new RegisterFragment());
                         break;
                     case 2:
-                        replacePage(new CameraFragment());
+                        replacePage(new LoginFragment());
                         break;
                     case 3:
                         replacePage(new GalleryFragment());
