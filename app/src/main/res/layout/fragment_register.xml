@@ -135,7 +135,6 @@
             android:layout_margin="10dp"
             android:fontFamily="Roboto-Medium"
             android:paddingStart="45dp"
-            android:paddingLeft="45dp"
             android:paddingTop="5dp"
             android:text="@string/login_with_google"
             android:textAllCaps="false"
@@ -157,7 +156,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/login_with_facebook"
-            android:src="@drawable/grupo" />
+            android:src="@drawable/ic_facebook" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -167,7 +166,6 @@
             android:layout_margin="10dp"
             android:fontFamily="Roboto-Medium"
             android:paddingStart="45dp"
-            android:paddingLeft="45dp"
             android:paddingTop="5dp"
             android:text="@string/login_with_facebook"
             android:textAllCaps="false"

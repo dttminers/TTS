@@ -56,7 +56,10 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.AudioSettingActivity"
-            android:label="@string/title_activity_audio_setting"></activity>
+            android:label="@string/title_activity_audio_setting" />
+        <activity android:name=".activities.SettingActivity" />
+        <activity android:name=".activities.OurOtherAppActivity" />
+        <activity android:name=".activities.HelpActivity"></activity>
     </application>
 
 </manifest>
