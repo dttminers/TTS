@@ -15,6 +15,7 @@
     <string name="str_login_to_get_access_to_read">Login to get access to read</string>
     <string name="str_username">Username</string>
     <string name="str_password">Password</string>
+    <string name="str_logo_image">logo image</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
