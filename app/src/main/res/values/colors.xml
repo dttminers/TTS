@@ -20,7 +20,7 @@
     <color name="light3">#f2f3f5</color>
 
     <color name="grey">#C4C4C4</color>
-    <color name="grey1">#5a5d64</color>
+    <color name="warm_grey">#707070</color>
     <color name="grey2">#FFE3E2E2</color>
     <color name="grey3">#8D8A8A</color>
     <color name="grey4">#FFF0EAE4</color>
@@ -56,6 +56,7 @@
     <color name="dark_pink1">#C061C3</color>
     <color name="dark_pink2">#9B51E0</color>
     <color name="dark_pink3">#A80CAD</color>
+    <color name="dark_pink_two">#cb356b</color>
 
     <color name="dark_blue">#253159</color>
 

@@ -16,6 +16,8 @@
     <string name="str_username">Username</string>
     <string name="str_password">Password</string>
     <string name="str_logo_image">logo image</string>
+    <string name="title_activity_audio_setting">AudioSettingActivity</string>
+    <string name="str_voice_selection">Voice Selection</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
