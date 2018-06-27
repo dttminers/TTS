@@ -188,18 +188,17 @@
         </RelativeLayout>
 
 
-            <ImageView
-                android:contentDescription="@string/str_already_have_an_account"
-                android:textColor="@color/white1"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="60dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/rlFacebook"
-                android:id="@+id/txtAlreadyAccount"
-                android:src="@drawable/already_have_a_accout_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
+        <ImageView
+            android:textColor="@color/white1"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="60dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/rlFacebook"
+            android:id="@+id/txtAlreadyAccount"
+            android:src="@drawable/already_have_a_accout_login"
+            android:contentDescription="@string/str_already_have_an_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 

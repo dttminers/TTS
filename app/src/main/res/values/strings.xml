@@ -24,8 +24,12 @@
     <string name="str_or">or</string>
     <string name="login_with_google">Login with Google</string>
     <string name="login_with_facebook">Login with Facebook</string>
+
     <string name="str_already_have_an_account">Already have an account? Login!</string>
     <string name="str_login">Login !</string>
+    <string name="str_british_accent">British Accent</string>
+    <string name="str_american_accent">American Accent</string>
+    <string name="str_content_image">content image</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
