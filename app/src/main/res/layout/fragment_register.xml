@@ -15,7 +15,7 @@
             android:layout_width="55dp"
             android:layout_height="72dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/read_it_02" />
 
@@ -88,7 +88,7 @@
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:layout_below="@id/edtConfirmPassword"
             android:layout_centerHorizontal="true"
             android:background="@drawable/rounded_cornor_border"
@@ -114,15 +114,15 @@
             android:textSize="14sp" />
 
         <RelativeLayout
-            android:layout_marginLeft="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginRight="50dp"
             android:id="@+id/rlGoogle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtOr"
             android:layout_centerHorizontal="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
             android:background="@drawable/rounded_cornor_border">
 
             <ImageView
@@ -152,15 +152,15 @@
 
         <RelativeLayout
             android:id="@+id/rlFacebook"
-            android:layout_marginLeft="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginRight="50dp"
             android:layout_width="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/rlGoogle"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_cornor_border">
 
@@ -189,18 +189,17 @@
 
 
         <ImageView
-            android:textColor="@color/white1"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="60dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/rlFacebook"
             android:id="@+id/txtAlreadyAccount"
-            android:src="@drawable/already_have_a_accout_login"
-            android:contentDescription="@string/str_already_have_an_account"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlFacebook"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/str_already_have_an_account"
+            android:src="@drawable/already_have_a_accout_login"
+            android:textColor="@color/white1" />
     </RelativeLayout>
-
 
 
 </android.support.v4.widget.NestedScrollView>
