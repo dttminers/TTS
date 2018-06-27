@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "143294501560",
+    "firebase_url": "https://readit-2018.firebaseio.com",
+    "project_id": "readit-2018",
+    "storage_bucket": "readit-2018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143294501560:android:1d55839c957bb73b",
+        "android_client_info": {
+          "package_name": "in.tts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143294501560-05lbg1t4nfcp0b67kvmcribjvkklibmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW6CEFcx2NusG_Hs1ilcU1A3P9fzmiRTw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

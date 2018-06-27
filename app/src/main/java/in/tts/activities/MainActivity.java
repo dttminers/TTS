@@ -10,11 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import in.tts.fragment.BrowserFragment;
-import in.tts.fragment.CameraFragment;
-import in.tts.fragment.DocumentsFragment;
-import in.tts.fragment.GalleryFragment;
+import in.tts.fragments.BrowserFragment;
+import in.tts.fragments.CameraFragment;
+import in.tts.fragments.DocumentsFragment;
+import in.tts.fragments.GalleryFragment;
 import in.tts.R;
 import in.tts.model.PrefManager;
 
