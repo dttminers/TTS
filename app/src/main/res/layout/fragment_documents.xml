@@ -6,4 +6,6 @@
 
     tools:context=".fragments.DocumentsFragment">
 
+    <include layout="@layout/activity_audio_setting"/>
+
 </FrameLayout>

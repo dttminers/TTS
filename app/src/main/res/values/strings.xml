@@ -27,6 +27,21 @@
     <string name="str_british_accent">British Accent</string>
     <string name="str_american_accent">American Accent</string>
     <string name="str_content_image">content image</string>
+    <string name="str_faq">FAQ</string>
+    <string name="str_terms_and_privacy_policy">Terms and Privacy Policy</string>
+    <string name="str_app_info">App Info</string>
+    <string name="str_logout">Logout</string>
+    <string name="str_storage_usage">Storage Usage</string>
+    <string name="str_data_usage">Data Usage</string>
+    <string name="str_voice_speed">Voice Speed</string>
+    <string name="str_tamil">Tamil</string>
+    <string name="marathi">Marathi</string>
+    <string name="str_hindi">Hindi</string>
+    <string name="str_accent_selection">Accent selection</string>
+    <string name="str_english">English</string>
+    <string name="str_language_selection">Language Selection</string>
+    <string name="str_female_voice">Female Voice</string>
+    <string name="str_male_voice">Male Voice</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk

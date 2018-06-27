@@ -15,33 +15,50 @@
         android:padding="2dp"
         android:textColor="@color/warm_grey"
         android:textSize="15sp"
-        tools:text="Data Usage" />
+        android:text="@string/str_data_usage" />
 
-    <SeekBar
-        android:id="@+id/seekBar1"
+    <ProgressBar
+        android:id="@+id/pbSetting1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="10dp"
         android:max="100"
         android:progress="10"
+        android:minHeight="5dp"
+        android:progressTint="@color/dark_pink_two"
+        android:maxHeight="8dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
         android:secondaryProgress="10" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:padding="2dp"
         android:textColor="@color/warm_grey"
         android:textSize="15sp"
-        tools:text="Storage Usage" />
+        android:text="@string/str_storage_usage" />
 
-    <SeekBar
-        android:id="@+id/seekBar2"
+    <ProgressBar
+        android:id="@+id/pbSetting2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="10dp"
         android:max="100"
         android:progress="10"
+        android:minHeight="5dp"
+        android:progressTint="@color/dark_pink_two"
+        android:maxHeight="8dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
         android:secondaryProgress="10" />
 
     <RelativeLayout
@@ -71,7 +88,7 @@
             android:layout_toEndOf="@+id/ivLogout"
             android:textColor="@color/black"
             android:textSize="15sp"
-            tools:text="Logout" />
+            android:text="@string/str_logout" />
 
     </RelativeLayout>
 
