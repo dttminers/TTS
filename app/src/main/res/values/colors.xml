@@ -5,6 +5,8 @@
     <color name="colorAccent">#707070</color>
 
     <color name="white">#ffffff</color>
+    <color name="white1">#ccffffff</color>
+
     <color name="black">#000000</color>
 
     <color name="transparent">#00ffffff</color>
@@ -59,6 +61,7 @@
     <color name="dark_pink_two">#cb356b</color>
 
     <color name="dark_blue">#253159</color>
+    <color name="dark_blu1e">#253159</color>
 
     <color name="light_pink1">#EF7D7D</color>
     <color name="light_pink2">#e48f8f</color>
@@ -67,10 +70,10 @@
     <color name="light_orange2">#EB5757</color>
 
     <color name="shade1">#4f002a</color>
-    <color name="shade2">#cb356b</color>
+    <color name="shade2">#c13f3d</color>
     <color name="shade3">#bd3f32</color>
 
-    <color name="shade4">#cb356b</color>
+    <color name="shade4">#FFCB3C66</color>
     <color name="shade5">#cb3d54</color>
     <color name="shade6">#707070</color>
 

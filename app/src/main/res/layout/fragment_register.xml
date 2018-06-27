@@ -1,14 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".fragments.RegisterFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="55dp"
+        android:layout_height="72dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/read_it_02" />
+
+    <EditText
+        android:id="@+id/edtEmailId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_below="@id/imgLogo"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/line"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/layer_723"
+        android:fontFamily="Roboto-Regular"
+        android:hint="@string/str_email_id"
+        android:inputType="textEmailAddress"
+        android:padding="5dp"
+        android:textColor="@color/white1"
+        android:textColorHint="@color/white1"
+        android:textSize="16sp" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtEmailId"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/line"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/layer_724"
+        android:fontFamily="Roboto-Regular"
+        android:hint="@string/str_password"
+        android:inputType="textPassword"
+        android:padding="5dp"
+        android:textColor="@color/white1"
+        android:textColorHint="@color/white1"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/edtConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtPassword"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/line"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/layer_724"
+        android:fontFamily="Roboto-Regular"
+        android:hint="@string/str_confirm_password"
+        android:inputType="textPassword"
+        android:padding="5dp"
+        android:textColor="@color/white1"
+        android:textColorHint="@color/white1"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/edtConfirmPassword"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_cornor_border"
+        android:fontFamily="Roboto-Regular"
+        android:paddingEnd="40dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingStart="40dp"
+        android:text="@string/str_sign_up"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtOr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSignUp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:fontFamily="Roboto-Regular"
+        android:text="@string/str_or"
+        android:textColor="@color/white1"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/rlGoogle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtOr"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_cornor_border">
+
+        <ImageView
+            android:layout_margin="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ellipse_712"
+            android:contentDescription="@string/login_with_google"
+            android:padding="10dp"
+            android:src="@drawable/layer_720" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:fontFamily="Roboto-Medium"
+            android:paddingStart="45dp"
+            android:paddingLeft="45dp"
+            android:paddingTop="5dp"
+            android:text="@string/login_with_google"
+            android:textAllCaps="false"
+            android:textColor="@color/white1"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tlFacebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlGoogle"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_cornor_border">
+
+        <ImageView
+            android:layout_margin="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/login_with_facebook"
+            android:src="@drawable/grupo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:fontFamily="Roboto-Medium"
+            android:paddingStart="45dp"
+            android:paddingLeft="45dp"
+            android:paddingTop="5dp"
+            android:text="@string/login_with_facebook"
+            android:textAllCaps="false"
+            android:textColor="@color/white1"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
