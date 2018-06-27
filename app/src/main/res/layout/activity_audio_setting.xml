@@ -5,57 +5,178 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="20dp"
     tools:context=".activities.AudioSettingActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12.7sp"
-        android:fontFamily="sans-serif"
-        android:textStyle="normal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/warm_grey"
-        tools:text="Voice selection"
-        />
+        android:textSize="15sp"
+        android:padding="2dp"
+        android:text="@string/str_voice_selection" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:padding="2dp"
+            android:text="@string/str_male_voice" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:padding="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/str_female_voice" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13.3sp"
-        android:fontFamily="sans-serif"
-        android:textStyle="normal"
-        android:textColor="@color/dark_pink_two"
-        tools:text="Male Voice"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="13.3sp"
-        android:fontFamily="sans-serif"
-        android:textStyle="normal"
-        android:textColor="@color/black"
-        tools:text="Female Voice"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12.7sp"
-        android:fontFamily="sans-serif"
-        android:textStyle="normal"
         android:textColor="@color/warm_grey"
-        tools:text="Language Selection"
-        />
+        android:textSize="15sp"
+        android:padding="2dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/str_language_selection" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/black"
+            android:textSize="13.3sp"
+            android:padding="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/str_english" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvAccentSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="10dp"
+                android:padding="2dp"
+                android:textColor="@color/warm_grey"
+                android:text="@string/str_accent_selection"
+                />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAccentSel"
+                android:id="@+id/radioGroup">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_british_accent"
+                    android:layout_marginStart="50dp"
+                    android:id="@+id/radioButton"
+                    android:checked="true"
+                    android:textColor="@color/dark_pink_two"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_american_accent"
+                    android:layout_marginStart="50dp"
+                    android:id="@+id/radioButton2"
+                    android:checked="false"
+                    android:textSize="12sp" />
+            </RadioGroup>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/black"
+            android:textSize="13.3sp"
+            android:padding="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/str_hindi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/black"
+            android:textSize="13.3sp"
+            android:padding="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/marathi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/black"
+            android:textSize="13.3sp"
+            android:padding="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/str_tamil" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/warm_grey"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13.3sp"
-        android:fontFamily="sans-serif"
-        android:textStyle="normal"
-        android:textColor="@color/dark_pink_two"
-        tools:text="English"
-        />
+        android:textSize="15sp"
+        android:padding="2dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/warm_grey"
+        android:text="@string/str_voice_speed" />
+
+    <SeekBar
+        android:id="@+id/seek1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:progress="10"
+        android:max="100"
+        android:thumbTint="@color/dark_pink_two"
+        android:tickMarkTint="@color/dark_pink_two"
+        android:progressTint="@color/dark_pink_two"
+        android:secondaryProgress="10" />
 
 </LinearLayout>
