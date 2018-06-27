@@ -13,64 +13,62 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/warm_grey"
-        android:textSize="15sp"
         android:padding="2dp"
-        android:text="@string/str_voice_selection" />
+        android:text="@string/str_voice_selection"
+        android:textColor="@color/warm_grey"
+        android:textSize="15sp" />
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/rgVoice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:padding="2dp"
-            android:text="@string/str_male_voice" />
+            android:checked="true"
+            android:text="@string/str_male_voice"
+            android:textColor="@color/dark_pink_two"
+            android:textSize="14sp" />
 
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:padding="2dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:text="@string/str_female_voice" />
+            android:checked="false"
+            android:text="@string/str_female_voice"
+            android:textSize="14sp" />
+    </RadioGroup>
 
-    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/warm_grey"
-        android:textSize="15sp"
-        android:padding="2dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:text="@string/str_language_selection" />
+        android:padding="2dp"
+        android:text="@string/str_language_selection"
+        android:textColor="@color/warm_grey"
+        android:textSize="15sp" />
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/rgLanguageSel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
-            android:textSize="13.3sp"
-            android:padding="2dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:text="@string/str_english" />
+            android:checked="true"
+            android:text="@string/str_english"
+            android:textColor="@color/dark_pink_two"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -80,103 +78,97 @@
                 android:id="@+id/tvAccentSel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="60dp"
                 android:layout_marginTop="10dp"
                 android:padding="2dp"
-                android:textColor="@color/warm_grey"
                 android:text="@string/str_accent_selection"
-                />
+                android:textColor="@color/warm_grey"
+                android:textSize="14sp" />
 
             <RadioGroup
+                android:id="@+id/rgAccentSel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvAccentSel"
-                android:id="@+id/radioGroup">
+                android:layout_below="@+id/tvAccentSel">
 
                 <RadioButton
+                    android:id="@+id/radioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/str_british_accent"
-                    android:layout_marginStart="50dp"
-                    android:id="@+id/radioButton"
+                    android:layout_marginStart="60dp"
                     android:checked="true"
+                    android:text="@string/str_british_accent"
                     android:textColor="@color/dark_pink_two"
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:id="@+id/radioButton2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/str_american_accent"
-                    android:layout_marginStart="50dp"
-                    android:id="@+id/radioButton2"
+                    android:layout_marginStart="60dp"
                     android:checked="false"
+                    android:text="@string/str_american_accent"
                     android:textSize="12sp" />
             </RadioGroup>
 
 
         </RelativeLayout>
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
-            android:textSize="13.3sp"
-            android:padding="2dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:text="@string/str_hindi" />
+            android:checked="false"
+            android:text="@string/str_hindi"
+            android:textSize="14sp" />
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
-            android:textSize="13.3sp"
-            android:padding="2dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:text="@string/marathi" />
+            android:checked="false"
+            android:text="@string/marathi"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
-            android:textSize="13.3sp"
-            android:padding="2dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/str_tamil" />
-    </LinearLayout>
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:text="@string/str_tamil"
+            android:textSize="14sp" />
+    </RadioGroup>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/warm_grey"/>
+        android:background="@color/warm_grey" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:padding="2dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:padding="2dp"
+        android:text="@string/str_voice_speed"
         android:textColor="@color/warm_grey"
-        android:text="@string/str_voice_speed" />
+        android:textSize="15sp" />
 
     <SeekBar
         android:id="@+id/seek1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:progress="10"
         android:max="100"
-        android:thumbTint="@color/dark_pink_two"
-        android:tickMarkTint="@color/dark_pink_two"
+        android:progress="10"
         android:progressTint="@color/dark_pink_two"
-        android:secondaryProgress="10" />
+        android:secondaryProgress="10"
+        android:thumbTint="@color/dark_pink_two"
+        android:tickMarkTint="@color/dark_pink_two" />
 
 </LinearLayout>

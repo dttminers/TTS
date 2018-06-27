@@ -80,24 +80,24 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        signInButton = getActivity().findViewById(R.id.btn_sign_in);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-
-        loginButton = getActivity().findViewById(R.id.login_button);
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.btn_sign_in:
-                        signIn();
-                        break;
-                    case R.id.btn_sign_out:
-//                        signOut();
-                        break;
-                }
-            }
-        });
+//        signInButton = getActivity().findViewById(R.id.btn_sign_in);
+//        signInButton.setSize(SignInButton.SIZE_WIDE);
+//
+//        loginButton = getActivity().findViewById(R.id.login_button);
+//
+//        signInButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                switch (view.getId()) {
+//                    case R.id.btn_sign_in:
+//                        signIn();
+//                        break;
+//                    case R.id.btn_sign_out:
+////                        signOut();
+//                        break;
+//                }
+//            }
+//        });
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
