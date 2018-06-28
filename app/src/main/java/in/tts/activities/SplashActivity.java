@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Window;
 
 import in.tts.R;
-import in.tts.utils.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

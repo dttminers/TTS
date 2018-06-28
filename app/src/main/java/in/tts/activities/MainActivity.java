@@ -7,6 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +31,9 @@ import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
+import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.LoginFragment;
+import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.RegisterFragment;
 import in.tts.model.PrefManager;
 import in.tts.utils.FloatingViewService;
@@ -46,15 +52,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-            getSupportActionBar().setTitle(R.string.app_name);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else {
-            getSupportActionBar().setTitle(R.string.app_name);
-        }
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().show();
+//            getSupportActionBar().setTitle(R.string.app_name);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//            getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        } else {
+//            getSupportActionBar().setTitle(R.string.app_name);
+//        }
+
+        toSetTitle(getResources().getString(R.string.app_name), true);
 
         PrefManager prefManager = new PrefManager(this);
         if (prefManager.isFirstTimeLaunch()) {
@@ -66,23 +74,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        replacePage(new BrowserFragment());
-                        break;
-                    case 1:
-                        replacePage(new RegisterFragment());
-                        break;
-                    case 2:
-                        replacePage(new LoginFragment());
-                        break;
-                    case 3:
-                        replacePage(new GalleryFragment());
-                        break;
-                    default:
-                        replacePage(new DocumentsFragment());
-                        break;
-                }
+                setCurrentViewPagerItem(tab.getPosition());
+
             }
 
             @Override
@@ -96,23 +89,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//
-        //Check if the application has draw over other apps permission or not?
-        //This permission is by default available for API<23. But for API > 23
-        //you have to ask for the permission in runtime.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d("TAG " , " ff " + !Settings.canDrawOverlays(this));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            //If the draw over permission is not available open the settings screen
-            //to grant the permission.
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName()));
-                    Log.d ("TAG " ," ll " + Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
-        } else {
-            initializeView();
-        }
-//        toShowTab();
+////
+//        //Check if the application has draw over other apps permission or not?
+//        //This permission is by default available for API<23. But for API > 23
+//        //you have to ask for the permission in runtime.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            Log.d("TAG " , " ff " + !Settings.canDrawOverlays(this));
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+//            //If the draw over permission is not available open the settings screen
+//            //to grant the permission.
+//            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName()));
+//                    Log.d ("TAG " ," ll " + Uri.parse("package:" + getPackageName()));
+//            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+//        } else {
+//            initializeView();
+//        }
+////        toShowTab();
     }
 
     /**
@@ -193,18 +186,131 @@ public class MainActivity extends AppCompatActivity {
             case R.id.actionSetting:
                 showPopup(findViewById(R.id.actionSetting));
                 break;
+
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void toSetTitle(String title, boolean b) {
+        if (!b) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide();
+            }
+        } else {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backword));
+                if (title != null) {
+                    if (title.length() > 0) {
+                        getSupportActionBar().setTitle(firstLetterCaps(title));
+                    } else {
+                        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+                    }
+                } else {
+                    getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+                }
+            }
+        }
+    }
+
+    public static String firstLetterCaps(String myString) {
+
+        return myString.substring(0, 1).toUpperCase() + myString.substring(1);
+    }
+
     public void replacePage(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
-                .addToBackStack(fragment.getClass().getName())
+                .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .commit();
     }
+
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            Log.d("Tag", " g "+ tabLayout.getSelectedTabPosition() );
+//            if (tabLayout != null) {
+                if (tabLayout.getSelectedTabPosition() != 2) {
+                    setCurrentViewPagerItem(2);
+                } else {
+                    doExit();
+                }
+//            } else if (tabLayout.getSelectedTabPosition() == 0) {
+//                doExit();
+//            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setCurrentViewPagerItem(int i) {
+        tabLayout.getTabAt(i).select();
+        switch (i) {
+
+            case 0:
+                toSetTitle("Browser It", true);
+                replacePage(new RegisterFragment());
+
+                break;
+            case 1:
+                toSetTitle("Docs", true);
+                replacePage(new DocumentsFragment());
+                break;
+            case 2:
+                toSetTitle("Read It", true);
+                replacePage(new HomePageFragment());
+                break;
+            case 3:
+                toSetTitle("Make Your Own Read", true);
+                replacePage(new MakeYourOwnReadFragment());
+                break;
+            case 4:
+                toSetTitle("Images", true);
+                replacePage(new GalleryFragment());
+                break;
+            default:
+                toSetTitle("Read It", true);
+                replacePage(new HomePageFragment());
+                break;
+        }
+    }
+
+    private void doExit() {
+        try {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setPositiveButton(getResources().getString(R.string.lbl_yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            alertDialog.setNegativeButton(getResources().getString(R.string.lbl_no), null);
+            alertDialog.setMessage(getResources().getString(R.string.lbl_str_exit_from_app));
+            alertDialog.setTitle(getResources().getString(R.string.app_name));
+            alertDialog.show();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            getSupportFragmentManager().popBackStack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//
+//    }
 }

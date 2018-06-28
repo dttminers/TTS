@@ -33,12 +33,8 @@ public class BrowserFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 //        WebView webView = getActivity().findViewById(R.id.webView);
-//        WebSettings webSettings = webView.getSettings();
-////        webSettings.setJavaScriptEnabled(true);
 //        webView.loadUrl("http://www.google.com");
 //
-//        TextView tv = getActivity().findViewById(R.id.tvurl);
-//        tv.setText(webView.getUrl());
 //        Log.d("Tag", " f " +webView.getProgress());
     }
 }

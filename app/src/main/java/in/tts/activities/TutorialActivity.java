@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import in.tts.R;
 import in.tts.model.PrefManager;
 
@@ -26,6 +29,11 @@ public class TutorialActivity extends AppCompatActivity {
     private int[] layouts;
     private Button btnSkip;
     private PrefManager prefManager;
+
+    int currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
+    final long PERIOD_MS = 2000; // time in milliseconds between successive task executions.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,12 @@ public class TutorialActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.view_pager);
         btnSkip = findViewById(R.id.btn_skip);
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TutorialActivity.this, LoginActivity.class).putExtra("LOGIN","login"));
+            }
+        });
 
 
         // layouts of all welcome sliders
@@ -62,6 +76,27 @@ public class TutorialActivity extends AppCompatActivity {
         myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+
+        /*After setting the adapter use the timer */
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == layouts.length-1) {
+//                    currentPage = 0;
+                    finish();
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer(); // This will create a new Thread
+        timer .schedule(new TimerTask() { // task to be scheduled
+
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
 
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override

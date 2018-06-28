@@ -34,7 +34,7 @@
     <color name="yellow1">#FFFEDB29</color>
     <color name="yellow2">#f7c002</color>
 
-    <color name="black1">#242424</color>
+    <color name="black1">#66000000</color>
     <color name="black2">#2c2c2c</color>
     <color name="black3">#333333</color>
     <color name="black4">#dddfe2</color>
@@ -76,5 +76,6 @@
     <color name="shade4">#FFCB3C66</color>
     <color name="shade5">#cb3d54</color>
     <color name="shade6">#707070</color>
+    <color name="shade7">#c0c0c0</color>
 
 </resources>

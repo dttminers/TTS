@@ -12,9 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:fontFamily="Roboto-Regular"
         android:padding="2dp"
         android:text="@string/str_data_usage"
-        android:fontFamily="Roboto-Regular"
         android:textColor="@color/warm_grey"
         android:textSize="15sp" />
 
@@ -41,8 +41,8 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:padding="2dp"
         android:fontFamily="Roboto-Regular"
+        android:padding="2dp"
         android:text="@string/str_storage_usage"
         android:textColor="@color/warm_grey"
         android:textSize="15sp" />
@@ -52,7 +52,7 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
@@ -67,6 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/warm_grey" />
 
@@ -74,7 +76,7 @@
         android:id="@+id/rlLogout"
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="20dp">
 
         <ImageView
             android:id="@+id/ivLogout"
@@ -88,8 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/ivLogout"
-            android:text="@string/str_logout"
             android:fontFamily="Roboto-Regular"
+            android:text="@string/str_logout"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
