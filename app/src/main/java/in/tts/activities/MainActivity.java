@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import in.tts.fragments.BrowserFragment;
-import in.tts.fragments.CameraFragment;
 import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
