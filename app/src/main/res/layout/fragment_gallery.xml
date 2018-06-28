@@ -5,6 +5,5 @@
     android:layout_height="match_parent"
     tools:context=".fragments.GalleryFragment">
 
-    <include layout="@layout/activity_setting"/>
 
 </FrameLayout>

@@ -1,6 +1,10 @@
 package in.tts.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -18,6 +22,7 @@ import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
+import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.RegisterFragment;
@@ -33,15 +38,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-            getSupportActionBar().setTitle(R.string.app_name);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-        } else {
-            getSupportActionBar().setTitle(R.string.app_name);
-        }
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().show();
+//            getSupportActionBar().setTitle(R.string.app_name);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//            getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        } else {
+//            getSupportActionBar().setTitle(R.string.app_name);
+//        }
+
+        toSetTitle(getResources().getString(R.string.app_name), true);
 
 
         PrefManager prefManager = new PrefManager(this);
@@ -55,26 +62,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        replacePage(new BrowserFragment());
-                        break;
-                    case 1:
-                        replacePage(new RegisterFragment());
-                        break;
-                    case 2:
-                        replacePage(new LoginFragment());
-                        break;
-                    case 3:
-                        replacePage(new MakeYourOwnReadFragment());
-                        break;
-                    case 4:
-                        replacePage(new GalleryFragment());
-                        break;
-                    default:
-                        replacePage(new DocumentsFragment());
-                        break;
-                }
+                setCurrentViewPagerItem(tab.getPosition());
+
             }
 
             @Override
@@ -113,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.help:
-//                        showPopup(findViewById(R.id.actionSetting));
                         startActivity(new Intent(MainActivity.this, HelpActivity.class));
                         break;
                     default:
@@ -146,18 +134,131 @@ public class MainActivity extends AppCompatActivity {
             case R.id.actionSetting:
                 showPopup(findViewById(R.id.actionSetting));
                 break;
+
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void toSetTitle(String title, boolean b) {
+        if (!b) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide();
+            }
+        } else {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backword));
+                if (title != null) {
+                    if (title.length() > 0) {
+                        getSupportActionBar().setTitle(firstLetterCaps(title));
+                    } else {
+                        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+                    }
+                } else {
+                    getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+                }
+            }
+        }
+    }
+
+    public static String firstLetterCaps(String myString) {
+
+        return myString.substring(0, 1).toUpperCase() + myString.substring(1);
+    }
+
     public void replacePage(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
-                .addToBackStack(fragment.getClass().getName())
+                .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .commit();
     }
+
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            Log.d("Tag", " g "+ tabLayout.getSelectedTabPosition() );
+//            if (tabLayout != null) {
+                if (tabLayout.getSelectedTabPosition() != 2) {
+                    setCurrentViewPagerItem(2);
+                } else {
+                    doExit();
+                }
+//            } else if (tabLayout.getSelectedTabPosition() == 0) {
+//                doExit();
+//            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setCurrentViewPagerItem(int i) {
+        tabLayout.getTabAt(i).select();
+        switch (i) {
+
+            case 0:
+                toSetTitle("Browser It", true);
+                replacePage(new RegisterFragment());
+
+                break;
+            case 1:
+                toSetTitle("Docs", true);
+                replacePage(new DocumentsFragment());
+                break;
+            case 2:
+                toSetTitle("Read It", true);
+                replacePage(new HomePageFragment());
+                break;
+            case 3:
+                toSetTitle("Make Your Own Read", true);
+                replacePage(new MakeYourOwnReadFragment());
+                break;
+            case 4:
+                toSetTitle("Images", true);
+                replacePage(new GalleryFragment());
+                break;
+            default:
+                toSetTitle("Read It", true);
+                replacePage(new HomePageFragment());
+                break;
+        }
+    }
+
+    private void doExit() {
+        try {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setPositiveButton(getResources().getString(R.string.lbl_yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            alertDialog.setNegativeButton(getResources().getString(R.string.lbl_no), null);
+            alertDialog.setMessage(getResources().getString(R.string.lbl_str_exit_from_app));
+            alertDialog.setTitle(getResources().getString(R.string.app_name));
+            alertDialog.show();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            getSupportFragmentManager().popBackStack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//
+//    }
 }

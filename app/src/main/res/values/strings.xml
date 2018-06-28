@@ -50,6 +50,10 @@
     <string name="str_audio_settings">Audio Settings</string>
     <string name="str_our_other_apps">Our Other Apps</string>
     <string name="str_help">Help</string>
+    <string name="str_start_typing_here">Start typing here...</string>
+    <string name="lbl_yes">Yes</string>
+    <string name="lbl_no">No</string>
+    <string name="lbl_str_exit_from_app">Do you want to close the app?</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk

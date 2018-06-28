@@ -30,40 +30,37 @@
             android:clickable="true"
             android:focusable="true"
             android:layout_alignParentBottom="true"
-            app:tabIndicatorHeight="3dp"
-            app:tabIndicatorColor="@color/ttsRed"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="@android:color/holo_red_dark">
+            app:tabMode="fixed">
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|fill"
-                android:icon="@drawable/browser_24dp" />
+                android:icon="@drawable/tab1" />
 
             <android.support.design.widget.TabItem
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center|fill"
-                android:icon="@drawable/archive_black_24dp"/>
+                android:icon="@drawable/tab2" />
 
             <android.support.design.widget.TabItem
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center|fill"
-                android:icon="@drawable/ic_home_black_24dp"/>
+                android:icon="@drawable/tab3" />
 
             <android.support.design.widget.TabItem
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center|fill"
-                android:icon="@drawable/ic_assignment_black_24dp"/>
+                android:icon="@drawable/tab4" />
 
             <android.support.design.widget.TabItem
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center|fill"
-                android:icon="@drawable/image_black_24dp"/>
+                android:icon="@drawable/tab5" />
 
 
         </android.support.design.widget.TabLayout>

@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/ttsRed</item>
         <item name="colorPrimaryDark">@color/red1</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/dark_pink_two</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 

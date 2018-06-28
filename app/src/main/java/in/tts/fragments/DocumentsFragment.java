@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import in.tts.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
+
 public class DocumentsFragment extends Fragment {
 
 
