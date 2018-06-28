@@ -15,6 +15,7 @@ import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
 import in.tts.fragments.LoginFragment;
+import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.RegisterFragment;
 import in.tts.model.PrefManager;
 
@@ -61,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
                         replacePage(new LoginFragment());
                         break;
                     case 3:
+                        replacePage(new MakeYourOwnReadFragment());
+                        break;
+                    case 4:
                         replacePage(new GalleryFragment());
                         break;
                     default:
