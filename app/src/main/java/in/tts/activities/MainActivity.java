@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
             case 0:
                 toSetTitle("Browser It", true);
-                replacePage(new RegisterFragment());
+                replacePage(new BrowserFragment());
 
                 break;
             case 1:
