@@ -1,6 +1,13 @@
 package in.tts.activities;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.net.Uri;
+import android.widget.Toast;
 
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.DocumentsFragment;
@@ -21,11 +30,16 @@ import in.tts.R;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.RegisterFragment;
 import in.tts.model.PrefManager;
+import in.tts.utils.FloatingViewService;
+import in.tts.utils.FloatingWidgetService;
 
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
+
+    /*  Permission request code to draw over other apps  */
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +56,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.app_name);
         }
 
-
         PrefManager prefManager = new PrefManager(this);
-        Log.d("TAG", "prefManager " + prefManager.isFirstTimeLaunch());
         if (prefManager.isFirstTimeLaunch()) {
             startActivity(new Intent(MainActivity.this, TutorialActivity.class));
         }
@@ -84,6 +96,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//
+        //Check if the application has draw over other apps permission or not?
+        //This permission is by default available for API<23. But for API > 23
+        //you have to ask for the permission in runtime.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d("TAG " , " ff " + !Settings.canDrawOverlays(this));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName()));
+                    Log.d ("TAG " ," ll " + Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+        } else {
+            initializeView();
+        }
+//        toShowTab();
+    }
+
+    /**
+     * Set and initialize the view elements.
+     */
+    private void initializeView() {
+        Log.d("TAG", "GGG ");
+//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW}, 1);
+        startService(new Intent(MainActivity.this, FloatingViewService.class));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("TAG"," REsult : " + requestCode + " : " + resultCode + " : ");
+        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
+            //Check if the permission is granted or not.
+//            if (resultCode == RESULT_OK) {
+                initializeView();
+//            } else { //Permission is not available
+//                Toast.makeText(this,
+//                        "Draw over other app permission not available. Closing the application",
+//                        Toast.LENGTH_SHORT).show(); }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     public void showPopup(View v) {
@@ -101,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.audio_settings:
-
                         startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
                         break;
                     case R.id.our_other_apps:
@@ -109,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.help:
-//                        showPopup(findViewById(R.id.actionSetting));
                         startActivity(new Intent(MainActivity.this, HelpActivity.class));
                         break;
                     default:
@@ -132,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionCamera:
-
                 break;
 
             case R.id.actionSearch:
