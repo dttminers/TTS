@@ -32,11 +32,11 @@ import com.google.android.gms.tasks.Task;
 import in.tts.R;
 
 public class LoginFragment extends Fragment {
-    private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 007;
-    private SignInButton signInButton;
-    private Button btnSignOut, loginButton;
-    private CallbackManager callbackManager;
+//    private GoogleSignInClient mGoogleSignInClient;
+//    private static final int RC_SIGN_IN = 007;
+//    private SignInButton signInButton;
+//    private Button btnSignOut, loginButton;
+//    private CallbackManager callbackManager;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -47,64 +47,64 @@ public class LoginFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-
-        callbackManager = CallbackManager.Factory.create();
-
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+//
+//        callbackManager = CallbackManager.Factory.create();
+//
+//        LoginManager.getInstance().registerCallback(callbackManager,
+//                new FacebookCallback<LoginResult>() {
+//                    @Override
+//                    public void onSuccess(LoginResult loginResult) {
+//                        // App code
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                        // App code
+//                    }
+//
+//                    @Override
+//                    public void onError(FacebookException exception) {
+//                        // App code
+//                    }
+//                });
+//
+//        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+//        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        signInButton = getActivity().findViewById(R.id.btn_sign_in);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-
-        loginButton = getActivity().findViewById(R.id.login_button);
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.btn_sign_in:
-                        signIn();
-                        break;
-                    case R.id.btn_sign_out:
-//                        signOut();
-                        break;
-                }
-            }
-        });
+//        signInButton = getActivity().findViewById(R.id.btn_sign_in);
+//        signInButton.setSize(SignInButton.SIZE_WIDE);
+//
+//        loginButton = getActivity().findViewById(R.id.login_button);
+//
+//        signInButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                switch (view.getId()) {
+//                    case R.id.btn_sign_in:
+//                        signIn();
+//                        break;
+//                    case R.id.btn_sign_out:
+////                        signOut();
+//                        break;
+//                }
+//            }
+//        });
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
+//    private void signIn() {
+//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//        startActivityForResult(signInIntent, RC_SIGN_IN);
+//    }
 
 //    private void signOut() {
 //        mGoogleSignInClient.signOut()
@@ -119,12 +119,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
+//        callbackManager.onActivityResult(requestCode, resultCode, data);
+//        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+//        if (requestCode == RC_SIGN_IN) {
+//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//            handleSignInResult(task);
+//        }
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {

@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.CameraFragment;
 import in.tts.fragments.DocumentsFragment;
@@ -83,6 +87,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.submenu, popup.getMenu());
+        popup.show();
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.settings:
+                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                        break;
+
+                    case R.id.audio_settings:
+
+                        startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
+                        break;
+                    case R.id.our_other_apps:
+                        startActivity(new Intent(MainActivity.this, OurOtherAppActivity.class));
+                        break;
+
+                    case R.id.help:
+//                        showPopup(findViewById(R.id.actionSetting));
+                        startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                        break;
+                    default:
+                        break;
+
+                }
+                return true;
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -102,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.actionSetting:
-
+                showPopup(findViewById(R.id.actionSetting));
                 break;
             default:
                 break;
@@ -119,4 +158,3 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 }
-

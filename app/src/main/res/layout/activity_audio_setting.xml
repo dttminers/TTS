@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".activities.AudioSettingActivity">
+
+    <LinearLayout
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="wrap_content"
@@ -94,24 +98,27 @@
                 android:layout_below="@+id/tvAccentSel"
                 android:id="@+id/radioGroup">
 
-                <RadioButton
+                <android.support.v7.widget.AppCompatRadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/str_british_accent"
                     android:layout_marginStart="50dp"
                     android:id="@+id/radioButton"
                     android:checked="true"
+                    android:buttonTint="@color/dark_pink_two"
                     android:textColor="@color/dark_pink_two"
                     android:textSize="12sp" />
 
-                <RadioButton
+                <android.support.v7.widget.AppCompatRadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/str_american_accent"
                     android:layout_marginStart="50dp"
                     android:id="@+id/radioButton2"
+                    android:buttonTint="@color/dark_pink_two"
                     android:checked="false"
                     android:textSize="12sp" />
+
             </RadioGroup>
 
 
@@ -172,11 +179,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:progress="10"
-        android:max="100"
+        android:progress="1"
+        android:max="4"
+        android:tickMark="@drawable/tickmark"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:thumbTint="@color/dark_pink_two"
-        android:tickMarkTint="@color/dark_pink_two"
-        android:progressTint="@color/dark_pink_two"
-        android:secondaryProgress="10" />
+        android:tickMarkTint="@color/black"
+        android:progressTint="@color/dark_pink_two" />
 
 </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
-    android:drawable="@color/yellow">
+    android:drawable="@drawable/ic_home_black_24dp">
 
     <target android:name="tick">
         <aapt:attr name="android:animation">
@@ -15,15 +15,15 @@
         </aapt:attr>
     </target>
 
-    <target android:name="circle">
-        <aapt:attr name="android:animation">
-            <objectAnimator
-                android:duration="@android:integer/config_shortAnimTime"
-                android:interpolator="@android:interpolator/accelerate_decelerate"
-                android:propertyName="strokeColor"
-                android:valueFrom="#1E9618"
-                android:valueTo="#A0A0A0"
-                android:valueType="intType" />
-        </aapt:attr>
-    </target>
+    <!--<target android:name="circle">-->
+        <!--<aapt:attr name="android:animation">-->
+            <!--<objectAnimator-->
+                <!--android:duration="@android:integer/config_shortAnimTime"-->
+                <!--android:interpolator="@android:interpolator/accelerate_decelerate"-->
+                <!--android:propertyName="strokeColor"-->
+                <!--android:valueFrom="#1E9618"-->
+                <!--android:valueTo="#A0A0A0"-->
+                <!--android:valueType="intType" />-->
+        <!--</aapt:attr>-->
+    <!--</target>-->
 </animated-vector>
