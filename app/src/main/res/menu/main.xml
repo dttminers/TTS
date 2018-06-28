@@ -20,6 +20,6 @@
         android:id="@+id/actionSetting"
         android:icon="@drawable/ic_setting_white_24dp"
         android:orderInCategory="300"
-        android:title="@string/str_setting"
+        android:title="@string/str_settings"
         app:showAsAction="always|collapseActionView" />
 </menu>
