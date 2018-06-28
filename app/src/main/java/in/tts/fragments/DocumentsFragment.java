@@ -111,6 +111,9 @@ public class DocumentsFragment extends Fragment {
             }
         }
         Log.d("TAG"," count " + fileList);
+        if (fileList.size() == 0){
+            Toast.makeText(getContext(), " No Files Found",Toast.LENGTH_SHORT).show();
+        }
         return fileList;
     }
     private void fn_permission() {
