@@ -9,16 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import in.tts.R;
 
 
 public class BrowserFragment extends Fragment {
+    WebView webView;
 
 
     public BrowserFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -29,12 +31,11 @@ public class BrowserFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated( Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        WebView webView = getActivity().findViewById(R.id.webView);
+//        webView = getActivity().findViewById(R.id.webView);
+//        webView.setWebViewClient(new WebViewClient());
 //        webView.loadUrl("http://www.google.com");
-//
-//        Log.d("Tag", " f " +webView.getProgress());
     }
 }
