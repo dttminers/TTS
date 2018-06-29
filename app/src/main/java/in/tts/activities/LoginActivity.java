@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
             if (Status == null) {
                 replaceMainTabsFragment(new LoginFragment());
             } else if (Status.toLowerCase().equals("login")) {
-            replaceMainTabsFragment(new LoginFragment());
+                replaceMainTabsFragment(new LoginFragment());
             } else if (Status.toLowerCase().equals("register")) {
                 replaceMainTabsFragment(new RegisterFragment());
             } else {
@@ -37,10 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private void replaceMainTabsFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragmentrepalce, fragment);
-//        ft.setCustomAnimations(R.animator.flip_right_in, C0990R.animator.flip_right_out, C0990R.animator.flip_left_in, C0990R.animator.flip_left_out);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commitAllowingStateLoss();
     }
-
-
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_below="@+id/appbar"
-    tools:context="in.tts.activities.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -15,15 +16,14 @@
         android:layout_marginBottom="50dp"/>
 
     <View
-        android:background="@drawable/shadow_top"
         android:layout_width="match_parent"
-        android:layout_height="2dp" />
+        android:layout_height="5dp"
+        android:background="@drawable/shadow_top" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:clickable="true"
         android:focusable="true"
         app:tabBackground="@color/white"
@@ -63,4 +63,4 @@
 
     </android.support.design.widget.TabLayout>
 
-</RelativeLayout>
+</LinearLayout>

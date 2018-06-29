@@ -4,22 +4,22 @@
 
     <item
         android:id="@+id/checked"
-        android:drawable="@drawable/circle_white"
+        android:drawable="@drawable/right_24dp"
         android:state_checked="true" />
 
     <item
         android:id="@+id/unchecked"
-        android:drawable="@drawable/grupo" />
+        android:drawable="@drawable/right_white_24dp" />
 
-    <transition
-        android:drawable="@drawable/toggle_unchecked_checked"
-        android:fromId="@id/unchecked"
-        android:toId="@id/checked" />
+    <!--<transition-->
+        <!--android:drawable="@drawable/toggle_unchecked_checked"-->
+        <!--android:fromId="@id/unchecked"-->
+        <!--android:toId="@id/checked" />-->
 
-    <transition
-        android:drawable="@drawable/toggle_checked_unchecked"
-        android:fromId="@+id/checked"
-        android:toId="@+id/unchecked" />
+    <!--<transition-->
+        <!--android:drawable="@drawable/toggle_checked_unchecked"-->
+        <!--android:fromId="@+id/checked"-->
+        <!--android:toId="@+id/unchecked" />-->
 
 </animated-selector>
 <!--

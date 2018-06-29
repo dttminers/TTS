@@ -2,22 +2,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/simpleViewSwitcher"
     android:layout_height="match_parent"
-    tools:showIn="@layout/activity_tutorial">
+    tools:context=".activities.TutorialActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/img5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/tutorial5" />
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/img4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/tutorial4" />
 
-    <Button
-        android:id="@+id/btn_skip"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="visible"
-        android:background="@color/transparent"
-        android:textColor="@android:color/white" />
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/img3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/tutorial3" />
+
+
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/img2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/tutorial2" />
+
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/img1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/tutorial1" />
+
+        <Button
+            android:id="@+id/btn_skip"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:background="@color/transparent" />
 
 </RelativeLayout>

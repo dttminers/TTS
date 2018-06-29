@@ -30,6 +30,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import in.tts.R;
+import in.tts.activities.LoginActivity;
+import in.tts.activities.MainActivity;
+import in.tts.activities.TutorialActivity;
 
 public class LoginFragment extends Fragment {
 //    private GoogleSignInClient mGoogleSignInClient;
@@ -43,9 +46,37 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            getActivity().findViewById(R.id.llSignUp).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
+                        getActivity().finish();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            getActivity().findViewById(R.id.txtSkipLogin).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    getActivity().finish();
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
 
 //        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 //                .requestEmail()
