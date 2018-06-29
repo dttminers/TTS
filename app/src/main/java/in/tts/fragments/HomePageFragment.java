@@ -22,7 +22,7 @@ public class HomePageFragment extends Fragment {
     ViewPager mViewPager;
     TabLayout tabLayout;
     ImageView imageView;
-    ImageView ivLeft ,ivRight;
+    ImageView ivLeft, ivRight;
     CustomPagerAdapter mCustomPagerAdapter;
     int currentImage = 0;
 
@@ -66,18 +66,27 @@ public class HomePageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Increase Counter to move to next Image
-                currentImage++;
-                currentImage = currentImage % mResources.length;
-                imageView.setImageResource(mResources[currentImage]);
+                if (currentImage == 0) {
+                    currentImage = mResources.length-1;
+                    mViewPager.setCurrentItem(currentImage);
+
+                } else {
+                    currentImage--;
+                    mViewPager.setCurrentItem(currentImage);
+                }
             }
         });
 
         ivRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentImage--;
-                currentImage = currentImage % mResources.length;
-                imageView.setImageResource(mResources[currentImage]);
+                if (currentImage == mResources.length-1) {
+                    currentImage = 0;
+                    mViewPager.setCurrentItem(currentImage);
+                } else {
+                    currentImage++;
+                    mViewPager.setCurrentItem(currentImage);
+                }
             }
         });
     }

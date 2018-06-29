@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="20dp"
     android:scrollbars="none"
     tools:context=".fragments.HomePageFragment">
 
@@ -55,6 +54,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
+                app:tabPaddingStart="7dp"
+                app:tabPaddingEnd="7dp"
                 app:tabBackground="@drawable/tab_selector"
                 app:tabGravity="center"
                 app:tabIndicatorGravity="bottom"
@@ -64,21 +65,20 @@
         </RelativeLayout>
 
 
-
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="10dp">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:scaleType="fitXY"
                 android:contentDescription="@string/str_logo_image"
+                android:scaleType="fitXY"
                 android:src="@drawable/bannner1" />
 
         </android.support.v7.widget.CardView>
@@ -86,34 +86,34 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="10dp">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:scaleType="fitXY"
                 android:contentDescription="@string/str_logo_image"
+                android:scaleType="fitXY"
                 android:src="@drawable/banner2" />
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="10dp">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:scaleType="fitXY"
                 android:contentDescription="@string/str_logo_image"
+                android:scaleType="fitXY"
                 android:src="@drawable/banner3" />
 
         </android.support.v7.widget.CardView>
