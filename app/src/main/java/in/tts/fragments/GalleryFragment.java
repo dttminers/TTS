@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
 import com.bumptech.glide.Glide;
+
 import in.tts.R;
 
 public class GalleryFragment extends Fragment {
 
-    /** The images. */
+    /**
+     * The images.
+     */
     private ArrayList<String> images;
-    public GalleryFragment(){
+
+    public GalleryFragment() {
 
     }
 
@@ -48,15 +54,9 @@ public class GalleryFragment extends Fragment {
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-                if (null != images && !images.isEmpty())
-                    Toast.makeText(
-                            getContext(),
-                            "position " + position + " " + images.get(position),
-                            Toast.LENGTH_SHORT).show();
-                ;
-
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//                if (null != images && !images.isEmpty())
+//                    Toast.makeText(getContext(), "position " + position + " " + images.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -66,14 +66,15 @@ public class GalleryFragment extends Fragment {
      */
     private class ImageAdapter extends BaseAdapter {
 
-        /** The context. */
+        /**
+         * The context.
+         */
         private Activity context;
 
         /**
          * Instantiates a new image adapter.
          *
-         * @param localContext
-         *            the local context
+         * @param localContext the local context
          */
         public ImageAdapter(Activity localContext) {
             context = localContext;
@@ -97,16 +98,25 @@ public class GalleryFragment extends Fragment {
             ImageView picturesView;
             if (convertView == null) {
                 picturesView = new ImageView(context);
-                picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                picturesView
-                        .setLayoutParams(new GridView.LayoutParams(270, 270));
+                picturesView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int width = displayMetrics.widthPixels;
+                int size = width / 3;
+
+                picturesView.setLayoutParams(new GridView.LayoutParams(size, size));
+                picturesView.setPadding(2, 2, 2, 2);
 
             } else {
                 picturesView = (ImageView) convertView;
             }
 
             Glide.with(context).load(images.get(position))
-                    .placeholder(R.color.light).centerCrop()
+//                    .placeholder(R.
+// .light)
+//                    .centerCrop()
                     .into(picturesView);
 
             return picturesView;
@@ -115,8 +125,7 @@ public class GalleryFragment extends Fragment {
         /**
          * Getting All Images Path.
          *
-         * @param activity
-         *            the activity
+         * @param activity the activity
          * @return ArrayList with images Path
          */
         private ArrayList<String> getAllShownImagesPath(Activity activity) {
@@ -127,8 +136,8 @@ public class GalleryFragment extends Fragment {
             String absolutePathOfImage = null;
             uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-            String[] projection = { MediaStore.MediaColumns.DATA,
-                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+            String[] projection = {MediaStore.MediaColumns.DATA,
+                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
             cursor = activity.getContentResolver().query(uri, projection, null,
                     null, null);
