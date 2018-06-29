@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@drawable/ellipse_712"
+                android:background="@drawable/circle_white"
                 android:contentDescription="@string/login_with_google"
                 android:padding="10dp"
                 android:src="@drawable/layer_720" />
