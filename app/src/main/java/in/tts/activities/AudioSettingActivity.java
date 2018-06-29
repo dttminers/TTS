@@ -31,11 +31,12 @@ public class AudioSettingActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.app_name);
         }
 
-        SeekBar yourSeekbar = (SeekBar) findViewById(R.id.seek1);
+        final SeekBar yourSeekbar = (SeekBar) findViewById(R.id.seek1);
 //        yourSeekbar.setMax(20);
         yourSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+//                yourSeekbar.setProgress(storedValue);
 
             }
 
@@ -52,6 +53,7 @@ public class AudioSettingActivity extends AppCompatActivity {
                         String progressString = String.valueOf(progress * 10);
 //                        yourTextView.setText(progressString); // the TextView Reference
                         seekBar.setSecondaryProgress(progress);
+                        seekBar.setProgress(progress);
                     }
                 }
 

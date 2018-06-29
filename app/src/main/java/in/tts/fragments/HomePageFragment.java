@@ -27,10 +27,10 @@ public class HomePageFragment extends Fragment {
     int currentImage = 0;
 
     int mResources[] = {
-            R.drawable.bannner1,
+            R.drawable.banner1,
             R.drawable.banner2,
             R.drawable.banner3,
-            R.drawable.bannner1,
+            R.drawable.banner1,
             R.drawable.banner2
     };
 

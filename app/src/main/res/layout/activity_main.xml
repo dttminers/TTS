@@ -18,11 +18,6 @@
             android:layout_above="@+id/tabs"
             android:animateLayoutChanges="true" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="@drawable/shadow_top" />
-
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
@@ -70,6 +65,12 @@
 
         </android.support.design.widget.TabLayout>
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_above="@id/tabs"
+            android:background="@drawable/shadow_top" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

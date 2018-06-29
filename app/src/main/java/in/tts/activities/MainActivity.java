@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
     private void setCurrentViewPagerItem(int i) {
         tabLayout.getTabAt(i).select();
         switch (i) {
-
             case 0:
                 toSetTitle("Browser It");
                 replacePage(new BrowserFragment());
@@ -176,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 toSetTitle("Read It");
+                tabLayout.getTabAt(2).select();
                 replacePage(new HomePageFragment());
                 break;
         }

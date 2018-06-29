@@ -1,265 +1,242 @@
 package in.tts.fragments;
 
-
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.facebook.internal.Utility;
-
-import java.io.File;
-
+import java.util.ArrayList;
+import com.bumptech.glide.Glide;
 import in.tts.R;
-import in.tts.adapters.GridViewAdapter;
 
-import static android.app.Activity.RESULT_OK;
-
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class GalleryFragment extends Fragment {
-    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
-    Uri picUri;
 
-    // Declare variables
-    private String[] FilePathStrings;
-    private String[] FileNameStrings;
-    private File[] listFile;
-    GridView grid;
-    GridViewAdapter adapter;
-    File file;
+    /** The images. */
+    private ArrayList<String> images;
+    public GalleryFragment(){
 
-    public GalleryFragment() {
-        // Required empty public constructor
     }
 
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_gallery, container, false);
-
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
-        //        galleryIntent();
-//        display();
-//        Intent i = new Intent(
-//                Intent.ACTION_PICK,
-//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//        startActivityForResult(i, 1);
-    }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        GridView gallery = (GridView) getActivity().findViewById(R.id.gridView);
 
-    private void display() {
-        // Check for SD Card
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(getContext(), "Error! No SDCARD Found!", Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            // Locate the image folder in your SD Card
-            file = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + "SDImageTutorial");
-            // Create a new folder if no folder named SDImageTutorial exist
-            file.mkdirs();
-        }
+        gallery.setAdapter(new ImageAdapter(getActivity()));
 
-        if (file.isDirectory()) {
-            listFile = file.listFiles();
-            // Create a String array for FilePathStrings
-            FilePathStrings = new String[listFile.length];
-            // Create a String array for FileNameStrings
-            FileNameStrings = new String[listFile.length];
-
-            for (int i = 0; i < listFile.length; i++) {
-                // Get the path of the image file
-                FilePathStrings[i] = listFile[i].getAbsolutePath();
-                // Get the name image file
-                FileNameStrings[i] = listFile[i].getName();
-            }
-        }
-
-        // Locate the GridView in gridview_main.xml
-        grid = getActivity().findViewById(R.id.gridView);
-        Log.d("TAG", " FILEPAth " + FileNameStrings.length + " : "+ FilePathStrings.length);
-        // Pass String arrays to LazyAdapter Class
-        adapter = new GridViewAdapter(getContext(), FilePathStrings, FileNameStrings);
-        // Set the LazyAdapter to the GridView
-        grid.setAdapter(adapter);
-
-        // Capture gridview item click
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+                if (null != images && !images.isEmpty())
+                    Toast.makeText(
+                            getContext(),
+                            "position " + position + " " + images.get(position),
+                            Toast.LENGTH_SHORT).show();
+                ;
 
-//                Intent i = new Intent(GalleryFragment.this, ViewImage.class);
-//                // Pass String arrays FilePathStrings
-//                i.putExtra("filepath", FilePathStrings);
-//                // Pass String arrays FileNameStrings
-//                i.putExtra("filename", FileNameStrings);
-//                // Pass click position
-//                i.putExtra("position", position);
-//                startActivity(i);
             }
-
         });
     }
 
+    /**
+     * The Class ImageAdapter.
+     */
+    private class ImageAdapter extends BaseAdapter {
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//
-//            Cursor cursor = getContentResolver().query(selectedImage,
-//                    filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//            cursor.close();
-//
-//            ImageView imageView = (ImageView) getActivity().findViewById(R.id.imgView);
-//
-//            Bitmap bmp = null;
-//            try {
-//                bmp = getBitmapFromUri(selectedImage);
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            imageView.setImageBitmap(bmp);
-//
-//        }
+        /** The context. */
+        private Activity context;
 
-    private void cameraIntent() {
-        try {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            String imageFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/picture.jpg";
-            File imageFile = new File(imageFilePath);
-            picUri = Uri.fromFile(imageFile); // convert path to Uri
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
-            startActivityForResult(intent, REQUEST_CAMERA);
-        } catch (Exception | Error e) {
-            e.printStackTrace();
+        /**
+         * Instantiates a new image adapter.
+         *
+         * @param localContext
+         *            the local context
+         */
+        public ImageAdapter(Activity localContext) {
+            context = localContext;
+            images = getAllShownImagesPath(context);
         }
-    }
 
-    private void galleryIntent() {
-        try {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
-        } catch (Exception | Error e) {
-            e.printStackTrace();
+        public int getCount() {
+            return images.size();
         }
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        try {
-            if (resultCode == RESULT_OK) {
-                if (requestCode == SELECT_FILE)
-                    onSelectFromGalleryResult(data);
-                else if (requestCode == REQUEST_CAMERA)
-                    onCaptureImageResult(data);
-                else if (requestCode == 3){
-                    // get the returned data
-                    Bundle extras = data.getExtras();
-                    Log.d("hmapp", " crop " + extras);
-                    // get the cropped bitmap
-                    Bitmap thePic = (Bitmap) extras.get("data");
-                    Log.d("hmapp", " crop " + thePic + " ; " + thePic.getByteCount());
-//                    CommonFunctions.toSaveImages(thePic, "HM_PP", true, getContext(), getActivity());
-//                    mCivUpeProfile.setImageBitmap(thePic);
-                }
+        public Object getItem(int position) {
+            return position;
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(final int position, View convertView,
+                            ViewGroup parent) {
+            ImageView picturesView;
+            if (convertView == null) {
+                picturesView = new ImageView(context);
+                picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                picturesView
+                        .setLayoutParams(new GridView.LayoutParams(270, 270));
+
+            } else {
+                picturesView = (ImageView) convertView;
             }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void onCaptureImageResult(Intent data) {
-        try {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-//            mCivUpeProfile.setImageBitmap(thumbnail);
-            CropImage(picUri);
-//            CommonFunctions.toSaveImages(thumbnail, "HMC", true, getContext(), getActivity());
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-        }
-    }
+            Glide.with(context).load(images.get(position))
+                    .placeholder(R.color.light).centerCrop()
+                    .into(picturesView);
 
-    private void onSelectFromGalleryResult(Intent data) {
-        if (data != null) {
-            try {
-                Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-//                mCivUpeProfile.setImageBitmap(bm);
-                CropImage(data.getData());
-//                CommonFunctions.toSaveImages(bm, "HMG", true, getContext(), getActivity());
-            } catch (Exception | Error e) {
-                e.printStackTrace();
+            return picturesView;
+        }
+
+        /**
+         * Getting All Images Path.
+         *
+         * @param activity
+         *            the activity
+         * @return ArrayList with images Path
+         */
+        private ArrayList<String> getAllShownImagesPath(Activity activity) {
+            Uri uri;
+            Cursor cursor;
+            int column_index_data, column_index_folder_name;
+            ArrayList<String> listOfAllImages = new ArrayList<String>();
+            String absolutePathOfImage = null;
+            uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+            String[] projection = { MediaStore.MediaColumns.DATA,
+                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+
+            cursor = activity.getContentResolver().query(uri, projection, null,
+                    null, null);
+
+            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            column_index_folder_name = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+
+                listOfAllImages.add(absolutePathOfImage);
             }
+            return listOfAllImages;
         }
     }
-
-    private void CropImage(Uri picUri) {
-        try {
-            Log.d("Hmapp", " Crop image " + picUri);
-            //call the standard crop action intent (the user device may not support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            //indicate image type and Uri
-            cropIntent.setDataAndType(picUri, "image/*");
-            //set crop properties
-            cropIntent.putExtra("crop", "true");
-            //indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            //indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            //retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            //start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, 3);
-        } catch (ActivityNotFoundException e) {
-//            Toast.makeText(this, "Your device is not supportting the crop action", Toast.LENGTH_SHORT);
-        }
-    }
-
-
-
-
-
 }
+//    /**
+//     * Cursor used to access the results from querying for images on the SD card.
+//     */
+//    private Cursor cursor;
+//    /*
+//     * Column index for the Thumbnails Image IDs.
+//     */
+//    private int columnIndex;
+//
+//    public GalleryFragment() {
+//        // Required empty public constructor
+//    }
+//
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//        return inflater.inflate(R.layout.fragment_gallery, container, false);
+//    }
+//
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//
+//        // Set up an array of the Thumbnail Image ID column we want
+//        String[] projection = {MediaStore.Images.Thumbnails._ID};
+//        // Create the cursor pointing to the SDCard
+//        cursor = getActivity().managedQuery( MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+//                projection, // Which columns to return
+//                null,       // Return all rows
+//                null,
+//                MediaStore.Images.Thumbnails.IMAGE_ID);
+//        // Get the column index of the Thumbnails Image ID
+//        columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID);
+//        GridView sdcardImages = (GridView) getActivity().findViewById(R.id.gridView);
+//        sdcardImages.setAdapter(new ImageAdapter(getContext()));
+//        // Set up a click listener
+//        sdcardImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView parent, View v, int position, long id) {
+//                // Get the data location of the image
+//                String[] projection = {MediaStore.Images.Media.DATA};
+//                cursor = getActivity().managedQuery( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                        projection, // Which columns to return
+//                        null,       // Return all rows
+//                        null,
+//                        null);
+//                columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//                cursor.moveToPosition(position);
+//                // Get image filename
+//                String imagePath = cursor.getString(columnIndex);
+//                // Use this path to do further processing, i.e. full screen display
+//            }
+//        });
+//    }
+//    /**
+//     * Adapter for our image files.
+//     */
+//    private class ImageAdapter extends BaseAdapter {
+//        private Context context;
+//        public ImageAdapter(Context localContext) {
+//            context = localContext;
+//        }
+//        public int getCount() {
+//            Log.d("TAG", " Count  " + cursor.getCount());
+//            return cursor.getCount();
+//        }
+//        public Object getItem(int position) {
+//            return position;
+//        }
+//        public long getItemId(int position) {
+//            return position;
+//        }
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            ImageView picturesView;
+//            if (convertView == null) {
+//                picturesView = new ImageView(context);
+//                // Move cursor to current position
+//                cursor.moveToPosition(position);
+//                // Get the current value for the requested column
+//                int imageID = cursor.getInt(columnIndex);
+//                // Set the content of the image based on the provided URI
+//                picturesView.setImageURI(Uri.withAppendedPath(
+//                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID));
+//                picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//                picturesView.setPadding(8, 8, 8, 8);
+//                picturesView.setLayoutParams(new GridView.LayoutParams(100, 100));
+//            }
+//            else {
+//                picturesView = (ImageView)convertView;
+//            }
+//            return picturesView;
+//        }
+//    }
+//
+//}

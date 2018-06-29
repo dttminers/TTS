@@ -3,12 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white1"
+    android:layout_margin="10dp"
     android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:text="60 mins"
+        android:textColor="@color/dark_pink_two"
+        android:textSize="15sp" />
 
     <ImageView
         android:id="@+id/iv_image"
-        android:layout_width="28dp"
-        android:layout_height="37dp"
+        android:layout_width="55dp"
+        android:layout_height="70dp"
         android:layout_margin="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_pdf" />
@@ -17,13 +33,30 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/iv_image"
+        android:layout_toStartOf="@id/tv_duration"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:text="name"
         android:textColor="#000000"
         android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_remaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_toEndOf="@+id/iv_image"
+        android:layout_toStartOf="@id/tv_duration"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:text="100% Remaining"
+        android:textColor="@color/dark_pink_two"
+        android:textSize="15sp" />
+
 </RelativeLayout>

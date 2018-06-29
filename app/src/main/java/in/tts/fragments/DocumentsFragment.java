@@ -28,15 +28,10 @@ import android.view.ViewGroup;
 import android.widget.Toolbar;
 
 import in.tts.R;
+import in.tts.activities.PdfActivity;
 import in.tts.adapters.PDFAdapter;
 
-
 public class DocumentsFragment extends Fragment {
-
-//    private ListView mListView;
-//    private ArrayList<AttachmentModel> mAttachmentList = new ArrayList<>();
-//    private ArrayList<File> fileList = new ArrayList<File>();
-
 
     ListView lv_pdf;
     public static ArrayList<File> fileList = new ArrayList<File>();
@@ -54,7 +49,6 @@ public class DocumentsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,14 +60,9 @@ public class DocumentsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
 
-//        mListView = (ListView)getActivity().findViewById(R.id.listAttachments);
-//        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//        getfile(dir );
-//        setAdapter();
         init();
-
     }
 
     private void init() {
@@ -84,11 +73,11 @@ public class DocumentsFragment extends Fragment {
         lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = new Intent(getContext(), PdfActivity.class);
-//                intent.putExtra(“position”, i);
-//                startActivity(intent);
-
-//                Log.e(“Position”, i + “”);
+                Intent intent = new Intent(getContext(), PdfActivity.class);
+                intent.putExtra("position", i);
+                startActivity(intent);
+//
+                Log.e("Position", i + "");
             }
         });
     }

@@ -9,6 +9,7 @@
     tools:context=".activities.HelpActivity">
 
     <RelativeLayout
+        android:layout_marginBottom="20dp"
         android:id="@+id/rlFaq"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -20,7 +21,6 @@
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
             android:padding="2dp"
             android:contentDescription="@string/str_logo_image"
             android:src="@drawable/ic_faq"/>
@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="30dp"
             android:fontFamily="sans-serif"
             android:padding="2dp"
             android:layout_toEndOf="@+id/ivFaq"
@@ -40,8 +39,8 @@
 
     </RelativeLayout>
 
-
     <RelativeLayout
+        android:layout_marginBottom="20dp"
         android:id="@+id/rlTermPolicy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -53,7 +52,6 @@
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
             android:padding="2dp"
             android:contentDescription="@string/str_logo_image"
             android:src="@drawable/ic_term_privacy"/>
@@ -63,7 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="30dp"
             android:padding="2dp"
             android:fontFamily="sans-serif"
             android:layout_toEndOf="@+id/ivTermPolicy"
@@ -86,7 +83,6 @@
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
             android:padding="2dp"
             android:contentDescription="@string/str_logo_image"
             android:src="@drawable/ic_app_info"/>
@@ -96,7 +92,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="30dp"
             android:padding="2dp"
             android:fontFamily="sans-serif"
             android:layout_toEndOf="@+id/ivAppInfo"

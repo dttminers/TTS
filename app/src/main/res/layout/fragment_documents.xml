@@ -3,19 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="top">
 
+    <TextView
+        android:id="@+id/txtMyBooks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="My Books"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtRecent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtMyBooks"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="Recent"
+        android:textColor="#838383"
+        android:textSize="14sp" />
 
     <ListView
+        android:id="@+id/lv_pdf"
         android:layout_width="match_parent"
-    android:id="@+id/lv_pdf"
-    android:divider="#efefef"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    android:dividerHeight="5dp"
-    android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtRecent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:divider="#efefef"
+        android:dividerHeight="2dp" />
 
 </RelativeLayout>

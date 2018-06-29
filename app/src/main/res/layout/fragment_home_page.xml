@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     android:scrollbars="none"
     tools:context=".fragments.HomePageFragment">
 
     <LinearLayout
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -22,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@color/transparent" />
+                android:background="@color/black" />
 
             <ImageView
                 android:id="@+id/imageViewLeft"
@@ -49,7 +51,7 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/tlHomePage"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
@@ -79,7 +81,7 @@
                 android:layout_height="150dp"
                 android:contentDescription="@string/str_logo_image"
                 android:scaleType="fitXY"
-                android:src="@drawable/bannner1" />
+                android:src="@drawable/banner1" />
 
         </android.support.v7.widget.CardView>
 
