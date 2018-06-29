@@ -212,3 +212,220 @@
 
 
 </android.support.v4.widget.NestedScrollView>
+
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:scrollbars="none"
+    tools:context=".fragments.RegisterFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgLogoReg"
+            android:layout_width="55dp"
+            android:layout_height="72dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/read_it_02" />
+
+        <EditText
+            android:id="@+id/edtEmailIdReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgLogoReg"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/line"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/layer_723"
+            android:fontFamily="sans-serif"
+            android:hint="@string/str_email_id"
+            android:inputType="textEmailAddress"
+            android:padding="5dp"
+            android:textColor="@color/white1"
+            android:textColorHint="@color/white1"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtPasswordReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtEmailIdReg"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/line"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/layer_724"
+            android:fontFamily="sans-serif"
+            android:hint="@string/str_password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/white1"
+            android:textColorHint="@color/white1"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtConfirmPasswordReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtPasswordReg"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/line"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/layer_724"
+            android:fontFamily="sans-serif"
+            android:hint="@string/str_confirm_password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/white1"
+            android:textColorHint="@color/white1"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnSignUpReg"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_below="@id/edtConfirmPasswordReg"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/rounded_cornor_border"
+            android:fontFamily="sans-serif"
+            android:paddingEnd="40dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingStart="40dp"
+            android:text="@string/str_sign_up"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txtOrReg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnSignUpReg"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="30dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/str_or"
+            android:textColor="@color/white1"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:id="@+id/rlGoogleReg"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtOrReg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_cornor_border">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@drawable/ellipse_712"
+                android:contentDescription="@string/login_with_google"
+                android:padding="10dp"
+                android:src="@drawable/layer_720" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingStart="40dp"
+                android:text="@string/login_with_google"
+                android:textAllCaps="false"
+                android:textColor="@color/white1"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlFacebookReg"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlGoogleReg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_cornor_border">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:contentDescription="@string/login_with_facebook"
+                android:src="@drawable/ic_facebook" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingStart="40dp"
+                android:text="@string/login_with_facebook"
+                android:textAllCaps="false"
+                android:textColor="@color/white1"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/txtAlreadyAccountReg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlFacebookReg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/str_already_have_an_account"
+            android:src="@drawable/already_have_a_accout_login"
+            android:textColor="@color/white1" />
+
+
+        <ImageView
+            android:id="@+id/txtSkipRegisterReg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"
+            android:contentDescription="@string/str_skip"
+            android:fontFamily="sans-serif"
+            android:src="@drawable/skip"
+            android:textColor="@color/white1"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+
+</android.support.v4.widget.NestedScrollView>
+-->
