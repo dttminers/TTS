@@ -39,7 +39,6 @@ import in.tts.model.PrefManager;
 import in.tts.utils.FloatingViewService;
 import in.tts.utils.FloatingWidgetService;
 
-
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -50,88 +49,42 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        try {
+            setContentView(R.layout.activity_main);
 
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().show();
-//            getSupportActionBar().setTitle(R.string.app_name);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-//            getSupportActionBar().setDisplayShowHomeEnabled(true);
-//            getSupportActionBar().setDisplayShowTitleEnabled(true);
-//        } else {
-//            getSupportActionBar().setTitle(R.string.app_name);
-//        }
+            toSetTitle(getResources().getString(R.string.app_name), true);
 
-        toSetTitle(getResources().getString(R.string.app_name), true);
-
-        PrefManager prefManager = new PrefManager(this);
-        if (prefManager.isFirstTimeLaunch()) {
-            startActivity(new Intent(MainActivity.this, TutorialActivity.class));
-        }
-
-        tabLayout = findViewById(R.id.tabs);
-        replacePage(new DocumentsFragment());
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                setCurrentViewPagerItem(tab.getPosition());
-
+            PrefManager prefManager = new PrefManager(this);
+            if (prefManager.isFirstTimeLaunch()) {
+                startActivity(new Intent(MainActivity.this, TutorialActivity.class));
             }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            tabLayout = findViewById(R.id.tabs);
+            replacePage(new DocumentsFragment());
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    setCurrentViewPagerItem(tab.getPosition());
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
-        });
+                }
 
-////
-//        //Check if the application has draw over other apps permission or not?
-//        //This permission is by default available for API<23. But for API > 23
-//        //you have to ask for the permission in runtime.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            Log.d("TAG " , " ff " + !Settings.canDrawOverlays(this));
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-//            //If the draw over permission is not available open the settings screen
-//            //to grant the permission.
-//            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName()));
-//                    Log.d ("TAG " ," ll " + Uri.parse("package:" + getPackageName()));
-//            startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
-//        } else {
-//            initializeView();
-//        }
-////        toShowTab();
-    }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-    /**
-     * Set and initialize the view elements.
-     */
-    private void initializeView() {
-        Log.d("TAG", "GGG ");
-//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW}, 1);
-        startService(new Intent(MainActivity.this, FloatingViewService.class));
-    }
+                }
+            });
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("TAG"," REsult : " + requestCode + " : " + resultCode + " : ");
-        if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
-            //Check if the permission is granted or not.
-//            if (resultCode == RESULT_OK) {
-                initializeView();
-//            } else { //Permission is not available
-//                Toast.makeText(this,
-//                        "Draw over other app permission not available. Closing the application",
-//                        Toast.LENGTH_SHORT).show(); }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+            setCurrentViewPagerItem(2);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
         }
     }
+
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -183,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
-            case R.id.actionSetting:
-                showPopup(findViewById(R.id.actionSetting));
-                break;
+//            case R.id.actionSetting:
+//                showPopup(findViewById(R.id.actionSetting));
+//                break;
 
             case android.R.id.home:
                 onBackPressed();
@@ -239,13 +192,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         try {
-            Log.d("Tag", " g "+ tabLayout.getSelectedTabPosition() );
+            Log.d("Tag", " g " + tabLayout.getSelectedTabPosition());
 //            if (tabLayout != null) {
-                if (tabLayout.getSelectedTabPosition() != 2) {
-                    setCurrentViewPagerItem(2);
-                } else {
-                    doExit();
-                }
+            if (tabLayout.getSelectedTabPosition() != 2) {
+                setCurrentViewPagerItem(2);
+            } else {
+                doExit();
+            }
 //            } else if (tabLayout.getSelectedTabPosition() == 0) {
 //                doExit();
 //            }
@@ -260,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
             case 0:
                 toSetTitle("Browser It", true);
-                replacePage(new RegisterFragment());
+                replacePage(new BrowserFragment());
 
                 break;
             case 1:

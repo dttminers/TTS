@@ -9,6 +9,22 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="40dp"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/bannner1" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/banner2" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/bannner1" />
 
 </LinearLayout>

@@ -127,7 +127,7 @@ public class TutorialActivity extends AppCompatActivity {
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
-                btnSkip.setVisibility(View.GONE);
+                btnSkip.setVisibility(View.VISIBLE);
                 new Handler().postDelayed(
                         new Runnable() {
                             @Override

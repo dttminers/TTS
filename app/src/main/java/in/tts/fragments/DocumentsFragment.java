@@ -19,6 +19,13 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toolbar;
 
 import in.tts.R;
 import in.tts.adapters.PDFAdapter;
@@ -38,6 +45,11 @@ public class DocumentsFragment extends Fragment {
     boolean boolean_permission;
     File dir;
 
+    private TabLayout tabLayout;
+
+
+    private ViewPager viewPager;
+
     public DocumentsFragment() {
         // Required empty public constructor
     }
@@ -53,6 +65,8 @@ public class DocumentsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
 
 //        mListView = (ListView)getActivity().findViewById(R.id.listAttachments);
 //        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -112,7 +126,7 @@ public class DocumentsFragment extends Fragment {
         }
         Log.d("TAG"," count " + fileList);
         if (fileList.size() == 0){
-            Toast.makeText(getContext(), " No Files Found",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), " No Files Found",Toast.LENGTH_SHORT).show();
         }
         return fileList;
     }

@@ -64,8 +64,9 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        galleryIntent();
-        display();
+Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
+        //        galleryIntent();
+//        display();
 //        Intent i = new Intent(
 //                Intent.ACTION_PICK,
 //                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -104,7 +105,7 @@ public class GalleryFragment extends Fragment {
 
         // Locate the GridView in gridview_main.xml
         grid = getActivity().findViewById(R.id.gridView);
-        Log.d("TAG", " FILEPAth " + FileNameStrings + " : "+ FilePathStrings);
+        Log.d("TAG", " FILEPAth " + FileNameStrings.length + " : "+ FilePathStrings.length);
         // Pass String arrays to LazyAdapter Class
         adapter = new GridViewAdapter(getContext(), FilePathStrings, FileNameStrings);
         // Set the LazyAdapter to the GridView
