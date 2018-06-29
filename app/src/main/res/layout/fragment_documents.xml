@@ -6,11 +6,16 @@
     android:gravity="center">
 
 
-    <TextView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Documents It"
-        android:gravity="center"/>
+    android:id="@+id/lv_pdf"
+    android:divider="#efefef"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:dividerHeight="5dp"
+    android:layout_height="wrap_content"/>
 
 
 </RelativeLayout>

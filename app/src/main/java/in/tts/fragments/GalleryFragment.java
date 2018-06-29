@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +18,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.internal.Utility;
 
 import java.io.File;
 
 import in.tts.R;
+import in.tts.adapters.GridViewAdapter;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -32,6 +40,13 @@ public class GalleryFragment extends Fragment {
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     Uri picUri;
 
+    // Declare variables
+    private String[] FilePathStrings;
+    private String[] FileNameStrings;
+    private File[] listFile;
+    GridView grid;
+    GridViewAdapter adapter;
+    File file;
 
     public GalleryFragment() {
         // Required empty public constructor
@@ -49,8 +64,102 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        galleryIntent();
+Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
+        //        galleryIntent();
+//        display();
+//        Intent i = new Intent(
+//                Intent.ACTION_PICK,
+//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//
+//        startActivityForResult(i, 1);
     }
+
+    private void display() {
+        // Check for SD Card
+        if (!Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(getContext(), "Error! No SDCARD Found!", Toast.LENGTH_LONG)
+                    .show();
+        } else {
+            // Locate the image folder in your SD Card
+            file = new File(Environment.getExternalStorageDirectory()
+                    + File.separator + "SDImageTutorial");
+            // Create a new folder if no folder named SDImageTutorial exist
+            file.mkdirs();
+        }
+
+        if (file.isDirectory()) {
+            listFile = file.listFiles();
+            // Create a String array for FilePathStrings
+            FilePathStrings = new String[listFile.length];
+            // Create a String array for FileNameStrings
+            FileNameStrings = new String[listFile.length];
+
+            for (int i = 0; i < listFile.length; i++) {
+                // Get the path of the image file
+                FilePathStrings[i] = listFile[i].getAbsolutePath();
+                // Get the name image file
+                FileNameStrings[i] = listFile[i].getName();
+            }
+        }
+
+        // Locate the GridView in gridview_main.xml
+        grid = getActivity().findViewById(R.id.gridView);
+        Log.d("TAG", " FILEPAth " + FileNameStrings.length + " : "+ FilePathStrings.length);
+        // Pass String arrays to LazyAdapter Class
+        adapter = new GridViewAdapter(getContext(), FilePathStrings, FileNameStrings);
+        // Set the LazyAdapter to the GridView
+        grid.setAdapter(adapter);
+
+        // Capture gridview item click
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+//                Intent i = new Intent(GalleryFragment.this, ViewImage.class);
+//                // Pass String arrays FilePathStrings
+//                i.putExtra("filepath", FilePathStrings);
+//                // Pass String arrays FileNameStrings
+//                i.putExtra("filename", FileNameStrings);
+//                // Pass click position
+//                i.putExtra("position", position);
+//                startActivity(i);
+            }
+
+        });
+    }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
+//            Uri selectedImage = data.getData();
+//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//
+//            Cursor cursor = getContentResolver().query(selectedImage,
+//                    filePathColumn, null, null, null);
+//            cursor.moveToFirst();
+//
+//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//            String picturePath = cursor.getString(columnIndex);
+//            cursor.close();
+//
+//            ImageView imageView = (ImageView) getActivity().findViewById(R.id.imgView);
+//
+//            Bitmap bmp = null;
+//            try {
+//                bmp = getBitmapFromUri(selectedImage);
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            imageView.setImageBitmap(bmp);
+//
+//        }
 
     private void cameraIntent() {
         try {
@@ -80,7 +189,7 @@ public class GalleryFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 if (requestCode == SELECT_FILE)
                     onSelectFromGalleryResult(data);
                 else if (requestCode == REQUEST_CAMERA)

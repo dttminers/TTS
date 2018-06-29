@@ -12,14 +12,12 @@
 
     <Button
         android:id="@+id/btn_skip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:background="@null"
-        android:text="@string/str_skip"
+        android:visibility="visible"
+        android:background="@color/transparent"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>

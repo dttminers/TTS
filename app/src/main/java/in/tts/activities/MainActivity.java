@@ -1,5 +1,12 @@
 package in.tts.activities;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -17,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.net.Uri;
+import android.widget.Toast;
 
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.DocumentsFragment;
@@ -27,57 +36,55 @@ import in.tts.fragments.LoginFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.RegisterFragment;
 import in.tts.model.PrefManager;
-
+import in.tts.utils.FloatingViewService;
+import in.tts.utils.FloatingWidgetService;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
 
+    /*  Permission request code to draw over other apps  */
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        try {
+            setContentView(R.layout.activity_main);
 
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().show();
-//            getSupportActionBar().setTitle(R.string.app_name);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-//            getSupportActionBar().setDisplayShowHomeEnabled(true);
-//            getSupportActionBar().setDisplayShowTitleEnabled(true);
-//        } else {
-//            getSupportActionBar().setTitle(R.string.app_name);
-//        }
+            toSetTitle(getResources().getString(R.string.app_name), true);
 
-        toSetTitle(getResources().getString(R.string.app_name), true);
+            PrefManager prefManager = new PrefManager(this);
+            if (prefManager.isFirstTimeLaunch()) {
+                startActivity(new Intent(MainActivity.this, TutorialActivity.class));
+            }
 
+            tabLayout = findViewById(R.id.tabs);
+            replacePage(new DocumentsFragment());
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    setCurrentViewPagerItem(tab.getPosition());
 
-        PrefManager prefManager = new PrefManager(this);
-        Log.d("TAG", "prefManager " + prefManager.isFirstTimeLaunch());
-        if (prefManager.isFirstTimeLaunch()) {
-            startActivity(new Intent(MainActivity.this, TutorialActivity.class));
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+
+            setCurrentViewPagerItem(2);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
         }
-
-        tabLayout = findViewById(R.id.tabs);
-        replacePage(new DocumentsFragment());
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                setCurrentViewPagerItem(tab.getPosition());
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
     }
+
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -94,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.audio_settings:
-
                         startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
                         break;
                     case R.id.our_other_apps:
@@ -124,16 +130,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionCamera:
-
                 break;
 
             case R.id.actionSearch:
 
                 break;
 
-            case R.id.actionSetting:
-                showPopup(findViewById(R.id.actionSetting));
-                break;
+//            case R.id.actionSetting:
+//                showPopup(findViewById(R.id.actionSetting));
+//                break;
 
             case android.R.id.home:
                 onBackPressed();
@@ -187,13 +192,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         try {
-            Log.d("Tag", " g "+ tabLayout.getSelectedTabPosition() );
+            Log.d("Tag", " g " + tabLayout.getSelectedTabPosition());
 //            if (tabLayout != null) {
-                if (tabLayout.getSelectedTabPosition() != 2) {
-                    setCurrentViewPagerItem(2);
-                } else {
-                    doExit();
-                }
+            if (tabLayout.getSelectedTabPosition() != 2) {
+                setCurrentViewPagerItem(2);
+            } else {
+                doExit();
+            }
 //            } else if (tabLayout.getSelectedTabPosition() == 0) {
 //                doExit();
 //            }
