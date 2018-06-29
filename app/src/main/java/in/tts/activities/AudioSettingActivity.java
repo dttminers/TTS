@@ -5,9 +5,13 @@ import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import in.tts.R;
+import in.tts.services.MySeekBar;
 
 public class AudioSettingActivity extends AppCompatActivity {
 
@@ -27,9 +31,8 @@ public class AudioSettingActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.app_name);
         }
 
-        SeekBar yourSeekbar = (SeekBar)findViewById(R.id.seek1);
+        SeekBar yourSeekbar = (SeekBar) findViewById(R.id.seek1);
 //        yourSeekbar.setMax(20);
-
         yourSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -54,8 +57,22 @@ public class AudioSettingActivity extends AppCompatActivity {
 
             }
         });
+        final RelativeLayout rlEng = (RelativeLayout) findViewById(R.id.rlEnglish);
+
+        RadioGroup rg = (RadioGroup) findViewById(R.id.rgLanguageSel);
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (checkedId == R.id.rbEnglishLs) {
+                    rlEng.setVisibility(View.VISIBLE);
+                } else {
+                    rlEng.setVisibility(View.GONE);
+                }
+            }
+        });
 
     }
+
 
     public boolean onOptionsItemSelected(MenuItem item) {
         try {

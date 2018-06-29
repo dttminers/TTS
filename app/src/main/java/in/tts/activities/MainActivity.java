@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             tabLayout = findViewById(R.id.tabs);
-            replacePage(new DocumentsFragment());
+
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
