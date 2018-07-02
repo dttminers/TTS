@@ -2,7 +2,6 @@ package in.tts.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,9 +25,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import in.tts.R;
+
+import com.bumptech.glide.Glide;
 
 public class GalleryFragment extends Fragment {
 
@@ -53,24 +54,28 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       gallery = (GridView) getActivity().findViewById(R.id.gridView);
-
+        gallery = (GridView) getActivity().findViewById(R.id.gridView);
         per();
-
-
+        toGetData();
     }
 
     private void per() {
         if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-
             if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+                Log.d("TAG", " k1");
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                        10);
-
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
+                Log.d("TAG", " k2");
             }
         } else {
 //            boolean_permission = true;
+            Log.d("TAG", " k3");
+            toGetData();
+        }
+    }
+
+    private void toGetData() {
+        try {
             gallery.setAdapter(new ImageAdapter(getActivity()));
 
             gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,30 +86,23 @@ public class GalleryFragment extends Fragment {
 //                    Toast.makeText(getContext(), "position " + position + " " + images.get(position), Toast.LENGTH_SHORT).show();
                 }
             });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * The Class ImageAdapter.
-     */
-  private class ImageAdapter extends BaseAdapter {
 
-        /**
-         * The context.
-         */
+    private class ImageAdapter extends BaseAdapter {
+
         private Activity context;
 
-        /**
-         * Instantiates a new image adapter.
-         *
-         * @param localContext the local context
-         */
         public ImageAdapter(Activity localContext) {
             context = localContext;
             images = getAllShownImagesPath(context);
         }
 
         public int getCount() {
+            Log.d("TAG", " count " + images.size());
             return images.size();
         }
 
@@ -116,8 +114,7 @@ public class GalleryFragment extends Fragment {
             return position;
         }
 
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ImageView picturesView;
             if (convertView == null) {
                 picturesView = new ImageView(context);
@@ -130,27 +127,15 @@ public class GalleryFragment extends Fragment {
                 int size = width / 3;
 
                 picturesView.setLayoutParams(new GridView.LayoutParams(size, size));
-                picturesView.setPadding(2, 2, 2, 2);
+                picturesView.setPadding(5, 5, 5, 5);
 
             } else {
                 picturesView = (ImageView) convertView;
             }
-
-            Glide.with(context).load(images.get(position))
-//                    .placeholder(R.
-// .light)
-//                    .centerCrop()
-                    .into(picturesView);
-
+            Glide.with(context).load(images.get(position)).into(picturesView);
             return picturesView;
         }
 
-        /**
-         * Getting All Images Path.
-         *
-         * @param activity the activity
-         * @return ArrayList with images Path
-         */
         private ArrayList<String> getAllShownImagesPath(Activity activity) {
             Uri uri;
             Cursor cursor;
@@ -176,99 +161,20 @@ public class GalleryFragment extends Fragment {
             return listOfAllImages;
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 10) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                toGetData();
+
+            } else {
+                Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
+
+            }
+        }
+    }
 }
-//    /**
-//     * Cursor used to access the results from querying for images on the SD card.
-//     */
-//    private Cursor cursor;
-//    /*
-//     * Column index for the Thumbnails Image IDs.
-//     */
-//    private int columnIndex;
-//
-//    public GalleryFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_gallery, container, false);
-//    }
-//
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//
-//        // Set up an array of the Thumbnail Image ID column we want
-//        String[] projection = {MediaStore.Images.Thumbnails._ID};
-//        // Create the cursor pointing to the SDCard
-//        cursor = getActivity().managedQuery( MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
-//                projection, // Which columns to return
-//                null,       // Return all rows
-//                null,
-//                MediaStore.Images.Thumbnails.IMAGE_ID);
-//        // Get the column index of the Thumbnails Image ID
-//        columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID);
-//        GridView sdcardImages = (GridView) getActivity().findViewById(R.id.gridView);
-//        sdcardImages.setAdapter(new ImageAdapter(getContext()));
-//        // Set up a click listener
-//        sdcardImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView parent, View v, int position, long id) {
-//                // Get the data location of the image
-//                String[] projection = {MediaStore.Images.Media.DATA};
-//                cursor = getActivity().managedQuery( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                        projection, // Which columns to return
-//                        null,       // Return all rows
-//                        null,
-//                        null);
-//                columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//                cursor.moveToPosition(position);
-//                // Get image filename
-//                String imagePath = cursor.getString(columnIndex);
-//                // Use this path to do further processing, i.e. full screen display
-//            }
-//        });
-//    }
-//    /**
-//     * Adapter for our image files.
-//     */
-//    private class ImageAdapter extends BaseAdapter {
-//        private Context context;
-//        public ImageAdapter(Context localContext) {
-//            context = localContext;
-//        }
-//        public int getCount() {
-//            Log.d("TAG", " Count  " + cursor.getCount());
-//            return cursor.getCount();
-//        }
-//        public Object getItem(int position) {
-//            return position;
-//        }
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            ImageView picturesView;
-//            if (convertView == null) {
-//                picturesView = new ImageView(context);
-//                // Move cursor to current position
-//                cursor.moveToPosition(position);
-//                // Get the current value for the requested column
-//                int imageID = cursor.getInt(columnIndex);
-//                // Set the content of the image based on the provided URI
-//                picturesView.setImageURI(Uri.withAppendedPath(
-//                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID));
-//                picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                picturesView.setPadding(8, 8, 8, 8);
-//                picturesView.setLayoutParams(new GridView.LayoutParams(100, 100));
-//            }
-//            else {
-//                picturesView = (ImageView)convertView;
-//            }
-//            return picturesView;
-//        }
-//    }
-//
-//}

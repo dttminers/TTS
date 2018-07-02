@@ -6,25 +6,25 @@
     android:background="@color/white"
     android:gravity="top">
 
-    <!--<TextView-->
-        <!--android:id="@+id/txtMyBooks"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="20dp"-->
-        <!--android:text="My Books"-->
-        <!--android:textColor="@color/black"-->
-        <!--android:textSize="14sp" />-->
+    <ProgressBar
+        android:id="@+id/pbPdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/txtRecent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:text="Recent"
         android:textColor="#838383"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/lv_pdf"
@@ -35,6 +35,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:divider="#efefef"
-        android:dividerHeight="2dp" />
+        android:dividerHeight="2dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
