@@ -33,7 +33,7 @@ public class MakeYourOwnReadFragment extends Fragment {
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editText.setBackgroundColor(getResources().getColor(R.color.transparent));
+//                editText.setBackgroundColor(getResources().getColor(R.color.transparent));
             }
         });
     }

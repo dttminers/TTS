@@ -1,14 +1,18 @@
 package in.tts.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +32,8 @@ import in.tts.R;
 
 public class GalleryFragment extends Fragment {
 
+
+    GridView gallery;
     /**
      * The images.
      */
@@ -47,24 +53,41 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        GridView gallery = (GridView) getActivity().findViewById(R.id.gridView);
+       gallery = (GridView) getActivity().findViewById(R.id.gridView);
 
-        gallery.setAdapter(new ImageAdapter(getActivity()));
+        per();
 
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+    }
+
+    private void per() {
+        if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        10);
+
+            }
+        } else {
+//            boolean_permission = true;
+            gallery.setAdapter(new ImageAdapter(getActivity()));
+
+            gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 //                if (null != images && !images.isEmpty())
 //                    Toast.makeText(getContext(), "position " + position + " " + images.get(position), Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
      * The Class ImageAdapter.
      */
-    private class ImageAdapter extends BaseAdapter {
+  private class ImageAdapter extends BaseAdapter {
 
         /**
          * The context.

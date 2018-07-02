@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import in.tts.R;
-import in.tts.services.MySeekBar;
 
 public class AudioSettingActivity extends AppCompatActivity {
 

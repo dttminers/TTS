@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white1"
     android:layout_margin="10dp"
+    android:background="@color/white1"
     android:orientation="horizontal">
 
     <TextView
@@ -21,21 +21,29 @@
         android:textColor="@color/dark_pink_two"
         android:textSize="15sp" />
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/iv_image"
-        android:layout_width="55dp"
-        android:layout_height="70dp"
+        android:layout_width="32dp"
+        android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_pdf" />
+        android:background="@drawable/ic_pdf">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="3dp"
+            android:src="@drawable/ic_pdf_text" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/iv_image"
         android:layout_toStartOf="@id/tv_duration"
         android:ellipsize="end"

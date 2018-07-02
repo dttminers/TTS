@@ -18,6 +18,7 @@ import in.tts.fragments.GalleryFragment;
 import in.tts.R;
 import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
+import in.tts.fragments.PdfFragment;
 import in.tts.model.PrefManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 1:
                 toSetTitle("Docs");
-                replacePage(new DocumentsFragment());
+                replacePage(new PdfFragment());
                 break;
             case 2:
                 toSetTitle("Read It");

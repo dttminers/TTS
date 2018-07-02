@@ -18,8 +18,16 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <!-- Splash Screen theme. -->
+    <style name="FullScreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@drawable/splash_screen</item>
+        <item name="android:background">@drawable/background</item>
     </style>
 
 </resources>

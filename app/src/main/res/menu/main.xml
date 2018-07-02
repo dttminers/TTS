@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionCamera"
-        android:icon="@drawable/camera"
+        android:icon="@drawable/white_camera"
         android:orderInCategory="100"
         android:title="@string/str_camera"
         app:showAsAction="always" />

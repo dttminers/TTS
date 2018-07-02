@@ -1,52 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/simpleViewSwitcher"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.TutorialActivity">
 
-        <ImageView
-            android:contentDescription="@string/app_name"
-            android:id="@+id/img5"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/tutorial5" />
-        <ImageView
-            android:contentDescription="@string/app_name"
-            android:id="@+id/img4"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/tutorial4" />
+    <!--<ImageView-->
+        <!--android:id="@+id/img5"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/tutorial5"-->
+        <!--android:contentDescription="@string/app_name" />-->
 
-        <ImageView
-            android:contentDescription="@string/app_name"
-            android:id="@+id/img3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/tutorial3" />
+    <!--<ImageView-->
+        <!--android:id="@+id/img4"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/tutorial4"-->
+        <!--android:contentDescription="@string/app_name" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/img3"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/tutorial3"-->
+        <!--android:contentDescription="@string/app_name" />-->
 
 
-        <ImageView
-            android:contentDescription="@string/app_name"
-            android:id="@+id/img2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/tutorial2" />
+    <!--<ImageView-->
+        <!--android:id="@+id/img2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/tutorial2"-->
+        <!--android:contentDescription="@string/app_name" />-->
 
-        <ImageView
-            android:contentDescription="@string/app_name"
-            android:id="@+id/img1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/tutorial1" />
+    <ImageView
+        android:id="@+id/img1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/tutorial1"
+        android:contentDescription="@string/app_name" />
 
-        <Button
-            android:id="@+id/btn_skip"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:background="@color/transparent" />
+    <Button
+        android:id="@+id/btn_skip"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/transparent" />
 
 </RelativeLayout>

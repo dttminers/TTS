@@ -37,7 +37,7 @@
 
         <RelativeLayout
             android:id="@+id/rlGoogleLogin"
-            android:layout_width="210dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtLogin"
             android:layout_centerHorizontal="true"
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@drawable/circle_white"
+                android:background="@drawable/ellipse_712"
                 android:contentDescription="@string/login_with_google"
                 android:padding="10dp"
                 android:src="@drawable/layer_720" />
@@ -62,7 +62,9 @@
                 android:layout_margin="10dp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
+                android:paddingEnd="40dp"
                 android:paddingLeft="40dp"
+                android:paddingRight="40dp"
                 android:paddingStart="40dp"
                 android:text="@string/login_with_google"
                 android:textAllCaps="false"
@@ -72,8 +74,8 @@
 
         <RelativeLayout
             android:id="@+id/rlFacebookLogin"
-            android:layout_width="210dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/rlGoogleLogin"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
@@ -82,8 +84,8 @@
             android:background="@drawable/rounded_cornor_border">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="1dp"
                 android:contentDescription="@string/login_with_facebook"
                 android:src="@drawable/ic_facebook" />
@@ -94,9 +96,12 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="10dp"
+                android:lines="1"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
+                android:paddingEnd="30dp"
                 android:paddingLeft="40dp"
+                android:paddingRight="30dp"
                 android:paddingStart="40dp"
                 android:text="@string/login_with_facebook"
                 android:textAllCaps="false"
@@ -174,7 +179,7 @@
             android:layout_below="@id/btnLogin"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -193,6 +198,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:lines="1"
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
                 android:fontFamily="sans-serif"
@@ -208,13 +214,13 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/llSignUp"
-            android:layout_gravity="end"
-            android:layout_margin="20dp"
+            android:layout_margin="15dp"
             android:contentDescription="@string/str_skip"
             android:fontFamily="sans-serif"
             android:src="@drawable/skip"
             android:textColor="@color/white1"
             android:textSize="15sp" />
+
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

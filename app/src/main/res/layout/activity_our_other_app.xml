@@ -16,8 +16,6 @@
         android:contentDescription="@string/str_content_image"
         android:src="@drawable/our_new_app_destintion_alarm_is" />
 
-
-
     <ImageView
         android:layout_width="220dp"
         android:layout_height="220dp"

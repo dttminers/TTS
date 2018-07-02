@@ -5,8 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.facebook.login.Login;
-
 import in.tts.R;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.RegisterFragment;
