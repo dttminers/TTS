@@ -1,5 +1,7 @@
 package in.tts.fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -11,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
 import java.util.ArrayList;
@@ -51,6 +54,14 @@ public class PdfFragment extends Fragment {
 
         tabLayout.getTabAt(0).setText("My Book");
         tabLayout.getTabAt(1).setText("Free eBooks");
+
+        LinearLayout linearLayout = (LinearLayout)tabLayout.getChildAt(0);
+        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(Color.GRAY);
+        drawable.setSize(1, 1);
+        linearLayout.setDividerPadding(10);
+        linearLayout.setDividerDrawable(drawable);
     }
 
 
