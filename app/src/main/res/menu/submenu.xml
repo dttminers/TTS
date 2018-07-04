@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/audio_settings"
         android:title="@string/str_audio_settings" />
+    <item android:id="@+id/recent_voice"
+        android:title="@string/str_recent_voice" />
     <item android:id="@+id/settings"
         android:title="@string/str_settings" />
     <item android:id="@+id/our_other_apps"

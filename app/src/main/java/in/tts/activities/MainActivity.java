@@ -99,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
                 break;
 
-            case R.id.audio_settings:
-                startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
+            case R.id.recent_voice:
+                startActivity(new Intent(MainActivity.this, RecentVoiceActivity.class));
                 break;
+
             case R.id.our_other_apps:
                 startActivity(new Intent(MainActivity.this, OurOtherAppActivity.class));
                 break;
