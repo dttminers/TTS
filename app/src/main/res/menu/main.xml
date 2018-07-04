@@ -20,7 +20,6 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/recent_voice"
-        android:title="@string/str_recent_voice"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/settings"

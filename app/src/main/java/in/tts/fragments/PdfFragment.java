@@ -54,13 +54,13 @@ public class PdfFragment extends Fragment {
         viewPager = getActivity().findViewById(R.id.viewpagersub);
 
         viewPager.setAdapter(new PagerAdapter(getFragmentManager()));
-        tabLayout.addTab(tabLayout.newTab().setText("A"));
-        tabLayout.addTab(tabLayout.newTab().setText("B"));
+//        tabLayout.addTab(tabLayout.newTab().setText("A"));
+//        tabLayout.addTab(tabLayout.newTab().setText("B"));
 
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("My Book");
-        tabLayout.getTabAt(1).setText("Free eBooks");
+//        tabLayout.getTabAt(0).setText("My Book");
+//        tabLayout.getTabAt(1).setText("Free eBooks");
 
         LinearLayout linearLayout = (LinearLayout)tabLayout.getChildAt(0);
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);

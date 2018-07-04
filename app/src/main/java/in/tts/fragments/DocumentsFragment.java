@@ -4,6 +4,7 @@ import android.Manifest;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
 import in.tts.activities.MainActivity;
+import in.tts.activities.PDFReaderActivity;
 import in.tts.activities.PdfActivity;
 import in.tts.adapters.PDFAdapter;
 import in.tts.utils.CommonMethod;
@@ -77,7 +79,8 @@ public class DocumentsFragment extends Fragment {
         lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getContext(), PdfActivity.class);
+//                Intent intent = new Intent(getContext(), PdfActivity.class);
+                Intent intent = new Intent(getContext(), PDFReaderActivity.class);
                 intent.putExtra("position", i);
                 startActivity(intent);
 //
@@ -117,12 +120,13 @@ public class DocumentsFragment extends Fragment {
                 }
             }
         }
-        Log.d("TAG"," count " + fileList);
-        if (fileList.size() == 0){
+        Log.d("TAG", " count " + fileList);
+        if (fileList.size() == 0) {
 //            Toast.makeText(getContext(), " No Files Found",Toast.LENGTH_SHORT).show();
         }
         return fileList;
     }
+
     private void fn_permission() {
         if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 
@@ -142,6 +146,7 @@ public class DocumentsFragment extends Fragment {
 
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -161,7 +166,7 @@ public class DocumentsFragment extends Fragment {
             }
         }
     }
-
+}
 //    public ArrayList<File> getfile(File dir) {
 //        File listFile[] = dir.listFiles();
 //        if (listFile != null && listFile.length > 0) {
@@ -195,4 +200,4 @@ public class DocumentsFragment extends Fragment {
 //        itemsAdapter.setData(mAttachmentList);
 //        mListView.setAdapter(itemsAdapter);
 //    }
-}
+

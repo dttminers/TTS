@@ -63,6 +63,8 @@
     <string name="str_bookmarks">Bookmarks</string>
     <string name="str_recent_search">Recent Search</string>
     <string name="str_recent">Recent</string>
+    <string name="str_next">Next</string>
+    <string name="str_previous">Previous</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
