@@ -2,32 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp"
-    android:background="@color/white1"
-    android:orientation="horizontal">
+    android:layout_marginBottom="1dp"
+    android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/iv_image"
-            android:layout_width="32dp"
-            android:layout_height="40dp"
-            android:layout_margin="15dp"
-            android:contentDescription="@string/str_logo_image"
-            android:src="@drawable/capture" />
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="32dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/capture" />
 
     <TextView
         android:id="@+id/tv_file_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="3dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/iv_image"
         android:layout_toStartOf="@id/tv_duration"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
-        android:text="AUD3456"
-        android:textColor="#000000"
+        android:paddingLeft="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:textColor="@color/black"
         android:textSize="15sp" />
 
     <TextView
@@ -40,16 +40,9 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
-        android:text="1.08 MB"
+        android:paddingLeft="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
         android:textColor="@color/dark_pink_two"
         android:textSize="12sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/tv_file_size"
-        android:background="@color/warm_grey1" />
-
 </RelativeLayout>

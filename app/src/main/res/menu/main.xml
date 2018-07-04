@@ -19,7 +19,8 @@
         android:title="@string/str_audio_settings"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/recent_voice"
+        android:id="@+id/recent_audios"
+        android:title="@string/str_recent_audios"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/settings"

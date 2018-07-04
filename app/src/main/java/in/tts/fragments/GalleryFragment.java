@@ -130,8 +130,8 @@ public class GalleryFragment extends Fragment {
                 int width = displayMetrics.widthPixels;
                 int size = width / 3;
 
-                picturesView.setLayoutParams(new GridView.LayoutParams(size, size));
-                picturesView.setPadding(5, 5, 5, 5);
+                picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size-10));
+//                picturesView.setPadding(5, 5, 5, 5);
 
             } else {
                 picturesView = (ImageView) convertView;

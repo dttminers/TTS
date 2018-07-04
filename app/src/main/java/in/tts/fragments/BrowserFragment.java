@@ -1,8 +1,12 @@
 package in.tts.fragments;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +43,7 @@ public class BrowserFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
 
-//        webView = getActivity().findViewById(R.id.webView);
-//        webView.setWebViewClient(new WebViewClient());
-//        webView.loadUrl("http://www.google.com");
     }
+
+
 }
