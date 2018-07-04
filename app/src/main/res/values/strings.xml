@@ -66,6 +66,8 @@
     <string name="str_next">Next</string>
     <string name="str_previous">Previous</string>
     <string name="str_recent_voice">Recent Voice</string>
+    <string name="str_recent_audios">Recent Audios</string>
+    <string name="str_text_to_speech">Text to Speech</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
