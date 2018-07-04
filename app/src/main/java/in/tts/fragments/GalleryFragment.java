@@ -106,7 +106,7 @@ public class GalleryFragment extends Fragment {
         }
 
         public int getCount() {
-            Log.d("TAG", " count " + images.size());
+            Log.d("TAG", " count images " + images.size());
             return images.size();
         }
 
@@ -137,7 +137,8 @@ public class GalleryFragment extends Fragment {
                 picturesView = (ImageView) convertView;
             }
 //            Glide.with(context).load(images.get(position)).into(picturesView);
-            Picasso.get().load(images.get(position)).into(picturesView);
+            Log.d("TAG","Images " + images.get(position) + " : " + position);
+            Picasso.get().load("file://"+images.get(position).replaceAll("\\s", "%20")).into(picturesView);
             return picturesView;
         }
 

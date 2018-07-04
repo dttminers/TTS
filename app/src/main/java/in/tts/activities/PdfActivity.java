@@ -1,62 +1,62 @@
-//package in.tts.activities;
-//
-//import in.tts.R;
-//import in.tts.fragments.DocumentsFragment;
-//import in.tts.utils.CommonMethod;
-//
-//import android.os.Bundle;
-//import android.support.annotation.Nullable;
-//import android.support.v4.content.ContextCompat;
-//import android.support.v7.app.AppCompatActivity;
-//import android.util.Log;
-//import android.view.MenuItem;
-//import android.widget.Toast;
-//
-//import com.crashlytics.android.Crashlytics;
+package in.tts.activities;
+
+import in.tts.R;
+import in.tts.fragments.DocumentsFragment;
+import in.tts.utils.CommonMethod;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 //import com.github.barteksc.pdfviewer.PDFView;
 //import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 //import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 //import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
-//import com.google.firebase.perf.metrics.AddTrace;
+import com.google.firebase.perf.metrics.AddTrace;
 //import com.shockwave.pdfium.PdfDocument;
-//
-//import java.io.File;
-//import java.util.List;
-//
-//public class PdfActivity extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener {
+
+import java.io.File;
+import java.util.List;
+
+public class PdfActivity extends AppCompatActivity {//implements OnPageChangeListener, OnLoadCompleteListener {
 //
 //    PDFView pdfView;
 //    Integer pageNumber = 0;
 //    String pdfFileName;
 //    String TAG = "PdfActivity";
 //    int position = -1;
-//
-//    @Override
-//    @AddTrace(name = "onCreatePdfActivity", enabled = true)
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        CommonMethod.setAnalyticsData(PdfActivity.this, "MainTab", "Pdf", null);
-//        try {
-//            setContentView(R.layout.activity_pdf);
-//            if (getSupportActionBar() != null) {
-//                getSupportActionBar().show();
-//                getSupportActionBar().setTitle(R.string.app_name);
-//                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                getSupportActionBar().setDisplayShowHomeEnabled(true);
-//                getSupportActionBar().setDisplayShowTitleEnabled(true);
-//                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backward));
-//            } else {
-//                getSupportActionBar().setTitle(R.string.app_name);
-//            }
-//
+
+    @Override
+    @AddTrace(name = "onCreatePdfActivity", enabled = true)
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CommonMethod.setAnalyticsData(PdfActivity.this, "MainTab", "Pdf", null);
+        try {
+            setContentView(R.layout.activity_pdf);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+                getSupportActionBar().setTitle(R.string.app_name);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backward));
+            } else {
+                getSupportActionBar().setTitle(R.string.app_name);
+            }
+
 //            init();
-//        } catch (Exception | Error e) {
-//            e.printStackTrace();
-//            Crashlytics.logException(e);
-//            Toast.makeText(PdfActivity.this, " Error in Displaying Pdf ", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            Toast.makeText(PdfActivity.this, " Error in Displaying Pdf ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 //    private void init() {
 //        try {
 //            pdfView = (PDFView) findViewById(R.id.pdfView);
@@ -159,4 +159,4 @@
 //            Toast.makeText(PdfActivity.this, " Error in Displaying Pdf ", Toast.LENGTH_SHORT).show();
 //        }
 //    }
-//}
+}

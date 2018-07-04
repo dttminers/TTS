@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionCamera:
+                startActivity(new Intent(MainActivity.this, CameraOcrActivity.class));
                 break;
 
             case R.id.actionSearch:

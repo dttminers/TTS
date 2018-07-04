@@ -33,6 +33,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Meta Data -->
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="ocr" />
+
         <!-- Splash screen -->
         <activity
             android:name=".activities.SplashActivity"
@@ -84,14 +93,22 @@
             android:name=".activities.PdfActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
-
-        <activity android:name=".activities.RecentVoiceActivity" />
-        <activity android:name=".activities.PDFReaderActivity" />
-        <activity android:name=".activities.PdfReadersActivity"></activity>
+        <activity
+            android:name=".activities.RecentVoiceActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.PDFReaderActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.PdfReadersActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.CameraOcrActivity"></activity>
     </application>
 
 </manifest>
