@@ -18,10 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import android.support.design.widget.TabLayout;
 
 import android.support.v4.view.ViewPager;
@@ -30,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toolbar;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
@@ -41,13 +45,16 @@ import in.tts.utils.CommonMethod;
 
 public class DocumentsFragment extends Fragment {
 
-    ListView lv_pdf;
-    public static ArrayList<File> fileList = new ArrayList<File>();
-    PDFAdapter obj_adapter;
-    public static int REQUEST_PERMISSIONS = 1;
-    boolean boolean_permission;
-    File dir;
+    private ListView lv_pdf;
+    private ProgressBar mLoading;
+    private TextView mTvLblRecent;
 
+    private PDFAdapter obj_adapter;
+    boolean boolean_permission;
+    private File dir;
+
+    public static ArrayList<File> fileList = new ArrayList<File>();
+    public static int REQUEST_PERMISSIONS = 1;
 
     public DocumentsFragment() {
         // Required empty public constructor
@@ -55,8 +62,7 @@ public class DocumentsFragment extends Fragment {
 
     @Override
     @AddTrace(name = "onCreateDocuments", enabled = true)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_documents, container, false);
     }
@@ -65,15 +71,15 @@ public class DocumentsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Document", null);
-
 //        Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
-
         init();
     }
 
     private void init() {
+        lv_pdf = getActivity().findViewById(R.id.lv_pdf);
+        mLoading = getActivity().findViewById(R.id.pbPdf);
+        mTvLblRecent = getActivity().findViewById(R.id.txtRecent);
 
-        lv_pdf = (ListView) getActivity().findViewById(R.id.lv_pdf);
         dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         fn_permission();
         lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -121,29 +127,36 @@ public class DocumentsFragment extends Fragment {
             }
         }
         Log.d("TAG", " count " + fileList);
-        if (fileList.size() == 0) {
-//            Toast.makeText(getContext(), " No Files Found",Toast.LENGTH_SHORT).show();
-        }
         return fileList;
     }
 
     private void fn_permission() {
         if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-
             if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_PERMISSIONS);
-
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
             }
         } else {
-            boolean_permission = true;
+            toGetPDF();
+        }
+    }
 
-            getfile(dir);
+    private void toGetPDF() {
+        try {
+//            if (fileList.size() == 0) {
+//                Toast.makeText(getContext(), " No Files Found", Toast.LENGTH_SHORT).show();
+//            } else {
+                boolean_permission = true;
+                getfile(dir);
+                obj_adapter = new PDFAdapter(getContext(), fileList);
+                lv_pdf.setAdapter(obj_adapter);
 
-            obj_adapter = new PDFAdapter(getContext(), fileList);
-            lv_pdf.setAdapter(obj_adapter);
-
+                mTvLblRecent.setVisibility(View.VISIBLE);
+                lv_pdf.setVisibility(View.VISIBLE);
+                mLoading.setVisibility(View.GONE);
+//            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
         }
     }
 
@@ -151,18 +164,10 @@ public class DocumentsFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
-
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                boolean_permission = true;
-                getfile(dir);
-
-                obj_adapter = new PDFAdapter(getContext(), fileList);
-                lv_pdf.setAdapter(obj_adapter);
-
+                toGetPDF();
             } else {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
-
             }
         }
     }

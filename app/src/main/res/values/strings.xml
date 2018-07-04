@@ -65,7 +65,24 @@
     <string name="str_recent">Recent</string>
     <string name="str_next">Next</string>
     <string name="str_previous">Previous</string>
+    <string name="str_recent_voice">Recent Voice</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
+
+
+speakTextTxt = speakText.getText().toString();
+HashMap<String, String> myHashRender = new HashMap<String, String>();
+myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_SAVE_ID);
+
+String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+File appTmpPath = new File(exStoragePath + "/sounds/");
+appTmpPath.mkdirs();
+String tempFilename = "tmpaudio.wav";
+tempDestFile = appTmpPath.getAbsolutePath() + "/" + tempFilename;
+
+mTts.synthesizeToFile(speakTextTxt, myHashRender, tempDestFile);
+
+mTts.addSpeech(wakeUpText, destFileName);
+
 -->

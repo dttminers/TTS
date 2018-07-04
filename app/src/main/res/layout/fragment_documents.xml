@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/txtRecent"
@@ -20,11 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Recent"
+        android:text="@string/str_recent"
         android:textColor="#838383"
         android:textSize="14sp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <ListView
         android:id="@+id/lv_pdf"
@@ -36,6 +37,6 @@
         android:layout_marginRight="10dp"
         android:divider="#efefef"
         android:dividerHeight="2dp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </RelativeLayout>
