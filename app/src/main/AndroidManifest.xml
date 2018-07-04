@@ -90,7 +90,8 @@
             android:value="false" />
 
         <activity android:name=".activities.RecentVoiceActivity" />
-        <activity android:name=".activities.PDFReaderActivity"></activity>
+        <activity android:name=".activities.PDFReaderActivity" />
+        <activity android:name=".activities.PdfReadersActivity"></activity>
     </application>
 
 </manifest>

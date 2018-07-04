@@ -6,7 +6,24 @@
     android:orientation="vertical"
     tools:context=".activities.PDFReaderActivity">
 
-    <ImageView
+    <!--<in.tts.utils.ZoomTextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:gravity="center"-->
+    <!--android:layout_weight="1"-->
+    <!--android:id="@+id/image"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:text="@string/app_name"/>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/image"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:scaleType="fitCenter" />-->
+
+    <in.tts.utils.TouchImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="0dp"

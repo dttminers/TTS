@@ -209,7 +209,7 @@ public class SimpleAndroidOCRActivity extends Activity {
 		// _image.setImageBitmap( bitmap );
 		
 		Log.v(TAG, "Before baseApi");
-//
+
 //		TessBaseAPI baseApi = new TessBaseAPI();
 //		baseApi.setDebug(true);
 //		baseApi.init(DATA_PATH, lang);
@@ -218,11 +218,11 @@ public class SimpleAndroidOCRActivity extends Activity {
 //		String recognizedText = baseApi.getUTF8Text();
 //
 //		baseApi.end();
-
-		// You now have the text in recognizedText var, you can do anything with it.
-		// We will display a stripped out trimmed alpha-numeric version of it (if lang is eng)
-		// so that garbage doesn't make it to the display.
-
+//
+//		// You now have the text in recognizedText var, you can do anything with it.
+//		// We will display a stripped out trimmed alpha-numeric version of it (if lang is eng)
+//		// so that garbage doesn't make it to the display.
+//
 //		Log.v(TAG, "OCRED TEXT: " + recognizedText);
 //
 //		if ( lang.equalsIgnoreCase("eng") ) {
@@ -235,7 +235,7 @@ public class SimpleAndroidOCRActivity extends Activity {
 //			_field.setText(_field.getText().toString().length() == 0 ? recognizedText : _field.getText() + " " + recognizedText);
 //			_field.setSelection(_field.getText().toString().length());
 //		}
-		
+
 		// Cycle done.
 	}
 	

@@ -3,13 +3,18 @@ package in.tts.activities;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import in.tts.R;
+import in.tts.fragments.DocumentsFragment;
+
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -21,6 +26,7 @@ public class PDFReaderActivity extends AppCompatActivity {
     private ImageView image;
     private Button btnPrevious;
     private Button btnNext;
+    private int position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +34,23 @@ public class PDFReaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdfreader);
 
         // Retain view references.
-        image = (ImageView) findViewById(R.id.image);
-        btnPrevious = (Button) findViewById(R.id.btn_previous);
-        btnNext = (Button) findViewById(R.id.btn_next);
+        image = findViewById(R.id.image);
+        btnPrevious = findViewById(R.id.btn_previous);
+        btnNext = findViewById(R.id.btn_next);
 
         //set buttons event
         btnPrevious.setOnClickListener(onActionListener(-1)); //previous button clicked
         btnNext.setOnClickListener(onActionListener(1)); //next button clicked
+
+        try {
+            openRenderer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.i("Fragment", "Error occurred!");
+            Log.e("Fragment", e.getMessage());
+            Toast.makeText(PDFReaderActivity.this, " Not able to Read PDF ", Toast.LENGTH_SHORT).show();
+//            activity.finish();
+        }
 
         int index = 0;
         // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
@@ -43,19 +59,6 @@ public class PDFReaderActivity extends AppCompatActivity {
         }
         showPage(index);
     }
-
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            openRenderer(activity);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.i("Fragment", "Error occurred!");
-//            Log.e("Fragment", e.getMessage());
-//            activity.finish();
-//        }
-//    }
 
     @Override
     public void onDestroy() {
@@ -75,14 +78,15 @@ public class PDFReaderActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Create a PDF renderer
-     * @param activity
-     * @throws IOException
-     */
-    private void openRenderer(Activity activity) throws IOException {
+
+    private void openRenderer() throws IOException {
         // Reading a PDF file from the assets directory.
-        fileDescriptor = activity.getAssets().openFd("canon_in_d.pdf").getParcelFileDescriptor();
+//        fileDescriptor = activity.getAssets().openFd("canon_in_d.pdf").getParcelFileDescriptor();
+
+        position = getIntent().getIntExtra("position", -1);
+        fileDescriptor = ParcelFileDescriptor.open(DocumentsFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+
+        Log.d("TAG", " " + DocumentsFragment.fileList.get(position).getName() + " : " + position);
 
         // This is the PdfRenderer we use to render the PDF.
         pdfRenderer = new PdfRenderer(fileDescriptor);
@@ -99,10 +103,6 @@ public class PDFReaderActivity extends AppCompatActivity {
         fileDescriptor.close();
     }
 
-    /**
-     * Shows the specified page of PDF file to screen
-     * @param index The page index.
-     */
     private void showPage(int index) {
         if (pdfRenderer.getPageCount() <= index) {
             return;

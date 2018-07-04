@@ -39,7 +39,8 @@ import com.google.firebase.perf.metrics.AddTrace;
 import in.tts.R;
 import in.tts.activities.MainActivity;
 import in.tts.activities.PDFReaderActivity;
-import in.tts.activities.PdfActivity;
+//import in.tts.activities.PdfActivity;
+import in.tts.activities.PdfReadersActivity;
 import in.tts.adapters.PDFAdapter;
 import in.tts.utils.CommonMethod;
 
@@ -86,7 +87,7 @@ public class DocumentsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                Intent intent = new Intent(getContext(), PdfActivity.class);
-                Intent intent = new Intent(getContext(), PDFReaderActivity.class);
+                Intent intent = new Intent(getContext(), PdfReadersActivity.class);
                 intent.putExtra("position", i);
                 startActivity(intent);
 //

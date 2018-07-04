@@ -30,7 +30,7 @@ import com.squareup.picasso.Picasso;
 
 import in.tts.R;
 
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 
 public class GalleryFragment extends Fragment {
 
@@ -136,7 +136,8 @@ public class GalleryFragment extends Fragment {
             } else {
                 picturesView = (ImageView) convertView;
             }
-            Glide.with(context).load(images.get(position)).into(picturesView);
+//            Glide.with(context).load(images.get(position)).into(picturesView);
+            Picasso.get().load(images.get(position)).into(picturesView);
             return picturesView;
         }
 
