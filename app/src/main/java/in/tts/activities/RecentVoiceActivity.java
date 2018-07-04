@@ -3,12 +3,15 @@ package in.tts.activities;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
+import in.tts.adapters.RecentVoiceAdapter;
 import in.tts.utils.CommonMethod;
 
 public class RecentVoiceActivity extends AppCompatActivity {
@@ -30,6 +33,12 @@ public class RecentVoiceActivity extends AppCompatActivity {
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
         }
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycleView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//       RecentVoiceAdapter mAdapter = new RecentVoiceAdapter();
+//        recyclerView.setAdapter(mAdapter);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
