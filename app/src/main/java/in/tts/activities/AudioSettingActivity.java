@@ -10,14 +10,21 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import com.crashlytics.android.Crashlytics;
+
 import in.tts.R;
+import in.tts.utils.CommonMethod;
+
+import com.google.firebase.perf.metrics.AddTrace;
 
 public class AudioSettingActivity extends AppCompatActivity {
 
     @Override
+    @AddTrace(name = "onCreateAudioSettingActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_setting);
+        CommonMethod.setAnalyticsData(AudioSettingActivity.this, "MainTab", "AudioSetting", null);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
@@ -86,6 +93,7 @@ public class AudioSettingActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         return super.onOptionsItemSelected(item);
     }

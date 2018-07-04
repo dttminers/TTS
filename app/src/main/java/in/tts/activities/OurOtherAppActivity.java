@@ -5,14 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 public class OurOtherAppActivity extends AppCompatActivity {
 
     @Override
+    @AddTrace(name = "onCreateOurOtherAppActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_our_other_app);
+        CommonMethod.setAnalyticsData(OurOtherAppActivity.this, "MainTab", "OurOtherApp", null);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
@@ -37,6 +43,7 @@ public class OurOtherAppActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -5,14 +5,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 public class HelpActivity extends AppCompatActivity {
 
     @Override
+
+    @AddTrace(name = "onCreateHelpActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+        CommonMethod.setAnalyticsData(HelpActivity.this, "MainTab", "Help", null);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
@@ -38,6 +45,7 @@ public class HelpActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         return super.onOptionsItemSelected(item);
     }

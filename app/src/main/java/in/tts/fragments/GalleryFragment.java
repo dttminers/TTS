@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import com.google.firebase.perf.metrics.AddTrace;
 import com.squareup.picasso.Picasso;
 
 import in.tts.R;
@@ -46,12 +47,15 @@ public class GalleryFragment extends Fragment {
 
     @Nullable
     @Override
+    @AddTrace(name = "onCreateGalleryFragment", enabled = true)
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_gallery, container, false);
     }
 
     @Override
+
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         gallery = (GridView) getActivity().findViewById(R.id.gridView);

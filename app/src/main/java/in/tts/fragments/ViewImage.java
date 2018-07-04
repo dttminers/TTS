@@ -1,13 +1,18 @@
 package in.tts.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 public class ViewImage extends Activity {
     // Declare Variable
@@ -15,10 +20,14 @@ public class ViewImage extends Activity {
     ImageView imageview;
 
     @Override
+
+    @AddTrace(name = "onCreateViewImage", enabled = true)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get the view from view_image.xml
         setContentView(R.layout.image_itm);
+
+        CommonMethod.setAnalyticsData(getApplicationContext(), "MainTab", "ViewImage", null);
 
         // Retrieve data from MainActivity on GridView item click
         Intent i = getIntent();

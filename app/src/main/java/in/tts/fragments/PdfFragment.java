@@ -16,10 +16,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
+import com.google.firebase.perf.metrics.AddTrace;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 public class PdfFragment extends Fragment {
 
@@ -32,6 +35,8 @@ public class PdfFragment extends Fragment {
 
 
     @Override
+
+    @AddTrace(name = "onCreatePdfFragment", enabled = true)
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -41,6 +46,8 @@ public class PdfFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        CommonMethod.setAnalyticsData(getContext(), "MainTab", "PdfFragment", null);
 
         tabLayout = getActivity().findViewById(R.id.tabsub);
 

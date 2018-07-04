@@ -1,6 +1,6 @@
 package in.tts.fragments;
 
-
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,8 +12,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import in.tts.R;
+import com.google.firebase.perf.metrics.AddTrace;
 
+import in.tts.R;
+import in.tts.activities.MainActivity;
+import in.tts.utils.CommonMethod;
 
 public class BrowserFragment extends Fragment {
     WebView webView;
@@ -24,6 +27,7 @@ public class BrowserFragment extends Fragment {
     }
 
     @Override
+    @AddTrace(name = "onCreateBrowserFragment", enabled = true)
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -33,6 +37,7 @@ public class BrowserFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
 
 //        webView = getActivity().findViewById(R.id.webView);
 //        webView.setWebViewClient(new WebViewClient());

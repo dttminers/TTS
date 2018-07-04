@@ -9,11 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.perf.metrics.AddTrace;
+
 import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
 
+@AddTrace(name = "onCreatePDFAdapter", enabled = true)
 public class PDFAdapter extends ArrayAdapter<File> {
     Context context;
     ViewHolder viewHolder;

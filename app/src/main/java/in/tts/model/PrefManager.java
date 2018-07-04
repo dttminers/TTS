@@ -3,6 +3,8 @@ package in.tts.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.firebase.perf.metrics.AddTrace;
+
 /**
  * Created by Lincoln on 05/05/16.
  */
@@ -30,6 +32,7 @@ public class PrefManager {
         editor.commit();
     }
 
+    @AddTrace(name = "onCallIsFirstTimeLaunch", enabled = true)
     public boolean isFirstTimeLaunch() {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }

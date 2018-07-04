@@ -12,6 +12,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
@@ -20,15 +24,21 @@ import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
 import in.tts.model.PrefManager;
+import in.tts.utils.CommonMethod;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
+    @AddTrace(name = "onCreateMainActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
             setContentView(R.layout.activity_main);
+            Fabric.with(this, new Crashlytics());
 
             toSetTitle(getResources().getString(R.string.app_name));
 
@@ -43,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setCurrentViewPagerItem(tab.getPosition());
-
+                    CommonMethod.setAnalyticsData(MainActivity.this, "MainTab", "HomePage", null);
                 }
 
                 @Override
@@ -60,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             setCurrentViewPagerItem(2);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -82,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.settings:
                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                break;
+
+            case R.id.audio_settings:
+                startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
                 break;
 
             case R.id.audio_settings:
@@ -147,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -197,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
             alertDialog.show();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 }

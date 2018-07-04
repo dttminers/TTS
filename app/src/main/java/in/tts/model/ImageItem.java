@@ -2,10 +2,13 @@ package in.tts.model;
 
 import android.graphics.Bitmap;
 
+import com.google.firebase.perf.metrics.AddTrace;
+
 public class ImageItem {
     private Bitmap image;
     private String title;
 
+    @AddTrace(name = "onCallImageItem", enabled = true)
     public ImageItem(Bitmap image, String title) {
         super();
         this.image = image;

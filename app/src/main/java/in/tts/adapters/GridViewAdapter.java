@@ -13,8 +13,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import in.tts.R;
+import com.google.firebase.perf.metrics.AddTrace;
 
+import in.tts.R;
+import in.tts.utils.CommonMethod;
+
+
+@AddTrace(name = "onCreateGridAdapter", enabled = true)
 public class GridViewAdapter extends BaseAdapter {
 
     // Declare variables
@@ -47,6 +52,7 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
+
         View vi = convertView;
         if (convertView == null)
             vi = inflater.inflate(R.layout.image_itm, null);

@@ -9,14 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 public class SettingActivity extends AppCompatActivity {
 
     @Override
+    @AddTrace(name = "onCreateSettingActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        CommonMethod.setAnalyticsData(SettingActivity.this, "MainTab", "Setting", null);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
@@ -52,6 +58,7 @@ public class SettingActivity extends AppCompatActivity {
             alertDialog.show();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -66,6 +73,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         return super.onOptionsItemSelected(item);
     }

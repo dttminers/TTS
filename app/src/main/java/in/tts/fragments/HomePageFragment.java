@@ -15,7 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 
 public class HomePageFragment extends Fragment {
@@ -40,15 +44,16 @@ public class HomePageFragment extends Fragment {
     }
 
     @Override
+    @AddTrace(name = "onCreateHomePageFragment", enabled = true)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_home_page, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CommonMethod.setAnalyticsData(getContext(), "MainTab", "HomePage", null);
         try {
             imageView = getActivity().findViewById(R.id.imageView);
             ivLeft = getActivity().findViewById(R.id.imageViewLeft);
@@ -60,6 +65,7 @@ public class HomePageFragment extends Fragment {
             tabLayout.setupWithViewPager(mViewPager);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
 
         ivLeft.setOnClickListener(new View.OnClickListener() {

@@ -9,9 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
 import in.tts.activities.LoginActivity;
 import in.tts.activities.MainActivity;
+import in.tts.utils.CommonMethod;
 
 public class RegisterFragment extends Fragment {
 
@@ -21,6 +25,8 @@ public class RegisterFragment extends Fragment {
     }
 
     @Override
+
+    @AddTrace(name = "onCreateRegisterFragment", enabled = true)
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -30,6 +36,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
         try {
             getActivity().findViewById(R.id.txtAlreadyAccountReg).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -51,6 +58,7 @@ public class RegisterFragment extends Fragment {
             });
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 }

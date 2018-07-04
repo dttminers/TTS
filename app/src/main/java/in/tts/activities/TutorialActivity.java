@@ -9,8 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
 import in.tts.model.PrefManager;
+import in.tts.utils.CommonMethod;
 
 public class TutorialActivity extends AppCompatActivity {
 
@@ -18,8 +22,10 @@ public class TutorialActivity extends AppCompatActivity {
     private int i = 0;
 
     @Override
+    @AddTrace(name = "onCreateTutorialActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonMethod.setAnalyticsData(TutorialActivity.this, "MainTab", "Tutorial", null);
         try {
 
             // Making notification bar transparent
@@ -111,6 +117,7 @@ public class TutorialActivity extends AppCompatActivity {
             });
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
