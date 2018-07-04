@@ -9,6 +9,8 @@ import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,6 +46,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
 
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "MakeYourRead", null);
 
@@ -75,6 +78,12 @@ public class MakeYourOwnReadFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.actionSearch);
+        item.setVisible(false);
     }
 
     public void onPause(){
