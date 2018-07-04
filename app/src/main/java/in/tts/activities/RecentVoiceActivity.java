@@ -3,7 +3,9 @@ package in.tts.activities;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
@@ -28,6 +30,22 @@ public class RecentVoiceActivity extends AppCompatActivity {
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
         }
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    onBackPressed();
+                    break;
+                default:
+                    return true;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onBackPressed() {
