@@ -1,86 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#bd3f32</color>
-    <color name="colorPrimaryDark">#4f002a</color>
-    <color name="colorAccent">#707070</color>
 
     <color name="white">#ffffff</color>
     <color name="white1">#ccffffff</color>
 
     <color name="black">#000000</color>
-    <color name="blackt">#000000</color>
 
     <color name="transparent">#00ffffff</color>
-    <color name="transparent2">#78778184</color>
-    <color name="transparent_white">#3cffffff</color>
-    <color name="transparent_white1">#85ffffff</color>
-    <color name="transparent_white2">#afffffff</color>
-    <color name="transparent_black">#85000000</color>
 
     <color name="light">#EDEDED</color>
-    <color name="light1">#e4e4e6</color>
     <color name="light2">#E0E0E0</color>
-    <color name="light3">#f2f3f5</color>
 
-    <color name="grey">#C4C4C4</color>
     <color name="warm_grey">#707070</color>
     <color name="warm_grey1">#b5b5b5</color>
     <color name="warm_grey2">#838383</color>
-    <color name="grey2">#FFE3E2E2</color>
-    <color name="grey3">#8D8A8A</color>
-    <color name="grey4">#FFF0EAE4</color>
     <color name="grey5">#3d3b3b</color>
-    <color name="grey6">#e9ebee</color>
-    <color name="grey7">#efefef</color>
-
-    <color name="yellow">#FEE464</color>
-    <color name="yellow1">#FFFEDB29</color>
-    <color name="yellow2">#f7c002</color>
 
     <color name="black1">#66000000</color>
-    <color name="black2">#2c2c2c</color>
-    <color name="black3">#333333</color>
-    <color name="black4">#dddfe2</color>
-    <color name="black5">#7d7d7d</color>
-
-    <color name="blue2">#5164d0</color>
-    <color name="blue">#599AF0</color>
-    <color name="blue1">#5776cd</color>
-    <color name="blue4">#3f89a8</color>
-    <color name="blue5">#233259</color>
 
     <color name="ttsRed">#c03d43</color>
     <color name="red1">#902c44</color>
-    <color name="red2">#e23c3a</color>
-    <color name="red3">#F61702</color>
 
-    <color name="green">#38A165</color>
-    <color name="green1">#219653</color>
-    <color name="green2">#a5ca44</color>
-
-    <color name="dark_pink1">#C061C3</color>
-    <color name="dark_pink2">#9B51E0</color>
-    <color name="dark_pink3">#A80CAD</color>
     <color name="dark_pink_two">#cb356b</color>
 
-    <color name="dark_blue">#253159</color>
-    <color name="dark_blu1e">#253159</color>
-
-    <color name="light_pink1">#EF7D7D</color>
-    <color name="light_pink2">#e48f8f</color>
-
-    <color name="light_orange">#e84f27</color>
-    <color name="light_orange2">#EB5757</color>
-
-    <color name="shade1">#4f002a</color>
     <color name="shade2">#c13f3d</color>
-    <color name="shade3">#bd3f32</color>
 
     <color name="shade4">#FFCB3C66</color>
-    <color name="shade5">#cb3d54</color>
-    <color name="shade6">#707070</color>
     <color name="shade7">#c0c0c0</color>
-    <color name="shade8">#191919</color>
     <color name="shade9">#FFD0D0D0</color>
 
 </resources>

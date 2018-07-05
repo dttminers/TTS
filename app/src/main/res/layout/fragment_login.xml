@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/bg_main"
     android:scrollbars="none"
     tools:context=".fragments.LoginFragment">
 
@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/read_it_02" />
+            android:src="@drawable/ic_launcher" />
 
 
         <TextView
@@ -33,7 +33,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="20dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/login_to_get_access_to_read_more_than_20_cr_books" />
+            android:background="@drawable/txt_login" />
 
         <RelativeLayout
             android:id="@+id/rlGoogleLogin"
@@ -49,10 +49,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:background="@drawable/ellipse_712"
+                android:background="@drawable/bg_white_circle"
                 android:contentDescription="@string/login_with_google"
                 android:padding="10dp"
-                android:src="@drawable/layer_720" />
+                android:src="@drawable/ic_google" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,9 +121,9 @@
             android:layout_marginRight="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/line"
+            android:background="@drawable/ic_bottom_line"
             android:drawablePadding="15dp"
-            android:drawableStart="@drawable/layer_723"
+            android:drawableStart="@drawable/ic_email_white"
             android:fontFamily="sans-serif"
             android:hint="@string/str_email_id"
             android:inputType="textEmailAddress"
@@ -144,9 +144,9 @@
             android:layout_marginRight="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="0dp"
-            android:background="@drawable/line"
+            android:background="@drawable/ic_bottom_line"
             android:drawablePadding="15dp"
-            android:drawableStart="@drawable/layer_724"
+            android:drawableStart="@drawable/ic_lock"
             android:fontFamily="sans-serif"
             android:hint="@string/str_password"
             android:inputType="textPassword"
@@ -217,7 +217,7 @@
             android:layout_margin="15dp"
             android:contentDescription="@string/str_skip"
             android:fontFamily="sans-serif"
-            android:src="@drawable/skip"
+            android:src="@drawable/ic_skip"
             android:textColor="@color/white1"
             android:textSize="15sp" />
 

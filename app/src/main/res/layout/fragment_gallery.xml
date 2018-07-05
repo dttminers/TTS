@@ -28,7 +28,7 @@
     <!--android:layout_margin="2dp"-->
     <!--android:verticalSpacing="2dp"-->
     <!--android:horizontalSpacing="10dp"-->
-    <!--android:background="@color/white"-->
+    <!--android:bg_main="@color/white"-->
     <!--android:columnWidth="100dp"-->
     <!--android:drawSelectorOnTop="true"-->
     <!--android:gravity="center_horizontal"-->

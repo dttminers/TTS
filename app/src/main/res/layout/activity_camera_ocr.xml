@@ -4,21 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="5"
+    android:background="@color/transparent"
     tools:context=".activities.CameraOcrActivity">
 
     <SurfaceView
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_height="match_parent" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/text_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:layout_weight="1"
+        android:layout_height="100dp"
+        android:layout_margin="2dp"
+        android:background="@color/transparent"
         android:gravity="center"
         android:text="@string/txt_message"
         android:textColor="@android:color/black"

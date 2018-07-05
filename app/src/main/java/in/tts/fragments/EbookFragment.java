@@ -1,6 +1,5 @@
 package in.tts.fragments;
 
-
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -15,9 +14,6 @@ import in.tts.R;
 import in.tts.activities.MainActivity;
 import in.tts.utils.CommonMethod;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class EbookFragment extends Fragment {
 
 
@@ -25,11 +21,9 @@ public class EbookFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     @AddTrace(name = "onCreateEbookFragment", enabled = true)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_ebook, container, false);
     }

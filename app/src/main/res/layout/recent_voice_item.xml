@@ -11,7 +11,7 @@
         android:layout_height="40dp"
         android:layout_margin="10dp"
         android:contentDescription="@string/str_logo_image"
-        android:src="@drawable/capture" />
+        android:src="@drawable/ic_audio_file" />
 
     <TextView
         android:id="@+id/tv_file_name"

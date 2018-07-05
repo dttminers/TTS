@@ -10,21 +10,21 @@
         <!--android:id="@+id/img5"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:background="@drawable/tutorial5"-->
+        <!--android:bg_main="@drawable/tutorial5"-->
         <!--android:contentDescription="@string/app_name" />-->
 
     <!--<ImageView-->
         <!--android:id="@+id/img4"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:background="@drawable/tutorial4"-->
+        <!--android:bg_main="@drawable/tutorial4"-->
         <!--android:contentDescription="@string/app_name" />-->
 
     <!--<ImageView-->
         <!--android:id="@+id/img3"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:background="@drawable/tutorial3"-->
+        <!--android:bg_main="@drawable/tutorial3"-->
         <!--android:contentDescription="@string/app_name" />-->
 
 
@@ -32,7 +32,7 @@
         <!--android:id="@+id/img2"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:background="@drawable/tutorial2"-->
+        <!--android:bg_main="@drawable/tutorial2"-->
         <!--android:contentDescription="@string/app_name" />-->
 
     <ImageView

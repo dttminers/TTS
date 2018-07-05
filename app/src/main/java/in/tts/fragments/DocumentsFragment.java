@@ -4,7 +4,6 @@ import android.Manifest;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -25,21 +24,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
-import android.support.design.widget.TabLayout;
-
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toolbar;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
-import in.tts.activities.MainActivity;
-import in.tts.activities.PDFReaderActivity;
-//import in.tts.activities.PdfActivity;
 import in.tts.activities.PdfReadersActivity;
 import in.tts.adapters.PDFAdapter;
 import in.tts.utils.CommonMethod;
@@ -90,7 +77,6 @@ public class DocumentsFragment extends Fragment {
                 Intent intent = new Intent(getContext(), PdfReadersActivity.class);
                 intent.putExtra("position", i);
                 startActivity(intent);
-//
                 Log.e("Position", i + "");
             }
         });
@@ -100,28 +86,21 @@ public class DocumentsFragment extends Fragment {
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
-
                 if (listFile[i].isDirectory()) {
                     getfile(listFile[i]);
-
                 } else {
-
                     boolean booleanpdf = false;
                     if (listFile[i].getName().endsWith(".pdf")) {
-
                         for (int j = 0; j < fileList.size(); j++) {
                             if (fileList.get(j).getName().equals(listFile[i].getName())) {
                                 booleanpdf = true;
                             } else {
-
                             }
                         }
-
                         if (booleanpdf) {
                             booleanpdf = false;
                         } else {
                             fileList.add(listFile[i]);
-
                         }
                     }
                 }
@@ -147,14 +126,14 @@ public class DocumentsFragment extends Fragment {
 //            if (fileList.size() == 0) {
 //                Toast.makeText(getContext(), " No Files Found", Toast.LENGTH_SHORT).show();
 //            } else {
-                boolean_permission = true;
-                getfile(dir);
-                obj_adapter = new PDFAdapter(getContext(), fileList);
-                lv_pdf.setAdapter(obj_adapter);
+            boolean_permission = true;
+            getfile(dir);
+            obj_adapter = new PDFAdapter(getContext(), fileList);
+            lv_pdf.setAdapter(obj_adapter);
 
-                mTvLblRecent.setVisibility(View.VISIBLE);
-                lv_pdf.setVisibility(View.VISIBLE);
-                mLoading.setVisibility(View.GONE);
+            mTvLblRecent.setVisibility(View.VISIBLE);
+            lv_pdf.setVisibility(View.VISIBLE);
+            mLoading.setVisibility(View.GONE);
 //            }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -173,37 +152,3 @@ public class DocumentsFragment extends Fragment {
         }
     }
 }
-//    public ArrayList<File> getfile(File dir) {
-//        File listFile[] = dir.listFiles();
-//        if (listFile != null && listFile.length > 0) {
-//            for (int i = 0; i < listFile.length; i++) {
-//
-//                if (listFile[i].isDirectory()) {
-//                    fileList.add(listFile[i]);
-//                    getfile(listFile[i]);
-//
-//                } else {
-//                    if (listFile[i].getName().endsWith(".pdf")
-//                            || listFile[i].getName().endsWith(".xls")
-//                            || listFile[i].getName().endsWith(".jpg")
-//                            || listFile[i].getName().endsWith(".jpeg")
-//                            || listFile[i].getName().endsWith(".png")
-//                            || listFile[i].getName().endsWith(".doc"))
-//                    {
-//                        fileList.add(listFile[i]);
-//                        mAttachmentList.add(new AttachmentModel(listFile[i].getName()));
-//                    }
-//                }
-//            }
-//        }
-//        return fileList;
-//    }
-//
-//    private void setAdapter()
-//    {
-//        AttachmentAdapter itemsAdapter = new AttachmentAdapter(AttachmentFileList.this);
-//        ArrayList<AttachmentModel> list = new ArrayList<>();
-//        itemsAdapter.setData(mAttachmentList);
-//        mListView.setAdapter(itemsAdapter);
-//    }
-

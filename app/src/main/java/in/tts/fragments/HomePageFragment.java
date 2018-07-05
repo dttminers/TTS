@@ -1,6 +1,5 @@
 package in.tts.fragments;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +20,6 @@ import com.google.firebase.perf.metrics.AddTrace;
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
-
 public class HomePageFragment extends Fragment {
     ViewPager mViewPager;
     TabLayout tabLayout;
@@ -29,15 +27,7 @@ public class HomePageFragment extends Fragment {
     ImageView ivLeft, ivRight;
     CustomPagerAdapter mCustomPagerAdapter;
     int currentImage = 0;
-
-    int mResources[] = {
-            R.drawable.t1,
-            R.drawable.t2,
-            R.drawable.t3,
-            R.drawable.t4,
-            R.drawable.t5
-    };
-
+    int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -45,8 +35,7 @@ public class HomePageFragment extends Fragment {
 
     @Override
     @AddTrace(name = "onCreateHomePageFragment", enabled = true)
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home_page, container, false);
     }
 
@@ -75,7 +64,6 @@ public class HomePageFragment extends Fragment {
                 if (currentImage == 0) {
                     currentImage = mResources.length-1;
                     mViewPager.setCurrentItem(currentImage);
-
                 } else {
                     currentImage--;
                     mViewPager.setCurrentItem(currentImage);
@@ -103,7 +91,6 @@ public class HomePageFragment extends Fragment {
         LayoutInflater mLayoutInflater;
         int mResources[];
 
-
         public CustomPagerAdapter(int mResources[], Context context) {
             mContext = context;
             this.mResources = mResources;
@@ -123,12 +110,9 @@ public class HomePageFragment extends Fragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
-
             ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
             imageView.setImageResource(mResources[position]);
-
             container.addView(itemView);
-
             return itemView;
         }
 

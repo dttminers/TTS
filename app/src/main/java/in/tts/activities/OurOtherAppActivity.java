@@ -22,11 +22,11 @@ public class OurOtherAppActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
-            getSupportActionBar().setTitle("Our Other Apps");
+            getSupportActionBar().setTitle("Audio Settings");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backward));
+            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
         } else {
             getSupportActionBar().setTitle(R.string.app_name);
         }

@@ -45,6 +45,17 @@ public class PdfReadersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdf_readers);
         try {
 
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+                getSupportActionBar().setTitle("Audio Settings");
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+            } else {
+                getSupportActionBar().setTitle(R.string.app_name);
+            }
+
             position = getIntent().getIntExtra("position", -1);
             fileDescriptor = ParcelFileDescriptor.open(DocumentsFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
 
