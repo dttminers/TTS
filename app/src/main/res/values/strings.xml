@@ -55,6 +55,8 @@
     <string name="str_recent_audios">Recent Audios</string>
     <string name="txt_message">No Text Available</string>
     <string name="str_more_options">More Options</string>
+    <string name="str_reload">Reload</string>
+    <string name="str_speak">Speak</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
