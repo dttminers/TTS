@@ -221,6 +221,7 @@
             android:textColor="@color/white1"
             android:textSize="15sp" />
 
+
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>
