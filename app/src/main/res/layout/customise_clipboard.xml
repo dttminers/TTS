@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlClipboard"
+    android:layout_width="wrap_content"
+    android:layout_height="45dp"
+    android:layout_margin="2dp"
+    android:background="@drawable/shadow">
+
+    <ImageView
+        android:id="@+id/ivCopy"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/ic_copy" />
+
+    <View
+        android:id="@+id/view11"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/ivCopy"
+        android:background="@color/warm_grey1" />
+
+    <ImageView
+        android:id="@+id/ivPaste"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/view11"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/ic_paste" />
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/ivPaste"
+        android:background="@color/warm_grey1" />
+
+    <ImageView
+        android:id="@+id/ivShare"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/view12"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/ic_share" />
+
+    <View
+        android:id="@+id/view13"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/ivShare"
+        android:background="@color/warm_grey1" />
+
+    <ImageView
+        android:id="@+id/ivSpeak"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/view13"
+        android:background="@drawable/ic_speak"
+        android:contentDescription="@string/str_logo_image" />
+
+</RelativeLayout>
