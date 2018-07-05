@@ -15,9 +15,9 @@ import in.tts.R;
 import in.tts.utils.CommonMethod;
 
 public class ViewImage extends Activity {
-    // Declare Variable
-    TextView text;
-    ImageView imageview;
+
+    private TextView text;
+    private ImageView imageview;
 
     @Override
 

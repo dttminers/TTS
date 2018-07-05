@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().show();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backword));
+//            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_pink_arrow));
             if (title != null) {
                 if (title.length() > 0) {
                     getSupportActionBar().setTitle(firstLetterCaps(title));

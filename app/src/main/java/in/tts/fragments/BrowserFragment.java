@@ -14,15 +14,12 @@ import in.tts.utils.CommonMethod;
 public class BrowserFragment extends Fragment {
     WebView webView;
 
-
     public BrowserFragment() {
-
     }
 
     @Override
     @AddTrace(name = "onCreateBrowserFragment", enabled = true)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_browser, container, false);
     }
@@ -33,6 +30,4 @@ public class BrowserFragment extends Fragment {
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
 
     }
-
-
 }

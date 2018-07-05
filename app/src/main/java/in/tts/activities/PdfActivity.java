@@ -1,15 +1,12 @@
 package in.tts.activities;
 
 import in.tts.R;
-import in.tts.fragments.DocumentsFragment;
 import in.tts.utils.CommonMethod;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -20,8 +17,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 //import com.shockwave.pdfium.PdfDocument;
 
-import java.io.File;
-import java.util.List;
 
 public class PdfActivity extends AppCompatActivity {//implements OnPageChangeListener, OnLoadCompleteListener {
 //
@@ -40,11 +35,11 @@ public class PdfActivity extends AppCompatActivity {//implements OnPageChangeLis
             setContentView(R.layout.activity_pdf);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
-                getSupportActionBar().setTitle(R.string.app_name);
+                getSupportActionBar().setTitle("Audio Settings");
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
                 getSupportActionBar().setDisplayShowTitleEnabled(true);
-                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_backward));
+                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
             } else {
                 getSupportActionBar().setTitle(R.string.app_name);
             }

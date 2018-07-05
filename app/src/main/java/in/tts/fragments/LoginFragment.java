@@ -44,15 +44,14 @@ import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
 
-    GoogleSignInClient mGoogleSignInClient;
-    RelativeLayout relativeLayoutGoogle, relativeLayoutFb;
-    CallbackManager callbackManager;
-    AccessTokenTracker accessTokenTracker;
-    AccessToken accessToken;
-    ProfileTracker profileTracker;
-    int RC_SIGN_IN = 123;
+    private GoogleSignInClient mGoogleSignInClient;
+    private RelativeLayout relativeLayoutGoogle, relativeLayoutFb;
+    private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private AccessToken accessToken;
+    private ProfileTracker profileTracker;
+    private int RC_SIGN_IN = 123;
     private static final String EMAIL = "email";
-
 
     public LoginFragment() {
         // Required empty public constructor
@@ -106,7 +105,7 @@ public class LoginFragment extends Fragment {
                 signIn();
             }
         });
-        
+
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override

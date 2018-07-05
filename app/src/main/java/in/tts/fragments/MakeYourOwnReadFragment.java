@@ -31,7 +31,6 @@ import in.tts.utils.CommonMethod;
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 import static android.content.Context.CLIPBOARD_SERVICE;
 
-
 public class MakeYourOwnReadFragment extends Fragment {
 
     private EditText editText;
@@ -145,7 +144,6 @@ public class MakeYourOwnReadFragment extends Fragment {
         });
     }
 
-
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         menu.removeItem(android.R.id.cut);
 
@@ -207,9 +205,4 @@ public class MakeYourOwnReadFragment extends Fragment {
         MenuItem item = menu.findItem(R.id.actionSearch);
         item.setVisible(false);
     }
-
-
 }
-
-
-
