@@ -15,7 +15,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="btn_logout_from_google">str_logout</string>
 
-    <string name="facebook_app_id">[APP_ID]</string>
+    <string name="facebook_app_id">218149285671521</string>
     <string name="fb_login_protocol_scheme">fb[APP_ID]</string>
     <string name="str_login_to_get_access_to_read">Login to get access to read</string>
     <string name="str_username">Username</string>
@@ -71,6 +71,9 @@
     <string name="txt_message">No Text Available</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="str_more_options">More Options</string>
+    <string name="copy">copy</string>
+    <string name="paste">paste</string>
+    <string name="replace">share</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk

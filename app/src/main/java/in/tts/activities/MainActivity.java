@@ -21,6 +21,7 @@ import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
 import in.tts.fragments.HomePageFragment;
+import in.tts.fragments.LoginFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
 import in.tts.model.PrefManager;
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         switch (i) {
             case 0:
                 toSetTitle("Browser It");
-                replacePage(new BrowserFragment());
+                replacePage(new LoginFragment());
 
                 break;
             case 1:
