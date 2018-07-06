@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvRecentItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginEnd="-10dp"
+    android:layout_marginRight="-10dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="10dp"
+    android:background="@color/dark_pink_two"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="10dp">
+
+    <RelativeLayout
+        android:id="@+id/rlRecentItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvRecent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:text="Recent Free Books" />
+
+        <TextView
+            android:id="@+id/tvSeeMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
+            android:layout_alignParentEnd="true"
+            android:textSize="12sp"
+            android:textColor="@color/dark_pink_two"
+            android:text="see more" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpRecentItem"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/tvRecent"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"/>
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
