@@ -38,13 +38,11 @@ public class CameraOcrActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
-            getSupportActionBar().setTitle("Audio Settings");
+            getSupportActionBar().setTitle(getString(R.string.app_name));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
-        } else {
-            getSupportActionBar().setTitle(R.string.app_name);
         }
 
         setContentView(R.layout.activity_camera_ocr);
@@ -97,34 +95,34 @@ public class CameraOcrActivity extends AppCompatActivity {
             mCameraView.getHolder()
                     .addCallback(
                             new SurfaceHolder.Callback() {
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
-                    try {
+                                @Override
+                                public void surfaceCreated(SurfaceHolder holder) {
+                                    try {
 
-                        if (ActivityCompat
-                                .checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(
-                                    CameraOcrActivity.this,
-                                    new String[]{Manifest.permission.CAMERA},
-                                    requestPermissionID);
-                            return;
-                        }
-                        mCameraSource.start(mCameraView.getHolder());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                                        if (ActivityCompat
+                                                .checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions(
+                                                    CameraOcrActivity.this,
+                                                    new String[]{Manifest.permission.CAMERA},
+                                                    requestPermissionID);
+                                            return;
+                                        }
+                                        mCameraSource.start(mCameraView.getHolder());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 
-                @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                }
+                                @Override
+                                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                                }
 
-                @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    mCameraSource.stop();
-                }
-            });
+                                @Override
+                                public void surfaceDestroyed(SurfaceHolder holder) {
+                                    mCameraSource.stop();
+                                }
+                            });
 
             //Set the TextRecognizer's Processor.
             textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {

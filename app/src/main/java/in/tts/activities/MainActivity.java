@@ -19,7 +19,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.fragments.BrowserFragment;
-import in.tts.fragments.DocumentsFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
 import in.tts.fragments.HomePageFragment;
@@ -179,28 +178,28 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(i).select();
         switch (i) {
             case 0:
-                toSetTitle("Browser It");
+                toSetTitle(getString(R.string.str_title_browse_it));
                 replacePage(new BrowserFragment());
 
                 break;
             case 1:
-                toSetTitle("Docs");
+                toSetTitle(getString(R.string.str_title_docs));
                 replacePage(new PdfFragment());
                 break;
             case 2:
-                toSetTitle("Read It");
+                toSetTitle(getString(R.string.app_name));
                 replacePage(new HomePageFragment());
                 break;
             case 3:
-                toSetTitle("Make Your Own Read");
+                toSetTitle(getString(R.string.str_title_make_your_own_read));
                 replacePage(new MakeYourOwnReadFragment());
                 break;
             case 4:
-                toSetTitle("Images");
+                toSetTitle(getString(R.string.str_title_images));
                 replacePage(new GalleryFragment());
                 break;
             default:
-                toSetTitle("Read It");
+                toSetTitle(getString(R.string.app_name));
                 tabLayout.getTabAt(2).select();
                 replacePage(new HomePageFragment());
                 break;
@@ -210,19 +209,43 @@ public class MainActivity extends AppCompatActivity {
     private void doExit() {
         try {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setPositiveButton(getResources().getString(R.string.lbl_yes), new DialogInterface.OnClickListener() {
+            alertDialog.setPositiveButton(getResources().getString(R.string.str_lbl_yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
                 }
             });
-            alertDialog.setNegativeButton(getResources().getString(R.string.lbl_no), null);
-            alertDialog.setMessage(getResources().getString(R.string.lbl_str_exit_from_app));
+            alertDialog.setNegativeButton(getResources().getString(R.string.str_lbl_no), null);
+            alertDialog.setMessage(getResources().getString(R.string.str_lbl_exit_from_app));
             alertDialog.setTitle(getResources().getString(R.string.app_name));
             alertDialog.show();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        CommonMethod.toReleaseMemory();
     }
 }

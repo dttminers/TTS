@@ -1,6 +1,7 @@
 package in.tts.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.activities.ImageOcrActivity;
 
 public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGallery.ViewHolder> {
     private Context context;
@@ -52,6 +54,12 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             picturesView = itemView.findViewById(R.id.ivItem);
+            picturesView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", images.get(getAdapterPosition())));
+                }
+            });
         }
     }
 }

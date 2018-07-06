@@ -20,7 +20,7 @@
         android:layout_margin="2dp"
         android:background="@color/transparent"
         android:gravity="center"
-        android:text="@string/txt_message"
+        android:text="@string/str_txt_message"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold" />

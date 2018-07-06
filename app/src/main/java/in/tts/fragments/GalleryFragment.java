@@ -2,7 +2,6 @@ package in.tts.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,23 +12,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
-
 import in.tts.R;
 import in.tts.adapters.ImageAdapterGallery;
+
+import in.tts.activities.ImageOcrActivity;
+
 import in.tts.utils.CommonMethod;
 
 public class GalleryFragment extends Fragment {
@@ -129,51 +126,3 @@ public class GalleryFragment extends Fragment {
         }
     }
 }
-
-/*
-    private class ImageAdapter extends BaseAdapter {
-
-        private Activity context;
-
-        public ImageAdapter(Activity localContext) {
-            context = localContext;
-            images = getAllShownImagesPath(context);
-        }
-
-        public int getCount() {
-            Log.d("TAG", " count images " + images.size());
-            return images.size();
-        }
-
-        public Object getItem(int position) {
-            return position;
-        }
-
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            ImageView picturesView;
-            if (convertView == null) {
-                picturesView = new ImageView(context);
-                picturesView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int height = displayMetrics.heightPixels;
-                int width = displayMetrics.widthPixels;
-                int size = width / 3;
-
-                picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size-10));
-//                picturesView.setPadding(5, 5, 5, 5);
-
-            } else {
-                picturesView = (ImageView) convertView;
-            }
-//            Glide.with(context).load(images.get(position)).into(picturesView);
-            Log.d("TAG","Images " + images.get(position) + " : " + position);
-            Picasso.get().load("file://"+images.get(position).replaceAll("\\s", "%20")).into(picturesView);
-            return picturesView;
-        }
-* */

@@ -4,8 +4,10 @@ import android.Manifest;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
@@ -58,30 +61,49 @@ public class DocumentsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Document", null);
-//        Toast.makeText(getContext(), " Unable to Display Data", Toast.LENGTH_SHORT).show();
-        init();
+        CommonMethod.setAnalyticsData(getContext(), "MainTab", "PDF Document", null);
+        toStart();
     }
 
-    private void init() {
-        lv_pdf = getActivity().findViewById(R.id.lv_pdf);
-        mLoading = getActivity().findViewById(R.id.pbPdf);
-        mTvLblRecent = getActivity().findViewById(R.id.txtRecent);
+    private void toStart() {
+        try {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bindData();
+                }
+            }, 100);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
 
-        dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-        fn_permission();
-        lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    private void bindData() {
+        try {
+            Log.d("TAG", " PDF bindData ");
+            lv_pdf = getActivity().findViewById(R.id.lv_pdf);
+            mLoading = getActivity().findViewById(R.id.pbPdf);
+            mTvLblRecent = getActivity().findViewById(R.id.txtRecent);
+
+            dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+            fn_permission();
+            lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                Intent intent = new Intent(getContext(), PdfActivity.class);
-                Intent intent = new Intent(getContext(), PdfReadersActivity.class);
-                intent.putExtra("position", i);
-                startActivity(intent);
-                Log.e("Position", i + "");
-            }
-        });
+                    Intent intent = new Intent(getContext(), PdfReadersActivity.class);
+                    intent.putExtra("position", i);
+                    startActivity(intent);
+                    Log.d("TAG", "pdf Position" + i);
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
+    @AddTrace(name = "onGetPDF", enabled = true)
     public ArrayList<File> getfile(File dir) {
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
@@ -106,26 +128,29 @@ public class DocumentsFragment extends Fragment {
                 }
             }
         }
-        Log.d("TAG", " count " + fileList);
+        Log.d("TAG", " pdf count " + fileList.size());
         return fileList;
     }
 
     private void fn_permission() {
-        if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-            if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+        try {
+            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                }
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                toGetPDF();
             }
-        } else {
-            toGetPDF();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
         }
     }
 
     private void toGetPDF() {
         try {
-//            if (fileList.size() == 0) {
-//                Toast.makeText(getContext(), " No Files Found", Toast.LENGTH_SHORT).show();
-//            } else {
+            Log.d("TAG", " pdf getpdf ");
             boolean_permission = true;
             getfile(dir);
             obj_adapter = new PDFAdapter(getContext(), fileList);
@@ -134,7 +159,6 @@ public class DocumentsFragment extends Fragment {
             mTvLblRecent.setVisibility(View.VISIBLE);
             lv_pdf.setVisibility(View.VISIBLE);
             mLoading.setVisibility(View.GONE);
-//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
         }
@@ -150,5 +174,18 @@ public class DocumentsFragment extends Fragment {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("TAG", " pdf resume" + fileList.size());
+        toStart();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
     }
 }

@@ -23,13 +23,11 @@ public class HelpActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
-            getSupportActionBar().setTitle("Help");
+            getSupportActionBar().setTitle(getString(R.string.str_title_help));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
-        } else {
-            getSupportActionBar().setTitle(R.string.app_name);
         }
     }
 

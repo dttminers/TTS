@@ -9,6 +9,8 @@ import android.view.Window;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
+import in.tts.model.PrefManager;
+import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 
 public class SplashActivity extends AppCompatActivity {
@@ -23,19 +25,14 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(new Runnable() {
 
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-
             @Override
             public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
-//                startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-
-                // close this activity
+                PrefManager.getUserInfo(SplashActivity.this);
+                if (User.getUser(SplashActivity.this).getId() != null) {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                } else {
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                }
                 finish();
             }
         }, 3000);

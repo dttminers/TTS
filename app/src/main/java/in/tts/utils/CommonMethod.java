@@ -24,6 +24,7 @@ public class CommonMethod {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
+
     public static void toCallLoader(Context context, String msg) {
         try {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -54,4 +55,10 @@ public class CommonMethod {
         }
     }
 
+    public static void toReleaseMemory() {
+        Runtime.getRuntime().runFinalization();
+        Runtime.getRuntime().freeMemory();
+        Runtime.getRuntime().gc();
+        System.gc();
+    }
 }

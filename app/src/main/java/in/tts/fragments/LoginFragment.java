@@ -254,4 +254,16 @@ public class LoginFragment extends Fragment {
             Crashlytics.logException(e);
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
+    }
 }

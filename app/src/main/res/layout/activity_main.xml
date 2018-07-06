@@ -13,41 +13,47 @@
         android:clickable="true"
         android:focusable="true"
         app:tabBackground="@color/white"
-        app:tabGravity="fill"
         app:tabIndicatorColor="@color/ttsRed"
         app:tabIndicatorHeight="1dp"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@android:color/holo_red_dark">
+        app:tabSelectedTextColor="@color/dark_pink_two"
+        app:tabTextAppearance="@style/MineCustomTabText"
+        app:tabTextColor="@color/black">
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab1" />
+            android:icon="@drawable/tab1"
+            android:text="Browser" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab2" />
+            android:icon="@drawable/tab2"
+            android:text="PDF" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab3" />
+            android:icon="@drawable/tab3"
+            android:text="Home" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab4" />
+            android:icon="@drawable/tab4"
+            android:text="Own Read" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab5" />
+            android:icon="@drawable/tab5"
+            android:text="Images" />
 
     </android.support.design.widget.TabLayout>
 

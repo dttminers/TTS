@@ -17,7 +17,6 @@ public class MediaFile extends AppCompatActivity {
 //        setContentView(R.layout.main);
 //        MediaPlayer mediaPlayer = MediaPlayer.create(MediaFile.this, R.raw.sound_file_1);
 //        mediaPlayer.start();
-//
 //        Uri myUri = Uri.parse("https://soundcloud.com/uri-music/black-flag-2"); // initialize Uri here
 //        MediaPlayer mediaPlayer = new MediaPlayer();
 //        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);

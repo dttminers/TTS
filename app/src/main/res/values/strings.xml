@@ -1,11 +1,20 @@
 <resources>
-
     <string name="app_name">Read It</string>
+
+    <string name="str_title_settings">Settings</string>
+    <string name="str_title_help">Help</string>
+    <string name="str_title_make_your_own_read">Make Your Own Read</string>
+    <string name="str_title_browse_it">Browse It</string>
+    <string name="str_title_docs">Docs</string>
+    <string name="str_title_audio_settings">Audio Settings</string>
+    <string name="str_title_our_other_apps">Read It</string>
+    <string name="str_title_images">Images</string>
+
+    <string name="str_start_typing_here">Start typing here...</string>
     <string name="str_send">Send</string>
     <string name="str_camera">Camera</string>
     <string name="str_settings">Settings</string>
     <string name="str_skip">skip</string>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="btn_logout_from_google">str_logout</string>
 
@@ -20,9 +29,8 @@
     <string name="str_confirm_password">Confirm Password</string>
     <string name="str_sign_up">Sign Up</string>
     <string name="str_or">or</string>
-    <string name="login_with_google">Login with Google</string>
-    <string name="login_with_facebook">Login with Facebook</string>
-
+    <string name="str_login_with_google">Login with Google</string>
+    <string name="str_login_with_facebook">Login with Facebook</string>
     <string name="str_already_have_an_account">Already have an account? Login!</string>
     <string name="str_login">Login</string>
     <string name="str_british_accent">British Accent</string>
@@ -38,7 +46,7 @@
     <string name="str_data_usage">Data Usage</string>
     <string name="str_voice_speed">Voice Speed</string>
     <string name="str_tamil">Tamil</string>
-    <string name="marathi">Marathi</string>
+    <string name="str_marathi">Marathi</string>
     <string name="str_hindi">Hindi</string>
     <string name="str_accent_selection">Accent selection</string>
     <string name="str_english">English</string>
@@ -48,10 +56,9 @@
     <string name="str_audio_settings">Audio Settings</string>
     <string name="str_our_other_apps">Our Other Apps</string>
     <string name="str_help">Help</string>
-    <string name="str_start_typing_here">Start typing here...</string>
-    <string name="lbl_yes">Yes</string>
-    <string name="lbl_no">No</string>
-    <string name="lbl_str_exit_from_app">Do you want to close the app?</string>
+    <string name="str_lbl_yes">Yes</string>
+    <string name="str_lbl_no">No</string>
+    <string name="str_lbl_exit_from_app">Do you want to close the app?</string>
     <string name="str_enter_url_here">Enter URL here</string>
     <string name="str_bookmarks">Bookmarks</string>
     <string name="str_recent_search">Recent Search</string>
@@ -59,33 +66,38 @@
     <string name="str_next">Next</string>
     <string name="str_previous">Previous</string>
     <string name="str_recent_audios">Recent Audios</string>
-    <string name="txt_message">No Text Available</string>
+    <string name="str_txt_message">No Text Available</string>
     <string name="str_more_options">More Options</string>
     <string name="copy">copy</string>
     <string name="paste">paste</string>
     <string name="replace">share</string>
 
     <string name="str_reload">Reload</string>
-    <string name="str_speak">Speak</string>
+    <string name="str_lbl_logout_from_app">Do you want to Logout from App ?</string>
+    <string name="str_title_recent_voice">Recent Voice</string>
+
+
     <string name="str_50mins">50mins</string>
     <string name="str_60">60%</string>
+    <string name="str_speak">Speak</string>
+</resources>
 
-</resources><!--%USERPROFILE%\AppData\Local\Temp
-https://github.com/watson-developer-cloud/speech-android-sdk
+    <!--%USERPROFILE%\AppData\Local\Temp
+    https://github.com/watson-developer-cloud/speech-android-sdk
 
 
-speakTextTxt = speakText.getText().toString();
-HashMap<String, String> myHashRender = new HashMap<String, String>();
-myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_SAVE_ID);
+    speakTextTxt = speakText.getText().toString();
+    HashMap<String, String> myHashRender = new HashMap<String, String>();
+    myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_SAVE_ID);
 
-String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-File appTmpPath = new File(exStoragePath + "/sounds/");
-appTmpPath.mkdirs();
-String tempFilename = "tmpaudio.wav";
-tempDestFile = appTmpPath.getAbsolutePath() + "/" + tempFilename;
+    String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    File appTmpPath = new File(exStoragePath + "/sounds/");
+    appTmpPath.mkdirs();
+    String tempFilename = "tmpaudio.wav";
+    tempDestFile = appTmpPath.getAbsolutePath() + "/" + tempFilename;
 
-mTts.synthesizeToFile(speakTextTxt, myHashRender, tempDestFile);
+    mTts.synthesizeToFile(speakTextTxt, myHashRender, tempDestFile);
 
-mTts.addSpeech(wakeUpText, destFileName);
+    mTts.addSpeech(wakeUpText, destFileName);
 
--->
+    -->

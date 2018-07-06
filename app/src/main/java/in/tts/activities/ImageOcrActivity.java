@@ -34,7 +34,7 @@ public class ImageOcrActivity extends AppCompatActivity {
 
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
-                getSupportActionBar().setTitle("Audio Settings");
+                getSupportActionBar().setTitle(getString(R.string.app_name));
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
                 getSupportActionBar().setDisplayShowTitleEnabled(true);

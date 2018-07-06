@@ -23,28 +23,25 @@ import in.tts.utils.CommonMethod;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private RelativeLayout relativeLayoutFb;
-    private LoginButton loginButton;
-
     @Override
     @AddTrace(name = "onCreateLoginActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login", null);
-
-//        relativeLayoutFb = findViewById(R.id.rlFacebookLogin);
-//        loginButton = findViewById(R.id.login_button);
 
         try {
             String Status = getIntent().getStringExtra("LOGIN");
             if (Status == null) {
+                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login1", null);
                 replaceMainTabsFragment(new LoginFragment());
             } else if (Status.toLowerCase().equals("login")) {
+                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
                 replaceMainTabsFragment(new LoginFragment());
             } else if (Status.toLowerCase().equals("register")) {
+                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Register", null);
                 replaceMainTabsFragment(new RegisterFragment());
             } else {
+                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login3", null);
                 replaceMainTabsFragment(new LoginFragment());
             }
         } catch (Exception | Error e2) {
@@ -52,13 +49,6 @@ public class LoginActivity extends AppCompatActivity {
             Crashlytics.logException(e2);
         }
     }
-
-//    public void onClick(View v) {
-//        if (v == relativeLayoutFb) {
-//            loginButton.performClick();
-//        }
-//    }
-
 
     private void replaceMainTabsFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

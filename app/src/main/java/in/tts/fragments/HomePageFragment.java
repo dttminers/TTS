@@ -121,4 +121,10 @@ public class HomePageFragment extends Fragment {
             container.removeView((LinearLayout) object);
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
 }
