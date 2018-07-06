@@ -3,6 +3,7 @@ package in.tts.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class PDFHomePageImages extends PagerAdapter {
 
     @Override
     public int getCount() {
+        Log.d("TAG", " count images " + l.size());
         return l.size();
     }
 
@@ -40,10 +42,10 @@ public class PDFHomePageImages extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-//            iv.setBackgroundColor(toGetRandomColor());
+            iv.setBackgroundColor(toGetRandomColor());
             Picasso.get().load("file://" + l.get(position).replaceAll("\\s", "%20")).into(iv);
             container.addView(vg);
-        }catch (Exception| Error e){
+        } catch (Exception | Error e) {
             e.printStackTrace();
         }
         return vg;

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,8 @@ import in.tts.R;
 
 public class PDFHomePage extends PagerAdapter {
 
-    ArrayList<File> l;
-    Context context;
+    private ArrayList<File> l;
+    private Context context;
 
     public PDFHomePage(Context ctx, ArrayList<File> list) {
         context = ctx;
@@ -29,6 +30,7 @@ public class PDFHomePage extends PagerAdapter {
 
     @Override
     public int getCount() {
+        Log.d("TAG ", " count "+ l.size());
         return l.size();
     }
 

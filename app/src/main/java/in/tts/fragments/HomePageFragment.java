@@ -73,8 +73,8 @@ public class HomePageFragment extends Fragment {
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "HomePage", null);
         try {
             imageView = getActivity().findViewById(R.id.imageView);
-            ivLeft = getActivity().findViewById(R.id.imageViewLeft);
-            ivRight = getActivity().findViewById(R.id.imageViewRight);
+            ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
+            ivRight = getActivity().findViewById(R.id.imageViewRight1);
             tabLayout = getActivity().findViewById(R.id.tlHomePage);
             mViewPager = getActivity().findViewById(R.id.vpHomePage);
 
@@ -149,10 +149,8 @@ public class HomePageFragment extends Fragment {
             Log.d("TAG", " pdf getpdf ");
             boolean_permission = true;
             getfile(dir);
-            toBindDealProductData(fileList, "Recent PDF ", "See More");
-
-            toBindDealProductDataimages(getAllShownImagesPath(getActivity()), "Recent Images ", "See More");
-
+//            toBindDealProductData(fileList, "Recent PDF ", "See More");
+//            toBindDealProductDataimages(getAllShownImagesPath(getActivity()), "Recent Images ", "See More");
         } catch (Exception | Error e) {
             e.printStackTrace();
         }
@@ -168,7 +166,7 @@ public class HomePageFragment extends Fragment {
                 ViewPager vpDeals = (ViewPager) view.findViewById(R.id.vpRecentItem);
                 tvHeader.setText(header);
                 vpDeals.setClipToPadding(false);
-//                vpDeals.setPadding(15, 0, 15, 0);
+                vpDeals.setPadding(15, 0, 15, 0);
                 vpDeals.setOffscreenPageLimit(4);
                 vpDeals.setPageMargin(10);
                 vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
@@ -261,7 +259,6 @@ public class HomePageFragment extends Fragment {
             }
         }
     }
-
 
     class CustomPagerAdapter extends PagerAdapter {
 
