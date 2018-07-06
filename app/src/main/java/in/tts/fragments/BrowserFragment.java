@@ -30,4 +30,10 @@ public class BrowserFragment extends Fragment {
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
 }

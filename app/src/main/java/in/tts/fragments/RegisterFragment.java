@@ -58,4 +58,10 @@ public class RegisterFragment extends Fragment {
             Crashlytics.logException(e);
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
 }

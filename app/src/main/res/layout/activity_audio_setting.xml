@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:scrollbars="none"
     tools:context=".activities.AudioSettingActivity">
@@ -89,10 +90,10 @@
                 android:textSize="14sp" />
 
             <RelativeLayout
-                android:layout_marginStart="10dp"
                 android:id="@+id/rlEnglish"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp">
 
                 <TextView
                     android:id="@+id/tvAccentSel"
@@ -106,11 +107,11 @@
                     android:textSize="12sp" />
 
                 <RadioGroup
-                    android:layout_marginStart="5dp"
                     android:id="@+id/rgAccentSel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvAccentSel">
+                    android:layout_below="@+id/tvAccentSel"
+                    android:layout_marginStart="5dp">
 
                     <RadioButton
                         android:id="@+id/radioButton"
@@ -154,7 +155,7 @@
                 android:button="@drawable/toggle"
                 android:checked="false"
                 android:fontFamily="sans-serif"
-                android:text="@string/marathi"
+                android:text="@string/str_marathi"
                 android:textColor="@drawable/selector_textcolor_rb"
                 android:textSize="14sp" />
 
@@ -173,6 +174,7 @@
 
         </RadioGroup>
 
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -188,19 +190,34 @@
             android:textColor="@color/warm_grey"
             android:textSize="15sp" />
 
-        <SeekBar
+        <com.vsa.seekbarindicated.SeekBarIndicated
             android:id="@+id/seek1"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:max="3"
-            android:progress="1"
+            app:seekbar_max="3"
             android:progressTint="@color/dark_pink_two"
             android:secondaryProgress="10"
+            android:progress="1"
             android:thumbTint="@color/dark_pink_two"
-            android:tickMark="@color/black"
-            android:tickMarkTint="@color/dark_pink_two" />
+            android:tickMark="@color/dark_pink_two"
+            android:tickMarkTint="@color/dark_pink_two"
+            app:seekbar_marginLeft="10dp"
+            app:seekbar_marginRight="10dp" />
+
+        <!--<SeekBar-->
+            <!--android:id="@+id/seek1"-->
+            <!--style="@style/Widget.AppCompat.SeekBar.Discrete"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:max="3"-->
+            <!--android:progress="1"-->
+            <!--android:progressTint="@color/dark_pink_two"-->
+            <!--android:secondaryProgress="10"-->
+            <!--android:thumbTint="@color/dark_pink_two"-->
+            <!--android:tickMark="@color/black"-->
+            <!--android:tickMarkTint="@color/dark_pink_two" />-->
+        <!---->
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

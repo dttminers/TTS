@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:background="@drawable/bg_white_circle"
-                android:contentDescription="@string/login_with_google"
+                android:contentDescription="@string/str_login_with_google"
                 android:padding="10dp"
                 android:src="@drawable/ic_google" />
 
@@ -145,7 +145,7 @@
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
                 android:paddingStart="40dp"
-                android:text="@string/login_with_google"
+                android:text="@string/str_login_with_google"
                 android:textAllCaps="false"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />
@@ -165,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
-                android:contentDescription="@string/login_with_facebook"
+                android:contentDescription="@string/str_login_with_facebook"
                 android:src="@drawable/ic_facebook" />
 
             <TextView
@@ -181,7 +181,7 @@
                 android:paddingLeft="40dp"
                 android:paddingRight="30dp"
                 android:paddingStart="40dp"
-                android:text="@string/login_with_facebook"
+                android:text="@string/str_login_with_facebook"
                 android:textAllCaps="false"
                 android:textColor="@color/white1"
                 android:textSize="15sp" />

@@ -27,7 +27,6 @@ public class TutorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         CommonMethod.setAnalyticsData(TutorialActivity.this, "MainTab", "Tutorial", null);
         try {
-
             // Making notification bar transparent
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -42,47 +41,6 @@ public class TutorialActivity extends AppCompatActivity {
                     launchHomeScreen(false);
                 }
             });
-
-
-            // ClickListener for NEXT button
-            // When clicked on Button ViewSwitcher will switch between views
-            // The current view will go out and next view will come in with specified animation
-//            findViewById(R.id.img1).setOnClickListener(new View.OnClickListener() {
-//
-//                public void onClick(View v) {
-//                    btnSkip.setVisibility(View.VISIBLE);
-////                simpleViewSwitcher.showNext();
-//                    v.setVisibility(View.GONE);
-//
-//                }
-//            });
-//
-//            findViewById(R.id.img2).setOnClickListener(new View.OnClickListener() {
-//
-//                public void onClick(View v) {
-//                    btnSkip.setVisibility(View.VISIBLE);
-////                simpleViewSwitcher.showNext();
-//                    v.setVisibility(View.GONE);
-//                }
-//            });
-//
-//            findViewById(R.id.img3).setOnClickListener(new View.OnClickListener() {
-//
-//                public void onClick(View v) {
-//                    btnSkip.setVisibility(View.VISIBLE);
-////                simpleViewSwitcher.showNext();
-//                    v.setVisibility(View.GONE);
-//                }
-//            });
-//
-//            findViewById(R.id.img4).setOnClickListener(new View.OnClickListener() {
-//
-//                public void onClick(View v) {
-//                    btnSkip.setVisibility(View.VISIBLE);
-////                simpleViewSwitcher.showNext();
-//                    v.setVisibility(View.GONE);
-//                }
-//            });
 
             findViewById(R.id.img1).setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

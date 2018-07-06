@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import in.tts.R;
 import in.tts.activities.ImageOcrActivity;
+import in.tts.utils.CommonMethod;
 
 public class GalleryFragment extends Fragment {
 
@@ -160,5 +161,11 @@ public class GalleryFragment extends Fragment {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
     }
 }

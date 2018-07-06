@@ -131,6 +131,8 @@ public class MakeYourOwnReadFragment extends Fragment {
             t1.stop();
             t1.shutdown();
         }
+
+        CommonMethod.toReleaseMemory();
         super.onPause();
     }
 

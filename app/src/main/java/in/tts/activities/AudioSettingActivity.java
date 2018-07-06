@@ -27,43 +27,41 @@ public class AudioSettingActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
-            getSupportActionBar().setTitle("Audio Settings");
+            getSupportActionBar().setTitle(getString(R.string.str_title_audio_settings));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
-        } else {
-            getSupportActionBar().setTitle(R.string.app_name);
         }
 
-        final SeekBar yourSeekbar = (SeekBar) findViewById(R.id.seek1);
+//        final SeekBar yourSeekbar = (SeekBar) findViewById(R.id.seek1);
 //        yourSeekbar.setMax(20);
-        yourSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-//                yourSeekbar.setProgress(storedValue);
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    if (progress >= 0 && progress <= seekBar.getMax()) {
-
-                        String progressString = String.valueOf(progress * 10);
-//                        yourTextView.setText(progressString); // the TextView Reference
-                        seekBar.setSecondaryProgress(progress);
-                        seekBar.setProgress(progress);
-                    }
-                }
-
-            }
-        });
+//        yourSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+////                yourSeekbar.setProgress(storedValue);
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                if (fromUser) {
+//                    if (progress >= 0 && progress <= seekBar.getMax()) {
+//
+//                        String progressString = String.valueOf(progress * 10);
+////                        yourTextView.setText(progressString); // the TextView Reference
+//                        seekBar.setSecondaryProgress(progress);
+//                        seekBar.setProgress(progress);
+//                    }
+//                }
+//
+//            }
+//        });
         final RelativeLayout rlEng = (RelativeLayout) findViewById(R.id.rlEnglish);
 
         RadioGroup rg = (RadioGroup) findViewById(R.id.rgLanguageSel);
