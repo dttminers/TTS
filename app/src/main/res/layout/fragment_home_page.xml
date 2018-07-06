@@ -66,6 +66,8 @@
 
         </RelativeLayout>
 
+        <include layout="@layout/layout_home_page_recent_items"/>
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

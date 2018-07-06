@@ -2,7 +2,7 @@ package in.tts.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,27 +13,24 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
-import com.squareup.picasso.Picasso;
 
 import in.tts.R;
-import in.tts.activities.ImageOcrActivity;
+import in.tts.adapters.ImageAdapterGallery;
+import in.tts.utils.CommonMethod;
 
 public class GalleryFragment extends Fragment {
 
@@ -74,6 +71,7 @@ public class GalleryFragment extends Fragment {
 
     private void toGetData() {
         try {
+            CommonMethod.toCallLoader(getContext(), "Loading");
 //            gallery.setAdapter(new ImageAdapter(getActivity()));
 //            gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //
@@ -91,6 +89,7 @@ public class GalleryFragment extends Fragment {
             recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), getAllShownImagesPath(getActivity())));
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
         }
     }
 
@@ -111,6 +110,10 @@ public class GalleryFragment extends Fragment {
             listOfAllImages.add(absolutePathOfImage);
         }
         Log.d("TAG", " DATa " + listOfAllImages.size()+":"+listOfAllImages);
+        CommonMethod.toCloseLoader();
+        if (listOfAllImages.size() == 0){
+            Toast.makeText(getContext(),"Image not found",Toast.LENGTH_SHORT).show();
+        }
         return listOfAllImages;
     }
 

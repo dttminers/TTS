@@ -1,4 +1,4 @@
-package in.tts.fragments;
+package in.tts.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import in.tts.R;
 
-class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGallery.ViewHolder> {
+public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGallery.ViewHolder> {
     private Context context;
     private ArrayList<String> images;
 
