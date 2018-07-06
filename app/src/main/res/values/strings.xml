@@ -10,7 +10,7 @@
     <string name="btn_logout_from_google">str_logout</string>
 
     <string name="facebook_app_id">218149285671521</string>
-    <string name="fb_login_protocol_scheme">fb[APP_ID]</string>
+    <string name="fb_login_protocol_scheme">fb218149285671521</string>
     <string name="str_login_to_get_access_to_read">Login to get access to read</string>
     <string name="str_username">Username</string>
     <string name="str_password">Password</string>

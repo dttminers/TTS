@@ -10,14 +10,18 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
 
+import io.fabric.sdk.android.Fabric;
+
 public class ReadIt extends Application {
 
     public void onCreate() {
         super.onCreate();
         try {
             FirebaseAnalytics.getInstance(this);
-            FacebookSdk.sdkInitialize(getApplicationContext());
-            AppEventsLogger.activateApp((Application) this);
+//            FacebookSdk.sdkInitialize(getApplicationContext());
+//            AppEventsLogger.activateApp(getApplicationContext());
+            AppEventsLogger.activateApp(this);
+            Fabric.with(this, new Crashlytics());
             return;
         } catch (Exception | Error e) {
             Crashlytics.logException(e);

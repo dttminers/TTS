@@ -82,6 +82,12 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_cornor_border">
 
+            <!--<com.facebook.login.widget.LoginButton-->
+            <!--android:id="@+id/login_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone" />-->
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,9 +101,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="10dp"
-                android:lines="1"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
+                android:lines="1"
                 android:paddingEnd="30dp"
                 android:paddingLeft="40dp"
                 android:paddingRight="30dp"
@@ -197,10 +203,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:lines="1"
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
                 android:fontFamily="sans-serif"
+                android:lines="1"
                 android:text="@string/str_sign_in"
                 android:textColor="@color/white1" />
 
@@ -213,10 +219,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/llSignUp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="0dp"
+            android:layout_marginTop="10dp"
             android:contentDescription="@string/str_skip"
             android:fontFamily="sans-serif"
             android:src="@drawable/ic_skip"
