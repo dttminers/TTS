@@ -37,13 +37,21 @@
     <!--android:focusable="true"-->
     <!--android:clickable="true"/>-->
 
-    <GridView
-        android:id="@+id/gridView"
+    <!--<GridView-->
+        <!--android:id="@+id/gridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:horizontalSpacing="5dp"-->
+        <!--android:numColumns="3"-->
+        <!--android:verticalSpacing="5dp" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvGallery"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:horizontalSpacing="5dp"
-        android:numColumns="3"
-        android:verticalSpacing="5dp" />
+        android:layout_height="wrap_content">
+
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
