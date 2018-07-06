@@ -83,6 +83,7 @@ public class GalleryFragment extends Fragment {
 //            });
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+//            recyclerView.setPadding(10,10,10,10);
             recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), getAllShownImagesPath(getActivity())));
         } catch (Exception | Error e) {
             e.printStackTrace();
