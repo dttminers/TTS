@@ -10,8 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center">
+        android:layout_gravity="center">
 
         <ImageView
             android:id="@+id/imgLogoLogin"
@@ -214,13 +213,15 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/llSignUp"
-            android:layout_margin="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="0dp"
             android:contentDescription="@string/str_skip"
             android:fontFamily="sans-serif"
             android:src="@drawable/ic_skip"
             android:textColor="@color/white1"
-            android:textSize="15sp" />
-
+            android:textSize="12sp" />
 
     </RelativeLayout>
 

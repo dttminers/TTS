@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         switch (i) {
             case 0:
                 toSetTitle("Browser It");
-                replacePage(new LoginFragment());
+                replacePage(new BrowserFragment());
 
                 break;
             case 1:

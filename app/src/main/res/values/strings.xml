@@ -67,6 +67,8 @@
 
     <string name="str_reload">Reload</string>
     <string name="str_speak">Speak</string>
+    <string name="str_50mins">50mins</string>
+    <string name="str_60">60%</string>
 
 </resources><!--%USERPROFILE%\AppData\Local\Temp
 https://github.com/watson-developer-cloud/speech-android-sdk
