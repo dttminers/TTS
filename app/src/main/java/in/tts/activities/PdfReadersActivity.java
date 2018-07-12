@@ -2,6 +2,7 @@ package in.tts.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +11,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-
+import android.util.Log;
+import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import in.tts.R;
 import in.tts.adapters.PdfPages;
@@ -60,6 +66,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                 rv.setItemAnimator(new DefaultItemAnimator());
                 rv.setAdapter(new PdfPages(PdfReadersActivity.this, list));
             }
+            toGetPDFText();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -84,25 +91,39 @@ public class PdfReadersActivity extends AppCompatActivity {
         list.add(bitmap);
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public void toGetPDFText() {
         try {
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    onBackPressed();
-                    break;
-                default:
-                    return true;
+//            File sdcard = Environment.getExternalStorageDirectory();
+
+//Get the text file
+
+//            File file = new File(sdcard, "myfolder/anskey.txt");
+
+//ob.pathh
+            //Read text from file
+
+            StringBuilder text = new StringBuilder();
+            BufferedReader br = new BufferedReader(new FileReader(new File(DocumentsFragment.fileList.get(position).getName())));
+            String line = null;
+            //int i=0;
+            List<String> lines = new ArrayList<String>();
+
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+//       arr[i]=line;
+//       i++;
+                text.append(line);
+                text.append('\n');
             }
+            Log.d("Tag", " text : " + text);
+            Toast.makeText(PdfReadersActivity.this, "TEXT " + text.length(), Toast.LENGTH_LONG).show();
+            //arr = lines.toArray(new String[lines.size()]);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
-        return super.onOptionsItemSelected(item);
     }
-
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
 }
+
+
+

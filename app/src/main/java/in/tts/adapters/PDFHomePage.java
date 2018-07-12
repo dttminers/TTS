@@ -3,8 +3,6 @@ package in.tts.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +33,12 @@ public class PDFHomePage extends PagerAdapter {
     }
 
 
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
 
-    public Object instantiateItem(ViewGroup container, int position) {
+    @NonNull
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ViewGroup vg = null;
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
@@ -52,13 +51,13 @@ public class PDFHomePage extends PagerAdapter {
         return vg;
     }
 
-    public int toGetRandomColor() {
+    private int toGetRandomColor() {
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(200), rnd.nextInt(200), rnd.nextInt(200));
     }
 
     @Override
     public float getPageWidth(int position) {
-        return(0.9f);
+        return(30.9f);
     }
 }
