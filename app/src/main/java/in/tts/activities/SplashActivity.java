@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    startActivity(new Intent(SplashActivity.this, TutorialActivity.class));
 //                }
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class)
-                            .putExtra("LOGIN", "login"));
+                            .putExtra("LOGIN", "login1"));
                 }
                 finish();
             }
