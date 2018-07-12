@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import in.tts.R;
 import in.tts.adapters.PdfPages;
 import in.tts.fragments.DocumentsFragment;
+import in.tts.utils.CommonMethod;
 
 public class PdfReadersActivity extends AppCompatActivity {
 
@@ -81,4 +83,26 @@ public class PdfReadersActivity extends AppCompatActivity {
         // showing bitmap to an imageview
         list.add(bitmap);
     }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    onBackPressed();
+                    break;
+                default:
+                    return true;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
 }
