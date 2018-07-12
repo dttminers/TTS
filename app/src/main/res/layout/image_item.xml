@@ -3,6 +3,7 @@
     android:id="@+id/ivItem"
     android:scaleType="centerCrop"
     android:layout_width="120dp"
+    android:background="@color/black2"
     android:layout_height="100dp"
     android:layout_marginBottom="5dp" />
 
