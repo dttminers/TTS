@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 
 import java.io.BufferedReader;
@@ -24,6 +24,7 @@ import java.util.List;
 import in.tts.R;
 import in.tts.adapters.PdfPages;
 import in.tts.fragments.DocumentsFragment;
+import in.tts.utils.CommonMethod;
 
 public class PdfReadersActivity extends AppCompatActivity {
 
@@ -123,3 +124,6 @@ public class PdfReadersActivity extends AppCompatActivity {
         }
     }
 }
+
+
+
