@@ -149,8 +149,8 @@ public class HomePageFragment extends Fragment {
             Log.d("TAG", " pdf getpdf ");
             boolean_permission = true;
             getfile(dir);
-//            toBindDealProductData(fileList, "Recent PDF ", "See More");
-//            toBindDealProductDataimages(getAllShownImagesPath(getActivity()), "Recent Images ", "See More");
+            toBindDealProductData(fileList, "Recent PDF ", "See More");
+            toBindDealProductDataimages(getAllShownImagesPath(getActivity()), "Recent Images ", "See More");
         } catch (Exception | Error e) {
             e.printStackTrace();
         }
