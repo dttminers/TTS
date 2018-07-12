@@ -62,8 +62,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
 
     @AddTrace(name = "onCreateMakeYourOurReadFragment", enabled = true)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_make_your_own_read, container, false);
     }
@@ -146,130 +145,93 @@ public class MakeYourOwnReadFragment extends Fragment {
     private void popup() {
 
         try {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.customise_clipboard, null);
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View customView = inflater.inflate(R.layout.customise_clipboard, null);
 
-        final PopupWindow popupWindow = new PopupWindow(
-                customView,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
+            final PopupWindow popupWindow = new PopupWindow(
+                    customView,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
 
-        // Set an elevation value for popup window
-        // Call requires API level 21
-        if (Build.VERSION.SDK_INT >= 21) {
-            popupWindow.setElevation(5.0f);
-        }
-//        final TextView placename = (TextView) customView.findViewById(R.id.popup_id) ;
-//        Button closeButton = (Button) customView.findViewById(R.id.directions);
-//        placename.setText("Name");
-//        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-//        popupWindow.setOutsideTouchable(true);
-        // Set a click listener for the popup window close button
-//        closeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Dismiss the popup window
-//
-//                popupWindow.dismiss();
-//
-//            }
-//        });
-//        popupWindow.setFocusable(true);
-
-
-//        RelativeLayout relativeLayout = getActivity().findViewById(R.id.rlMakeRead);
-//        final FrameLayout frameLayout = getActivity().findViewById(R.id.flMakeRead);
-//        frameLayout.addView(customView);
-
-        editText = customView.findViewById(R.id.edMakeRead);
-        ivCopy = customView.findViewById(R.id.ivCopy);
-        ivPaste = customView.findViewById(R.id.ivPaste);
-        ivShare = customView.findViewById(R.id.ivShare);
-        ivSpeak = customView.findViewById(R.id.ivSpeak);
-
-        myClipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
-
-        ivCopy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CharSequence text = editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-
-                myClip = ClipData.newPlainText("text", text);
-                myClipboard.setPrimaryClip(myClip);
-
-                Toast.makeText(getContext(), "Text Copied", Toast.LENGTH_SHORT).show();
+            // Set an elevation value for popup window
+            // Call requires API level 21
+            if (Build.VERSION.SDK_INT >= 21) {
+                popupWindow.setElevation(5.0f);
             }
-        });
+            popupWindow.setFocusable(true);
 
-        ivPaste.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ClipData text = myClipboard.getPrimaryClip();
-//                ClipData.Item item = text.getItemAt(0);
-//
-//                String text1 = item.getText().toString();
-//                editText.setText(text1);
+            ivCopy = customView.findViewById(R.id.ivCopy);
+            ivPaste = customView.findViewById(R.id.ivPaste);
+            ivShare = customView.findViewById(R.id.ivShare);
+            ivSpeak = customView.findViewById(R.id.ivSpeak);
 
-                if (myClipboard.hasPrimaryClip()) {
-                    ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
-                    CharSequence ptext = item.getText();
-                    editText.setText(ptext);
+            myClipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+
+            ivCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CharSequence text = editText.getText();//.subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
+                    myClip = ClipData.newPlainText("text", text);
+                    myClipboard.setPrimaryClip(myClip);
+                    Toast.makeText(getContext(), "Text Copied : " + text, Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), "Text Pasted", Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
 
-//        editText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                editText.setBackgroundColor(getResources().getColor(R.color.transparent));
-////                frameLayout.setVisibility(View.VISIBLE);
-//            }
-//        });
-
-        ivShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClip);
-                getActivity().startActivity(Intent.createChooser(sharingIntent, "Share"));
-            }
-        });
-
-        t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.UK);
+            ivPaste.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myClipboard.hasPrimaryClip()) {
+                        ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
+                        String ptext = item.getText().toString();
+                        editText.setText(ptext);
+                        Toast.makeText(getContext(), "Text Pasted : " + ptext, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
 
-        ivSpeak.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String toSpeak = editText.getText().toString();
-                Toast.makeText(getContext(), toSpeak, Toast.LENGTH_SHORT).show();
-                t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        });
+            ivShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                    Log.d("TAG", "SHARE : " + sharingIntent.getExtras());
+                    getContext().startActivity(Intent.createChooser(sharingIntent, "Share"));
+                }
+            });
 
-        Log.d("TAG", " Touch " + lastTouchDownXY[0] + " : " + lastTouchDownXY[1] + " :" + customView.getMeasuredHeight() + " : " + (lastTouchDownXY[1] - customView.getMeasuredHeight()));
-        popupWindow.setOutsideTouchable(true);
-        customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.NO_GRAVITY, (int) lastTouchDownXY[0], (int) lastTouchDownXY[1] + customView.getMeasuredHeight());
-        //(int)event.getX(), (int)event.getY() - customView.getMeasuredHeight());
+            t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if (status != TextToSpeech.ERROR) {
+                        t1.setLanguage(Locale.UK);
+                    }
+                }
+            });
 
-        getActivity().getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        } catch (Exception| Error e){
+            ivSpeak.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String toSpeak = editText.getText().toString();
+                    Toast.makeText(getContext(), toSpeak, Toast.LENGTH_SHORT).show();
+                    t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                }
+            });
+
+            Log.d("TAG", " Touch " + lastTouchDownXY[0] + " : " + lastTouchDownXY[1] + " :" + customView.getMeasuredHeight() + " : " + (lastTouchDownXY[1] - customView.getMeasuredHeight()));
+            popupWindow.setOutsideTouchable(true);
+            customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.NO_GRAVITY, (int) lastTouchDownXY[0], (int) lastTouchDownXY[1] + customView.getMeasuredHeight());
+            //(int)event.getX(), (int)event.getY() - customView.getMeasuredHeight());
+
+            getActivity().getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return false;
+                }
+            });
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
@@ -285,29 +247,11 @@ public class MakeYourOwnReadFragment extends Fragment {
         super.onPause();
     }
 
-
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_copy:
-                copyText();
-                mode.finish();
-                return true;
-            case R.id.action_paste:
-                pasteText();
-                mode.finish();
-                return true;
-            default:
-                return false;
-        }
-
-    }
-
-
     private void copyText() {
         ClipboardManager clipboardManager = (ClipboardManager)
                 getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        CharSequence selectedTxt =  editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
+        CharSequence selectedTxt = editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
         ClipData clipData = ClipData.newPlainText("zoftino text view", selectedTxt);
         clipboardManager.setPrimaryClip(clipData);
     }
@@ -316,7 +260,7 @@ public class MakeYourOwnReadFragment extends Fragment {
         ClipboardManager clipboardManager = (ClipboardManager)
                 getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        if(clipboardManager.hasPrimaryClip()) {
+        if (clipboardManager.hasPrimaryClip()) {
             ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
 
             CharSequence ptext = item.getText();

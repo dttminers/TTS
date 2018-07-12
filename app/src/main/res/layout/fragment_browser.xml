@@ -28,6 +28,10 @@
         android:background="@drawable/rounded_corner_button"
         android:hint="@string/str_enter_url_here"
         android:paddingStart="20dp"
+        android:paddingLeft="20dp"
+        android:paddingEnd="20dp"
+        android:paddingRight="20dp"
+        android:inputType="text"
         android:textColorHint="@color/warm_grey2" />
 
     <TextView
@@ -186,9 +190,3 @@
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
-
-    <!--<?xml version="1.0" encoding="utf-8"?>--><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
-
-    <!--<WebView--><!--android:id="@+id/webView"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent" />-->
-
-    <!--</RelativeLayout>-->
