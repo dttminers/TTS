@@ -55,5 +55,10 @@ public class PDFHomePageImages extends PagerAdapter {
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(200), rnd.nextInt(200), rnd.nextInt(200));
     }
+
+    @Override
+    public float getPageWidth(int position) {
+        return(0.9f);
+    }
 }
 
