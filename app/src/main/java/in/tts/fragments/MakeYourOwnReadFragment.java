@@ -286,43 +286,43 @@ public class MakeYourOwnReadFragment extends Fragment {
     }
 
 
-//    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_copy:
-//                copyText();
-//                mode.finish();
-//                return true;
-//            case R.id.action_paste:
-//                pasteText();
-//                mode.finish();
-//                return true;
-//            default:
-//                return false;
-//        }
-//
-//    }
-//
-//
-//    private void copyText() {
-//        ClipboardManager clipboardManager = (ClipboardManager)
-//                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-//
-//        CharSequence selectedTxt =  editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-//        ClipData clipData = ClipData.newPlainText("zoftino text view", selectedTxt);
-//        clipboardManager.setPrimaryClip(clipData);
-//    }
-//
-//    private void pasteText() {
-//        ClipboardManager clipboardManager = (ClipboardManager)
-//                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-//
-//        if(clipboardManager.hasPrimaryClip()) {
-//            ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
-//
-//            CharSequence ptext = item.getText();
-//            editText.setText(ptext);
-//        }
-//    }
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_copy:
+                copyText();
+                mode.finish();
+                return true;
+            case R.id.action_paste:
+                pasteText();
+                mode.finish();
+                return true;
+            default:
+                return false;
+        }
+
+    }
+
+
+    private void copyText() {
+        ClipboardManager clipboardManager = (ClipboardManager)
+                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        CharSequence selectedTxt =  editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
+        ClipData clipData = ClipData.newPlainText("zoftino text view", selectedTxt);
+        clipboardManager.setPrimaryClip(clipData);
+    }
+
+    private void pasteText() {
+        ClipboardManager clipboardManager = (ClipboardManager)
+                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if(clipboardManager.hasPrimaryClip()) {
+            ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
+
+            CharSequence ptext = item.getText();
+            editText.setText(ptext);
+        }
+    }
 
 
     @Override
