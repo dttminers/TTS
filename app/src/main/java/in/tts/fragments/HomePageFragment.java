@@ -177,7 +177,7 @@ public class HomePageFragment extends Fragment {
                 tvHeader.setText(header);
 
                 vpDeals.setClipToPadding(false);
-                vpDeals.setPadding(15, 0, 15, 0);
+//                vpDeals.setPadding(15, 0, 15, 0);
                 vpDeals.setOffscreenPageLimit(4);
                 vpDeals.setPageMargin(10);
                 vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
@@ -252,7 +252,7 @@ public class HomePageFragment extends Fragment {
 
                 tvHeader.setText(header);
 
-                vpDeals.setClipToPadding(false);
+                vpDeals.setClipToPadding(true);
 //                vpDeals.setPadding(15, 0, 15, 0);
                 vpDeals.setOffscreenPageLimit(4);
                 vpDeals.setPageMargin(10);
@@ -311,6 +311,7 @@ public class HomePageFragment extends Fragment {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
             container.removeView((LinearLayout) object);
         }
     }

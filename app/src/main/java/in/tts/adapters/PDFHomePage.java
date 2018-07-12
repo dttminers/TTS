@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class PDFHomePage extends PagerAdapter {
 
     @Override
     public int getCount() {
-        Log.d("TAG ", " count "+ l.size());
+        Log.d("TAG ", " count " + l.size());
         return l.size();
     }
 
@@ -45,7 +46,7 @@ public class PDFHomePage extends PagerAdapter {
             ImageView iv = vg.findViewById(R.id.ivBi);
             iv.setBackgroundColor(toGetRandomColor());
             container.addView(vg);
-        }catch (Exception| Error e){
+        } catch (Exception | Error e) {
             e.printStackTrace();
         }
         return vg;
@@ -58,6 +59,7 @@ public class PDFHomePage extends PagerAdapter {
 
     @Override
     public float getPageWidth(int position) {
-        return(0.3f);
+        return (0.3f);
     }
 }
+

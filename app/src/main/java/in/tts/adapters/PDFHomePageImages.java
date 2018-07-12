@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -49,5 +50,11 @@ public class PDFHomePageImages extends PagerAdapter {
     @Override
     public float getPageWidth(int position) {
         return (0.3f);
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+        container.removeView((LinearLayout) object);
     }
 }
