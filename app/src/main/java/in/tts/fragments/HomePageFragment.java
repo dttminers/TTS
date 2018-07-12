@@ -148,12 +148,16 @@ public class HomePageFragment extends Fragment {
             boolean_permission = true;
             getfile(dir);
             getAllShownImagesPath(getActivity());
+
             if (fileList.size() != 0) {
                 toBindDealProductData(fileList, "Recent PDF ", "See More");
             }
+
             if (fileName.size() != 0) {
                 toBindDealProductDataimages(fileName, "Recent Images ", "See More");
             }
+//            toBindDealProductData(fileList, "Recent PDF ", "See More");
+//            toBindDealProductDataimages(getAllShownImagesPath(getActivity()), "Recent Images ", "See More");
         } catch (Exception | Error e) {
             e.printStackTrace();
         }
