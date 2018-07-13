@@ -311,7 +311,6 @@ public class HomePageFragment extends Fragment {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
             container.removeView((LinearLayout) object);
         }
     }
