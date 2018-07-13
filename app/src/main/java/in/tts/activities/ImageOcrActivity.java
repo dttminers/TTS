@@ -26,6 +26,7 @@ import com.google.android.gms.vision.text.TextRecognizer;
 
 import in.tts.*;
 import in.tts.classes.TTS;
+import in.tts.utils.CommonMethod;
 
 public class ImageOcrActivity extends AppCompatActivity {
 
@@ -37,6 +38,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     private SparseArray<TextBlock> textBlocks, items;
     private TextBlock textBlock, item;
     private StringBuilder stringBuilder;
+    private View view;
 
     private RelativeLayout mRl;
     private TTS tts;
@@ -163,9 +165,9 @@ public class ImageOcrActivity extends AppCompatActivity {
             try {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 if (inflater != null) {
-                    View view = inflater.inflate(R.layout.layout_ocr_image, null, false);
+                    view = inflater.inflate(R.layout.layout_ocr_image, null, false);
 
-                    TextView tvImgOcr = view.findViewById(R.id.tvImgOcr);
+                    final TextView tvImgOcr = view.findViewById(R.id.tvImgOcr);
                     ImageView ivSpeak = view.findViewById(R.id.ivSpeak);
                     ImageView ivReload = view.findViewById(R.id.ivReload);
 
@@ -174,6 +176,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                     ivReload.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            tvImgOcr.setText("");
                             new toGetImage().execute();
                         }
                     });
@@ -184,12 +187,35 @@ public class ImageOcrActivity extends AppCompatActivity {
                             tts.SpeakLoud(stringBuilder.toString());
                         }
                     });
-                    mRl.addView(view);
+
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT); // or wrap_content
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    layoutParams.setMargins(
+                            CommonMethod.dpToPx(10, ImageOcrActivity.this),
+                            CommonMethod.dpToPx(10, ImageOcrActivity.this),
+                            CommonMethod.dpToPx(10, ImageOcrActivity.this),
+                            CommonMethod.dpToPx(10, ImageOcrActivity.this)
+                    );
+
+                    mRl.addView(view, layoutParams);
                 }
 
             } catch (Exception | Error e) {
                 Crashlytics.logException(e);
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mRl != null) {
+            Log.d("TAG", "Count Rel " + mRl.getChildCount());
+            if (mRl.getChildCount() > 1) {
+                if (view != null) {
+                    mRl.removeView(view);
+                }
             }
         }
     }

@@ -30,14 +30,14 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 PrefManager prefManager = new PrefManager(SplashActivity.this);
                 prefManager.getUserInfo();
-//                if (User.getUser(SplashActivity.this).getId() != null) {
+                if (User.getUser(SplashActivity.this).getId() != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//                } else {
+                } else {
 //                    if (prefManager.isFirstTimeLaunch()) {
 //                        startActivity(new Intent(SplashActivity.this, TutorialActivity.class));
 //                    } else {
-//                        startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-//                    }
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                    }
 //                }
                 finish();
             }

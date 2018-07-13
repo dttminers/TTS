@@ -2,15 +2,21 @@ package in.tts.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
@@ -51,6 +57,8 @@ import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
 
+    private TextView mTvLogin;
+
     // Google
     private GoogleSignInClient mGoogleSignInClient;
     private RelativeLayout relativeLayoutGoogle;
@@ -85,6 +93,23 @@ public class LoginFragment extends Fragment {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Login", null);
 
             FacebookSdk.sdkInitialize(getContext());
+
+             mTvLogin = getActivity().findViewById(R.id.txtLogin);
+
+//            Spannable wordtoSpan = new SpannableString("I know just how to whisper, And I know just how to cry,I know just where to find the answers");
+            Spannable wordtoSpan = new SpannableString("Login to get access to read \nmore than 20 millions books");
+
+//            wordtoSpan.setSpan(new ForegroundColorSpan(Color.WHITE), 15, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//            mTvLogin.setText(wordtoSpan);
+
+//            String s= "Hello Everyone";
+            String s = "Login to get access to read \nmore than 20 millions books";
+            SpannableString ss1=  new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(2f), 0,5, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 11, 0);// set color
+//            TextView tv= (TextView) findViewById(R.id.textview);
+            mTvLogin.setText(ss1);
 
             // View
             getActivity().findViewById(R.id.llSignUp).setOnClickListener(new View.OnClickListener() {
