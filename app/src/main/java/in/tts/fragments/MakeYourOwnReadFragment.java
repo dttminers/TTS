@@ -72,6 +72,14 @@ public class MakeYourOwnReadFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
+
+            // EditText.getSelectionStart()
+            // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
+
+//            int start = Math.max(myEditText.getSelectionStart(), 0);
+//            int end = Math.max(myEditText.getSelectionEnd(), 0);
+//            myEditText.getText().replace(Math.min(start, end), Math.max(start, end),
+//                    textToInsert, 0, textToInsert.length());
             setHasOptionsMenu(true);
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "MakeYourRead", null);
             editText = getActivity().findViewById(R.id.edMakeRead);

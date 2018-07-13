@@ -171,6 +171,7 @@ public class HomePageFragment extends Fragment {
         }
     }
 
+
     public ArrayList<File> getfile(File dir) {
 //        ArrayList<File> fileList = new ArrayList<>();
         File listFile[] = dir.listFiles();
@@ -234,7 +235,7 @@ public class HomePageFragment extends Fragment {
         try {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (inflater != null) {
-                View view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
+                View view = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
 
                 TextView tvHeader = view.findViewById(R.id.tvRecent);
                 TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);

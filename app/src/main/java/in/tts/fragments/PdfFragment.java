@@ -28,7 +28,7 @@ public class PdfFragment extends Fragment {
     private ViewPager viewPager;
 
     private MyBooksFragment tab1;
-    private EBookFragment tab2;
+    private EbookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Free eBooks"};
 
@@ -105,7 +105,7 @@ public class PdfFragment extends Fragment {
                 case 0:
                     return tab1 = MyBooksFragment.newInstance();
                 case 1:
-                    return tab2 = EBookFragment.newInstance();
+                    return tab2 = EbookFragment.newInstance();
                 default:
                     return tab1 = MyBooksFragment.newInstance();
             }
