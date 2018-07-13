@@ -51,7 +51,7 @@ public class PDFHomePage extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivBi);
-            iv.setBackgroundColor(toGetRandomColor());
+//            iv.setBackgroundColor(toGetRandomColor());
 
             fileDescriptor = ParcelFileDescriptor.open(list.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
 
