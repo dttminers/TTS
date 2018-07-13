@@ -199,7 +199,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                                 stringBuilder.append("\n");
                             }
 //                                    mTextView.setText(stringBuilder.toString());
-//                                    Toast.makeText(CameraOcrActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CameraOcrActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
 //                                }
 //                            });
                             toSetView();

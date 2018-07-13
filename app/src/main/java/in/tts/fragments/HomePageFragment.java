@@ -56,6 +56,7 @@ public class HomePageFragment extends Fragment {
     int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
     boolean boolean_permission;
     private File dir;
+    private View view, view1;
 
     public static int REQUEST_PERMISSIONS = 1;
     public static ArrayList<File> fileList = new ArrayList<>();
@@ -155,17 +156,20 @@ public class HomePageFragment extends Fragment {
 
     private void toGetPDF() {
         try {
+            CommonMethod.toCallLoader(getContext(), "Loading...");
             boolean_permission = true;
-            getfile(dir);
-            getAllShownImagesPath(getActivity());
-
             if (AppData.fileList.size() != 0) {
-                toBindDealProductData(AppData.fileList, "Recent PDF ", "See More");
+                toBindDealProductData(AppData.fileList);
+            } else {
+                getfile(dir);
             }
 
             if (AppData.fileName.size() != 0) {
-                toBindDealProductDataImages(AppData.fileName, "Recent Images ", "See More");
+                toBindDealProductDataImages(AppData.fileName);
+            } else {
+                getAllShownImagesPath(getActivity());
             }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
         }
@@ -173,7 +177,6 @@ public class HomePageFragment extends Fragment {
 
 
     public ArrayList<File> getfile(File dir) {
-//        ArrayList<File> fileList = new ArrayList<>();
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
@@ -199,6 +202,7 @@ public class HomePageFragment extends Fragment {
         }
         Log.d("TAG", "home pdf count " + fileList.size());
         AppData.fileList = fileList;
+        toBindDealProductData(fileList);
         return fileList;
     }
 
@@ -228,30 +232,33 @@ public class HomePageFragment extends Fragment {
 
         Log.d("TAG", " DATa " + fileName.size() + ":" + fileName);
         AppData.fileName = fileName;
+        toBindDealProductDataImages(fileName);
         return fileName;
     }
 
-    private void toBindDealProductDataImages(ArrayList<String> fileList, String header, String see_more) {
+    private void toBindDealProductDataImages(ArrayList<String> fileList) {
         try {
+            if (view1 != null) {
+                ll.removeView(view1);
+            }
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (inflater != null) {
-                View view = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
+                view1 = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
 
-                TextView tvHeader = view.findViewById(R.id.tvRecent);
-                TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
+                TextView tvHeader = view1.findViewById(R.id.tvRecent);
+                TextView tvSeeMore = view1.findViewById(R.id.tvSeeMore);
 
-                ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
+                ViewPager vpDeals = view1.findViewById(R.id.vpRecentItem);
 
-                tvHeader.setText(header);
-                tvSeeMore.setText(see_more);
+                tvHeader.setText("Recent Images");
+                tvSeeMore.setText("See More");
 
                 vpDeals.setClipToPadding(false);
                 vpDeals.setOffscreenPageLimit(3);
-//                vpDeals.setPageMargin(10);
                 vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
                 vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
 
-                ll.addView(view);
+                ll.addView(view1);
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -259,25 +266,26 @@ public class HomePageFragment extends Fragment {
         }
     }
 
-    private void toBindDealProductData(ArrayList<File> list, String header, String see_more) {
+    private void toBindDealProductData(ArrayList<File> list) {
         try {
+            if (view != null) {
+                ll.removeView(view);
+            }
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (inflater != null) {
-                View view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
+                view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
 
                 TextView tvHeader = view.findViewById(R.id.tvRecent);
                 TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
 
                 ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
 
-                tvHeader.setText(header);
-                tvSeeMore.setText(see_more);
+                tvHeader.setText("Recent PDF");
+                tvSeeMore.setText("See More");
 
                 vpDeals.setClipToPadding(true);
                 vpDeals.setOffscreenPageLimit(3);
-//                vpDeals.setPadding(CommonMethod.dpToPx(15, getActivity()), 0, CommonMethod.dpToPx(15, getActivity()), 0);
-//                vpDeals.setOffscreenPageLimit(4);
-                vpDeals.setPageMargin(CommonMethod.dpToPx(10,getActivity()));
+                vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
                 vpDeals.setAdapter(new PDFHomePage(getContext(), list));
 
                 ll.addView(view);

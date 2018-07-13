@@ -170,17 +170,17 @@ public class TutorialPageActivity extends AppCompatActivity {
         }
     }
 
-    public void toChangeScreen(View view) {
-        // checking for last page
-        // if last page home screen will be launched
-        int current = getItem(+1);
-        if (current < layouts.length) {
-            // move to next screen
-            viewPager.setCurrentItem(current);
-        } else {
-            launchHomeScreen();
-        }
-    }
+//    public void toChangeScreen(View view) {
+//        // checking for last page
+//        // if last page home screen will be launched
+//        int current = getItem(+1);
+//        if (current < layouts.length) {
+//            // move to next screen
+//            viewPager.setCurrentItem(current);
+//        } else {
+//            launchHomeScreen();
+//        }
+//    }
 
     /**
      * View pager adapter

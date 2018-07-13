@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 //            if (prefManager.isFirstTimeLaunch()){
 //                getSupportFragmentManager()
 //                        .beginTransaction()
-//                        .add(R.id.frame_layout, new TutorialFragment())
+//                        .add(R.id.activity_main, new TutorialFragment())
 //                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //                        .commitAllowingStateLoss();
 //            }
