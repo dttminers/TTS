@@ -6,9 +6,9 @@
     android:layout_width="100dp"
     android:layout_height="140dp"
     android:layout_marginEnd="10dp"
+    android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginStart="10dp"
-    android:layout_marginLeft="10dp"
     app:cardCornerRadius="10dp">
 
     <RelativeLayout
@@ -20,20 +20,20 @@
             android:id="@+id/ivBi"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/str_logo_image"/>
+            android:contentDescription="@string/str_logo_image" />
 
         <TextView
             android:id="@+id/tvBiReadTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:padding="3dp"
             android:background="@drawable/rounded_corner_yellow"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:lines="1"
             android:maxLines="1"
+            android:padding="3dp"
             android:text="@string/str_50mins"
             android:textColor="@color/black"
             android:textIsSelectable="false"
@@ -53,11 +53,11 @@
             android:gravity="start|center"
             android:lines="1"
             android:maxLines="1"
+            android:paddingBottom="8dp"
             android:paddingEnd="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
             android:paddingStart="10dp"
-            android:paddingBottom="3dp"
             android:paddingTop="3dp"
             android:text="@string/str_60"
             android:textColor="@color/black"

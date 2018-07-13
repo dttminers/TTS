@@ -275,9 +275,9 @@ public class HomePageFragment extends Fragment {
 
                 vpDeals.setClipToPadding(true);
                 vpDeals.setOffscreenPageLimit(3);
-//                vpDeals.setPadding(15, 0, 15, 0);
+//                vpDeals.setPadding(CommonMethod.dpToPx(15, getActivity()), 0, CommonMethod.dpToPx(15, getActivity()), 0);
 //                vpDeals.setOffscreenPageLimit(4);
-                vpDeals.setPageMargin(10);
+                vpDeals.setPageMargin(CommonMethod.dpToPx(10,getActivity()));
                 vpDeals.setAdapter(new PDFHomePage(getContext(), list));
 
                 ll.addView(view);
@@ -306,9 +306,9 @@ public class HomePageFragment extends Fragment {
         LayoutInflater mLayoutInflater;
         int mResources[];
 
-        public CustomPagerAdapter(int mResources[], Context context) {
+        public CustomPagerAdapter(int _mResources[], Context context) {
             mContext = context;
-            this.mResources = mResources;
+            mResources = _mResources;
             mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
