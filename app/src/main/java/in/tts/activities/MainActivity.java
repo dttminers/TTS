@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setCurrentViewPagerItem(tab.getPosition());
-                    CommonMethod.setAnalyticsData(MainActivity.this, "MainTab",
-                            "HomePage", null);
+                    CommonMethod.setAnalyticsData(MainActivity.this, "MainTab", "HomePage", null);
                 }
 
                 @Override

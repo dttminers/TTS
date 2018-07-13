@@ -4,12 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,20 +17,18 @@ import in.tts.R;
 
 public class PDFHomePage extends PagerAdapter {
 
-    private ArrayList<File> l;
+    private ArrayList<File> list;
     private Context context;
 
-    public PDFHomePage(Context ctx, ArrayList<File> list) {
+    public PDFHomePage(Context ctx, ArrayList<File> listfile) {
         context = ctx;
-        l = list;
+        list = listfile;
     }
 
     @Override
     public int getCount() {
-        Log.d("TAG ", " count " + l.size());
-        return l.size();
+        return list.size();
     }
-
 
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
@@ -59,7 +55,7 @@ public class PDFHomePage extends PagerAdapter {
 
     @Override
     public float getPageWidth(int position) {
-        return (0.3f);
+        return (0.32f);
     }
 }
 

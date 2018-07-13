@@ -235,7 +235,7 @@ public class RegisterFragment extends Fragment {
     // Called when successfully logged in
     private void toExit() {
         try {
-            PrefManager.setUserInfo(getContext());
+            new PrefManager(getContext()).setUserInfo();
             startActivity(new Intent(getContext(), MainActivity.class));
         } catch (Exception | Error e) {
             e.printStackTrace();

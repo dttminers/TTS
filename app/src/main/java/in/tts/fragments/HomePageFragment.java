@@ -36,10 +36,14 @@ import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.activities.MainActivity;
 import in.tts.adapters.PDFAdapter;
 import in.tts.adapters.PDFHomePage;
 import in.tts.adapters.PDFHomePageImages;
+import in.tts.model.AppData;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class HomePageFragment extends Fragment {
     ViewPager mViewPager;
@@ -50,13 +54,12 @@ public class HomePageFragment extends Fragment {
     LinearLayout ll;
     int currentImage = 0;
     int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
-    //    int mResources[] = {R.drawable.bg_main, R.drawable.bg_main, R.drawable.bg_main, R.drawable.bg_main, R.drawable.bg_main};
     boolean boolean_permission;
     private File dir;
 
+    public static int REQUEST_PERMISSIONS = 1;
     public static ArrayList<File> fileList = new ArrayList<>();
     public static ArrayList<String> fileName = new ArrayList<>();
-    public static int REQUEST_PERMISSIONS = 1;
 
 
     public HomePageFragment() {
@@ -74,21 +77,25 @@ public class HomePageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "HomePage", null);
         try {
-            imageView = getActivity().findViewById(R.id.imageView);
-            ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
-            ivRight = getActivity().findViewById(R.id.imageViewRight1);
-            tabLayout = getActivity().findViewById(R.id.tlHomePage);
-            mViewPager = getActivity().findViewById(R.id.vpHomePage);
+            toBindView();
 
-            ll = getActivity().findViewById(R.id.llData);
+            toSetData();
 
-            mCustomPagerAdapter = new CustomPagerAdapter(mResources, getContext());
-            mViewPager.setAdapter(mCustomPagerAdapter);
-            tabLayout.setupWithViewPager(mViewPager);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
+
+    }
+
+    private void toBindView() throws Error {
+        imageView = getActivity().findViewById(R.id.imageView);
+        ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
+        ivRight = getActivity().findViewById(R.id.imageViewRight1);
+        tabLayout = getActivity().findViewById(R.id.tlHomePage);
+        mViewPager = getActivity().findViewById(R.id.vpHomePage);
+
+        ll = getActivity().findViewById(R.id.llData);
 
         ivLeft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,16 +123,19 @@ public class HomePageFragment extends Fragment {
                 }
             }
         });
-        toSetData();
     }
 
-    private void toSetData() {
+    private void toSetData() throws Error {
+
+        mCustomPagerAdapter = new CustomPagerAdapter(mResources, getContext());
+        mViewPager.setAdapter(mCustomPagerAdapter);
+        tabLayout.setupWithViewPager(mViewPager);
+
         dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         fn_permission();
     }
 
     private void fn_permission() {
-
         try {
             Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
@@ -138,79 +148,31 @@ public class HomePageFragment extends Fragment {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
 
     }
 
     private void toGetPDF() {
         try {
-            Log.d("TAG", " pdf getpdf ");
             boolean_permission = true;
             getfile(dir);
             getAllShownImagesPath(getActivity());
 
-            if (fileList.size() != 0) {
-                toBindDealProductData(fileList, "Recent PDF ", "See More");
+            if (AppData.fileList.size() != 0) {
+                toBindDealProductData(AppData.fileList, "Recent PDF ", "See More");
             }
 
-            if (fileName.size() != 0) {
-                toBindDealProductDataimages(fileName, "Recent Images ", "See More");
-            }
-//            toBindDealProductData(fileList, "Recent PDF ", "See More");
-//            toBindDealProductDataimages(getAllShownImagesPath(getActivity()), "Recent Images ", "See More");
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void toBindDealProductDataimages(ArrayList<String> fileList, String header, String see_more) {
-        try {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (inflater != null) {
-                View view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
-
-                TextView tvHeader = (TextView) view.findViewById(R.id.tvRecent);
-                TextView tvHeaderTimer = (TextView) view.findViewById(R.id.tvSeeMore);
-
-                ViewPager vpDeals = (ViewPager) view.findViewById(R.id.vpRecentItem);
-
-                tvHeader.setText(header);
-
-                vpDeals.setClipToPadding(false);
-//                vpDeals.setPadding(15, 0, 15, 0);
-                vpDeals.setOffscreenPageLimit(4);
-                vpDeals.setPageMargin(10);
-                vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
-
-                ll.addView(view);
+            if (AppData.fileName.size() != 0) {
+                toBindDealProductDataImages(AppData.fileName, "Recent Images ", "See More");
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
         }
     }
 
-    private ArrayList<String> getAllShownImagesPath(Activity activity) {
-        Uri uri;
-        Cursor cursor;
-        int column_index_data, column_index_folder_name;
-        String absolutePathOfImage = null;
-        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-        cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
-            fileName.add(absolutePathOfImage);
-        }
-        Log.d("TAG", " DATa " + fileName.size() + ":" + fileName);
-        return fileName;
-    }
-
-    @AddTrace(name = "onGetPDF", enabled = true)
     public ArrayList<File> getfile(File dir) {
+//        ArrayList<File> fileList = new ArrayList<>();
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
@@ -234,27 +196,84 @@ public class HomePageFragment extends Fragment {
                 }
             }
         }
-        Log.d("TAG", " pdf count " + fileList.size());
+        Log.d("TAG", "home pdf count " + fileList.size());
+        AppData.fileList = fileList;
         return fileList;
     }
 
+    public ArrayList<String> getAllShownImagesPath(Activity activity) {
 
-    private void toBindDealProductData(ArrayList<File> list, String header, String viewAll) {
+        Cursor cursor;
+
+//        ArrayList<String> fileName = new ArrayList<>();
+
+        int column_index_data, column_index_folder_name;
+
+        String absolutePathOfImage = null;
+
+        Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+
+        cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(column_index_data);
+            fileName.add(absolutePathOfImage);
+        }
+
+        Log.d("TAG", " DATa " + fileName.size() + ":" + fileName);
+        AppData.fileName = fileName;
+        return fileName;
+    }
+
+    private void toBindDealProductDataImages(ArrayList<String> fileList, String header, String see_more) {
         try {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (inflater != null) {
                 View view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
 
-                TextView tvHeader = (TextView) view.findViewById(R.id.tvRecent);
-                TextView tvHeaderTimer = (TextView) view.findViewById(R.id.tvSeeMore);
+                TextView tvHeader = view.findViewById(R.id.tvRecent);
+                TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
 
-                ViewPager vpDeals = (ViewPager) view.findViewById(R.id.vpRecentItem);
+                ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
 
                 tvHeader.setText(header);
+                tvSeeMore.setText(see_more);
+
+                vpDeals.setClipToPadding(false);
+                vpDeals.setOffscreenPageLimit(3);
+//                vpDeals.setPageMargin(10);
+                vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
+
+                ll.addView(view);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    private void toBindDealProductData(ArrayList<File> list, String header, String see_more) {
+        try {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (inflater != null) {
+                View view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
+
+                TextView tvHeader = view.findViewById(R.id.tvRecent);
+                TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
+
+                ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
+
+                tvHeader.setText(header);
+                tvSeeMore.setText(see_more);
 
                 vpDeals.setClipToPadding(true);
-//                vpDeals.setPadding(15, 0, 15, 0);
-                vpDeals.setOffscreenPageLimit(4);
+                vpDeals.setOffscreenPageLimit(3);
                 vpDeals.setPageMargin(10);
                 vpDeals.setAdapter(new PDFHomePage(getContext(), list));
 
@@ -297,13 +316,13 @@ public class HomePageFragment extends Fragment {
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view == ((LinearLayout) object);
+            return view == object;
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            ImageView imageView = itemView.findViewById(R.id.imageView);
             imageView.setImageResource(mResources[position]);
             container.addView(itemView);
             return itemView;
