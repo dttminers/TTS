@@ -13,9 +13,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:contentDescription="@string/str_skip"
         android:fontFamily="sans-serif"
+        android:padding="10dp"
         android:src="@drawable/ic_skip"
         android:textColor="@color/white1"
         android:textSize="12sp" />
@@ -43,15 +44,15 @@
 
             <TextView
                 android:id="@+id/txtLogin"
-                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgLogoLogin"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/white"
-                android:text="@string/str_login_data"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="15dp" />
+                android:layout_margin="15dp"
+                android:gravity="center"
+                android:text="@string/str_login_data"
+                android:textColor="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/rlFacebookLogin"
