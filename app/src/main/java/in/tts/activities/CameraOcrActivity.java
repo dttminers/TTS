@@ -215,6 +215,9 @@ public class CameraOcrActivity extends AppCompatActivity {
 
     private void toSetView() {
         try {
+            if (view != null) {
+                mRl.removeView(view);
+            }
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (inflater != null) {
                 view = inflater.inflate(R.layout.layout_ocr_image, null, false);
