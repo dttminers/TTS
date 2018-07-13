@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
             PrefManager prefManager = new PrefManager(this);
             if (prefManager.isFirstTimeLaunch()) {
-//                startActivity(new Intent(MainActivity.this, TutorialPageActivity.class));
+                startActivity(new Intent(MainActivity.this, TutorialPageActivity.class));
             }
 
             tabLayout = findViewById(R.id.tabs);

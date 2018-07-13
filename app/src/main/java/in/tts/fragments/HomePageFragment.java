@@ -59,8 +59,8 @@ public class HomePageFragment extends Fragment {
     private View view, view1;
 
     public static int REQUEST_PERMISSIONS = 1;
-    public static ArrayList<File> fileList = new ArrayList<>();
-    public static ArrayList<String> fileName = new ArrayList<>();
+    public static ArrayList<File> fileList;
+    public static ArrayList<String> fileName;
 
 
     public HomePageFragment() {
@@ -158,15 +158,20 @@ public class HomePageFragment extends Fragment {
         try {
             CommonMethod.toCallLoader(getContext(), "Loading...");
             boolean_permission = true;
-            if (AppData.fileList.size() != 0) {
+            if (AppData.fileList != null) {
+                Log.d("TAG", " ppk 1 ");
                 toBindDealProductData(AppData.fileList);
             } else {
+                Log.d("TAG", " ppk 2 ");
+                fileList = new ArrayList<>();
+
                 getfile(dir);
             }
 
-            if (AppData.fileName.size() != 0) {
+            if (AppData.fileName != null) {
                 toBindDealProductDataImages(AppData.fileName);
             } else {
+                fileName = new ArrayList<>();
                 getAllShownImagesPath(getActivity());
             }
             CommonMethod.toCloseLoader();
@@ -209,8 +214,6 @@ public class HomePageFragment extends Fragment {
     public ArrayList<String> getAllShownImagesPath(Activity activity) {
 
         Cursor cursor;
-
-//        ArrayList<String> fileName = new ArrayList<>();
 
         int column_index_data, column_index_folder_name;
 
@@ -256,6 +259,7 @@ public class HomePageFragment extends Fragment {
                 vpDeals.setClipToPadding(false);
                 vpDeals.setOffscreenPageLimit(3);
                 vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
                 vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
 
                 ll.addView(view1);
@@ -285,6 +289,7 @@ public class HomePageFragment extends Fragment {
 
                 vpDeals.setClipToPadding(true);
                 vpDeals.setOffscreenPageLimit(3);
+                vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
                 vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
                 vpDeals.setAdapter(new PDFHomePage(getContext(), list));
 

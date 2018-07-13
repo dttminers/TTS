@@ -5,6 +5,6 @@ import java.util.ArrayList;
 
 public class AppData {
 
-    public static ArrayList<File> fileList = new ArrayList<>();
-    public static ArrayList<String> fileName = new ArrayList<>();
+    public static ArrayList<File> fileList;
+    public static ArrayList<String> fileName;
 }
