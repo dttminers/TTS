@@ -55,7 +55,7 @@ public class PDFHomePage extends PagerAdapter {
 
     @Override
     public float getPageWidth(int position) {
-        return (0.32f);
+        return (0.3f);
     }
 }
 

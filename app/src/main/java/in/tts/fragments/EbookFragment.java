@@ -16,12 +16,12 @@ import com.google.firebase.perf.metrics.AddTrace;
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
-public class EBookFragment extends Fragment {
+public class EbookFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
 
-    public EBookFragment() {
+    public EbookFragment() {
         // Required empty public constructor
     }
 
@@ -58,8 +58,8 @@ public class EBookFragment extends Fragment {
         Log.d("TAG", " pdf ebook 3 ");
     }
 
-    public static EBookFragment newInstance() {
-        return new EBookFragment();
+    public static EbookFragment newInstance() {
+        return new EbookFragment();
     }
 
     @Override
