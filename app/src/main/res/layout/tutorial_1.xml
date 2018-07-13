@@ -38,5 +38,17 @@
         android:contentDescription="@string/str_logo_image"
         android:src="@drawable/text1"/>
 
+    <ImageView
+        android:id="@+id/ivBrowser"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/str_logo_image"
+        android:src="@drawable/tab1_b" />
+
+
 
 </RelativeLayout>

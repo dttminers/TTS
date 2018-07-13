@@ -45,5 +45,18 @@
         android:layout_alignParentRight="true"
         android:layout_above="@id/ivPink_line"/>
 
+    <ImageView
+        android:id="@+id/ivImages"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/str_logo_image"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/tab5_b" />
+
 
 </RelativeLayout>
