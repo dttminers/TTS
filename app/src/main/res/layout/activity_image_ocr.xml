@@ -1,76 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlImageOcrActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/warm_grey1"
     tools:context=".activities.ImageOcrActivity">
-
-    <LinearLayout
-        android:id="@+id/rl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:gravity="center"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <ImageView
-            android:id="@+id/ivRefresh"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_black_ring"
-            android:contentDescription="@string/str_reload"
-            android:padding="5dp"
-            android:src="@drawable/ic_refresh" />
-
-        <ImageView
-            android:id="@+id/ivSpeak"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/str_speak"
-            android:padding="2dp"
-            android:src="@drawable/ic_speak" />
-
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/imgOcr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/rl"
-        android:layout_marginBottom="2dp"
         android:background="@color/black"
         android:contentDescription="@string/app_name" />
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bottom_sheet1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="43dp"
-        android:background="@color/transparent"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/textOCR1"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_cornor_white_bg" />
-
-    </LinearLayout>
-
-    <!-- Adding bottom sheet after main content -->
-    <!--<include layout="@layout/text_bottom_sheet" />-->
 
 </RelativeLayout>

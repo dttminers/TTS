@@ -3,7 +3,6 @@ package in.tts.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -23,6 +22,10 @@ public class CommonMethod {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
+    public static String firstLetterCaps(String myString) {
+        return myString.substring(0, 1).toUpperCase() + myString.substring(1);
+    }
+
     public static void setAnalyticsData(Context context, String id, String name, String contentType) {
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
@@ -35,19 +38,24 @@ public class CommonMethod {
         try {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             if (inflater != null) {
                 View view = inflater.inflate(R.layout.custom_loader, null, false);
+
                 alertDialogBuilder.setView(view);
                 alertDialogBuilder.setTitle(null);
                 alertDialogBuilder.setCancelable(false);
+
                 dialog = alertDialogBuilder.create();
                 dialog.setCancelable(false);
                 dialog.show();
+
                 TextView tvMsg = view.findViewById(R.id.txtLoaderMsg);
                 tvMsg.setText(msg);
             }
-        } catch (Exception|Error e) {
-            e.printStackTrace(); Crashlytics.logException(e);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -56,8 +64,9 @@ public class CommonMethod {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-        } catch (Exception|Error e) {
-            e.printStackTrace(); Crashlytics.logException(e);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 

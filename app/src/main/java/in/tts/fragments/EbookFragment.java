@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,27 +34,25 @@ public class EBookFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Ebook", null);
-        Log.d("TAG", " pdf ebook" + savedInstanceState);
+        CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc Free eBooks", null);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("TAG", " pdf ebook 1");
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("TAG", " pdf ebook 2 ");
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("TAG", " pdf ebook 3 ");
+        CommonMethod.toReleaseMemory();
     }
 
     public static EBookFragment newInstance() {

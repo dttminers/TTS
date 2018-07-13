@@ -2,8 +2,9 @@ package in.tts.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
-import android.os.Environment;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +24,7 @@ import java.util.List;
 
 import in.tts.R;
 import in.tts.adapters.PdfPages;
-import in.tts.fragments.DocumentsFragment;
-import in.tts.utils.CommonMethod;
+import in.tts.fragments.MyBooksFragment;
 
 public class PdfReadersActivity extends AppCompatActivity {
 
@@ -34,6 +34,7 @@ public class PdfReadersActivity extends AppCompatActivity {
     private int position = -1;
     ArrayList<Bitmap> list = new ArrayList<Bitmap>();
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +43,8 @@ public class PdfReadersActivity extends AppCompatActivity {
             position = getIntent().getIntExtra("position", -1);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
-                if (DocumentsFragment.fileList.get(position).getName() != null) {
-                    getSupportActionBar().setTitle(DocumentsFragment.fileList.get(position).getName());
+                if (MyBooksFragment.fileList.get(position).getName() != null) {
+                    getSupportActionBar().setTitle(MyBooksFragment.fileList.get(position).getName());
                 } else {
                     getSupportActionBar().setTitle(R.string.app_name);
                 }
@@ -53,7 +54,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                 getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
             }
 
-            fileDescriptor = ParcelFileDescriptor.open(DocumentsFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+            fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
 
             pdfRenderer = new PdfRenderer(fileDescriptor);
             for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
@@ -73,6 +74,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void showPage(int index) {
         if (pdfRenderer.getPageCount() <= index) {
             return;
@@ -103,7 +105,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             //Read text from file
 
             StringBuilder text = new StringBuilder();
-            BufferedReader br = new BufferedReader(new FileReader(new File(DocumentsFragment.fileList.get(position).getName())));
+            BufferedReader br = new BufferedReader(new FileReader(new File(MyBooksFragment.fileList.get(position).getName())));
             String line = null;
             //int i=0;
             List<String> lines = new ArrayList<String>();
