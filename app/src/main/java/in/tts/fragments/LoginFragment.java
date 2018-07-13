@@ -96,19 +96,9 @@ public class LoginFragment extends Fragment {
 
              mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
-//            Spannable wordtoSpan = new SpannableString("I know just how to whisper, And I know just how to cry,I know just where to find the answers");
-            Spannable wordtoSpan = new SpannableString("Login to get access to read \nmore than 20 millions books");
-
-//            wordtoSpan.setSpan(new ForegroundColorSpan(Color.WHITE), 15, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//            mTvLogin.setText(wordtoSpan);
-
-//            String s= "Hello Everyone";
-            String s = "Login to get access to read \nmore than 20 millions books";
-            SpannableString ss1=  new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(2f), 0,5, 0); // set size
-            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 11, 0);// set color
-//            TextView tv= (TextView) findViewById(R.id.textview);
+            SpannableString ss1=  new SpannableString(getString(R.string.str_login_data));
+            ss1.setSpan(new RelativeSizeSpan(1.5f), 38,50, 0); // set size
+//            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
             mTvLogin.setText(ss1);
 
             // View
