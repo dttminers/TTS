@@ -19,24 +19,34 @@ public class SplashActivity extends AppCompatActivity {
     @AddTrace(name = "onCreateSplashActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+
         CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
-                PrefManager.getUserInfo(SplashActivity.this);
-                if (User.getUser(SplashActivity.this).getId() != null) {
+                PrefManager prefManager = new PrefManager(SplashActivity.this);
+                prefManager.getUserInfo();
+//                if (User.getUser(SplashActivity.this).getId() != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                } else {
-                    startActivity(new Intent(SplashActivity.this, TutorialActivity.class));
-//                    startActivity(new Intent(SplashActivity.this, LoginActivity.class)
-//                            .putExtra("LOGIN", "login"));
-                }
+//                } else {
+//                    if (prefManager.isFirstTimeLaunch()) {
+//                        startActivity(new Intent(SplashActivity.this, TutorialActivity.class));
+//                    } else {
+//                        startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+//                    }
+//                }
                 finish();
             }
         }, 3000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
     }
 }

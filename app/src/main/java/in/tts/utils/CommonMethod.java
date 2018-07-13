@@ -1,9 +1,11 @@
 package in.tts.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +18,10 @@ import in.tts.R;
 public class CommonMethod {
     private static AlertDialog dialog;
 
+    public static int dpToPx(int dp, Activity activity) {
+        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
 
     public static void setAnalyticsData(Context context, String id, String name, String contentType) {
         Bundle bundle = new Bundle();

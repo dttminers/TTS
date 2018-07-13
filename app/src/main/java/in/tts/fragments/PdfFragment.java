@@ -1,8 +1,9 @@
 package in.tts.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
@@ -28,7 +30,17 @@ public class PdfFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+    private MyBooksFragment tab1;
+    private EBookFragment tab2;
+
+    private String[] tabHomeText = new String[]{"My Books", "Free eBooks"};
+
     public PdfFragment() {
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
     }
 
     @Override
@@ -42,78 +54,113 @@ public class PdfFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            CommonMethod.setAnalyticsData(getContext(), "MainTab", "PdfFragment", null);
+            CommonMethod.setAnalyticsData(getContext(), "MainTab", "pdf Fragment", null);
+
             tabLayout = getActivity().findViewById(R.id.tabsub);
             viewPager = getActivity().findViewById(R.id.viewpagersub);
-            toSetData();
-        } catch (Exception |Error e){
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-    }
 
-    class PagerAdapter extends FragmentPagerAdapter {
+//            tabLayout.addTab(tabLayout.newTab());
+//            tabLayout.addTab(tabLayout.newTab());
 
-        public PagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Log.d("TAG", " pdf position " + position);
-            switch (position) {
-                case 0:
-                    return new DocumentsFragment();
-                case 1:
-                    return new EbookFragment();
-                default:
-                    return new DocumentsFragment();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return "";
-//        }
-    }
-
-    public void toSetData(){
-        try{
-            viewPager.setAdapter(new PagerAdapter(getFragmentManager()));
-            tabLayout.setupWithViewPager(viewPager);
+//            tabLayout.getTabAt(0).setText(tabHomeText[0]);
+//            tabLayout.getTabAt(1).setText(tabHomeText[1]);
 
             tabLayout.getTabAt(0).setText("My Book").select();
             tabLayout.getTabAt(1).setText("Free eBooks");
 
-            LinearLayout linearLayout = (LinearLayout)tabLayout.getChildAt(0);
+
+            int i = 0;
+            while (i < tabHomeText.length) {
+                try {
+                    TextView textView = (TextView) ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.textview, null);
+                    textView.animate();
+                    textView.setText(tabHomeText[i].toUpperCase());
+//                    textView.setTypeface(SaneSwapFonts.getAnticSlabRegular(getContext()));
+                    tabLayout.getTabAt(i).setCustomView(textView);
+                    i++;
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                }
+            }
+
+            viewPager.setAdapter(new SectionsPagerAdapter(getFragmentManager()));
+            tabLayout.setupWithViewPager(viewPager);
+
+
+            LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
             linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+
             GradientDrawable drawable = new GradientDrawable();
             drawable.setColor(Color.GRAY);
             drawable.setSize(1, 1);
+
             linearLayout.setDividerPadding(10);
             linearLayout.setDividerDrawable(drawable);
-        } catch (Exception| Error e){
+
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    Log.d("TAB", " pdf onTabSelected : " + tab.getPosition());
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    Log.d("TAB", " pdf onTabUnselected : " + tab.getPosition());
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    Log.d("TAB", " pdf onTabReselected : " + tab.getPosition());
+                }
+            });
+
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
+    }
+
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public Fragment getItem(int position) {
+            Log.d("TAG", "pdf getitem ll" + position);
+            switch (position) {
+                case 0:
+                    return tab1 = MyBooksFragment.newInstance();
+                case 1:
+                    return tab2 = EBookFragment.newInstance();
+                default:
+                    return tab1 = MyBooksFragment.newInstance();
+            }
+        }
+
+        public int getCount() {
+            return tabHomeText.length;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewPager.setCurrentItem(1, true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        viewPager.setCurrentItem(0, true);
         Log.d("TAG", "pdf onResume ll");
-        toSetData();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("TAG", "pdf onPause ll" + tabLayout.getSelectedTabPosition());
         CommonMethod.toReleaseMemory();
     }
 }

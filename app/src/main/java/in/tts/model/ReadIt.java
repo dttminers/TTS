@@ -9,6 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -18,11 +19,8 @@ public class ReadIt extends Application {
         super.onCreate();
         try {
             FirebaseAnalytics.getInstance(this);
-//            FacebookSdk.sdkInitialize(getApplicationContext());
-//            AppEventsLogger.activateApp(getApplicationContext());
             AppEventsLogger.activateApp(this);
             Fabric.with(this, new Crashlytics());
-            return;
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
@@ -35,6 +33,7 @@ public class ReadIt extends Application {
 
     public void onLowMemory() {
         super.onLowMemory();
+        Log.d("TAG", "onLowMemory");
     }
 
     public void onTerminate() {

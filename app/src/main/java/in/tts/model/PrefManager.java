@@ -26,7 +26,7 @@ public class PrefManager {
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
     public PrefManager(Context context) {
-        this._context = context;
+        _context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
@@ -42,11 +42,11 @@ public class PrefManager {
     }
 
 
-    public static void getUserInfo(Context context) {
+    public void getUserInfo() {
         try {
-            String us = context.getSharedPreferences(USER_INFO_PREFERS, 0).getString(USER_INFO, null);
+            String us = _context.getSharedPreferences(USER_INFO_PREFERS, 0).getString(USER_INFO, null);
             if (us != null) {
-                User user = User.getUser(context);
+                User user = User.getUser(_context);
                 JSONObject userJSON = new JSONObject(us);
 
                 if (!userJSON.isNull("email")) {
@@ -88,10 +88,10 @@ public class PrefManager {
         }
     }
 
-    public static void setUserInfo(Context context) {
+    public void setUserInfo() {
         try {
-            SharedPreferences.Editor editor = context.getSharedPreferences(USER_INFO_PREFERS, 0).edit();
-            editor.putString(USER_INFO, new JSONObject(new Gson().toJson(User.getUser(context))).toString());
+            SharedPreferences.Editor editor = _context.getSharedPreferences(USER_INFO_PREFERS, 0).edit();
+            editor.putString(USER_INFO, new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
             editor.apply();
             editor.commit();
             return;
