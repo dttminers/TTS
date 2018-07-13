@@ -59,35 +59,15 @@ public class PdfFragment extends Fragment {
             tabLayout = getActivity().findViewById(R.id.tabsub);
             viewPager = getActivity().findViewById(R.id.viewpagersub);
 
-//            tabLayout.addTab(tabLayout.newTab());
-//            tabLayout.addTab(tabLayout.newTab());
-
-//            tabLayout.getTabAt(0).setText(tabHomeText[0]);
-//            tabLayout.getTabAt(1).setText(tabHomeText[1]);
+            viewPager.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
+            tabLayout.setupWithViewPager(viewPager);
 
             tabLayout.getTabAt(0).setText("My Book").select();
             tabLayout.getTabAt(1).setText("Free eBooks");
 
+            Log.d("TAG", "tab pdf " + tabLayout.getTabCount() + " : " + viewPager.getCurrentItem());
 
-            int i = 0;
-            while (i < tabHomeText.length) {
-                try {
-                    TextView textView = (TextView) ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.textview, null);
-                    textView.animate();
-                    textView.setText(tabHomeText[i].toUpperCase());
-//                    textView.setTypeface(SaneSwapFonts.getAnticSlabRegular(getContext()));
-                    tabLayout.getTabAt(i).setCustomView(textView);
-                    i++;
-                } catch (Exception | Error e) {
-                    e.printStackTrace();
-                    Crashlytics.logException(e);
-                }
-            }
-
-            viewPager.setAdapter(new SectionsPagerAdapter(getFragmentManager()));
-            tabLayout.setupWithViewPager(viewPager);
-
-
+            viewPager.setCurrentItem(1, true);
             LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
             linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
 
