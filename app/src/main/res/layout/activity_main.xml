@@ -66,6 +66,4 @@
         android:layout_above="@id/tabs"
         android:background="@drawable/shadow_top" />
 
-    <include layout="@layout/tutorial_5"/>
-
 </RelativeLayout>
