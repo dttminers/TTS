@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_black1">
+
+
+    <ImageView
+        android:id="@+id/ivCircle_pink"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:contentDescription="@string/str_logo_image"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-45dp"
+        android:layout_marginStart="-20dp"
+        android:layout_marginLeft="-20dp"
+        android:src="@drawable/circle_pink" />
+
+    <ImageView
+        android:id="@+id/ivPink_line"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:contentDescription="@string/str_logo_image"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="75dp"
+        android:src="@drawable/line_pink" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_listen_whatever_you_are_browsing"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/dark_pink_two"
+        android:layout_above="@id/ivPink_line"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+
+</RelativeLayout>

@@ -274,6 +274,8 @@ public class HomePageFragment extends Fragment {
 
                 vpDeals.setClipToPadding(true);
                 vpDeals.setOffscreenPageLimit(3);
+//                vpDeals.setPadding(15, 0, 15, 0);
+//                vpDeals.setOffscreenPageLimit(4);
                 vpDeals.setPageMargin(10);
                 vpDeals.setAdapter(new PDFHomePage(getContext(), list));
 
