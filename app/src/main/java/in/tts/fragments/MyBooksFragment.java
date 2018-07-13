@@ -108,6 +108,7 @@ public class MyBooksFragment extends Fragment {
 
     private void toGetPDF() {
         try {
+            CommonMethod.toCallLoader(getContext(), "Loading");
             boolean_permission = true;
             if ((AppData.fileList.size() == 0)) {
                 getfile(dir);
@@ -116,9 +117,11 @@ public class MyBooksFragment extends Fragment {
             }
             obj_adapter = new PDFAdapter(getContext(), fileList);
             lv_pdf.setAdapter(obj_adapter);
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
