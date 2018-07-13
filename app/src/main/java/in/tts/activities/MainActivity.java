@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 toSetTitle(getString(R.string.str_title_browse_it));
                 replacePage(new BrowserFragment());
-
                 break;
             case 1:
                 toSetTitle(getString(R.string.str_title_docs));

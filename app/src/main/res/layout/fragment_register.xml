@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/bg_main"
     tools:context=".fragments.RegisterFragment">
 
@@ -12,13 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="end"
         android:layout_margin="15dp"
         android:contentDescription="@string/str_skip"
         android:fontFamily="sans-serif"
         android:src="@drawable/ic_skip"
         android:textColor="@color/white1"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -127,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btnSignUpReg"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/str_or"
                 android:textColor="@color/white1"

@@ -17,6 +17,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ImageView
+            android:id="@+id/ivRefresh"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
@@ -27,6 +28,7 @@
             android:src="@drawable/ic_refresh" />
 
         <ImageView
+            android:id="@+id/ivSpeak"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"

@@ -31,7 +31,9 @@ public class SplashActivity extends AppCompatActivity {
                 if (User.getUser(SplashActivity.this).getId() != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 } else {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                    startActivity(new Intent(SplashActivity.this, TutorialActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, LoginActivity.class)
+//                            .putExtra("LOGIN", "login"));
                 }
                 finish();
             }

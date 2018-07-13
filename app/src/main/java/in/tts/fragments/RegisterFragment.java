@@ -96,7 +96,7 @@ public class RegisterFragment extends Fragment {
             });
 
             // Google
-            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleLogin);
+            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleReg);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -133,7 +133,7 @@ public class RegisterFragment extends Fragment {
                 }
             };
 
-            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookLogin);
+            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookReg);
             relativeLayoutFb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

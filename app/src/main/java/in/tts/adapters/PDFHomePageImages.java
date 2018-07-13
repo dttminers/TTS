@@ -1,9 +1,9 @@
 package in.tts.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +11,13 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 
 import in.tts.R;
 
 public class PDFHomePageImages extends PagerAdapter {
-    ArrayList<String> l;
-    Context context;
+    private ArrayList<String> l;
+    private Context context;
 
     public PDFHomePageImages(Context ctx, ArrayList<String> list) {
         context = ctx;
@@ -28,22 +26,20 @@ public class PDFHomePageImages extends PagerAdapter {
 
     @Override
     public int getCount() {
-        Log.d("TAG", " count images " + l.size());
-        return l.size();
+        return l.size() < 10 ? l.size() : 10;
     }
 
-
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
 
-    public Object instantiateItem(ViewGroup container, int position) {
+    @NonNull
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ViewGroup vg = null;
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            iv.setBackgroundColor(toGetRandomColor());
-            Picasso.get().load("file://" + l.get(position).replaceAll("\\s", "%20")).into(iv);
+            Picasso.get().load("file://" + l.get(position).replaceAll("\\s+", "%20")).into(iv);
             container.addView(vg);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -51,9 +47,13 @@ public class PDFHomePageImages extends PagerAdapter {
         return vg;
     }
 
-    public int toGetRandomColor() {
-        Random rnd = new Random();
-        return Color.argb(255, rnd.nextInt(200), rnd.nextInt(200), rnd.nextInt(200));
+    @Override
+    public float getPageWidth(int position) {
+        return (0.3f);
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        ((ViewPager) container).removeView((View) object);
     }
 }
-

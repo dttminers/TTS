@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
+
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
@@ -13,47 +14,42 @@
         android:clickable="true"
         android:focusable="true"
         app:tabBackground="@color/white"
-        app:tabIndicatorColor="@color/ttsRed"
         app:tabIndicatorHeight="1dp"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/dark_pink_two"
-        app:tabTextAppearance="@style/MineCustomTabText"
-        app:tabTextColor="@color/black">
+        app:tabMode="fixed">
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:icon="@drawable/tab1"
-            android:text="Browser" />
+            />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:icon="@drawable/tab2"
-            android:text="PDF" />
+            />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:icon="@drawable/tab3"
-            android:text="Home" />
+            />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:icon="@drawable/tab4"
-            android:text="Own Read" />
+            />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab5"
-            android:text="Images" />
+            android:icon="@drawable/tab5" />
 
     </android.support.design.widget.TabLayout>
 
@@ -61,9 +57,7 @@
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/tabs"
-        android:animateLayoutChanges="true"
-        android:background="@color/white" />
+        android:layout_above="@id/tabs"/>
 
 
     <View
