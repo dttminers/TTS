@@ -100,6 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:padding="2dp"
                     android:text="@string/str_accent_selection"
@@ -111,13 +112,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvAccentSel"
-                    android:layout_marginStart="5dp">
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp">
 
                     <RadioButton
                         android:id="@+id/radioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
                         android:checked="true"
                         android:text="@string/str_british_accent"
                         android:textColor="@drawable/selector_textcolor_rb"
@@ -128,6 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
                         android:checked="false"
                         android:text="@string/str_american_accent"
                         android:textSize="12sp" />
@@ -184,6 +188,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:padding="2dp"
             android:text="@string/str_voice_speed"

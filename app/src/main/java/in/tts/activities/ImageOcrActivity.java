@@ -169,6 +169,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                     ImageView ivSpeak = view.findViewById(R.id.ivSpeak);
                     ImageView ivReload = view.findViewById(R.id.ivReload);
 
+                    tvImgOcr.setText(stringBuilder);
+
                     ivReload.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

@@ -14,6 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
@@ -49,6 +50,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:paddingRight="10dp"
         android:text="name"
         android:textColor="#000000"
         android:textSize="15sp" />
@@ -63,6 +65,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:paddingRight="10dp"
         android:text="100% Remaining"
         android:textColor="@color/dark_pink_two"
         android:textSize="15sp" />

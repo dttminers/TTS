@@ -26,6 +26,7 @@
         android:contentDescription="@string/str_logo_image"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="80dp"
         android:src="@drawable/line4" />
 
