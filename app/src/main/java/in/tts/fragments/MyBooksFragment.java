@@ -74,7 +74,6 @@ public class MyBooksFragment extends Fragment {
             CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc MyBooks", null);
 
             lv_pdf = getActivity().findViewById(R.id.lv_pdf);
-            mLoading = getActivity().findViewById(R.id.pbPdf);
             mTvLblRecent = getActivity().findViewById(R.id.txtRecent);
 
             dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());

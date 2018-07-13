@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="15dp"
+        android:layout_margin="20dp"
         android:contentDescription="@string/str_skip"
         android:fontFamily="sans-serif"
         android:src="@drawable/ic_skip"
