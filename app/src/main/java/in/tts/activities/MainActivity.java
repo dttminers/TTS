@@ -23,6 +23,7 @@ import in.tts.R;
 import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
+import in.tts.fragments.TutorialFragment;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
             PrefManager prefManager = new PrefManager(this);
             if (prefManager.isFirstTimeLaunch()) {
-                startActivity(new Intent(MainActivity.this, TutorialActivity.class));
+//                startActivity(new Intent(MainActivity.this, TutorialPageActivity.class));
             }
 
             tabLayout = findViewById(R.id.tabs);
@@ -67,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
             });
 
             setCurrentViewPagerItem(2);
+
+//            if (prefManager.isFirstTimeLaunch()){
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .add(R.id.frame_layout, new TutorialFragment())
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                        .commitAllowingStateLoss();
+//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

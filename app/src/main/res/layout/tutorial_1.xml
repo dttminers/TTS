@@ -34,9 +34,9 @@
         android:layout_marginLeft="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
+        android:onClick="toChangeScreen"
         android:contentDescription="@string/str_logo_image"
-        android:src="@drawable/text1"
-        android:textColor="@color/dark_pink_two" />
+        android:src="@drawable/text1"/>
 
 
 </RelativeLayout>

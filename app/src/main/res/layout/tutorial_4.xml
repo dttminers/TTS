@@ -12,6 +12,7 @@
         android:contentDescription="@string/str_logo_image"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="-20dp"
         android:layout_marginEnd="-20dp"
         android:layout_marginBottom="-45dp"
@@ -31,6 +32,8 @@
         android:src="@drawable/line4" />
 
     <ImageView
+        android:onClick="toChangeScreen"
+        android:contentDescription="@string/app_name"
         android:id="@+id/ivText3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

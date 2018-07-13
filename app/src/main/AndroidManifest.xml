@@ -64,6 +64,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullScreen" />
         <activity
+            android:name=".activities.TutorialPageActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreen" />
+        <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

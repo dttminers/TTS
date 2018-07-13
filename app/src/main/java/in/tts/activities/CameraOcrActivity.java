@@ -178,7 +178,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                 textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
                     @Override
                     public void release() {
-                        mRl.removeView(view);
+//                        mRl.removeView(view);
                     }
 
                     /**

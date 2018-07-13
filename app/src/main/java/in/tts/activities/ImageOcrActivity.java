@@ -210,6 +210,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        tts.toStop();
         if (mRl != null) {
             Log.d("TAG", "Count Rel " + mRl.getChildCount());
             if (mRl.getChildCount() > 1) {
@@ -218,5 +219,11 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tts.toShutDown();
     }
 }

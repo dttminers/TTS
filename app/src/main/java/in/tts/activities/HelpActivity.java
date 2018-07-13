@@ -14,7 +14,6 @@ import in.tts.utils.CommonMethod;
 public class HelpActivity extends AppCompatActivity {
 
     @Override
-
     @AddTrace(name = "onCreateHelpActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
