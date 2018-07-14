@@ -23,7 +23,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="15dp"
         android:text="@string/str_skip"
-        android:textColor="@color/white"
+        android:textColor="@color/white1"
         android:textSize="15sp" />
 
 </RelativeLayout>
