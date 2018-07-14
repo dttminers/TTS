@@ -33,6 +33,7 @@ import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
 import in.tts.fragments.TutorialFragment;
+import in.tts.model.AppData;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
@@ -91,18 +92,18 @@ public class MainActivity extends AppCompatActivity {
         try {
             Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                    Log.d("TAG", "Home0131 ");
-//                } else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
                 Log.d("TAG", "Home0231 ");
-//                }
             } else {
-                Log.d("TAG", "Home0331 ");
-//                toGetPDF();
-                ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                ToGetImages.getAllShownImagesPath(MainActivity.this);
+                Log.d("TAG", "count Main Home0331 ");
+                if (AppData.fileList == null) {
+//                    if (AppData.fileList.size() == 0) {
+                        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//                    }
+                }
+                if (AppData.fileName == null) {
+                    ToGetImages.getAllShownImagesPath(MainActivity.this);
+                }
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

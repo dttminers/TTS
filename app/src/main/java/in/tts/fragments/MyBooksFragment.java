@@ -81,9 +81,12 @@ public class MyBooksFragment extends Fragment {
             lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    CommonMethod.toCallLoader(getContext(), "Loading...");
                     Intent intent = new Intent(getContext(), PdfReadersActivity.class);
                     intent.putExtra("position", i);
-                    startActivity(intent);
+                    getContext().startActivity(intent);
+                    CommonMethod.toReleaseMemory();
+                    CommonMethod.toCloseLoader();
                 }
             });
         } catch (Exception | Error e) {

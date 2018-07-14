@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.ImageOcrActivity;
+import in.tts.utils.CommonMethod;
 
 public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGallery.ViewHolder> {
     private Context context;
@@ -62,6 +63,7 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
                 @Override
                 public void onClick(View view) {
                     context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", images.get(getAdapterPosition())));
+                    CommonMethod.toReleaseMemory();
                 }
             });
         }

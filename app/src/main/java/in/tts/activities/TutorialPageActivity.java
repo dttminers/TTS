@@ -105,11 +105,11 @@ public class TutorialPageActivity extends AppCompatActivity {
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
         prefManager.getUserInfo();
-//        if (User.getUser(TutorialPageActivity.this).getId() != null) {
-        startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
-//        } else {
-//            startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-//        }
+        if (User.getUser(TutorialPageActivity.this).getId() != null) {
+            startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
+        } else {
+            startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+        }
         finish();
 
     }
@@ -210,20 +210,14 @@ public class TutorialPageActivity extends AppCompatActivity {
         try {
             Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                    Log.d("TAG", "Home0131 ");
-//                } else {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
                 Log.d("TAG", "Home0231 ");
-//                }
             } else {
-                Log.d("TAG", "Home0331 ");
-//                toGetPDF();
-//                ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-//                ToGetImages.getAllShownImagesPath(TutorialPageActivity.this);
+                Log.d("TAG", "count Home0331 ");
                 if (AppData.fileList == null) {
+//                    if (AppData.fileList.size() == 0) {
                     ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//                    }
                 }
                 if (AppData.fileName == null) {
                     ToGetImages.getAllShownImagesPath(TutorialPageActivity.this);

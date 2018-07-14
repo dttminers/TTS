@@ -134,9 +134,9 @@ public class HomePageFragment extends Fragment {
 //                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
 //                    Log.d("TAG", "Home0131 ");
 //                } else {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
 //                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                    Log.d("TAG", "Home0231 ");
+                Log.d("TAG", "Home0231 ");
 //                }
             } else {
                 Log.d("TAG", "Home0331 ");
@@ -154,10 +154,16 @@ public class HomePageFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Loading...");
             boolean_permission = true;
             if (AppData.fileList != null) {
-                Log.d("TAG", " ppk 1 ");
-                toBindDealProductData(AppData.fileList);
+                if (AppData.fileList.size() != 0) {
+                    Log.d("TAG", " ppk 1 " + AppData.fileList.size());
+                    toBindDealProductData(AppData.fileList);
+                } else {
+                    Log.d("TAG", " ppk 2 ");
+                    fileList = new ArrayList<>();
+                    getfile(dir);
+                }
             } else {
-                Log.d("TAG", " ppk 2 ");
+                Log.d("TAG", " ppk 3 ");
                 fileList = new ArrayList<>();
                 getfile(dir);
 //                toBindDealProductData(AppData.fileList);

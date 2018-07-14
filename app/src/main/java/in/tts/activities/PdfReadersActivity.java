@@ -43,7 +43,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf_readers);
         try {
-            CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
+//            CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             position = getIntent().getIntExtra("position", -1);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
@@ -70,7 +70,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
-                        CommonMethod.toCloseLoader();
+//                        CommonMethod.toCloseLoader();
                         Crashlytics.logException(e);
                     }
                 }
@@ -87,7 +87,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 //            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
+//            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }

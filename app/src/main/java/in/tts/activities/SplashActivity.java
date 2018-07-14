@@ -10,8 +10,10 @@ import android.view.Window;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.model.AppData;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
@@ -29,6 +31,9 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
+
+        AppData.fileList = new ArrayList<>();
+//        AppData.fileName = new ArrayList<>();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -49,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
         }, 3000);
 //        ToGetImages.getAllShownImagesPath(SplashActivity.this);
 //        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+
     }
 
     @Override

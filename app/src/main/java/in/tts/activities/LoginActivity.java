@@ -109,11 +109,12 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("TAG", "Home0231 ");
 //                }
             } else {
-                Log.d("TAG", "Home0331 ");
-//                toGetPDF();
+                Log.d("TAG", "count Home05331 ");
                 if (AppData.fileList == null) {
-                    ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                }
+//                    if (AppData.fileList.size() == 0) {
+                        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                    }
+//                }
                 if (AppData.fileName == null) {
                     ToGetImages.getAllShownImagesPath(LoginActivity.this);
                 }

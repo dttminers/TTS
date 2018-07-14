@@ -16,6 +16,7 @@ public class ToGetImages {
 
     public static ArrayList<String> getAllShownImagesPath(final Activity activity) {
         final ArrayList<String> fileName = new ArrayList<>();
+//        AppData.fileName = new ArrayList<>();
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

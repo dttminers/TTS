@@ -81,7 +81,7 @@ public class RegisterFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "login"));
-//                        getActivity().finish();
+                        getActivity().finish();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -91,6 +91,7 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     getContext().startActivity(new Intent(getContext(), MainActivity.class));
+                    getActivity().finish();
                 }
             });
 
@@ -235,7 +236,8 @@ public class RegisterFragment extends Fragment {
     private void toExit() {
         try {
             new PrefManager(getContext()).setUserInfo();
-            startActivity(new Intent(getContext(), MainActivity.class));
+            getContext().startActivity(new Intent(getContext(), MainActivity.class));
+            getActivity().finish();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
