@@ -43,7 +43,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf_readers);
         try {
-//            CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
+            CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             position = getIntent().getIntExtra("position", -1);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
@@ -58,24 +58,24 @@ public class PdfReadersActivity extends AppCompatActivity {
                 getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
             }
 
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
+//            AsyncTask.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
                         fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
 
                         pdfRenderer = new PdfRenderer(fileDescriptor);
                         for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
                             showPage(i);
                         }
-                    } catch (Exception | Error e) {
-                        e.printStackTrace();
-//                        CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
-                    }
-                }
-            });
-//            CommonMethod.toCloseLoader();
+//                    } catch (Exception | Error e) {
+//                        e.printStackTrace();
+////                        CommonMethod.toCloseLoader();
+//                        Crashlytics.logException(e);
+//                    }
+//                }
+//            });
+            CommonMethod.toCloseLoader();
             if (list.size() > 0) {
                 RecyclerView rv = findViewById(R.id.rv);
                 rv.setLayoutManager(new LinearLayoutManager(PdfReadersActivity.this));
@@ -83,11 +83,11 @@ public class PdfReadersActivity extends AppCompatActivity {
                 rv.setAdapter(new PdfPages(PdfReadersActivity.this, list));
 //                CommonMethod.toCloseLoader();
             }
-//            toGetPDFText();
-//            CommonMethod.toCloseLoader();
+            toGetPDFText();
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-//            CommonMethod.toCloseLoader();
+            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }

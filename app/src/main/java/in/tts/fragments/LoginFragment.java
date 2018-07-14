@@ -94,10 +94,10 @@ public class LoginFragment extends Fragment {
 
             FacebookSdk.sdkInitialize(getContext());
 
-             mTvLogin = getActivity().findViewById(R.id.txtLogin);
+            mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
-            SpannableString ss1=  new SpannableString(getString(R.string.str_login_data));
-            ss1.setSpan(new RelativeSizeSpan(1.5f), 38,50, 0); // set size
+            SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
+            ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 50, 0); // set size
 //            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
             mTvLogin.setText(ss1);
 
@@ -107,7 +107,6 @@ public class LoginFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
-//                        getActivity().finish();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);
@@ -117,13 +116,12 @@ public class LoginFragment extends Fragment {
             getActivity().findViewById(R.id.txtSkipLogin).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try{
-                    getContext().startActivity(new Intent(getContext(), MainActivity.class));
-//                    finish();
-                } catch (Exception | Error e) {
-                    e.printStackTrace();
-                    Crashlytics.logException(e);
-                }
+                    try {
+                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
                 }
             });
 
@@ -137,8 +135,13 @@ public class LoginFragment extends Fragment {
             relativeLayoutGoogle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                    startActivityForResult(signInIntent, RC_SIGN_IN);
+                    try {
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
                 }
             });
             // Google
