@@ -1,6 +1,7 @@
 package in.tts.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -9,11 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.activities.ImageOcrActivity;
+import in.tts.model.AppData;
+import in.tts.utils.CommonMethod;
 
 public class PDFHomePageImages extends PagerAdapter {
     private ArrayList<String> l;
@@ -38,7 +43,7 @@ public class PDFHomePageImages extends PagerAdapter {
     }
 
     @NonNull
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
@@ -47,6 +52,19 @@ public class PDFHomePageImages extends PagerAdapter {
                     .load("file://" + l.get(position).replaceAll("\\s+", "%20"))
                     .resize(250, 250)
                     .into(iv);
+
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", AppData.fileName.get(position)));
+                        CommonMethod.toReleaseMemory();
+                    } catch (Exception| Error e){
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
+                }
+            });
             container.addView(vg);
         } catch (Exception | Error e) {
             e.printStackTrace();

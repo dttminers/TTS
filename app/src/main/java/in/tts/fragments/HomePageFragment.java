@@ -64,6 +64,40 @@ public class HomePageFragment extends Fragment {
     private static ArrayList<File> fileList;
     private static ArrayList<String> fileName;
 
+    private OnFragmentInteractionListener mListener;
+
+    public static HomePageFragment newInstance() {
+        return new HomePageFragment();
+    }
+
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+
+        void setCurrentViewPagerItem(int i);
+    }
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -184,71 +218,81 @@ public class HomePageFragment extends Fragment {
 
 
     public ArrayList<File> getfile(final File dir) {
+        try {
 //        AsyncTask.execute(new Runnable() {
 //            @Override
 //            public void run() {
-                File listFile[] = dir.listFiles();
-                if (listFile != null && listFile.length > 0) {
-                    for (int i = 0; i < listFile.length; i++) {
-                        if (listFile[i].isDirectory()) {
-                            getfile(listFile[i]);
-                        } else {
-                            boolean booleanpdf = false;
-                            if (listFile[i].getName().endsWith(".pdf")) {
-                                for (int j = 0; j < fileList.size(); j++) {
-                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                        booleanpdf = true;
-                                    } else {
-                                    }
-                                }
-                                if (booleanpdf) {
-                                    booleanpdf = false;
+            File listFile[] = dir.listFiles();
+            if (listFile != null && listFile.length > 0) {
+                for (int i = 0; i < listFile.length; i++) {
+                    if (listFile[i].isDirectory()) {
+                        getfile(listFile[i]);
+                    } else {
+                        boolean booleanpdf = false;
+                        if (listFile[i].getName().endsWith(".pdf")) {
+                            for (int j = 0; j < fileList.size(); j++) {
+                                if (fileList.get(j).getName().equals(listFile[i].getName())) {
+                                    booleanpdf = true;
                                 } else {
-                                    fileList.add(listFile[i]);
                                 }
+                            }
+                            if (booleanpdf) {
+                                booleanpdf = false;
+                            } else {
+                                fileList.add(listFile[i]);
                             }
                         }
                     }
                 }
-                Log.d("TAG", "home pdf count " + fileList.size());
-                AppData.fileList = fileList;
+            }
+            Log.d("TAG", "home pdf count " + fileList.size());
+            AppData.fileList = fileList;
 
 //            }
 //        });
 //        toBindDealProductData(AppData.fileList);
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
         return fileList;
     }
 
     public ArrayList<String> getAllShownImagesPath(final Activity activity) {
-
+        try {
 //        AsyncTask.execute(new Runnable() {
 //            @Override
 //            public void run() {
-                Cursor cursor;
+            Cursor cursor;
 
-                int column_index_data, column_index_folder_name;
+            int column_index_data, column_index_folder_name;
 
-                String absolutePathOfImage = null;
+            String absolutePathOfImage = null;
 
-                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+            String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
-                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+            cursor = activity.getContentResolver().query(uri, projection, null, null, null);
 
-                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 
-                while (cursor.moveToNext()) {
-                    absolutePathOfImage = cursor.getString(column_index_data);
-                    fileName.add(absolutePathOfImage);
-                }
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                fileName.add(absolutePathOfImage);
+            }
 
-                Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
-                AppData.fileName = fileName;
+            Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
+            AppData.fileName = fileName;
 
 //            }
 //        });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
         return fileName;
     }
 
@@ -275,6 +319,18 @@ public class HomePageFragment extends Fragment {
                 vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
                 vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
 
+                tvSeeMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            mListener.setCurrentViewPagerItem(4);
+                        } catch (Exception | Error e) {
+                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                        }
+                    }
+                });
+
                 ll.addView(view1);
             }
         } catch (Exception | Error e) {
@@ -300,6 +356,18 @@ public class HomePageFragment extends Fragment {
                 tvHeader.setText("Recent PDF");
                 tvSeeMore.setText("See More");
 
+                tvSeeMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            mListener.setCurrentViewPagerItem(1);
+                        } catch (Exception | Error e) {
+                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                        }
+                    }
+                });
+
                 vpDeals.setClipToPadding(true);
                 vpDeals.setOffscreenPageLimit(3);
                 vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
@@ -317,23 +385,27 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                toGetPDF();
-                Log.d("TAG", "Home0311 ");
+        try {
+            if (requestCode == REQUEST_PERMISSIONS) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    toGetPDF();
+                    Log.d("TAG", "Home0311 ");
+                } else {
+                    Log.d("TAG", "Home0312 ");
+                    Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
+                }
             } else {
-                Log.d("TAG", "Home0312 ");
-                Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
+                Log.d("TAG", "Home0313 ");
+                fn_permission();
             }
-        } else {
-            Log.d("TAG", "Home0313 ");
-            fn_permission();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
     @Override
     public void onPause() {
-
         super.onPause();
         CommonMethod.toReleaseMemory();
     }

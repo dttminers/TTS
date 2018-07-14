@@ -1,6 +1,7 @@
 package in.tts.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.pdf.PdfRenderer;
@@ -10,18 +11,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
 import in.tts.R;
+import in.tts.activities.PdfReadersActivity;
 import in.tts.fragments.MyBooksFragment;
+import in.tts.utils.CommonMethod;
 
 public class PDFHomePage extends PagerAdapter {
 
@@ -52,10 +58,12 @@ public class PDFHomePage extends PagerAdapter {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
+
+            CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
 //            iv.setBackgroundColor(toGetRandomColor());
 
@@ -79,6 +87,25 @@ public class PDFHomePage extends PagerAdapter {
             // Here, we render the page onto the Bitmap.
             currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             iv.setImageBitmap(bitmap);
+
+            cv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        Log.d("TAG", " TAGit : " + position );
+                        CommonMethod.toCallLoader(context, "Loading...");
+                        Intent intent = new Intent(context, PdfReadersActivity.class);
+                        intent.putExtra("position", position);
+                        context.startActivity(intent);
+                        CommonMethod.toReleaseMemory();
+                        CommonMethod.toCloseLoader();
+                    } catch (Exception| Error e){
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
+                }
+            });
+
             container.addView(vg);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -101,4 +128,3 @@ public class PDFHomePage extends PagerAdapter {
         container.removeView((View) object);
     }
 }
-

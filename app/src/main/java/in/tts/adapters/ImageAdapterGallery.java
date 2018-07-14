@@ -62,8 +62,13 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
             picturesView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", images.get(getAdapterPosition())));
-                    CommonMethod.toReleaseMemory();
+                    try {
+                        context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", images.get(getAdapterPosition())));
+                        CommonMethod.toReleaseMemory();
+                    } catch (Exception| Error e){
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
                 }
             });
         }

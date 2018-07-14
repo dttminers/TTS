@@ -2,7 +2,6 @@ package in.tts.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.RequiresApi;
@@ -12,11 +11,14 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +28,7 @@ import java.util.List;
 
 import in.tts.R;
 import in.tts.adapters.PdfPages;
-import in.tts.fragments.MyBooksFragment;
+import in.tts.model.AppData;
 import in.tts.utils.CommonMethod;
 
 public class PdfReadersActivity extends AppCompatActivity {
@@ -35,6 +37,8 @@ public class PdfReadersActivity extends AppCompatActivity {
     private PdfRenderer pdfRenderer;
     private PdfRenderer.Page currentPage;
     private int position = -1;
+    //    private Bitmap bitmap;
+    private StringBuilder stringBuilder;
     ArrayList<Bitmap> list = new ArrayList<Bitmap>();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -45,10 +49,13 @@ public class PdfReadersActivity extends AppCompatActivity {
         try {
             CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             position = getIntent().getIntExtra("position", -1);
+            stringBuilder = new StringBuilder();
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
-                if (MyBooksFragment.fileList.get(position).getName() != null) {
-                    getSupportActionBar().setTitle(MyBooksFragment.fileList.get(position).getName());
+//                if (MyBooksFragment.fileList.get(position).getName() != null) {
+//                    getSupportActionBar().setTitle(MyBooksFragment.fileList.get(position).getName());
+                if (AppData.fileList.get(position).getName() != null) {
+                    getSupportActionBar().setTitle(AppData.fileList.get(position).getName());
                 } else {
                     getSupportActionBar().setTitle(R.string.app_name);
                 }
@@ -62,12 +69,13 @@ public class PdfReadersActivity extends AppCompatActivity {
 //                @Override
 //                public void run() {
 //                    try {
-                        fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+//            fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+            fileDescriptor = ParcelFileDescriptor.open(AppData.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
 
-                        pdfRenderer = new PdfRenderer(fileDescriptor);
-                        for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
-                            showPage(i);
-                        }
+            pdfRenderer = new PdfRenderer(fileDescriptor);
+            for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
+                showPage(i);
+            }
 //                    } catch (Exception | Error e) {
 //                        e.printStackTrace();
 ////                        CommonMethod.toCloseLoader();
@@ -83,12 +91,38 @@ public class PdfReadersActivity extends AppCompatActivity {
                 rv.setAdapter(new PdfPages(PdfReadersActivity.this, list));
 //                CommonMethod.toCloseLoader();
             }
-            toGetPDFText();
+//            toGetPDFText();
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+        }
+    }
+
+    private void toGetData(Bitmap bitmap) {
+        try {
+            stringBuilder.append("next page...");
+            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+            Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
+
+//            textBlocks = textRecognizer.detect(imageFrame);
+//            for (int i = 0; i < textBlocks.size(); i++) {
+//                textBlock = textBlocks.get(textBlocks.keyAt(i));
+//                imageText = textBlock.getValue();                   // return string
+//                Log.d("TAG", " Result : " + i + ":" + imageText);
+//            }
+//            Log.d("TAG", " Result Final: " + imageText);
+
+            SparseArray<TextBlock> items = textRecognizer.detect(imageFrame);
+            for (int i = 0; i < items.size(); i++) {
+                TextBlock item = items.valueAt(i);
+                stringBuilder.append(item.getValue());
+                stringBuilder.append("\n");
+            }
+            Log.d("TAG", " Final DATA " + stringBuilder);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
         }
     }
 
@@ -109,35 +143,37 @@ public class PdfReadersActivity extends AppCompatActivity {
         currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         // showing bitmap to an imageview
         list.add(bitmap);
+        toGetData(bitmap);
     }
 
-    public void toGetPDFText() {
-        try {
-//            File sdcard = Environment.getExternalStorageDirectory();
-//Get the text file
-//            File file = new File(sdcard, "myfolder/anskey.txt");
-//ob.pathh
-            //Read text from file
-
-            StringBuilder text = new StringBuilder();
-            BufferedReader br = new BufferedReader(new FileReader(new File(MyBooksFragment.fileList.get(position).getPath())));
-            String line = null;
-            //int i=0;
-            List<String> lines = new ArrayList<String>();
-
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-                text.append(line);
-                text.append('\n');
-            }
-            Log.d("Tag", " text : " + text);
-//            Toast.makeText(PdfReadersActivity.this, "TEXT " + text.length(), Toast.LENGTH_LONG).show();
-            //arr = lines.toArray(new String[lines.size()]);
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-    }
+//    public void toGetPDFText() {
+//        try {
+////            File sdcard = Environment.getExternalStorageDirectory();
+////Get the text file
+////            File file = new File(sdcard, "myfolder/anskey.txt");
+////ob.pathh
+//            //Read text from file
+//
+//            StringBuilder text = new StringBuilder();
+//            BufferedReader br = new BufferedReader(new FileReader(new File(AppData.fileList.get(position).getPath())));
+//            String line = null;
+//            //int i=0;
+//            List<String> lines = new ArrayList<String>();
+//
+//            while ((line = br.readLine()) != null) {
+//                lines.add(line);
+//                text.append(line);
+//                text.append('\n');
+//            }
+//            Log.d("Tag", " text : " + text);
+////            Toast.makeText(PdfReadersActivity.this, "TEXT " + text.length(), Toast.LENGTH_LONG).show();
+////            arr =
+//            Log.d("Tag", " text : " + lines.toArray(new String[lines.size()]));
+//        } catch (Exception | Error e) {
+//            e.printStackTrace();
+//            Crashlytics.logException(e);
+//        }
+//    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
