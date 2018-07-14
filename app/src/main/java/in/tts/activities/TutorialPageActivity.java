@@ -109,9 +109,9 @@ public class TutorialPageActivity extends AppCompatActivity {
 
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
+//                 last page. make button text to GOT IT
 //                btnNext.setText(getString(R.string.start));
-//                btnSkip.setVisibility(View.GONE);
+                skip.setVisibility(View.GONE);
             } else {
                 // still pages are left
 //                btnNext.setText(getString(R.string.next));
