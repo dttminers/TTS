@@ -47,8 +47,8 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, 3000);
-        ToGetImages.getAllShownImagesPath(SplashActivity.this);
-        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//        ToGetImages.getAllShownImagesPath(SplashActivity.this);
+//        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
     }
 
     @Override

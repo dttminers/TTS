@@ -15,11 +15,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,12 +30,14 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.adapters.CustomPagerAdapter;
+import in.tts.activities.MainActivity;
+import in.tts.adapters.PDFAdapter;
 import in.tts.adapters.PDFHomePage;
 import in.tts.adapters.PDFHomePageImages;
 import in.tts.model.AppData;
@@ -46,6 +50,7 @@ public class HomePageFragment extends Fragment {
     TabLayout tabLayout;
     ImageView imageView;
     ImageView ivLeft, ivRight;
+    CustomPagerAdapter mCustomPagerAdapter;
     LinearLayout ll;
     int currentImage = 0;
     int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
@@ -73,46 +78,9 @@ public class HomePageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "HomePage", null);
         try {
-            imageView = getActivity().findViewById(R.id.imageView);
-            ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
-            ivRight = getActivity().findViewById(R.id.imageViewRight1);
-            tabLayout = getActivity().findViewById(R.id.tlHomePage);
-            mViewPager = getActivity().findViewById(R.id.vpHomePage);
+            toBindView();
 
-            ll = getActivity().findViewById(R.id.llData);
-
-            ivLeft.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //Increase Counter to move to next Image
-                    if (currentImage == 0) {
-                        currentImage = mResources.length - 1;
-                        mViewPager.setCurrentItem(currentImage);
-                    } else {
-                        currentImage--;
-                        mViewPager.setCurrentItem(currentImage);
-                    }
-                }
-            });
-
-            ivRight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (currentImage == mResources.length - 1) {
-                        currentImage = 0;
-                        mViewPager.setCurrentItem(currentImage);
-                    } else {
-                        currentImage++;
-                        mViewPager.setCurrentItem(currentImage);
-                    }
-                }
-            });
-
-            dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-            fn_permission();
-
-            mViewPager.setAdapter(new CustomPagerAdapter(mResources, getContext()));
-            tabLayout.setupWithViewPager(mViewPager);
+            toSetData();
 
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -121,18 +89,62 @@ public class HomePageFragment extends Fragment {
 
     }
 
+    private void toBindView() throws Error {
+        imageView = getActivity().findViewById(R.id.imageView);
+        ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
+        ivRight = getActivity().findViewById(R.id.imageViewRight1);
+        tabLayout = getActivity().findViewById(R.id.tlHomePage);
+        mViewPager = getActivity().findViewById(R.id.vpHomePage);
+
+        ll = getActivity().findViewById(R.id.llData);
+
+        ivLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Increase Counter to move to next Image
+                if (currentImage == 0) {
+                    currentImage = mResources.length - 1;
+                    mViewPager.setCurrentItem(currentImage);
+                } else {
+                    currentImage--;
+                    mViewPager.setCurrentItem(currentImage);
+                }
+            }
+        });
+
+        ivRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentImage == mResources.length - 1) {
+                    currentImage = 0;
+                    mViewPager.setCurrentItem(currentImage);
+                } else {
+                    currentImage++;
+                    mViewPager.setCurrentItem(currentImage);
+                }
+            }
+        });
+    }
+
+    private void toSetData() throws Error {
+
+        mCustomPagerAdapter = new CustomPagerAdapter(mResources, getContext());
+        mViewPager.setAdapter(mCustomPagerAdapter);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        fn_permission();
+    }
+
     private void fn_permission() {
         try {
             Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-                    Log.d("TAG", "Home1 ");
                 } else {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                    Log.d("TAG", "Home2 ");
                 }
             } else {
-                Log.d("TAG", "Home3 ");
                 toGetPDF();
             }
         } catch (Exception | Error e) {
@@ -152,14 +164,15 @@ public class HomePageFragment extends Fragment {
             } else {
                 Log.d("TAG", " ppk 2 ");
                 fileList = new ArrayList<>();
-                toBindDealProductData(ToGetPdfFiles.getfile(dir));
+
+                getfile(dir);
             }
 
             if (AppData.fileName != null) {
                 toBindDealProductDataImages(AppData.fileName);
             } else {
                 fileName = new ArrayList<>();
-                toBindDealProductDataImages(ToGetImages.getAllShownImagesPath(getActivity()));
+                getAllShownImagesPath(getActivity());
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
@@ -167,7 +180,66 @@ public class HomePageFragment extends Fragment {
         }
     }
 
-    public void toBindDealProductDataImages(ArrayList<String> fileList) {
+
+    public ArrayList<File> getfile(File dir) {
+        File listFile[] = dir.listFiles();
+        if (listFile != null && listFile.length > 0) {
+            for (int i = 0; i < listFile.length; i++) {
+                if (listFile[i].isDirectory()) {
+                    getfile(listFile[i]);
+                } else {
+                    boolean booleanpdf = false;
+                    if (listFile[i].getName().endsWith(".pdf")) {
+                        for (int j = 0; j < fileList.size(); j++) {
+                            if (fileList.get(j).getName().equals(listFile[i].getName())) {
+                                booleanpdf = true;
+                            } else {
+                            }
+                        }
+                        if (booleanpdf) {
+                            booleanpdf = false;
+                        } else {
+                            fileList.add(listFile[i]);
+                        }
+                    }
+                }
+            }
+        }
+        Log.d("TAG", "home pdf count " + fileList.size());
+        AppData.fileList = fileList;
+        toBindDealProductData(fileList);
+        return fileList;
+    }
+
+    public ArrayList<String> getAllShownImagesPath(Activity activity) {
+
+        Cursor cursor;
+
+        int column_index_data, column_index_folder_name;
+
+        String absolutePathOfImage = null;
+
+        Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+
+        cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(column_index_data);
+            fileName.add(absolutePathOfImage);
+        }
+
+        Log.d("TAG", " DATa " + fileName.size() + ":" + fileName);
+        AppData.fileName = fileName;
+        toBindDealProductDataImages(fileName);
+        return fileName;
+    }
+
+    private void toBindDealProductDataImages(ArrayList<String> fileList) {
         try {
             if (view1 != null) {
                 ll.removeView(view1);
@@ -232,22 +304,55 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("TAG", "Home01 " + requestCode + ":" + permissions + ":" + grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 toGetPDF();
-                Log.d("TAG", "Home31 ");
             } else {
-                Log.d("TAG", "Home21 ");
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
-        } else {
-            Log.d("TAG", "Home11 ");
+        }
+    }
+
+    class CustomPagerAdapter extends PagerAdapter {
+
+        Context mContext;
+        LayoutInflater mLayoutInflater;
+        int mResources[];
+
+        public CustomPagerAdapter(int _mResources[], Context context) {
+            mContext = context;
+            mResources = _mResources;
+            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            return mResources.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
+            ImageView imageView = itemView.findViewById(R.id.imageView);
+            imageView.setImageResource(mResources[position]);
+            container.addView(itemView);
+            return itemView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((LinearLayout) object);
         }
     }
 
     @Override
     public void onPause() {
+        
         super.onPause();
         CommonMethod.toReleaseMemory();
     }

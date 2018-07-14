@@ -20,6 +20,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 import in.tts.R;
 import in.tts.adapters.ImageAdapterGallery;
 
+import in.tts.model.AppData;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 
@@ -59,7 +60,11 @@ public class GalleryFragment extends Fragment {
             RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-            recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), ToGetImages.getAllShownImagesPath(getActivity())));
+            if (AppData.fileName == null) {
+                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), ToGetImages.getAllShownImagesPath(getActivity())));
+            } else {
+                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), AppData.fileName));
+            }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
