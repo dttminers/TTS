@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 replaceMainTabsFragment(new LoginFragment());
             }
 
-            fn_permission();
+//            fn_permission();
         } catch (Exception | Error e2) {
             e2.printStackTrace();
             Crashlytics.logException(e2);
@@ -134,12 +134,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        finish();
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        finish();
         CommonMethod.toReleaseMemory();
     }
 

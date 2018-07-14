@@ -90,7 +90,7 @@ public class TutorialPageActivity extends AppCompatActivity {
             viewPager.setAdapter(new MyViewPagerAdapter());
             viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-            fn_permission();
+//            fn_permission();
 
         } catch (Exception | Error e) {
             e.printStackTrace();

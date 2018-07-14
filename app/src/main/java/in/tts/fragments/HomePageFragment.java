@@ -166,7 +166,7 @@ public class HomePageFragment extends Fragment {
                 Log.d("TAG", " ppk 3 ");
                 fileList = new ArrayList<>();
                 getfile(dir);
-//                toBindDealProductData(AppData.fileList);
+                toBindDealProductData(AppData.fileList);
             }
 
             if (AppData.fileName != null) {
@@ -184,9 +184,9 @@ public class HomePageFragment extends Fragment {
 
 
     public ArrayList<File> getfile(final File dir) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
                 File listFile[] = dir.listFiles();
                 if (listFile != null && listFile.length > 0) {
                     for (int i = 0; i < listFile.length; i++) {
@@ -213,44 +213,44 @@ public class HomePageFragment extends Fragment {
                 Log.d("TAG", "home pdf count " + fileList.size());
                 AppData.fileList = fileList;
 
-            }
-        });
-        toBindDealProductData(AppData.fileList);
+//            }
+//        });
+//        toBindDealProductData(AppData.fileList);
         return fileList;
     }
-//
-//    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
-//
+
+    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
+
 //        AsyncTask.execute(new Runnable() {
 //            @Override
 //            public void run() {
-//                Cursor cursor;
-//
-//                int column_index_data, column_index_folder_name;
-//
-//                String absolutePathOfImage = null;
-//
-//                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-//
-//                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-//
-//                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-//
-//                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-//                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-//
-//                while (cursor.moveToNext()) {
-//                    absolutePathOfImage = cursor.getString(column_index_data);
-//                    fileName.add(absolutePathOfImage);
-//                }
-//
-//                Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
-//                AppData.fileName = fileName;
-//
+                Cursor cursor;
+
+                int column_index_data, column_index_folder_name;
+
+                String absolutePathOfImage = null;
+
+                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+
+                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+
+                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+                while (cursor.moveToNext()) {
+                    absolutePathOfImage = cursor.getString(column_index_data);
+                    fileName.add(absolutePathOfImage);
+                }
+
+                Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
+                AppData.fileName = fileName;
+
 //            }
 //        });
-//        return fileName;
-//    }
+        return fileName;
+    }
 
     private void toBindDealProductDataImages(ArrayList<String> fileList) {
         try {
