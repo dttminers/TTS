@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import in.tts.fragments.HomePageFragment;
 import in.tts.model.AppData;
 
 public class ToGetImages {
@@ -36,7 +37,7 @@ public class ToGetImages {
             fileName.add(absolutePathOfImage);
         }
 
-        Log.d("TAG", " DATa " + fileName.size() + ":" + fileName);
+        Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
         return AppData.fileName = fileName;
     }
 }

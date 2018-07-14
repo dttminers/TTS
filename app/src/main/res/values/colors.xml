@@ -10,6 +10,7 @@
     <color name="black">#000000</color>
 
     <color name="transparent">#00ffffff</color>
+    <color name="transparent1">#00000000</color>
     <color name="transparent2">#78778184</color>
     <color name="transparent_white">#3cffffff</color>
     <color name="transparent_white1">#85ffffff</color>

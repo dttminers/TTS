@@ -2,6 +2,8 @@ package in.tts.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -43,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
             toSetTitle(getResources().getString(R.string.app_name));
 
-            PrefManager prefManager = new PrefManager(this);
-            if (prefManager.isFirstTimeLaunch()) {
-                startActivity(new Intent(MainActivity.this, TutorialPageActivity.class));
-            }
+//            PrefManager prefManager = new PrefManager(this);
+//            if (prefManager.isFirstTimeLaunch()) {
+//                startActivity(new Intent(MainActivity.this, TutorialPageActivity.class));
+//            }
 
             tabLayout = findViewById(R.id.tabs);
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -69,13 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             setCurrentViewPagerItem(2);
 
-//            if (prefManager.isFirstTimeLaunch()){
-//                getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .add(R.id.activity_main, new TutorialFragment())
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .commitAllowingStateLoss();
-//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -86,6 +82,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :");
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
+        fragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d("TAG", "Home013 " + requestCode + ":" + permissions + ":" + grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("TAG", "Home031 ");
+            } else {
+                Log.d("TAG", "Home021 ");
+                Toast.makeText(MainActivity.this, "Please allow the permission", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Log.d("TAG", "Home011 ");
+        }
     }
 
     @Override

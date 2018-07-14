@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -89,13 +90,12 @@ public class TutorialPageActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
-        PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
         prefManager.getUserInfo();
-        if (User.getUser(TutorialPageActivity.this).getId() != null) {
+//        if (User.getUser(TutorialPageActivity.this).getId() != null) {
             startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
-        } else {
-            startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-        }
+//        } else {
+//            startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+//        }
         finish();
 
     }
@@ -112,10 +112,12 @@ public class TutorialPageActivity extends AppCompatActivity {
                 // last page. make button text to GOT IT
 //                btnNext.setText(getString(R.string.start));
 //                btnSkip.setVisibility(View.GONE);
+                skip.setVisibility(View.GONE);
             } else {
                 // still pages are left
 //                btnNext.setText(getString(R.string.next));
 //                btnSkip.setVisibility(View.VISIBLE);
+                skip.setVisibility(View.VISIBLE);
             }
         }
 
@@ -163,7 +165,7 @@ public class TutorialPageActivity extends AppCompatActivity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view = layoutInflater.inflate(layouts[position], container, false);
@@ -178,13 +180,13 @@ public class TutorialPageActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object obj) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object obj) {
             return view == obj;
         }
 
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             View view = (View) object;
             container.removeView(view);
         }

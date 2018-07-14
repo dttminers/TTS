@@ -1,6 +1,7 @@
 package in.tts.activities;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,10 +9,14 @@ import android.view.Window;
 
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.io.File;
+
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -42,6 +47,8 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, 3000);
+        ToGetImages.getAllShownImagesPath(SplashActivity.this);
+        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
     }
 
     @Override

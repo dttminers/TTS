@@ -38,6 +38,8 @@ import in.tts.adapters.PDFHomePage;
 import in.tts.adapters.PDFHomePageImages;
 import in.tts.model.AppData;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class HomePageFragment extends Fragment {
     ViewPager mViewPager;
@@ -124,10 +126,13 @@ public class HomePageFragment extends Fragment {
             Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+                    Log.d("TAG", "Home1 ");
                 } else {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                    Log.d("TAG", "Home2 ");
                 }
             } else {
+                Log.d("TAG", "Home3 ");
                 toGetPDF();
             }
         } catch (Exception | Error e) {
@@ -147,15 +152,14 @@ public class HomePageFragment extends Fragment {
             } else {
                 Log.d("TAG", " ppk 2 ");
                 fileList = new ArrayList<>();
-
-                getfile(dir);
+                toBindDealProductData(ToGetPdfFiles.getfile(dir));
             }
 
             if (AppData.fileName != null) {
                 toBindDealProductDataImages(AppData.fileName);
             } else {
                 fileName = new ArrayList<>();
-                getAllShownImagesPath(getActivity());
+                toBindDealProductDataImages(ToGetImages.getAllShownImagesPath(getActivity()));
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
@@ -163,66 +167,7 @@ public class HomePageFragment extends Fragment {
         }
     }
 
-
-    public ArrayList<File> getfile(File dir) {
-        File listFile[] = dir.listFiles();
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) {
-                    getfile(listFile[i]);
-                } else {
-                    boolean booleanpdf = false;
-                    if (listFile[i].getName().endsWith(".pdf")) {
-                        for (int j = 0; j < fileList.size(); j++) {
-                            if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                booleanpdf = true;
-                            } else {
-                            }
-                        }
-                        if (booleanpdf) {
-                            booleanpdf = false;
-                        } else {
-                            fileList.add(listFile[i]);
-                        }
-                    }
-                }
-            }
-        }
-        Log.d("TAG", "home pdf count " + fileList.size());
-        AppData.fileList = fileList;
-        toBindDealProductData(fileList);
-        return fileList;
-    }
-
-    public ArrayList<String> getAllShownImagesPath(Activity activity) {
-
-        Cursor cursor;
-
-        int column_index_data, column_index_folder_name;
-
-        String absolutePathOfImage = null;
-
-        Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-
-        cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
-            fileName.add(absolutePathOfImage);
-        }
-
-        Log.d("TAG", " DATa " + fileName.size() + ":" + fileName);
-        AppData.fileName = fileName;
-        toBindDealProductDataImages(fileName);
-        return fileName;
-    }
-
-    private void toBindDealProductDataImages(ArrayList<String> fileList) {
+    public void toBindDealProductDataImages(ArrayList<String> fileList) {
         try {
             if (view1 != null) {
                 ll.removeView(view1);
@@ -287,12 +232,17 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d("TAG", "Home01 " + requestCode + ":" + permissions + ":" + grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 toGetPDF();
+                Log.d("TAG", "Home31 ");
             } else {
+                Log.d("TAG", "Home21 ");
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Log.d("TAG", "Home11 ");
         }
     }
 
@@ -301,5 +251,4 @@ public class HomePageFragment extends Fragment {
         super.onPause();
         CommonMethod.toReleaseMemory();
     }
-
 }
