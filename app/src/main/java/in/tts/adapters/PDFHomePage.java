@@ -40,7 +40,7 @@ public class PDFHomePage extends PagerAdapter {
     public int getCount() {
         if (list != null) {
             return list.size() < 10 ? list.size() : 10;
-        } else {
+        }else {
             return 0;
         }
     }

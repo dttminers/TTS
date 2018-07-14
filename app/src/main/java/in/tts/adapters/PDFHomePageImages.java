@@ -26,7 +26,11 @@ public class PDFHomePageImages extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return l.size() < 10 ? l.size() : 10;
+        if (l != null) {
+            return l.size() < 10 ? l.size() : 10;
+        } else {
+            return 0;
+        }
     }
 
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
@@ -41,7 +45,7 @@ public class PDFHomePageImages extends PagerAdapter {
             ImageView iv = vg.findViewById(R.id.ivItem);
             Picasso.get()
                     .load("file://" + l.get(position).replaceAll("\\s+", "%20"))
-                    .resize(250,250)
+                    .resize(250, 250)
                     .into(iv);
             container.addView(vg);
         } catch (Exception | Error e) {
