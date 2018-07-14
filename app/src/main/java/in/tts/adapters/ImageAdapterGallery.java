@@ -35,7 +35,11 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         try {
-            Picasso.get().load("file://" + images.get(i).replaceAll("\\s", "%20")).into(viewHolder.picturesView);
+            Picasso
+                    .get()
+                    .load("file://" + images.get(i).replaceAll("\\s", "%20"))
+                    .resize(250,250)
+                    .into(viewHolder.picturesView);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

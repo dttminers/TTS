@@ -39,7 +39,10 @@ public class PDFHomePageImages extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            Picasso.get().load("file://" + l.get(position).replaceAll("\\s+", "%20")).into(iv);
+            Picasso.get()
+                    .load("file://" + l.get(position).replaceAll("\\s+", "%20"))
+                    .resize(250,250)
+                    .into(iv);
             container.addView(vg);
         } catch (Exception | Error e) {
             e.printStackTrace();
