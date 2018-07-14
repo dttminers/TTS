@@ -37,9 +37,10 @@ import in.tts.utils.CommonMethod;
 public class CameraOcrActivity extends AppCompatActivity {
 
     private SurfaceView mCameraView;
-    //    private TextView mTextView;
     private CameraSource mCameraSource;
-    private RelativeLayout mRl;
+    private RelativeLayout mRlCamera, mRlOCRData;
+    private TextView tvImgOcr;
+    private ImageView ivSpeak, ivReload;
     private View view;
     private TextRecognizer textRecognizer;
     private StringBuilder stringBuilder;
@@ -64,7 +65,40 @@ public class CameraOcrActivity extends AppCompatActivity {
             setContentView(R.layout.activity_camera_ocr);
 
             mCameraView = findViewById(R.id.surfaceView);
-            mRl = findViewById(R.id.rlCamera);
+            mRlCamera = findViewById(R.id.rlCamera);
+            mRlOCRData = findViewById(R.id.rlOcrData);
+
+            // layout_ocr_image
+            tvImgOcr = view.findViewById(R.id.tvImgOcr);
+            ivSpeak = view.findViewById(R.id.ivSpeak);
+            ivReload = view.findViewById(R.id.ivReload);
+
+
+            ivReload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tvImgOcr.setText("");
+//                    new toGetImage().execute();
+                    startCameraSource();
+                }
+            });
+
+            ivSpeak.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tts.SpeakLoud(stringBuilder.toString());
+                }
+            });
+
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT); // or wrap_content
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            layoutParams.setMargins(
+                    CommonMethod.dpToPx(10, this),
+                    CommonMethod.dpToPx(10, this),
+                    CommonMethod.dpToPx(10, this),
+                    CommonMethod.dpToPx(10, this)
+            );
+
             tts = new TTS(CameraOcrActivity.this);
 
             startCameraSource();
@@ -178,7 +212,6 @@ public class CameraOcrActivity extends AppCompatActivity {
                 textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
                     @Override
                     public void release() {
-//                        mRl.removeView(view);
                     }
 
                     /**
@@ -189,20 +222,19 @@ public class CameraOcrActivity extends AppCompatActivity {
                         final SparseArray<TextBlock> items = detections.getDetectedItems();
                         if (items.size() != 0) {
 
-//                            mTextView.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-                            stringBuilder = new StringBuilder();
-                            for (int i = 0; i < items.size(); i++) {
-                                TextBlock item = items.valueAt(i);
-                                stringBuilder.append(item.getValue());
-                                stringBuilder.append("\n");
-                            }
-//                                    mTextView.setText(stringBuilder.toString());
-                                    Toast.makeText(CameraOcrActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-                            toSetView();
+                            tvImgOcr.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    stringBuilder = new StringBuilder();
+                                    for (int i = 0; i < items.size(); i++) {
+                                        TextBlock item = items.valueAt(i);
+                                        stringBuilder.append(item.getValue());
+                                        stringBuilder.append("\n");
+                                    }
+                                    tvImgOcr.setText(stringBuilder.toString().trim());
+//                                    Toast.makeText(CameraOcrActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 });
@@ -210,55 +242,6 @@ public class CameraOcrActivity extends AppCompatActivity {
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
-        }
-    }
-
-    private void toSetView() {
-        try {
-            if (view != null) {
-                mRl.removeView(view);
-            }
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (inflater != null) {
-                view = inflater.inflate(R.layout.layout_ocr_image, null, false);
-
-                final TextView tvImgOcr = view.findViewById(R.id.tvImgOcr);
-                ImageView ivSpeak = view.findViewById(R.id.ivSpeak);
-                ImageView ivReload = view.findViewById(R.id.ivReload);
-
-                tvImgOcr.setText(stringBuilder);
-
-                ivReload.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-//                        new toGetImage().execute();
-                        startCameraSource();
-                        tvImgOcr.setText("");
-                    }
-                });
-
-                ivSpeak.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        tts.SpeakLoud(stringBuilder.toString());
-                    }
-                });
-//                mRl.addView(view);
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT); // or wrap_content
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                layoutParams.setMargins(
-                        CommonMethod.dpToPx(10, CameraOcrActivity.this),
-                        CommonMethod.dpToPx(10, CameraOcrActivity.this),
-                        CommonMethod.dpToPx(10, CameraOcrActivity.this),
-                        CommonMethod.dpToPx(10, CameraOcrActivity.this)
-                );
-
-                mRl.addView(view, layoutParams);
-            }
-
-        } catch (Exception | Error e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
         }
     }
 }
