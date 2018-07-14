@@ -194,4 +194,18 @@ public class TutorialFragment extends Fragment {
             container.removeView(view);
         }
     }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
+    }
+
 }

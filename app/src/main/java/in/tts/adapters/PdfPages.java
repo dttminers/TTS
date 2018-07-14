@@ -40,8 +40,8 @@ public class PdfPages extends RecyclerView.Adapter<PdfPages.ViewHolder> {
         try {
             viewHolder.pageView.setImageBitmap(pages.get(i));
             viewHolder.tvPageNumber.setText(i + " / " + pages.size());
-            Log.d("TAG", " Page " + i+ ":"+ pages.size());
-            Toast.makeText(context, "Page " + i + "/" + pages.size(), Toast.LENGTH_SHORT).show();
+//            Log.d("TAG", " Page " + i+ ":"+ pages.size());
+//            Toast.makeText(context, "Page " + i + "/" + pages.size(), Toast.LENGTH_SHORT).show();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

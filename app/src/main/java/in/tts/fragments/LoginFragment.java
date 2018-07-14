@@ -106,8 +106,8 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
-                        getActivity().finish();
+                        getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
+//                        getActivity().finish();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);
@@ -117,8 +117,13 @@ public class LoginFragment extends Fragment {
             getActivity().findViewById(R.id.txtSkipLogin).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getContext(), MainActivity.class));
-                    getActivity().finish();
+                    try{
+                    getContext().startActivity(new Intent(getContext(), MainActivity.class));
+//                    finish();
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                }
                 }
             });
 

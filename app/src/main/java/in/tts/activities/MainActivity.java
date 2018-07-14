@@ -1,10 +1,14 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +24,8 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.io.File;
+
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
@@ -29,6 +35,8 @@ import in.tts.fragments.PdfFragment;
 import in.tts.fragments.TutorialFragment;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,6 +80,30 @@ public class MainActivity extends AppCompatActivity {
 
             setCurrentViewPagerItem(2);
 
+            fn_permission();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    private void fn_permission() {
+        try {
+            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                    Log.d("TAG", "Home0131 ");
+//                } else {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                Log.d("TAG", "Home0231 ");
+//                }
+            } else {
+                Log.d("TAG", "Home0331 ");
+//                toGetPDF();
+                ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                ToGetImages.getAllShownImagesPath(MainActivity.this);
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -90,16 +122,19 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d("TAG", "Home013 " + requestCode + ":" + permissions + ":" + grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("TAG", "Home031 ");
-            } else {
-                Log.d("TAG", "Home021 ");
-                Toast.makeText(MainActivity.this, "Please allow the permission", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Log.d("TAG", "Home011 ");
-        }
+        setCurrentViewPagerItem(2);
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
+//        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == 1) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Log.d("TAG", "Home031 ");
+//            } else {
+//                Log.d("TAG", "Home021 ");
+//                Toast.makeText(MainActivity.this, "Please allow the permission", Toast.LENGTH_LONG).show();
+//            }
+//        } else {
+//            Log.d("TAG", "Home011 ");
+//        }
     }
 
     @Override

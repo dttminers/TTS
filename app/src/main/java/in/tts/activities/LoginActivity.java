@@ -1,11 +1,16 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +21,8 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.io.File;
+
 import in.tts.R;
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.GalleryFragment;
@@ -24,7 +31,10 @@ import in.tts.fragments.LoginFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
 import in.tts.fragments.RegisterFragment;
+import in.tts.model.AppData;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -64,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                 CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login3", null);
                 replaceMainTabsFragment(new LoginFragment());
             }
+
+            fn_permission();
         } catch (Exception | Error e2) {
             e2.printStackTrace();
             Crashlytics.logException(e2);
@@ -84,4 +96,50 @@ public class LoginActivity extends AppCompatActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
         fragment.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void fn_permission() {
+        try {
+            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                    Log.d("TAG", "Home0131 ");
+//                } else {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                Log.d("TAG", "Home0231 ");
+//                }
+            } else {
+                Log.d("TAG", "Home0331 ");
+//                toGetPDF();
+                if (AppData.fileList == null) {
+                    ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                }
+                if (AppData.fileName == null) {
+                    ToGetImages.getAllShownImagesPath(LoginActivity.this);
+                }
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
+    }
+
 }

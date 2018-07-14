@@ -80,8 +80,8 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "login"));
-                        getActivity().finish();
+                        getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "login"));
+//                        getActivity().finish();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -90,8 +90,7 @@ public class RegisterFragment extends Fragment {
             getActivity().findViewById(R.id.txtSkipRegisterReg).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getContext(), MainActivity.class));
-                    getActivity().finish();
+                    getContext().startActivity(new Intent(getContext(), MainActivity.class));
                 }
             });
 
@@ -244,8 +243,21 @@ public class RegisterFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
+    }
+
+
+    @Override
     public void onPause() {
         super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         CommonMethod.toReleaseMemory();
     }
 }

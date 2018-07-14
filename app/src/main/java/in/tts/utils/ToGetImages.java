@@ -3,6 +3,7 @@ package in.tts.utils;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -13,31 +14,34 @@ import in.tts.model.AppData;
 
 public class ToGetImages {
 
-    public static ArrayList<String> getAllShownImagesPath(Activity activity) {
+    public static ArrayList<String> getAllShownImagesPath(final Activity activity) {
+        final ArrayList<String> fileName = new ArrayList<>();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Cursor cursor;
 
-        Cursor cursor;
+                int column_index_data, column_index_folder_name;
 
-        ArrayList<String> fileName = new ArrayList<>();
+                String absolutePathOfImage = null;
 
-        int column_index_data, column_index_folder_name;
+                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-        String absolutePathOfImage = null;
+                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
-        Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
 
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 
-        cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+                while (cursor.moveToNext()) {
+                    absolutePathOfImage = cursor.getString(column_index_data);
+                    fileName.add(absolutePathOfImage);
+                }
 
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
-            fileName.add(absolutePathOfImage);
-        }
-
-        Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
+                Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
+            }
+        });
         return AppData.fileName = fileName;
     }
 }

@@ -68,18 +68,22 @@ public class CameraOcrActivity extends AppCompatActivity {
             mRlCamera = findViewById(R.id.rlCamera);
             mRlOCRData = findViewById(R.id.rlOcrData);
 
-            // layout_ocr_image
-            tvImgOcr = view.findViewById(R.id.tvImgOcr);
-            ivSpeak = view.findViewById(R.id.ivSpeak);
-            ivReload = view.findViewById(R.id.ivReload);
 
+            // layout_ocr_image
+            tvImgOcr = findViewById(R.id.tvImgOcr);
+            ivSpeak = findViewById(R.id.ivSpeak);
+            ivReload = findViewById(R.id.ivReload);
+            view = findViewById(R.id.view101);
+
+            toHideLayout();
 
             ivReload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     tvImgOcr.setText("");
 //                    new toGetImage().execute();
-                    startCameraSource();
+//                    startCameraSource();
+                    fn_permission();
                 }
             });
 
@@ -101,11 +105,61 @@ public class CameraOcrActivity extends AppCompatActivity {
 
             tts = new TTS(CameraOcrActivity.this);
 
-            startCameraSource();
+//            startCameraSource();
+            fn_permission();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
+    }
+
+    private void toHideLayout() {
+        try {
+            mRlOCRData.setVisibility(View.GONE);
+            tvImgOcr.setVisibility(View.GONE);
+            ivReload.setVisibility(View.GONE);
+            ivReload.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    private void toShowLayout() {
+        try {
+            mRlOCRData.setVisibility(View.VISIBLE);
+            tvImgOcr.setVisibility(View.VISIBLE);
+            ivReload.setVisibility(View.VISIBLE);
+            ivReload.setVisibility(View.VISIBLE);
+            view.setVisibility(View.VISIBLE);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    private void fn_permission() {
+        try {
+            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(CameraOcrActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                    Log.d("TAG", "Home0131 ");
+//                } else {
+                ActivityCompat.requestPermissions(CameraOcrActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                Log.d("TAG", "Home0231 ");
+//                }
+            } else {
+                Log.d("TAG", "Home0331 ");
+//                toGetPDF();
+                startCameraSource();
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+
     }
 
     @Override
@@ -183,9 +237,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                                     public void surfaceCreated(SurfaceHolder holder) {
                                         try {
 
-                                            if (ActivityCompat
-                                                    .checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
-                                                    != PackageManager.PERMISSION_GRANTED) {
+                                            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                                                 ActivityCompat.requestPermissions(
                                                         CameraOcrActivity.this,
                                                         new String[]{Manifest.permission.CAMERA},
@@ -231,7 +283,9 @@ public class CameraOcrActivity extends AppCompatActivity {
                                         stringBuilder.append(item.getValue());
                                         stringBuilder.append("\n");
                                     }
+//                                    mRlOCRData.setVisibility(View.VISIBLE);
                                     tvImgOcr.setText(stringBuilder.toString().trim());
+                                    toShowLayout();
 //                                    Toast.makeText(CameraOcrActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -242,6 +296,14 @@ public class CameraOcrActivity extends AppCompatActivity {
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mRlOCRData != null) {
+            mRlOCRData.setVisibility(View.GONE);
         }
     }
 }

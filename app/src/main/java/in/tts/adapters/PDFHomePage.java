@@ -38,7 +38,11 @@ public class PDFHomePage extends PagerAdapter {
 
     @Override
     public int getCount() {
-         return list.size() < 10 ? list.size() : 10;
+        if (list != null) {
+            return list.size() < 10 ? list.size() : 10;
+        } else {
+            return 0;
+        }
     }
 
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {

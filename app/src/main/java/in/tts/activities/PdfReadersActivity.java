@@ -2,6 +2,7 @@ package in.tts.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.RequiresApi;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 
 import java.io.BufferedReader;
@@ -25,6 +27,7 @@ import java.util.List;
 import in.tts.R;
 import in.tts.adapters.PdfPages;
 import in.tts.fragments.MyBooksFragment;
+import in.tts.utils.CommonMethod;
 
 public class PdfReadersActivity extends AppCompatActivity {
 
@@ -40,6 +43,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf_readers);
         try {
+            CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             position = getIntent().getIntExtra("position", -1);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
@@ -54,22 +58,36 @@ public class PdfReadersActivity extends AppCompatActivity {
                 getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
             }
 
-            fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
 
-            pdfRenderer = new PdfRenderer(fileDescriptor);
-            for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
-                showPage(i);
-            }
-
+                        pdfRenderer = new PdfRenderer(fileDescriptor);
+                        for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
+                            showPage(i);
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        CommonMethod.toCloseLoader();
+                        Crashlytics.logException(e);
+                    }
+                }
+            });
+//            CommonMethod.toCloseLoader();
             if (list.size() > 0) {
                 RecyclerView rv = findViewById(R.id.rv);
                 rv.setLayoutManager(new LinearLayoutManager(PdfReadersActivity.this));
                 rv.setItemAnimator(new DefaultItemAnimator());
                 rv.setAdapter(new PdfPages(PdfReadersActivity.this, list));
+//                CommonMethod.toCloseLoader();
             }
-            toGetPDFText();
+//            toGetPDFText();
+//            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }
@@ -96,29 +114,24 @@ public class PdfReadersActivity extends AppCompatActivity {
     public void toGetPDFText() {
         try {
 //            File sdcard = Environment.getExternalStorageDirectory();
-
 //Get the text file
-
 //            File file = new File(sdcard, "myfolder/anskey.txt");
-
 //ob.pathh
             //Read text from file
 
             StringBuilder text = new StringBuilder();
-            BufferedReader br = new BufferedReader(new FileReader(new File(MyBooksFragment.fileList.get(position).getName())));
+            BufferedReader br = new BufferedReader(new FileReader(new File(MyBooksFragment.fileList.get(position).getPath())));
             String line = null;
             //int i=0;
             List<String> lines = new ArrayList<String>();
 
             while ((line = br.readLine()) != null) {
                 lines.add(line);
-//       arr[i]=line;
-//       i++;
                 text.append(line);
                 text.append('\n');
             }
             Log.d("Tag", " text : " + text);
-            Toast.makeText(PdfReadersActivity.this, "TEXT " + text.length(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(PdfReadersActivity.this, "TEXT " + text.length(), Toast.LENGTH_LONG).show();
             //arr = lines.toArray(new String[lines.size()]);
         } catch (Exception | Error e) {
             e.printStackTrace();

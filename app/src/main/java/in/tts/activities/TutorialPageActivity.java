@@ -1,15 +1,21 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +28,14 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.io.File;
+
 import in.tts.R;
+import in.tts.model.AppData;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class TutorialPageActivity extends AppCompatActivity {
 
@@ -78,6 +89,9 @@ public class TutorialPageActivity extends AppCompatActivity {
 
             viewPager.setAdapter(new MyViewPagerAdapter());
             viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+
+            fn_permission();
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -92,7 +106,7 @@ public class TutorialPageActivity extends AppCompatActivity {
         prefManager.setFirstTimeLaunch(false);
         prefManager.getUserInfo();
 //        if (User.getUser(TutorialPageActivity.this).getId() != null) {
-            startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
+        startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
 //        } else {
 //            startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
 //        }
@@ -189,6 +203,35 @@ public class TutorialPageActivity extends AppCompatActivity {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             View view = (View) object;
             container.removeView(view);
+        }
+    }
+
+    private void fn_permission() {
+        try {
+            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                    Log.d("TAG", "Home0131 ");
+//                } else {
+                ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                Log.d("TAG", "Home0231 ");
+//                }
+            } else {
+                Log.d("TAG", "Home0331 ");
+//                toGetPDF();
+//                ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//                ToGetImages.getAllShownImagesPath(TutorialPageActivity.this);
+                if (AppData.fileList == null) {
+                    ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                }
+                if (AppData.fileName == null) {
+                    ToGetImages.getAllShownImagesPath(TutorialPageActivity.this);
+                }
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 }

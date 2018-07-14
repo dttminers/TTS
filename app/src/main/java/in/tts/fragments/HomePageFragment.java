@@ -131,11 +131,15 @@ public class HomePageFragment extends Fragment {
         try {
             Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-                } else {
+//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                    Log.d("TAG", "Home0131 ");
+//                } else {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                }
+//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                    Log.d("TAG", "Home0231 ");
+//                }
             } else {
+                Log.d("TAG", "Home0331 ");
                 toGetPDF();
             }
         } catch (Exception | Error e) {
@@ -156,14 +160,14 @@ public class HomePageFragment extends Fragment {
                 Log.d("TAG", " ppk 2 ");
                 fileList = new ArrayList<>();
                 getfile(dir);
-                toBindDealProductData(AppData.fileList);
+//                toBindDealProductData(AppData.fileList);
             }
 
             if (AppData.fileName != null) {
                 toBindDealProductDataImages(AppData.fileName);
             } else {
                 fileName = new ArrayList<>();
-                getAllShownImagesPath(getActivity());
+                ToGetImages.getAllShownImagesPath(getActivity());
                 toBindDealProductDataImages(fileName);
             }
             CommonMethod.toCloseLoader();
@@ -202,44 +206,45 @@ public class HomePageFragment extends Fragment {
                 }
                 Log.d("TAG", "home pdf count " + fileList.size());
                 AppData.fileList = fileList;
-//                toBindDealProductData(fileList);
+
             }
         });
+        toBindDealProductData(AppData.fileList);
         return fileList;
     }
-
-    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
-
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Cursor cursor;
-
-                int column_index_data, column_index_folder_name;
-
-                String absolutePathOfImage = null;
-
-                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-
-                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-
-                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
-                while (cursor.moveToNext()) {
-                    absolutePathOfImage = cursor.getString(column_index_data);
-                    fileName.add(absolutePathOfImage);
-                }
-
-                Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
-                AppData.fileName = fileName;
-
-            }
-        });
-        return fileName;
-    }
+//
+//    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
+//
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Cursor cursor;
+//
+//                int column_index_data, column_index_folder_name;
+//
+//                String absolutePathOfImage = null;
+//
+//                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+//
+//                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+//
+//                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+//
+//                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+//
+//                while (cursor.moveToNext()) {
+//                    absolutePathOfImage = cursor.getString(column_index_data);
+//                    fileName.add(absolutePathOfImage);
+//                }
+//
+//                Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
+//                AppData.fileName = fileName;
+//
+//            }
+//        });
+//        return fileName;
+//    }
 
     private void toBindDealProductDataImages(ArrayList<String> fileList) {
         try {
@@ -309,9 +314,14 @@ public class HomePageFragment extends Fragment {
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 toGetPDF();
+                Log.d("TAG", "Home0311 ");
             } else {
+                Log.d("TAG", "Home0312 ");
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Log.d("TAG", "Home0313 ");
+            fn_permission();
         }
     }
 

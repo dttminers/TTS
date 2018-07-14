@@ -55,7 +55,7 @@ public class ImageOcrActivity extends AppCompatActivity {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
                 if (photoPath != null) {
-                    getSupportActionBar().setTitle(photoPath);
+                    getSupportActionBar().setTitle(photoPath.substring(photoPath.lastIndexOf("/")+1));
                 } else {
                     getSupportActionBar().setTitle(getString(R.string.app_name));
                 }
