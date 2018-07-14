@@ -15,13 +15,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,27 +28,22 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
-import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.activities.MainActivity;
-import in.tts.adapters.PDFAdapter;
+import in.tts.adapters.CustomPagerAdapter;
 import in.tts.adapters.PDFHomePage;
 import in.tts.adapters.PDFHomePageImages;
 import in.tts.model.AppData;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.ToGetImages;
-import in.tts.utils.ToGetPdfFiles;
 
 public class HomePageFragment extends Fragment {
     ViewPager mViewPager;
     TabLayout tabLayout;
     ImageView imageView;
     ImageView ivLeft, ivRight;
-    CustomPagerAdapter mCustomPagerAdapter;
     LinearLayout ll;
     int currentImage = 0;
     int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
@@ -78,62 +71,52 @@ public class HomePageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "HomePage", null);
         try {
-            toBindView();
+            imageView = getActivity().findViewById(R.id.imageView);
+            ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
+            ivRight = getActivity().findViewById(R.id.imageViewRight1);
+            tabLayout = getActivity().findViewById(R.id.tlHomePage);
+            mViewPager = getActivity().findViewById(R.id.vpHomePage);
 
-            toSetData();
+            ll = getActivity().findViewById(R.id.llData);
+
+            ivLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Increase Counter to move to next Image
+                    if (currentImage == 0) {
+                        currentImage = mResources.length - 1;
+                        mViewPager.setCurrentItem(currentImage);
+                    } else {
+                        currentImage--;
+                        mViewPager.setCurrentItem(currentImage);
+                    }
+                }
+            });
+
+            ivRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (currentImage == mResources.length - 1) {
+                        currentImage = 0;
+                        mViewPager.setCurrentItem(currentImage);
+                    } else {
+                        currentImage++;
+                        mViewPager.setCurrentItem(currentImage);
+                    }
+                }
+            });
+
+            dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+            fn_permission();
+
+            mViewPager.setAdapter(new CustomPagerAdapter(mResources, getContext()));
+            tabLayout.setupWithViewPager(mViewPager);
 
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
 
-    }
-
-    private void toBindView() throws Error {
-        imageView = getActivity().findViewById(R.id.imageView);
-        ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
-        ivRight = getActivity().findViewById(R.id.imageViewRight1);
-        tabLayout = getActivity().findViewById(R.id.tlHomePage);
-        mViewPager = getActivity().findViewById(R.id.vpHomePage);
-
-        ll = getActivity().findViewById(R.id.llData);
-
-        ivLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Increase Counter to move to next Image
-                if (currentImage == 0) {
-                    currentImage = mResources.length - 1;
-                    mViewPager.setCurrentItem(currentImage);
-                } else {
-                    currentImage--;
-                    mViewPager.setCurrentItem(currentImage);
-                }
-            }
-        });
-
-        ivRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentImage == mResources.length - 1) {
-                    currentImage = 0;
-                    mViewPager.setCurrentItem(currentImage);
-                } else {
-                    currentImage++;
-                    mViewPager.setCurrentItem(currentImage);
-                }
-            }
-        });
-    }
-
-    private void toSetData() throws Error {
-
-        mCustomPagerAdapter = new CustomPagerAdapter(mResources, getContext());
-        mViewPager.setAdapter(mCustomPagerAdapter);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-        fn_permission();
     }
 
     private void fn_permission() {
@@ -313,46 +296,10 @@ public class HomePageFragment extends Fragment {
         }
     }
 
-    class CustomPagerAdapter extends PagerAdapter {
-
-        Context mContext;
-        LayoutInflater mLayoutInflater;
-        int mResources[];
-
-        public CustomPagerAdapter(int _mResources[], Context context) {
-            mContext = context;
-            mResources = _mResources;
-            mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public int getCount() {
-            return mResources.length;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
-            ImageView imageView = itemView.findViewById(R.id.imageView);
-            imageView.setImageResource(mResources[position]);
-            container.addView(itemView);
-            return itemView;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((LinearLayout) object);
-        }
-    }
-
     @Override
     public void onPause() {
         super.onPause();
         CommonMethod.toReleaseMemory();
     }
+
 }
