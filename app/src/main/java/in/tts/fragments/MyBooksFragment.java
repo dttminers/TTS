@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +105,9 @@ public class MyBooksFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
 //                }
             } else {
-                toGetPDF();
+//                toGetPDF();
+                CommonMethod.toCallLoader(getContext(), "Loading...");
+                new toGetPDFData().execute();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -112,21 +116,14 @@ public class MyBooksFragment extends Fragment {
 
     private void toGetPDF() {
         try {
-            CommonMethod.toCallLoader(getContext(), "Loading");
+//            CommonMethod.toCallLoader(getContext(), "Loading");
             boolean_permission = true;
-//            if ((AppData.fileList.size() == 0)) {
-//            CommonMethod.toCallLoader(getContext(), "Loading...");
+            if ((AppData.fileList.size() == 0)) {
+//                CommonMethod.toCallLoader(getContext(), "Loading...");
                 getfile(dir);
-//            } else {
-//                fileList = AppData.fileList;
-//            }
-            obj_adapter = new PDFAdapter(getContext(), fileList);
-            lv_pdf.setAdapter(obj_adapter);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    CommonMethod.toCloseLoader();
-                }}, 1000);
+            } else {
+                fileList = AppData.fileList;
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -160,6 +157,7 @@ public class MyBooksFragment extends Fragment {
                 }
             }
         }
+        Log.d("Tag", " mybooks3 " + fileList.size());
         return fileList;
     }
 
@@ -169,7 +167,9 @@ public class MyBooksFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                toGetPDF();
+                CommonMethod.toCallLoader(getContext(), "Loading...");
+                new toGetPDFData().execute();
+
             } else {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
@@ -221,5 +221,23 @@ public class MyBooksFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class toGetPDFData extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.d("Tag", " mybooks1 " + fileList.size());
+            toGetPDF();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            CommonMethod.toCloseLoader();
+            Log.d("Tag", " mybooks2 " + fileList.size());
+            obj_adapter = new PDFAdapter(getContext(), fileList);
+            lv_pdf.setAdapter(obj_adapter);
+        }
     }
 }
