@@ -115,10 +115,8 @@ public class MyBooksFragment extends Fragment {
 
     private void toGetPDF() {
         try {
-//            CommonMethod.toCallLoader(getContext(), "Loading");
             boolean_permission = true;
             if ((AppData.fileList.size() == 0)) {
-//                CommonMethod.toCallLoader(getContext(), "Loading...");
                 getfile(dir);
             } else {
                 fileList = AppData.fileList;
@@ -206,9 +204,6 @@ public class MyBooksFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -225,7 +220,6 @@ public class MyBooksFragment extends Fragment {
     private class toGetPDFData extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.d("Tag", " mybooks1 " + fileList.size());
             toGetPDF();
             return null;
         }
@@ -234,7 +228,6 @@ public class MyBooksFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             CommonMethod.toCloseLoader();
-            Log.d("Tag", " mybooks2 " + fileList.size());
             obj_adapter = new PDFAdapter(getContext(), fileList);
             lv_pdf.setAdapter(obj_adapter);
         }
