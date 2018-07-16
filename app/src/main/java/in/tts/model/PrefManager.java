@@ -2,11 +2,13 @@ package in.tts.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import org.json.JSONObject;
+
 import com.google.gson.Gson;
 
 public class PrefManager {
@@ -48,6 +50,7 @@ public class PrefManager {
             if (us != null) {
                 User user = User.getUser(_context);
                 JSONObject userJSON = new JSONObject(us);
+                Log.d("TAG", "getUserinfo " + userJSON);
 
                 if (!userJSON.isNull("email")) {
                     user.setEmail(userJSON.getString("email"));
@@ -94,6 +97,7 @@ public class PrefManager {
             editor.putString(USER_INFO, new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
             editor.apply();
             editor.commit();
+            Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
             return;
         } catch (Exception | Error e) {
             Crashlytics.logException(e);

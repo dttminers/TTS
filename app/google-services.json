@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "143294501560",
-    "firebase_url": "https://readit-2018.firebaseio.com",
-    "project_id": "readit-2018",
-    "storage_bucket": "readit-2018.appspot.com"
+    "project_number": "282432496418",
+    "firebase_url": "https://readit-1530787572454.firebaseio.com",
+    "project_id": "readit-1530787572454",
+    "storage_bucket": "readit-1530787572454.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:143294501560:android:1d55839c957bb73b",
+        "mobilesdk_app_id": "1:282432496418:android:1d55839c957bb73b",
         "android_client_info": {
           "package_name": "in.tts"
         }
       },
       "oauth_client": [
         {
-          "client_id": "143294501560-05lbg1t4nfcp0b67kvmcribjvkklibmo.apps.googleusercontent.com",
+          "client_id": "282432496418-tqd1kja3hl00sj3a3hoe2th99o93lmb5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCW6CEFcx2NusG_Hs1ilcU1A3P9fzmiRTw"
+          "current_key": "AIzaSyDNGbINAIaTSxelhfCwpS2eYm-qsmU5LHc"
         }
       ],
       "services": {

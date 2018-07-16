@@ -134,14 +134,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        finish();
+//        finish();
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        finish();
+//        finish();
         CommonMethod.toReleaseMemory();
     }
 

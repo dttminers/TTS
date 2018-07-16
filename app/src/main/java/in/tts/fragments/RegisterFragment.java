@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +78,13 @@ public class RegisterFragment extends Fragment {
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
         try {
             FacebookSdk.sdkInitialize(getContext());
+
+//            mTvLogin = getActivity().findViewById(R.id.txtLogin);
+//
+//            SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
+//            ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 50, 0); // set size
+////            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
+//            mTvLogin.setText(ss1);
 
             //View
             getActivity().findViewById(R.id.txtAlreadyAccountReg).setOnClickListener(new View.OnClickListener() {

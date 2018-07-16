@@ -141,6 +141,7 @@ public class LoginFragment extends Fragment {
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);
+                        Log.d("TAG", " Login" + e.getMessage());
                     }
                 }
             });
