@@ -50,13 +50,14 @@ public class PdfReadersActivity extends AppCompatActivity {
         try {
             CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             position = getIntent().getIntExtra("position", -1);
+            String name = getIntent().getStringExtra("name");
             stringBuilder = new StringBuilder();
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
 //                if (MyBooksFragment.fileList.get(position).getName() != null) {
 //                    getSupportActionBar().setTitle(MyBooksFragment.fileList.get(position).getName());
-                if (AppData.fileList.get(position).getName() != null) {
-                    getSupportActionBar().setTitle(AppData.fileList.get(position).getName());
+                if (name != null) {
+                    getSupportActionBar().setTitle(name);
                 } else {
                     getSupportActionBar().setTitle(R.string.app_name);
                 }

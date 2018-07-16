@@ -1,10 +1,13 @@
 package in.tts.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -12,12 +15,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
+
+import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.adapters.ImageAdapterGallery;
@@ -28,6 +35,7 @@ import in.tts.utils.ToGetImages;
 
 public class GalleryFragment extends Fragment {
 
+    private  ArrayList<String> fileName = new ArrayList<>();
     public GalleryFragment() {
     }
 
@@ -62,17 +70,50 @@ public class GalleryFragment extends Fragment {
             RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-            if (AppData.fileName == null) {
-                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), ToGetImages.getAllShownImagesPath(getActivity())));
-            } else {
-                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), AppData.fileName));
-            }
+//            if (AppData.fileName == null) {
+                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), getAllShownImagesPath(getActivity())));
+//            } else {
+//                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), AppData.fileName));
+//            }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             CommonMethod.toCloseLoader();
         }
     }
+    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
+        try {
+            Cursor cursor;
+
+            int column_index_data, column_index_folder_name;
+
+            String absolutePathOfImage = null;
+
+            Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+            String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+
+            cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+
+            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+            while (cursor.moveToNext()) {
+                absolutePathOfImage = cursor.getString(column_index_data);
+                fileName.add(absolutePathOfImage);
+            }
+
+            Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
+//            AppData.fileName = fileName;
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+        }
+        return fileName;
+    }
+
 
 
     @Override

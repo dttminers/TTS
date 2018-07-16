@@ -297,40 +297,42 @@ public class MainHomeFragment extends Fragment {
             if (view != null) {
                 ll.removeView(view);
             }
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (inflater != null) {
-                view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
+            if (fileList.size() != 0) {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                if (inflater != null) {
+                    view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
 
-                TextView tvHeader = view.findViewById(R.id.tvRecent);
-                TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
+                    TextView tvHeader = view.findViewById(R.id.tvRecent);
+                    TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
 
-                ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
+                    ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
 
-                tvHeader.setText("Recent PDF");
-                tvSeeMore.setText("See More");
+                    tvHeader.setText("Recent PDF");
+                    tvSeeMore.setText("See More");
 
-                tvSeeMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        try {
-                            mListener.setCurrentViewPagerItem(1);
-                        } catch (Exception | Error e) {
-                            e.printStackTrace();
-                            CommonMethod.toCloseLoader();
-                            Crashlytics.logException(e);
+                    tvSeeMore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            try {
+                                mListener.setCurrentViewPagerItem(1);
+                            } catch (Exception | Error e) {
+                                e.printStackTrace();
+                                CommonMethod.toCloseLoader();
+                                Crashlytics.logException(e);
+                            }
                         }
-                    }
-                });
+                    });
 
-                vpDeals.setClipToPadding(true);
-                vpDeals.setOffscreenPageLimit(3);
-                vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
-                vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                    vpDeals.setClipToPadding(true);
+                    vpDeals.setOffscreenPageLimit(3);
+                    vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
+                    vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
 //                pdfHomePage = new PDFHomePage(getContext(), list);
-                vpDeals.setAdapter(new PDFHomePage(getContext(), fileList));
+                    vpDeals.setAdapter(new PDFHomePage(getContext(), fileList));
 //                pdfHomePage.notifyDataSetChanged();
 
-                ll.addView(view);
+                    ll.addView(view);
+                }
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

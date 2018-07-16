@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 @AddTrace(name = "onCreatePDFAdapter", enabled = true)
 public class PDFAdapter extends ArrayAdapter<File> {
@@ -45,6 +46,7 @@ public class PDFAdapter extends ArrayAdapter<File> {
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
         if (view == null) {
+            CommonMethod.toCloseLoader();
             view = LayoutInflater.from(getContext()).inflate(R.layout.adapter_pdf, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.tv_filename = (TextView) view.findViewById(R.id.tv_name);

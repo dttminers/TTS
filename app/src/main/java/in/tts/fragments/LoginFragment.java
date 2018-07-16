@@ -99,7 +99,7 @@ public class LoginFragment extends Fragment {
             mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
             SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
-            ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 50, 0); // set size
+            ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 47, 0); // set size
 //            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
             mTvLogin.setText(ss1);
 

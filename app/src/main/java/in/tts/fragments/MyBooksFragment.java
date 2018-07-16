@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -84,6 +85,7 @@ public class MyBooksFragment extends Fragment {
                     CommonMethod.toCallLoader(getContext(), "Loading...");
                     Intent intent = new Intent(getContext(), PdfReadersActivity.class);
                     intent.putExtra("position", i);
+                    intent.putExtra("name", fileList.get(i).getName());
                     getContext().startActivity(intent);
                     CommonMethod.toCloseLoader();
                 }
@@ -120,7 +122,11 @@ public class MyBooksFragment extends Fragment {
 //            }
             obj_adapter = new PDFAdapter(getContext(), fileList);
             lv_pdf.setAdapter(obj_adapter);
-            CommonMethod.toCloseLoader();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    CommonMethod.toCloseLoader();
+                }}, 1000);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
