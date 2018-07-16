@@ -39,6 +39,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -186,25 +187,32 @@ public class LoginFragment extends Fragment {
                         mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
                             public void onSuccess(LoginResult loginResult) {
-                                Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
-                                AccessToken accessToken = loginResult.getAccessToken();
-                                ProfileTracker profileTracker = new ProfileTracker() {
-                                    @Override
-                                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                                        if (currentProfile != null) {
-                                            this.stopTracking();
-                                            Profile.setCurrentProfile(currentProfile);
-                                            User user = User.getUser(getContext());
-                                            user.setId(currentProfile.getId());
-                                            user.setName1(currentProfile.getFirstName());
-                                            user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
-                                            user.setName(currentProfile.getName());
-                                            user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                            toExit();
+                                try {
+                                    Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
+                                    AccessToken accessToken = loginResult.getAccessToken();
+                                    ProfileTracker profileTracker = new ProfileTracker() {
+                                        @Override
+                                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                                            if (currentProfile != null) {
+                                                this.stopTracking();
+                                                Profile.setCurrentProfile(currentProfile);
+                                                User user = User.getUser(getContext());
+                                                user.setId(currentProfile.getId());
+                                                user.setName1(currentProfile.getFirstName());
+                                                user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
+                                                user.setName(currentProfile.getName());
+                                                user.setLoginFrom(2);
+                                                user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
+                                                Log.d("TAG", "Userinfo fb  " + new Gson().toJson(User.getUser(getContext())));
+                                                toExit();
+                                            }
                                         }
-                                    }
-                                };
-                                profileTracker.startTracking();
+                                    };
+                                    profileTracker.startTracking();
+                                } catch (Exception | Error e) {
+                                    e.printStackTrace();
+                                    Crashlytics.logException(e);
+                                }
                             }
 
                             @Override
@@ -260,6 +268,7 @@ public class LoginFragment extends Fragment {
                 user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                 user.setName1(account.getGivenName());
                 user.setName2(account.getFamilyName());
+                user.setLoginFrom(1);
                 toExit();
             }
         } catch (Exception | Error e) {
