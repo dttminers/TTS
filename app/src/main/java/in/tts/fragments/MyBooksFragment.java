@@ -39,7 +39,6 @@ public class MyBooksFragment extends Fragment {
 
     private ListView lv_pdf;
 
-    private ProgressBar mLoading;
     private TextView mTvLblRecent;
 
     private PDFAdapter obj_adapter;
@@ -105,9 +104,9 @@ public class MyBooksFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
 //                }
             } else {
-//                toGetPDF();
                 CommonMethod.toCallLoader(getContext(), "Loading...");
                 new toGetPDFData().execute();
+                CommonMethod.toCloseLoader();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -169,7 +168,7 @@ public class MyBooksFragment extends Fragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 CommonMethod.toCallLoader(getContext(), "Loading...");
                 new toGetPDFData().execute();
-
+                CommonMethod.toCloseLoader();
             } else {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
