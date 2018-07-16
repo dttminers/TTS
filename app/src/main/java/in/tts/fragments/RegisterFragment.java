@@ -33,6 +33,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.google.gson.Gson;
 
 import java.util.Arrays;
 
@@ -78,36 +79,39 @@ public class RegisterFragment extends Fragment {
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
         try {
             FacebookSdk.sdkInitialize(getContext());
-
-//            mTvLogin = getActivity().findViewById(R.id.txtLogin);
-//
-//            SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
-//            ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 50, 0); // set size
-////            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
-//            mTvLogin.setText(ss1);
-
             //View
             getActivity().findViewById(R.id.txtAlreadyAccountReg).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     try {
+                        CommonMethod.toCallLoader(getContext(), "Loading....");
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "login"));
                         getActivity().finish();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
+                        CommonMethod.toCloseLoader();
+                        Crashlytics.logException(e);
                     }
                 }
             });
             getActivity().findViewById(R.id.txtSkipRegisterReg).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getContext().startActivity(new Intent(getContext(), MainActivity.class));
-                    getActivity().finish();
+                    try {
+                        CommonMethod.toCallLoader(getContext(), "Loading....");
+                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
+                        getActivity().finish();
+//                        CommonMethod.toCloseLoader();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        CommonMethod.toCloseLoader();
+                        Crashlytics.logException(e);
+                    }
                 }
             });
 
             // Google
-            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleReg);
+            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleLogin);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -116,8 +120,17 @@ public class RegisterFragment extends Fragment {
             relativeLayoutGoogle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                    startActivityForResult(signInIntent, RC_SIGN_IN);
+                    try {
+                        CommonMethod.toCallLoader(getContext(), "Login in with Facebook ");
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                        CommonMethod.toCloseLoader();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        CommonMethod.toCloseLoader();
+                        Crashlytics.logException(e);
+                        Log.d("TAG", " Login" + e.getMessage());
+                    }
                 }
             });
             // Google
@@ -144,54 +157,71 @@ public class RegisterFragment extends Fragment {
                 }
             };
 
-            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookReg);
+            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookLogin);
             relativeLayoutFb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
                     Log.d("TAG", " fb 1 " + mFbLoginManager.getAuthType() + AccessToken.getCurrentAccessToken() + " : " + accessTokenTracker.isTracking() + profileTracker.isTracking());
                     if (accessTokenTracker.isTracking()) {
                         Log.d("TAG", " fb 2 " + accessTokenTracker.isTracking());
                         mFbLoginManager.logOut();
                         accessTokenTracker.stopTracking();
                         profileTracker.stopTracking();
+                        CommonMethod.toCloseLoader();
+                        CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                     } else {
                         Log.d("TAG", " fb 3 " + accessTokenTracker.isTracking());
                         accessTokenTracker.startTracking();
-                        mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile", "user_birthday"));
+                        mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
                         mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
                             public void onSuccess(LoginResult loginResult) {
-                                Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
-                                AccessToken accessToken = loginResult.getAccessToken();
-                                ProfileTracker profileTracker = new ProfileTracker() {
-                                    @Override
-                                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                                        if (currentProfile != null) {
-                                            this.stopTracking();
-                                            Profile.setCurrentProfile(currentProfile);
-                                            User user = User.getUser(getContext());
-                                            user.setId(currentProfile.getId());
-                                            user.setName1(currentProfile.getFirstName());
-                                            user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
-                                            user.setName(currentProfile.getName());
-                                            user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                            toExit();
+                                try {
+
+                                    Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
+                                    AccessToken accessToken = loginResult.getAccessToken();
+                                    ProfileTracker profileTracker = new ProfileTracker() {
+                                        @Override
+                                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                                            if (currentProfile != null) {
+                                                this.stopTracking();
+                                                Profile.setCurrentProfile(currentProfile);
+                                                User user = User.getUser(getContext());
+                                                user.setId(currentProfile.getId());
+                                                user.setName1(currentProfile.getFirstName());
+                                                user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
+                                                user.setName(currentProfile.getName());
+                                                user.setLoginFrom(2);
+                                                user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
+                                                Log.d("TAG", "Userinfo fb  " + new Gson().toJson(User.getUser(getContext())));
+                                                CommonMethod.toCloseLoader();
+                                                toExit();
+                                            }
                                         }
-                                    }
-                                };
-                                profileTracker.startTracking();
+                                    };
+                                    profileTracker.startTracking();
+                                } catch (Exception | Error e) {
+                                    CommonMethod.toCloseLoader();
+                                    e.printStackTrace();
+                                    Crashlytics.logException(e);
+                                    CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
+                                }
                             }
 
                             @Override
                             public void onCancel() {
                                 Log.d("TAG", " fb is cancel");
-
+                                CommonMethod.toCloseLoader();
+                                CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                             }
 
                             @Override
                             public void onError(FacebookException e) {
                                 // here write code when get error
                                 Log.d("TAG", "fb onError " + e.getMessage());
+                                CommonMethod.toCloseLoader();
+                                CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                             }
                         });
                     }
@@ -203,8 +233,10 @@ public class RegisterFragment extends Fragment {
             //Facebook
 
         } catch (Exception | Error e) {
+            CommonMethod.toCloseLoader();
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
         }
     }
 
@@ -223,6 +255,7 @@ public class RegisterFragment extends Fragment {
     //Google
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
+            CommonMethod.toCallLoader(getContext(), "Login successful from Google");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
                 Log.d("TAG", " Name : " + account.getDisplayName());
@@ -235,10 +268,12 @@ public class RegisterFragment extends Fragment {
                 user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                 user.setName1(account.getGivenName());
                 user.setName2(account.getFamilyName());
+                user.setLoginFrom(1);
                 toExit();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }
@@ -246,11 +281,16 @@ public class RegisterFragment extends Fragment {
     // Called when successfully logged in
     private void toExit() {
         try {
+            CommonMethod.toCloseLoader();
+            CommonMethod.toDisplayToast(getContext(), "Login Successful");
+            CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
-            getContext().startActivity(new Intent(getContext(), MainActivity.class));
+            startActivity(new Intent(getContext(), MainActivity.class));
             getActivity().finish();
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }

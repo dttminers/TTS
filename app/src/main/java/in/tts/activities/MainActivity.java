@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
 
-            setCurrentViewPagerItem(1);
+            setCurrentViewPagerItem(0);
 
 //            fn_permission();
         } catch (Exception | Error e) {

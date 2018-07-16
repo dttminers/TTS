@@ -322,8 +322,8 @@ public class HomePageFragment extends Fragment {
 
                 vpDeals.setClipToPadding(false);
                 vpDeals.setOffscreenPageLimit(3);
-                vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
-                vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
+                vpDeals.setPageMargin(CommonMethod.dpToPx(5, getActivity()));
+                vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(5, getActivity()), 0);
                 pdfHomePageImages = new PDFHomePageImages(getContext(), fileList);
                 vpDeals.setAdapter(pdfHomePageImages);
                 pdfHomePageImages.notifyDataSetChanged();
