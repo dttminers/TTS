@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 
 import com.google.firebase.perf.metrics.AddTrace;
@@ -54,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
         }, 3000);
 //        ToGetImages.getAllShownImagesPath(SplashActivity.this);
 //        ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+        CommonMethod.isSignedIn(SplashActivity.this);
 
     }
 

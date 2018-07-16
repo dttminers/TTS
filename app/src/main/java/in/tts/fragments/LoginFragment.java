@@ -50,6 +50,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import in.tts.R;
+import in.tts.activities.AudioSettingActivity;
 import in.tts.activities.LoginActivity;
 import in.tts.activities.MainActivity;
 import in.tts.model.PrefManager;
@@ -107,9 +108,12 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
+                        CommonMethod.toCallLoader(getContext(), "Loading....");
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
+                        getActivity().finish();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
+                        CommonMethod.toCloseLoader();
                         Crashlytics.logException(e);
                     }
                 }
@@ -118,9 +122,13 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
+                        CommonMethod.toCallLoader(getContext(), "Loading....");
                         getContext().startActivity(new Intent(getContext(), MainActivity.class));
+                        getActivity().finish();
+//                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
+                        CommonMethod.toCloseLoader();
                         Crashlytics.logException(e);
                     }
                 }
@@ -137,10 +145,13 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
+                        CommonMethod.toCallLoader(getContext(), "Login in with Facebook ");
                         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                         startActivityForResult(signInIntent, RC_SIGN_IN);
+                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
+                        CommonMethod.toCloseLoader();
                         Crashlytics.logException(e);
                         Log.d("TAG", " Login" + e.getMessage());
                     }
@@ -174,12 +185,15 @@ public class LoginFragment extends Fragment {
             relativeLayoutFb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
                     Log.d("TAG", " fb 1 " + mFbLoginManager.getAuthType() + AccessToken.getCurrentAccessToken() + " : " + accessTokenTracker.isTracking() + profileTracker.isTracking());
                     if (accessTokenTracker.isTracking()) {
                         Log.d("TAG", " fb 2 " + accessTokenTracker.isTracking());
                         mFbLoginManager.logOut();
                         accessTokenTracker.stopTracking();
                         profileTracker.stopTracking();
+                        CommonMethod.toCloseLoader();
+                        CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                     } else {
                         Log.d("TAG", " fb 3 " + accessTokenTracker.isTracking());
                         accessTokenTracker.startTracking();
@@ -188,6 +202,7 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onSuccess(LoginResult loginResult) {
                                 try {
+
                                     Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
                                     AccessToken accessToken = loginResult.getAccessToken();
                                     ProfileTracker profileTracker = new ProfileTracker() {
@@ -204,27 +219,33 @@ public class LoginFragment extends Fragment {
                                                 user.setLoginFrom(2);
                                                 user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
                                                 Log.d("TAG", "Userinfo fb  " + new Gson().toJson(User.getUser(getContext())));
+                                                CommonMethod.toCloseLoader();
                                                 toExit();
                                             }
                                         }
                                     };
                                     profileTracker.startTracking();
                                 } catch (Exception | Error e) {
+                                    CommonMethod.toCloseLoader();
                                     e.printStackTrace();
                                     Crashlytics.logException(e);
+                                    CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                                 }
                             }
 
                             @Override
                             public void onCancel() {
                                 Log.d("TAG", " fb is cancel");
-
+                                CommonMethod.toCloseLoader();
+                                CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                             }
 
                             @Override
                             public void onError(FacebookException e) {
                                 // here write code when get error
                                 Log.d("TAG", "fb onError " + e.getMessage());
+                                CommonMethod.toCloseLoader();
+                                CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                             }
                         });
                     }
@@ -236,8 +257,10 @@ public class LoginFragment extends Fragment {
             //Facebook
 
         } catch (Exception | Error e) {
+            CommonMethod.toCloseLoader();
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toDisplayToast(getContext(), " Click again  to login");
         }
     }
 
@@ -256,6 +279,7 @@ public class LoginFragment extends Fragment {
     //Google
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
+            CommonMethod.toCallLoader(getContext(), "Login successful from Google");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
                 Log.d("TAG", " Name : " + account.getDisplayName());
@@ -273,6 +297,7 @@ public class LoginFragment extends Fragment {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }
@@ -280,10 +305,16 @@ public class LoginFragment extends Fragment {
     // Called when successfully logged in
     private void toExit() {
         try {
+            CommonMethod.toCloseLoader();
+            CommonMethod.toDisplayToast(getContext(), "Login Successful");
+            CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
             startActivity(new Intent(getContext(), MainActivity.class));
+            getActivity().finish();
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
     }
@@ -332,5 +363,4 @@ public class LoginFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
 }

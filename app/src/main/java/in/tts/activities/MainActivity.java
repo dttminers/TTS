@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
 
-            setCurrentViewPagerItem(2);
+            setCurrentViewPagerItem(1);
 
 //            fn_permission();
         } catch (Exception | Error e) {
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
         try {
             if (tabLayout.getSelectedTabPosition() != 2) {
                 setCurrentViewPagerItem(2);

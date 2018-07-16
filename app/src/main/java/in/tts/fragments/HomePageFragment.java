@@ -64,6 +64,11 @@ public class HomePageFragment extends Fragment {
     private static ArrayList<File> fileList;
     private static ArrayList<String> fileName;
 
+    // Adapters
+    private CustomPagerAdapter customPagerAdapter;
+    private PDFHomePage pdfHomePage;
+    private PDFHomePageImages pdfHomePageImages;
+
     private OnFragmentInteractionListener mListener;
 
     public static HomePageFragment newInstance() {
@@ -150,8 +155,10 @@ public class HomePageFragment extends Fragment {
                 }
             });
 
-            mViewPager.setAdapter(new CustomPagerAdapter(mResources, getContext()));
+            customPagerAdapter = new CustomPagerAdapter(mResources, getContext());
+            mViewPager.setAdapter(customPagerAdapter);
             tabLayout.setupWithViewPager(mViewPager);
+            customPagerAdapter.notifyDataSetChanged();
 
             dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
             fn_permission();
@@ -317,7 +324,9 @@ public class HomePageFragment extends Fragment {
                 vpDeals.setOffscreenPageLimit(3);
                 vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
                 vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
-                vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileList));
+                pdfHomePageImages = new PDFHomePageImages(getContext(), fileList);
+                vpDeals.setAdapter(pdfHomePageImages);
+                pdfHomePageImages.notifyDataSetChanged();
 
                 tvSeeMore.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -372,7 +381,9 @@ public class HomePageFragment extends Fragment {
                 vpDeals.setOffscreenPageLimit(3);
                 vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
                 vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
-                vpDeals.setAdapter(new PDFHomePage(getContext(), list));
+                pdfHomePage = new PDFHomePage(getContext(), list);
+                vpDeals.setAdapter(pdfHomePage);
+                pdfHomePage.notifyDataSetChanged();
 
                 ll.addView(view);
             }
@@ -396,7 +407,7 @@ public class HomePageFragment extends Fragment {
                 }
             } else {
                 Log.d("TAG", "Home0313 ");
-                fn_permission();
+//                fn_permission();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
@@ -28,6 +29,12 @@ public class TTS implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranc
         } else {
             tts.speak(text, TextToSpeech.QUEUE_ADD, null);
         }
+        HashMap<String, String> myHashRender = new HashMap();
+        String wakeUpText = "Are you up yet?";
+//        String destFileName = "/sdcard/myAppCache/wakeUp.wav";
+        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
+        tts.synthesizeToFile(text, myHashRender, Environment.getDownloadCacheDirectory().toString());
+
     }
 
     public int SetLanguage() {
