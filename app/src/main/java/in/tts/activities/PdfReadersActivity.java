@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
 
@@ -174,6 +175,13 @@ public class PdfReadersActivity extends AppCompatActivity {
 //            Crashlytics.logException(e);
 //        }
 //    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu2, menu);
+        return true;
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
