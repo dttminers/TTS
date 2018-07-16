@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -30,12 +31,11 @@ import java.io.File;
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
-import in.tts.fragments.HomePageFragment;
+import in.tts.fragments.MainHomeFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
-import in.tts.fragments.TutorialFragment;
 import in.tts.model.AppData;
-import in.tts.model.PrefManager;
+import in.tts.utils.AppPermissions;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
@@ -43,7 +43,7 @@ import in.tts.utils.ToGetPdfFiles;
 public class MainActivity extends AppCompatActivity implements
         BrowserFragment.OnFragmentInteractionListener,
         PdfFragment.OnFragmentInteractionListener,
-        HomePageFragment.OnFragmentInteractionListener,
+        MainHomeFragment.OnFragmentInteractionListener,
         MakeYourOwnReadFragment.OnFragmentInteractionListener,
         GalleryFragment.OnFragmentInteractionListener {
 
@@ -55,16 +55,10 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            CommonMethod.toCloseLoader();
             setContentView(R.layout.activity_main);
-
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
             toSetTitle(getResources().getString(R.string.app_name));
-
-//            PrefManager prefManager = new PrefManager(this);
-//            if (prefManager.isFirstTimeLaunch()) {
-//                startActivity(new Intent(MainActivity.this, TutorialPageActivity.class));
-//            }
 
             tabLayout = findViewById(R.id.tabs);
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -76,77 +70,55 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
-
                 }
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-
                 }
             });
 
-            setCurrentViewPagerItem(1);
 
-//            fn_permission();
+//            if (
+                    AppPermissions.toAsk(MainActivity.this, MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+//                    )
+//            {
+//                ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//                ToGetImages.getAllShownImagesPath(MainActivity.this);
+//
+//            }
+//            AppPermissions.toAsk(MainActivity.this, MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//            AppPermissions.toAsk(MainActivity.this, MainActivity.this, Manifest.permission.CAMERA);
+            setCurrentViewPagerItem(0);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
     }
 
-    private void fn_permission() {
-        try {
-            Log.d("TAG", " pdf permission ");
-            if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                Log.d("TAG", "Home0231 ");
-            } else {
-                Log.d("TAG", "count Main Home0331 ");
-                if (AppData.fileList == null) {
-//                    if (AppData.fileList.size() == 0) {
-                    ToGetPdfFiles.getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-//                    }
-                }
-                if (AppData.fileName == null) {
-                    ToGetImages.getAllShownImagesPath(MainActivity.this);
-                }
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :");
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
-        fragment.onActivityResult(requestCode, resultCode, data);
+        try {
+            Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :");
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("TAG", "Home013 " + requestCode + ":" + permissions + ":" + grantResults);
-        setCurrentViewPagerItem(2);
-//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
-//        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == 1) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Log.d("TAG", "Home031 ");
-//            } else {
-//                Log.d("TAG", "Home021 ");
-//                Toast.makeText(MainActivity.this, "Please allow the permission", Toast.LENGTH_LONG).show();
-//            }
-//        } else {
-//            Log.d("TAG", "Home011 ");
-//        }
+        Log.d("TAG", "Main onRequestPermissionsResult : " + requestCode + ":" + permissions + ":" + grantResults);
+//        setCurrentViewPagerItem(2);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -234,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
     public void onBackPressed() {
-//        super.onBackPressed();
         try {
             if (tabLayout.getSelectedTabPosition() != 2) {
                 setCurrentViewPagerItem(2);
@@ -261,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case 2:
                     toSetTitle(getString(R.string.app_name));
-                    replacePage(new HomePageFragment());
+                    replacePage(new MainHomeFragment());
                     break;
                 case 3:
                     toSetTitle(getString(R.string.str_title_make_your_own_read));
@@ -274,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements
                 default:
                     toSetTitle(getString(R.string.app_name));
                     tabLayout.getTabAt(2).select();
-                    replacePage(new HomePageFragment());
+                    replacePage(new MainHomeFragment());
                     break;
             }
         } catch (Exception | Error e) {
@@ -311,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        setCurrentViewPagerItem(2);
         CommonMethod.toReleaseMemory();
     }
 

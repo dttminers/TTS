@@ -85,7 +85,6 @@ public class MyBooksFragment extends Fragment {
                     Intent intent = new Intent(getContext(), PdfReadersActivity.class);
                     intent.putExtra("position", i);
                     getContext().startActivity(intent);
-                    CommonMethod.toReleaseMemory();
                     CommonMethod.toCloseLoader();
                 }
             });
@@ -99,7 +98,7 @@ public class MyBooksFragment extends Fragment {
             if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 //                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
 //                } else {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
 //                }
             } else {
                 toGetPDF();
@@ -113,11 +112,12 @@ public class MyBooksFragment extends Fragment {
         try {
             CommonMethod.toCallLoader(getContext(), "Loading");
             boolean_permission = true;
-            if ((AppData.fileList.size() == 0)) {
+//            if ((AppData.fileList.size() == 0)) {
+//            CommonMethod.toCallLoader(getContext(), "Loading...");
                 getfile(dir);
-            } else {
-                fileList = AppData.fileList;
-            }
+//            } else {
+//                fileList = AppData.fileList;
+//            }
             obj_adapter = new PDFAdapter(getContext(), fileList);
             lv_pdf.setAdapter(obj_adapter);
             CommonMethod.toCloseLoader();
@@ -130,6 +130,7 @@ public class MyBooksFragment extends Fragment {
 
     @AddTrace(name = "onGetPDF", enabled = true)
     public ArrayList<File> getfile(File dir) {
+
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {

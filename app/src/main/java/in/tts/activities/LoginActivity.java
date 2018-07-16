@@ -24,9 +24,9 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.io.File;
 
 import in.tts.R;
-import in.tts.fragments.BrowserFragment;
-import in.tts.fragments.GalleryFragment;
-import in.tts.fragments.HomePageFragment;
+//import in.tts.fragments.BrowserFragment;
+//import in.tts.fragments.GalleryFragment;
+//import in.tts.fragments.HomePageFragment;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
@@ -52,21 +52,21 @@ public class LoginActivity extends AppCompatActivity {
             } else if (Status.toLowerCase().equals("login")) {
                 CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
                 replaceMainTabsFragment(new LoginFragment());
-            } else if (Status.toLowerCase().equals("login1")) {
-                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
-                replaceMainTabsFragment(new HomePageFragment());
-            } else if (Status.toLowerCase().equals("login2")) {
-                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
-                replaceMainTabsFragment(new PdfFragment());
-            } else if (Status.toLowerCase().equals("login3")) {
-                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
-                replaceMainTabsFragment(new BrowserFragment());
-            } else if (Status.toLowerCase().equals("login4")) {
-                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
-                replaceMainTabsFragment(new MakeYourOwnReadFragment());
-            } else if (Status.toLowerCase().equals("login5")) {
-                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
-                replaceMainTabsFragment(new GalleryFragment());
+//            } else if (Status.toLowerCase().equals("login1")) {
+//                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
+//                replaceMainTabsFragment(new HomePageFragment());
+//            } else if (Status.toLowerCase().equals("login2")) {
+//                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
+//                replaceMainTabsFragment(new PdfFragment());
+//            } else if (Status.toLowerCase().equals("login3")) {
+//                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
+//                replaceMainTabsFragment(new BrowserFragment());
+//            } else if (Status.toLowerCase().equals("login4")) {
+//                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
+//                replaceMainTabsFragment(new MakeYourOwnReadFragment());
+//            } else if (Status.toLowerCase().equals("login5")) {
+//                CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login2", null);
+//                replaceMainTabsFragment(new GalleryFragment());
             } else if (Status.toLowerCase().equals("register")) {
                 CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Register", null);
                 replaceMainTabsFragment(new RegisterFragment());

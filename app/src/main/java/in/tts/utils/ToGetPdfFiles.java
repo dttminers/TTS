@@ -1,6 +1,5 @@
 package in.tts.utils;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.firebase.perf.metrics.AddTrace;
@@ -14,11 +13,8 @@ public class ToGetPdfFiles {
 
     @AddTrace(name = "onGetPDF", enabled = true)
     public static ArrayList<File> getfile(final File dir) {
-        AppData.fileList = new ArrayList<>();
+        Log.d("TAG ", " PATH : "+ dir );
         final ArrayList<File> fileList = new ArrayList<>();
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
                 File listFile[] = dir.listFiles();
                 if (listFile != null && listFile.length > 0) {
                     for (int i = 0; i < listFile.length; i++) {
@@ -42,8 +38,6 @@ public class ToGetPdfFiles {
                         }
                     }
                 }
-//            }
-//        });
         Log.d("TAG", " pdf count " + fileList.size());
         return AppData.fileList = fileList;
     }

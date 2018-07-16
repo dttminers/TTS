@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
         AppData.fileList = new ArrayList<>();
-//        AppData.fileName = new ArrayList<>();
+        AppData.fileName = new ArrayList<>();
 
         new Handler().postDelayed(new Runnable() {
             @Override
