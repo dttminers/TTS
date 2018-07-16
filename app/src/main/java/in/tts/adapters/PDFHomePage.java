@@ -97,6 +97,7 @@ public class PDFHomePage extends PagerAdapter {
                         Intent intent = new Intent(context, PdfReadersActivity.class);
                         intent.putExtra("position", position);
                         intent.putExtra("name", list.get(position).getName());
+                        intent.putExtra("file", list.get(position).getPath());
                         context.startActivity(intent);
                         CommonMethod.toReleaseMemory();
                         CommonMethod.toCloseLoader();

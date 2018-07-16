@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
 //            }
 //            AppPermissions.toAsk(MainActivity.this, MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 //            AppPermissions.toAsk(MainActivity.this, MainActivity.this, Manifest.permission.CAMERA);
-            setCurrentViewPagerItem(0);
+//            setCurrentViewPagerItem(0);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

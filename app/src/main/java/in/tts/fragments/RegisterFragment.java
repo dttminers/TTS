@@ -76,8 +76,8 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
         try {
+            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
             FacebookSdk.sdkInitialize(getContext());
             //View
             getActivity().findViewById(R.id.txtAlreadyAccountReg).setOnClickListener(new View.OnClickListener() {

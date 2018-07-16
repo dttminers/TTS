@@ -87,6 +87,7 @@ public class MyBooksFragment extends Fragment {
                     Intent intent = new Intent(getContext(), PdfReadersActivity.class);
                     intent.putExtra("position", i);
                     intent.putExtra("name", fileList.get(i).getName());
+                    intent.putExtra("file", fileList.get(i).getPath());
                     getContext().startActivity(intent);
                     CommonMethod.toCloseLoader();
                 }
@@ -104,9 +105,15 @@ public class MyBooksFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
 //                }
             } else {
-                CommonMethod.toCallLoader(getContext(), "Loading...");
+//                CommonMethod.toCallLoader(getContext(), "Loading...");
                 new toGetPDFData().execute();
-                CommonMethod.toCloseLoader();
+//                CommonMethod.toCloseLoader();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        CommonMethod.toCloseLoader();
+                    }
+                }, 1500);
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -156,7 +163,7 @@ public class MyBooksFragment extends Fragment {
                 }
             }
         }
-        Log.d("Tag", " mybooks3 " + fileList.size());
+//        Log.d("Tag", " mybooks3 " + fileList.size());
         return fileList;
     }
 
@@ -166,9 +173,9 @@ public class MyBooksFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                CommonMethod.toCallLoader(getContext(), "Loading...");
+//                CommonMethod.toCallLoader(getContext(), "Loading...");
                 new toGetPDFData().execute();
-                CommonMethod.toCloseLoader();
+//                CommonMethod.toCloseLoader();
             } else {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
@@ -235,8 +242,19 @@ public class MyBooksFragment extends Fragment {
             super.onPostExecute(aVoid);
             CommonMethod.toCloseLoader();
             Log.d("Tag", " mybooks2 " + fileList.size());
-            obj_adapter = new PDFAdapter(getContext(), fileList);
-            lv_pdf.setAdapter(obj_adapter);
+            if (getContext() != null) {
+                obj_adapter = new PDFAdapter(getContext(), fileList);
+                lv_pdf.setAdapter(obj_adapter);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CommonMethod.toCloseLoader();
+            if (getContext() != null) {
+                CommonMethod.toCallLoader(getContext(), "Loading....");
+            }
         }
     }
 }

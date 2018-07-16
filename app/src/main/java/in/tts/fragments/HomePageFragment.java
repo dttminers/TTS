@@ -252,7 +252,7 @@ public class HomePageFragment extends Fragment {
                     }
                 }
             }
-            Log.d("TAG", "home pdf count " + fileList.size());
+//            Log.d("TAG", "home pdf count " + fileList.size());
             AppData.fileList = fileList;
 
 //            }

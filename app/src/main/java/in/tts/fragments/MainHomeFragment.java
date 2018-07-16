@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -90,30 +91,23 @@ public class MainHomeFragment extends Fragment {
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            Log.d("TAG", " ERROR1 " + e.getMessage());
         }
     }
 
 
     private void fn_permission() {
         try {
-            Log.d("TAG", " pdf permission ");
             if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                    Log.d("TAG", "Home0131 ");
-//                } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                Log.d("TAG", "Home0231 ");
-//                }
             } else {
-                Log.d("TAG", "Home0331 ");
-//                toGetPDF();
                 toSetOtherData();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            Log.d("TAG", " ERROR2 " + e.getMessage());
         }
 
     }
@@ -194,13 +188,25 @@ public class MainHomeFragment extends Fragment {
 
     private void toSetOtherData() {
         try {
-            CommonMethod.toCallLoader(getContext(), "Loading....");
-            new ToSetPDF().execute();
-            CommonMethod.toCloseLoader();
+            CommonMethod.toCallLoader(getContext(), "Loading Data");
+//            new ToSetPDF().execute();
+            getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+            if (getActivity() != null) {
+                getAllShownImagesPath(getActivity());
+            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    CommonMethod.toCloseLoader();
+                }
+            }, 2500);
+
+            toBindRecentPdf();
+            toBindRecentImages();
         } catch (Exception | Error e) {
-            CommonMethod.toCloseLoader();
             e.printStackTrace();
             Crashlytics.logException(e);
+            Log.d("TAG", " ERROR3 " + e.getMessage());
         }
     }
 
@@ -217,11 +223,10 @@ public class MainHomeFragment extends Fragment {
         void setCurrentViewPagerItem(int i);
     }
 
-    private class ToSetPDF extends AsyncTask<Void, Void, Void>{
+    private class ToSetPDF extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            getAllShownImagesPath(getActivity());
             return null;
         }
 
@@ -230,18 +235,22 @@ public class MainHomeFragment extends Fragment {
             super.onPostExecute(aVoid);
             toBindRecentPdf();
             toBindRecentImages();
-            CommonMethod.toCloseLoader();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+//            //CommonMethod.toCloseLoader();
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);
-            Log.d("TaG", " Values " + Arrays.toString(values));
+//            Log.d("TaG", " Values " + Arrays.toString(values));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            //CommonMethod.toCloseLoader();
+//            if (getContext() != null) {
+//                CommonMethod.toCallLoader(getContext(), "Loading....");
+//            }
         }
     }
 
@@ -250,46 +259,55 @@ public class MainHomeFragment extends Fragment {
             if (view1 != null) {
                 ll.removeView(view1);
             }
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (inflater != null) {
-                view1 = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
+            if (getContext() != null) {
+//                //CommonMethod.toCloseLoader();
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                CommonMethod.toCallLoader(getContext(), "Loading....");
+                if (inflater != null) {
+                    view1 = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
 
-                TextView tvHeader = view1.findViewById(R.id.tvRecent);
-                TextView tvSeeMore = view1.findViewById(R.id.tvSeeMore);
+                    TextView tvHeader = view1.findViewById(R.id.tvRecent);
+                    TextView tvSeeMore = view1.findViewById(R.id.tvSeeMore);
 
-                ViewPager vpDeals = view1.findViewById(R.id.vpRecentItem);
+                    ViewPager vpDeals = view1.findViewById(R.id.vpRecentItem);
 
-                tvHeader.setText("Recent Images");
-                tvSeeMore.setText("See More");
+                    tvHeader.setText("Recent Images");
+                    tvSeeMore.setText("See More");
 
-                vpDeals.setClipToPadding(false);
-                vpDeals.setOffscreenPageLimit(3);
-                vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
-                vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
+                    vpDeals.setClipToPadding(false);
+                    vpDeals.setOffscreenPageLimit(10);
+                    vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                    vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
 //                pdfHomePageImages = new PDFHomePageImages(getContext(), fileName);
-                vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileName));
+                    vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileName));
 //                pdfHomePageImages.notifyDataSetChanged();
 
-                tvSeeMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        try {
-                            mListener.setCurrentViewPagerItem(4);
-                        } catch (Exception | Error e) {
-                            e.printStackTrace();
-                            CommonMethod.toCloseLoader();
-                            Crashlytics.logException(e);
+                    tvSeeMore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            try {
+                                mListener.setCurrentViewPagerItem(4);
+                            } catch (Exception | Error e) {
+                                e.printStackTrace();
+                                //CommonMethod.toCloseLoader();
+                                Crashlytics.logException(e);
+                            }
                         }
-                    }
-                });
+                    });
 
-                ll.addView(view1);
+                    ll.addView(view1);
+                    //CommonMethod.toCloseLoader();
+                }
             }
+//            //CommonMethod.toCloseLoader();
+//            //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            Log.d("TAG", " ERROR4" + e.getMessage());
         }
+        //CommonMethod.toCloseLoader();
     }
 
     private void toBindRecentPdf() {
@@ -298,51 +316,61 @@ public class MainHomeFragment extends Fragment {
                 ll.removeView(view);
             }
             if (fileList.size() != 0) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                if (inflater != null) {
-                    view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
+//                //CommonMethod.toCloseLoader();
+                if (getContext() != null) {
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                    CommonMethod.toCallLoader(getContext(), "Loading....");
+                    if (inflater != null) {
+                        view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
 
-                    TextView tvHeader = view.findViewById(R.id.tvRecent);
-                    TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
+                        TextView tvHeader = view.findViewById(R.id.tvRecent);
+                        TextView tvSeeMore = view.findViewById(R.id.tvSeeMore);
 
-                    ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
+                        ViewPager vpDeals = view.findViewById(R.id.vpRecentItem);
 
-                    tvHeader.setText("Recent PDF");
-                    tvSeeMore.setText("See More");
+                        tvHeader.setText("Recent PDF");
+                        tvSeeMore.setText("See More");
 
-                    tvSeeMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            try {
-                                mListener.setCurrentViewPagerItem(1);
-                            } catch (Exception | Error e) {
-                                e.printStackTrace();
-                                CommonMethod.toCloseLoader();
-                                Crashlytics.logException(e);
+                        tvSeeMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    mListener.setCurrentViewPagerItem(1);
+                                } catch (Exception | Error e) {
+                                    e.printStackTrace();
+                                    //CommonMethod.toCloseLoader();
+                                    Crashlytics.logException(e);
+                                    Log.d("TAG", " ERROR5 " + e.getMessage());
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    vpDeals.setClipToPadding(true);
-                    vpDeals.setOffscreenPageLimit(3);
-                    vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
-                    vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                        vpDeals.setClipToPadding(true);
+                        vpDeals.setOffscreenPageLimit(10);
+                        vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
+                        vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
 //                pdfHomePage = new PDFHomePage(getContext(), list);
-                    vpDeals.setAdapter(new PDFHomePage(getContext(), fileList));
+                        vpDeals.setAdapter(new PDFHomePage(getContext(), fileList));
 //                pdfHomePage.notifyDataSetChanged();
 
-                    ll.addView(view);
+                        ll.addView(view);
+//                        //CommonMethod.toCloseLoader();
+                    }
                 }
             }
+//            //CommonMethod.toCloseLoader();
+//            //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            Log.d("TAG", " ERROR6 " + e.getMessage());
         }
+//        //CommonMethod.toCloseLoader();
     }
 
     public ArrayList<File> getfile(final File dir) {
-        Log.d("TAG ", " PATH : "+ dir );
+//        Log.d("TAG ", " PATH : " + dir);
 
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
@@ -367,12 +395,13 @@ public class MainHomeFragment extends Fragment {
                 }
             }
         }
-        Log.d("TAG", " pdf count " + fileList.size());
+//        Log.d("TAG", " pdf count " + fileList.size());
         return fileList;
     }
 
     public ArrayList<String> getAllShownImagesPath(final Activity activity) {
         try {
+//        CommonMethod.toCallLoader(getContext(), "Loading");
             Cursor cursor;
 
             int column_index_data, column_index_folder_name;
@@ -398,9 +427,22 @@ public class MainHomeFragment extends Fragment {
 
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
+            Log.d("TAG", " ERROR 7" + e.getMessage());
+//            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
         return fileName;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //CommonMethod.toCloseLoader();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //CommonMethod.toCloseLoader();
     }
 }

@@ -71,7 +71,9 @@ public class GalleryFragment extends Fragment {
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 //            if (AppData.fileName == null) {
+            if (getActivity() != null) {
                 recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), getAllShownImagesPath(getActivity())));
+            }
 //            } else {
 //                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), AppData.fileName));
 //            }

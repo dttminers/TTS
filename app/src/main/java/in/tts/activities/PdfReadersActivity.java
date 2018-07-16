@@ -51,6 +51,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             position = getIntent().getIntExtra("position", -1);
             String name = getIntent().getStringExtra("name");
+            String file = getIntent().getStringExtra("file");
             stringBuilder = new StringBuilder();
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
@@ -72,7 +73,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 //                public void run() {
 //                    try {
 //            fileDescriptor = ParcelFileDescriptor.open(MyBooksFragment.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
-            fileDescriptor = ParcelFileDescriptor.open(AppData.fileList.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+            fileDescriptor = ParcelFileDescriptor.open(new File(file), ParcelFileDescriptor.MODE_READ_ONLY);
 
             pdfRenderer = new PdfRenderer(fileDescriptor);
             for (int i = 0; i < pdfRenderer.getPageCount(); i++) {

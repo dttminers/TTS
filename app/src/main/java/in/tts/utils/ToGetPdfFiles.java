@@ -13,7 +13,7 @@ public class ToGetPdfFiles {
 
     @AddTrace(name = "onGetPDF", enabled = true)
     public static ArrayList<File> getfile(final File dir) {
-        Log.d("TAG ", " PATH : "+ dir );
+//        Log.d("TAG ", " PATH : "+ dir );
         final ArrayList<File> fileList = new ArrayList<>();
                 File listFile[] = dir.listFiles();
                 if (listFile != null && listFile.length > 0) {
@@ -38,7 +38,7 @@ public class ToGetPdfFiles {
                         }
                     }
                 }
-        Log.d("TAG", " pdf count " + fileList.size());
+//        Log.d("TAG", " pdf count " + fileList.size());
         return AppData.fileList = fileList;
     }
 }
