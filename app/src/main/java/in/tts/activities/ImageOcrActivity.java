@@ -1,10 +1,12 @@
 package in.tts.activities;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,10 +79,33 @@ public class ImageOcrActivity extends AppCompatActivity {
 
 //            toGetImage(bitmap);
             new toGetImage().execute();
+            fn_permission();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
+    }
+
+    private void fn_permission() {
+        try {
+            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                    Log.d("TAG", "Home0131 ");
+//                } else {
+                ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                Log.d("TAG", "Home0231 ");
+//                }
+            } else {
+                Log.d("TAG", "Home0331 ");
+//                toGetPDF();
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+
     }
 
     public void toGetImage(Bitmap bitmap) {

@@ -145,7 +145,7 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        CommonMethod.toCallLoader(getContext(), "Login in with Facebook ");
+                        CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
                         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                         CommonMethod.toCloseLoader();
@@ -328,6 +328,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        CommonMethod.toCloseLoader();
         CommonMethod.toReleaseMemory();
     }
 

@@ -181,7 +181,7 @@ public class HomePageFragment extends Fragment {
 //                }
             } else {
                 Log.d("TAG", "Home0331 ");
-                toGetPDF();
+//                toGetPDF();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

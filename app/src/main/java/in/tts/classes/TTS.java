@@ -29,11 +29,12 @@ public class TTS implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranc
         } else {
             tts.speak(text, TextToSpeech.QUEUE_ADD, null);
         }
-        HashMap<String, String> myHashRender = new HashMap();
-        String wakeUpText = "Are you up yet?";
+//        HashMap<String, String> myHashRender = new HashMap();
+//        String wakeUpText = "Are you up yet?";
 //        String destFileName = "/sdcard/myAppCache/wakeUp.wav";
-        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
-        tts.synthesizeToFile(text, myHashRender, Environment.getDownloadCacheDirectory().toString());
+//        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
+//        tts.synthesizeToFile(text, myHashRender, Environment.DIRECTORY_DOWNLOADS+"/"+System.currentTimeMillis()+"wakeUp.wav");
+//        Log.d("TAG", " path : " + Environment.DIRECTORY_DOWNLOADS+System.currentTimeMillis()+"wakeUp.wav");
 
     }
 
