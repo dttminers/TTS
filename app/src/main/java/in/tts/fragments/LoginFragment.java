@@ -181,7 +181,7 @@ public class LoginFragment extends Fragment {
                     } else {
                         Log.d("TAG", " fb 3 " + accessTokenTracker.isTracking());
                         accessTokenTracker.startTracking();
-                        mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile", "user_birthday"));
+                        mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
                         mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
                             public void onSuccess(LoginResult loginResult) {
