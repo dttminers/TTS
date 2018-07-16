@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
 
-
 //            if (
                     AppPermissions.toAsk(MainActivity.this, MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
 //                    )
