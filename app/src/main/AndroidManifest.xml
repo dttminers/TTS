@@ -45,11 +45,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="752c9b164b8b11cb297caceb967a4009f7433ab0"
-            />
+            android:value="752c9b164b8b11cb297caceb967a4009f7433ab0" />
 
         <!-- Splash screen -->
         <activity
@@ -124,11 +122,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
-        <!--Services-->
-        <!--<service-->
-        <!--android:name=".services.ClipboardMonitorService"-->
-        <!--android:exported="false"-->
-        <!--android:label="Clipboard Monitor" />-->
+        <!-- Services -->
+        <!-- <service -->
+        <!-- android:name=".services.ClipboardMonitorService" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="Clipboard Monitor" /> -->
+        <activity android:name=".activities.BrowserActivity"></activity>
     </application>
 
 </manifest>

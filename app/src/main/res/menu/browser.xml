@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.BrowserActivity">
+
+    <item
+        android:id="@+id/menuBack"
+        android:icon="@drawable/ic_arrow_back_black_24dp"
+        android:title="Item"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuForward"
+        android:icon="@drawable/ic_arrow_forward_black_24dp"
+        android:title="Item"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuBookmark"
+        android:icon="@drawable/ic_bookmark_border_black_24dp"
+        android:title="Item"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuReload"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        android:title="Item"
+        app:showAsAction="always" />
+
+</menu>

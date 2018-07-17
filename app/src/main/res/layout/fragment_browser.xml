@@ -20,6 +20,7 @@
         android:src="@drawable/tab1_red" />
 
     <EditText
+        android:id="@+id/edtBrowser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
@@ -36,6 +37,13 @@
         android:inputType="text"
         android:textColorHint="@color/warm_grey2" />
 
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="search"
+            android:layout_gravity="center"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -43,7 +51,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/str_bookmarks"
         android:textColor="@color/warm_grey2"
