@@ -1,53 +1,45 @@
 package in.tts.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.perf.metrics.AddTrace;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.activities.PdfReadersActivity;
-import in.tts.adapters.PDFAdapter;
-import in.tts.model.AppData;
+import in.tts.adapters.PdfListAdapter;
+import in.tts.model.PrefManager;
+import in.tts.utils.AppPermissions;
 import in.tts.utils.CommonMethod;
 
 public class MyBooksFragment extends Fragment {
 
-    private ListView lv_pdf;
-
     private TextView mTvLblRecent;
-
-    private PDFAdapter obj_adapter;
-    boolean boolean_permission;
-    private File dir;
-
-    public static ArrayList<File> fileList = new ArrayList<File>();
-    public static int REQUEST_PERMISSIONS = 1;
-
+    private RecyclerView mRv;
+    private PdfListAdapter pdfListAdapter;
+    private ArrayList<String> list;
+    private int count = 0, extra = 0;
+    private int nextPage = 1, lastPage = 1;
+    private LayoutManager mLayoutManager;
+    private int pastVisibleItems;
+    private int totalItemCount;
+    private boolean userScrolled = true;
+    private int visibleItemCount;
+    private PrefManager prefManager;
     private OnFragmentInteractionListener mListener;
 
     public MyBooksFragment() {
@@ -74,109 +66,132 @@ public class MyBooksFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc MyBooks", null);
+            prefManager = new PrefManager(getContext());
 
-            lv_pdf = getActivity().findViewById(R.id.lv_pdf);
             mTvLblRecent = getActivity().findViewById(R.id.txtRecent);
+            mRv = getActivity().findViewById(R.id.rvPDFList);
 
-            dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-            fn_permission();
-            lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            CommonMethod.toCloseLoader();
+
+            mLayoutManager = new LinearLayoutManager(getContext());
+            mRv.setHasFixedSize(true);
+            mRv.setLayoutManager(mLayoutManager);
+            mRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    CommonMethod.toCallLoader(getContext(), "Loading...");
-                    Intent intent = new Intent(getContext(), PdfReadersActivity.class);
-                    intent.putExtra("position", i);
-                    intent.putExtra("name", fileList.get(i).getName());
-                    intent.putExtra("file", fileList.get(i).getPath());
-                    getContext().startActivity(intent);
-                    CommonMethod.toCloseLoader();
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == 1) {
+                        userScrolled = true;
+                    }
+                }
+
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                    Log.d("TAG", " update1 " + userScrolled + ":" + visibleItemCount + ":" + pastVisibleItems + ":" + totalItemCount);
+                    if (userScrolled && visibleItemCount + pastVisibleItems < totalItemCount) {
+                        Log.d("TAG", " update2 " + userScrolled + ":" + visibleItemCount + ":" + pastVisibleItems + ":" + totalItemCount);
+                        userScrolled = false;
+                        if (nextPage <= lastPage) {
+                            Log.d("TAG", " update3 " + nextPage + ":" + lastPage);
+                            updateRecyclerView();
+                        }
+                    }
                 }
             });
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void fn_permission() {
-        try {
-            if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-//                }
-            } else {
-//                CommonMethod.toCallLoader(getContext(), "Loading...");
-                new toGetPDFData().execute();
-//                CommonMethod.toCloseLoader();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        CommonMethod.toCloseLoader();
-                    }
-                }, 1500);
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-        }
-    }
+            AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, MyBooksFragment.this, null, false);
 
-    private void toGetPDF() {
-        try {
-            boolean_permission = true;
-            if ((AppData.fileList.size() == 0)) {
-                getfile(dir);
-            } else {
-                fileList = AppData.fileList;
-            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
-            CommonMethod.toCloseLoader();
         }
     }
-
-    @AddTrace(name = "onGetPDF", enabled = true)
-    public ArrayList<File> getfile(File dir) {
-
-        File listFile[] = dir.listFiles();
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) {
-                    getfile(listFile[i]);
-                } else {
-                    boolean booleanpdf = false;
-                    if (listFile[i].getName().endsWith(".pdf")) {
-                        for (int j = 0; j < fileList.size(); j++) {
-                            if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                booleanpdf = true;
-                            } else {
-                            }
-                        }
-                        if (booleanpdf) {
-                            booleanpdf = false;
-                        } else {
-                            fileList.add(listFile[i]);
-                        }
-                    }
-                }
-            }
-        }
-//        Log.d("Tag", " mybooks3 " + fileList.size());
-        return fileList;
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS) {
+        if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                CommonMethod.toCallLoader(getContext(), "Loading...");
-                new toGetPDFData().execute();
-//                CommonMethod.toCloseLoader();
+                toSetView();
             } else {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    public void toSetView() {
+        try {
+            if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
+                populateRecyclerView();
+            } else {
+//                AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, MyBooksFragment.this);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    private void populateRecyclerView() {
+        try {
+            if (prefManager.toGetPDFList().size() > 20) {
+                list = new ArrayList<>();
+                extra = prefManager.toGetPDFList().size() % 20;
+                lastPage = prefManager.toGetPDFList().size() / 20;
+                Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
+                for (int i = 0; i < 20; i++) {
+                    list.add(prefManager.toGetPDFList().get(i));
+                }
+            } else {
+                list = prefManager.toGetPDFList();
+                Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
+            }
+            pdfListAdapter = new PdfListAdapter(getContext(), list);
+            mRv.setAdapter(pdfListAdapter);
+            pdfListAdapter.notifyDataSetChanged();
+            count += 20;
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            CommonMethod.toReleaseMemory();
+            Crashlytics.logException(e);
+        }
+        CommonMethod.toReleaseMemory();
+    }
+
+    private void updateRecyclerView() {
+        try {
+            int l;
+            if (nextPage < lastPage) {
+                l = this.count + 20;
+                Log.d("TAG", "update count 1: " + count +":"+ l);
+                for (int i = count; i < l; i++) {
+                    Log.d("TAG", "update count 3: " + count +":"+ l);
+                    list.add(prefManager.toGetPDFList().get(i));
+                    pdfListAdapter.notifyItemInserted(count);
+                    pdfListAdapter.notifyItemRangeChanged(count,l);
+                }
+                count += 20;
+                nextPage++;
+            } else {
+                l = count + extra;
+                Log.d("TAG", "update count 2: " + count +":"+ l);
+                for (int i = count; i < l; i++) {
+                    Log.d("TAG", "update count 4: " + count +":"+ l);
+                    list.add(prefManager.toGetPDFList().get(i));
+                    pdfListAdapter.notifyItemInserted(count);
+                    pdfListAdapter.notifyItemRangeChanged(count,l);
+                }
+            }
+
+
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            CommonMethod.toReleaseMemory();
+            Crashlytics.logException(e);
         }
     }
 
@@ -184,7 +199,6 @@ public class MyBooksFragment extends Fragment {
     public void onResume() {
         super.onResume();
         CommonMethod.toReleaseMemory();
-        fn_permission();
     }
 
     @Override
@@ -209,8 +223,13 @@ public class MyBooksFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        try {
+            if (context instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) context;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -222,33 +241,5 @@ public class MyBooksFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
-    }
-
-    private class toGetPDFData extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            toGetPDF();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            CommonMethod.toCloseLoader();
-            Log.d("Tag", " mybooks2 " + fileList.size());
-            if (getContext() != null) {
-                obj_adapter = new PDFAdapter(getContext(), fileList);
-                lv_pdf.setAdapter(obj_adapter);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            CommonMethod.toCloseLoader();
-            if (getContext() != null) {
-                CommonMethod.toCallLoader(getContext(), "Loading....");
-            }
-        }
     }
 }

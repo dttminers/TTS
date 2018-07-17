@@ -114,7 +114,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                     @Override
                     public void onCreateContextMenu(ContextMenu menu, View v,
                                                     ContextMenu.ContextMenuInfo menuInfo) {
-                        // TODO Auto-generated method stub
+
                         menu.clear();
                     }
                 });
@@ -122,29 +122,21 @@ public class MakeYourOwnReadFragment extends Fragment {
                 editText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
 
                     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        // TODO Auto-generated method stub
                         return false;
                     }
 
                     public void onDestroyActionMode(ActionMode mode) {
-                        // TODO Auto-generated method stub
-
                     }
 
                     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        // TODO Auto-generated method stub
                         return false;
                     }
 
-                    public boolean onActionItemClicked(ActionMode mode,
-                                                       MenuItem item) {
-                        // TODO Auto-generated method stub
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                         return false;
                     }
                 });
             }
-
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -152,7 +144,6 @@ public class MakeYourOwnReadFragment extends Fragment {
     }
 
     private void popup() {
-
         try {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
             View customView = inflater.inflate(R.layout.customise_clipboard, null);
@@ -257,23 +248,39 @@ public class MakeYourOwnReadFragment extends Fragment {
     }
 
     private void copyText() {
-        ClipboardManager clipboardManager = (ClipboardManager)
-                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        try {
+            if (getActivity() != null) {
+                ClipboardManager clipboardManager = (ClipboardManager)
+                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        CharSequence selectedTxt = editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-        ClipData clipData = ClipData.newPlainText("zoftino text view", selectedTxt);
-        clipboardManager.setPrimaryClip(clipData);
+                CharSequence selectedTxt = editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
+                ClipData clipData = ClipData.newPlainText("zoftino text view", selectedTxt);
+                if (clipboardManager != null) {
+                    clipboardManager.setPrimaryClip(clipData);
+                }
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     private void pasteText() {
-        ClipboardManager clipboardManager = (ClipboardManager)
-                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        try {
+            if (getActivity() != null) {
+                ClipboardManager clipboardManager = (ClipboardManager)
+                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        if (clipboardManager.hasPrimaryClip()) {
-            ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
+                if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
+                    ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
 
-            CharSequence ptext = item.getText();
-            editText.setText(ptext);
+                    CharSequence ptext = item.getText();
+                    editText.setText(ptext);
+                }
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -299,11 +306,13 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+        try {
+            if (context instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) context;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 

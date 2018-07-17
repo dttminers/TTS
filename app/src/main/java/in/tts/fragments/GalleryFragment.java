@@ -1,13 +1,10 @@
 package in.tts.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -24,18 +21,19 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
-import java.util.ArrayList;
-
 import in.tts.R;
 import in.tts.adapters.ImageAdapterGallery;
 
-import in.tts.model.AppData;
+import in.tts.model.PrefManager;
+import in.tts.utils.AppPermissions;
+import in.tts.utils.CommonMethod;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 
 public class GalleryFragment extends Fragment {
 
-    private  ArrayList<String> fileName = new ArrayList<>();
+    private PrefManager prefManager;
+
     public GalleryFragment() {
     }
 
@@ -50,72 +48,52 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fn_permissions();
+
+        prefManager = new PrefManager(getContext());
+//        fn_permissions();
+        AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, null, GalleryFragment.this, false);
     }
 
-    private void fn_permissions() {
-        if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//            if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//    private void fn_permissions() {
+//        try {
+//            if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+////            if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+////            } else {
+//                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
+////            }
 //            } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
+//                toGetData();
 //            }
-        } else {
-            toGetData();
-        }
-    }
+//        } catch (Exception | Error e) {
+//            e.printStackTrace();
+//            Crashlytics.logException(e);
+//        }
+//    }
 
-    private void toGetData() {
+    public void toGetData() {
         try {
             CommonMethod.toCallLoader(getContext(), "Loading");
-            RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-//            if (AppData.fileName == null) {
             if (getActivity() != null) {
-                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), getAllShownImagesPath(getActivity())));
+                RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                if (prefManager.toGetImageList() == null) {
+                    Log.d("TAG", "Gallery 10 ");
+                    prefManager.toSetImageFileList(ToGetImages.getAllShownImagesPath(getActivity()));
+                    recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), prefManager.toGetImageList()));
+                } else {
+                    Log.d("TAG", "Gallery 11 ");
+                    recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), prefManager.toGetImageList()));
+                }
             }
-//            } else {
-//                recyclerView.setAdapter(new ImageAdapterGallery(getActivity(), AppData.fileName));
-//            }
+            Log.d("TAG", "Gallery 12 ");
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
-        }
-    }
-    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
-        try {
-            Cursor cursor;
-
-            int column_index_data, column_index_folder_name;
-
-            String absolutePathOfImage = null;
-
-            Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-            String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-
-            cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-
-            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
-            while (cursor.moveToNext()) {
-                absolutePathOfImage = cursor.getString(column_index_data);
-                fileName.add(absolutePathOfImage);
-            }
-
-            Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
-//            AppData.fileName = fileName;
-
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
-        return fileName;
     }
-
 
 
     @Override
@@ -128,7 +106,7 @@ public class GalleryFragment extends Fragment {
                 Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
             }
         } else {
-            fn_permissions();
+            toGetData();
         }
     }
 
@@ -147,11 +125,13 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try{
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+        }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 

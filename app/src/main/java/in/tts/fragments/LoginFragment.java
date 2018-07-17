@@ -267,13 +267,19 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("TAG", " fb  result " + resultCode + ":" + requestCode + " :");
-        // Google
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+        try {
+            Log.d("TAG", " fb  result " + resultCode + ":" + requestCode + " :");
+            // Google
+            if (requestCode == RC_SIGN_IN) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+            }
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
         }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     //Google
@@ -347,11 +353,13 @@ public class LoginFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+        try {
+            if (context instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) context;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 

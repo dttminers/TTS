@@ -51,9 +51,9 @@ public class ImageOcrActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_image_ocr);
-            tts = new TTS(ImageOcrActivity.this);
             Log.d("TAG", " path : " + getIntent().getStringExtra("PATH"));
             photoPath = getIntent().getStringExtra("PATH");
+            tts = new TTS(ImageOcrActivity.this);
 
             if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
@@ -72,7 +72,7 @@ public class ImageOcrActivity extends AppCompatActivity {
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeFile(photoPath, options);
+            bitmap = BitmapFactory.decodeFile(photoPath.trim(), options);
 
             ImageView mIvOcr = findViewById(R.id.imgOcr);
             mIvOcr.setImageBitmap(bitmap);
@@ -210,7 +210,13 @@ public class ImageOcrActivity extends AppCompatActivity {
                     ivSpeak.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            tts.SpeakLoud(stringBuilder.toString());
+                            try {
+//
+//                                tts.SpeakLoud(stringBuilder.toString());
+                            } catch (Exception| Error e){
+                                e.printStackTrace();
+                                Crashlytics.logException(e);
+                            }
                         }
                     });
 
@@ -243,7 +249,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        tts.toStop();
+//        tts.toStop();
         if (mRl != null) {
             Log.d("TAG", "Count Rel " + mRl.getChildCount());
             if (mRl.getChildCount() > 1) {
@@ -257,6 +263,6 @@ public class ImageOcrActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        tts.toShutDown();
+//        tts.toShutDown();
     }
 }

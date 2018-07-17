@@ -32,6 +32,7 @@ import java.io.IOException;
 
 import in.tts.R;
 import in.tts.classes.TTS;
+import in.tts.utils.AppPermissions;
 import in.tts.utils.CommonMethod;
 
 public class CameraOcrActivity extends AppCompatActivity {
@@ -64,6 +65,7 @@ public class CameraOcrActivity extends AppCompatActivity {
 
             setContentView(R.layout.activity_camera_ocr);
 
+            tts = new TTS(CameraOcrActivity.this);
             mCameraView = findViewById(R.id.surfaceView);
             mRlCamera = findViewById(R.id.rlCamera);
             mRlOCRData = findViewById(R.id.rlOcrData);
@@ -81,16 +83,20 @@ public class CameraOcrActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     tvImgOcr.setText("");
-//                    new toGetImage().execute();
-//                    startCameraSource();
-                    fn_permission();
+                    AppPermissions.toCheckPermissionCamera(CameraOcrActivity.this, CameraOcrActivity.this, CameraOcrActivity.this);
                 }
             });
 
             ivSpeak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tts.SpeakLoud(stringBuilder.toString());
+                    try {
+
+                        tts.SpeakLoud(stringBuilder.toString());
+                    } catch (Exception | Error e){
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
                 }
             });
 
@@ -103,10 +109,10 @@ public class CameraOcrActivity extends AppCompatActivity {
                     CommonMethod.dpToPx(10, this)
             );
 
-            tts = new TTS(CameraOcrActivity.this);
 
-//            startCameraSource();
-            fn_permission();
+
+            AppPermissions.toCheckPermissionCamera(CameraOcrActivity.this, CameraOcrActivity.this, CameraOcrActivity.this);
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -137,29 +143,6 @@ public class CameraOcrActivity extends AppCompatActivity {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
-    }
-
-    private void fn_permission() {
-        try {
-            Log.d("TAG", " pdf permission ");
-            if ((ContextCompat.checkSelfPermission(CameraOcrActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                    Log.d("TAG", "Home0131 ");
-//                } else {
-                ActivityCompat.requestPermissions(CameraOcrActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
-//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                Log.d("TAG", "Home0231 ");
-//                }
-            } else {
-                Log.d("TAG", "Home0331 ");
-//                toGetPDF();
-                startCameraSource();
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-
     }
 
     @Override
@@ -209,7 +192,7 @@ public class CameraOcrActivity extends AppCompatActivity {
         finish();
     }
 
-    private void startCameraSource() {
+    public void startCameraSource() {
         try {
             //Create the TextRecognizer
             final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();

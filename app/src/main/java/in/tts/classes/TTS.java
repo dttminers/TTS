@@ -10,17 +10,42 @@ import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
-public class TTS implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener {
+public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
 
     public TTS(Context context) {
-        tts = new TextToSpeech(context, this);
+        try {
+            tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int i) {
+                    try {
+                        if (i == TextToSpeech.SUCCESS) {
+
+                            if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
+                                    || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
+                                Log.e("TTS", "This Language is not supported");
+                            }
+                        } else {
+                            Log.e("TTS", "Initilization Failed!");
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     public void SpeakLoud(String text) {
@@ -42,21 +67,21 @@ public class TTS implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranc
         return tts.setLanguage(Locale.US);
     }
 
-    @Override
-    public void onInit(int status) {
-
-        if (status == TextToSpeech.SUCCESS) {
-
-            if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
-                    || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "This Language is not supported");
-//                speakloud();
-            }
-        } else {
-            Log.e("TTS", "Initilization Failed!");
-        }
-
-    }
+//    @Override
+//    public void onInit(int status) {
+//
+//        if (status == TextToSpeech.SUCCESS) {
+//
+//            if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
+//                    || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                Log.e("TTS", "This Language is not supported");
+////                speakloud();
+//            }
+//        } else {
+//            Log.e("TTS", "Initilization Failed!");
+//        }
+//
+//    }
 
     public void toStop() {
         // Don't forget to shutdown tts!

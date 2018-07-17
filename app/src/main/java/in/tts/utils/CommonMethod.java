@@ -103,35 +103,23 @@ public class CommonMethod {
             Log.d("TAG ", "signed Facebook 1 :" + AccessToken.isCurrentAccessTokenActive());
             Log.d("TAG ", "signed Facebook 2 :" + AccessToken.getCurrentAccessToken());
             Log.d("TAG ", "signed Facebook 3 :" + Profile.getCurrentProfile());
-        } catch (Exception| Error e){
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
-         return false;
+        return false;
     }
 
     public static void toDisplayToast(Context context, String str) {
         try {
-            Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+            if (context != null) {
+                if (str != null) {
+                    Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+                }
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
     }
-
-//    public static void signInSilently(Context context) {
-//        GoogleSignInClient signInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-//        signInClient.silentSignIn().addOnCompleteListener(context,
-//                new OnCompleteListener<GoogleSignInAccount>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-//                        if (task.isSuccessful()) {
-//                            // The signed in account is stored in the task's result.
-//                            GoogleSignInAccount signedInAccount = task.getResult();
-//                        } else {
-//                            // Player will need to sign-in explicitly using via UI
-//                        }
-//                    }
-//                });
-//    }
 }
