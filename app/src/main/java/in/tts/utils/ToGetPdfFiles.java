@@ -7,24 +7,26 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.io.File;
 import java.util.ArrayList;
 
-import in.tts.model.AppData;
+import in.tts.fragments.MainHomeFragment;
 
 public class ToGetPdfFiles {
 
+    static ArrayList<String> fileList = new ArrayList<>();
+
     @AddTrace(name = "onGetPDF", enabled = true)
-    public static ArrayList<File> getfile(final File dir) {
-//        Log.d("TAG ", " PATH : "+ dir );
-        final ArrayList<File> fileList = new ArrayList<>();
+    public static ArrayList<String> getFile(final File dir, MainHomeFragment mainHomeFragment) {
+
                 File listFile[] = dir.listFiles();
                 if (listFile != null && listFile.length > 0) {
                     for (int i = 0; i < listFile.length; i++) {
                         if (listFile[i].isDirectory()) {
-                            getfile(listFile[i]);
+                            getFile(listFile[i], null);
                         } else {
                             boolean booleanpdf = false;
                             if (listFile[i].getName().endsWith(".pdf")) {
                                 for (int j = 0; j < fileList.size(); j++) {
-                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
+//                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
+                                    if (fileList.get(j).equals(listFile[i].getPath())) {
                                         booleanpdf = true;
                                     } else {
                                     }
@@ -32,13 +34,16 @@ public class ToGetPdfFiles {
                                 if (booleanpdf) {
                                     booleanpdf = false;
                                 } else {
-                                    fileList.add(listFile[i]);
+                                    fileList.add(listFile[i].getPath());
                                 }
                             }
                         }
                     }
                 }
-//        Log.d("TAG", " pdf count " + fileList.size());
-        return AppData.fileList = fileList;
+//                if (mainHomeFragment != null){
+//                    mainHomeFragment.toSetSomeData();
+//                }
+        Log.d("TAG", " pdf count " + fileList.size());
+        return fileList;
     }
 }

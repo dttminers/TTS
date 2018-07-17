@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -31,14 +32,15 @@ import in.tts.utils.CommonMethod;
 
 public class PDFHomePage extends PagerAdapter {
 
-    private ArrayList<File> list;
+    private ArrayList<String> list;
     private Context context;
 
     private ParcelFileDescriptor fileDescriptor;
     private PdfRenderer pdfRenderer;
     private PdfRenderer.Page currentPage;
+    private File file;
 
-    public PDFHomePage(Context ctx, ArrayList<File> listfile) {
+    public PDFHomePage(Context ctx, ArrayList<String> listfile) {
         context = ctx;
         list = listfile;
     }
@@ -47,7 +49,7 @@ public class PDFHomePage extends PagerAdapter {
     public int getCount() {
         if (list != null) {
             return list.size() < 10 ? list.size() : 10;
-        }else {
+        } else {
             return 0;
         }
     }
@@ -65,15 +67,13 @@ public class PDFHomePage extends PagerAdapter {
 
             CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
-//            iv.setBackgroundColor(toGetRandomColor());
 
-            fileDescriptor = ParcelFileDescriptor.open(list.get(position), ParcelFileDescriptor.MODE_READ_ONLY);
+            Log.d("TAG", " FILE " + list.get(position));
+           file = new File(list.get(position).trim());
+            fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
 
             pdfRenderer = new PdfRenderer(fileDescriptor);
 
-//            if (pdfRenderer.getPageCount() <= index) {
-//                return;
-//            }
             // Make sure to close the current page before opening another one.
             if (null != currentPage) {
                 currentPage.close();
@@ -81,7 +81,6 @@ public class PDFHomePage extends PagerAdapter {
             //open a specific page in PDF file
             currentPage = pdfRenderer.openPage(0);
             // Important: the destination bitmap must be ARGB (not RGB).
-            Log.d("TAG", " daf : " + currentPage.getHeight() +":"+ currentPage.getWidth());
 //            Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
             Bitmap bitmap = Bitmap.createBitmap(250, 300, Bitmap.Config.ARGB_8888);
             // Here, we render the page onto the Bitmap.
@@ -92,16 +91,16 @@ public class PDFHomePage extends PagerAdapter {
                 @Override
                 public void onClick(View view) {
                     try {
-                        Log.d("TAG", " TAGit : " + position );
+                        Log.d("TAG", " TAGit : " + position);
                         CommonMethod.toCallLoader(context, "Loading...");
                         Intent intent = new Intent(context, PdfReadersActivity.class);
-                        intent.putExtra("position", position);
-                        intent.putExtra("name", list.get(position).getName());
-                        intent.putExtra("file", list.get(position).getPath());
+//                        intent.putExtra("position", position);
+//                        intent.putExtra("name", file.getName());
+                        intent.putExtra("file", list.get(position));
                         context.startActivity(intent);
                         CommonMethod.toReleaseMemory();
                         CommonMethod.toCloseLoader();
-                    } catch (Exception| Error e){
+                    } catch (Exception | Error e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);
                     }
@@ -113,11 +112,6 @@ public class PDFHomePage extends PagerAdapter {
             e.printStackTrace();
         }
         return vg;
-    }
-
-    private int toGetRandomColor() {
-        Random rnd = new Random();
-        return Color.argb(255, rnd.nextInt(200), rnd.nextInt(200), rnd.nextInt(200));
     }
 
     @Override

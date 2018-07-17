@@ -1,24 +1,15 @@
 package in.tts.fragments;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +22,16 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import in.tts.R;
 import in.tts.adapters.CustomPagerAdapter;
 import in.tts.adapters.PDFHomePage;
 import in.tts.adapters.PDFHomePageImages;
-import in.tts.model.AppData;
+import in.tts.model.PrefManager;
+import in.tts.utils.AppPermissions;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class MainHomeFragment extends Fragment {
 
@@ -52,18 +44,15 @@ public class MainHomeFragment extends Fragment {
     private int currentImage = 0;
     private int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
 
-    private ArrayList<File> fileList;
-    private ArrayList<String> fileName;
-
     // Other data
     private LinearLayout ll;
     private View view, view1;
 
+    private PrefManager prefManager;
 
     private OnFragmentInteractionListener mListener;
 
     public MainHomeFragment() {
-        // Required empty public constructor
     }
 
     public static MainHomeFragment newInstance(String param1, String param2) {
@@ -76,8 +65,7 @@ public class MainHomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main_home, container, false);
     }
 
@@ -87,7 +75,7 @@ public class MainHomeFragment extends Fragment {
         try {
             toBindViews();
             toBindTopBanners();
-            fn_permission();
+            AppPermissions.toCheckPermissionRead(getContext(), getActivity(), MainHomeFragment.this, null, null,false);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -95,21 +83,91 @@ public class MainHomeFragment extends Fragment {
         }
     }
 
+    private void toBindViews() throws Exception, Error {
+        if (getActivity() != null) {
+            imageView = getActivity().findViewById(R.id.imageView);
+            ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
+            ivRight = getActivity().findViewById(R.id.imageViewRight1);
+            tabLayout = getActivity().findViewById(R.id.tlHomePage);
+            mViewPager = getActivity().findViewById(R.id.vpHomePage);
 
-    private void fn_permission() {
+            ll = getActivity().findViewById(R.id.llData);
+
+            ivLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Increase Counter to move to next Image
+                    if (currentImage == 0) {
+                        currentImage = mResources.length - 1;
+                        mViewPager.setCurrentItem(currentImage);
+                    } else {
+                        currentImage--;
+                        mViewPager.setCurrentItem(currentImage);
+                    }
+                }
+            });
+
+            ivRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (currentImage == mResources.length - 1) {
+                        currentImage = 0;
+                        mViewPager.setCurrentItem(currentImage);
+                    } else {
+                        currentImage++;
+                        mViewPager.setCurrentItem(currentImage);
+                    }
+                }
+            });
+
+            prefManager = new PrefManager(getContext());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         try {
-            if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                toSetOtherData();
+            if (requestCode == 1) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    toSetSomeData();
+                } else {
+                    Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
+                }
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
-            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
-            Log.d("TAG", " ERROR2 " + e.getMessage());
         }
+    }
 
+    public void toSetSomeData() {
+        try {
+            if (prefManager.toGetPDFList() != null) {
+                if (prefManager.toGetPDFList().size() != 0) {
+                    toBindRecentPdf();
+                } else {
+                    CommonMethod.toDisplayToast(getContext(), "No PDF Found");
+//                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), MainHomeFragment.this);
+                }
+            } else {
+                ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), MainHomeFragment.this);
+            }
+
+            if (prefManager.toGetImageList() != null) {
+                if (prefManager.toGetImageList().size() != 0) {
+                    toBindRecentImages();
+                } else {
+                    CommonMethod.toDisplayToast(getContext(), "No Images Found");
+                    prefManager.toSetImageFileList(ToGetImages.getAllShownImagesPath(getActivity()));
+                }
+            } else {
+                prefManager.toSetImageFileList(ToGetImages.getAllShownImagesPath(getActivity()));
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     private void toBindTopBanners() throws Exception, Error {
@@ -117,197 +175,55 @@ public class MainHomeFragment extends Fragment {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void toBindViews() throws Exception, Error {
-        fileList = new ArrayList<>();
-        fileName = new ArrayList<>();
-
-        imageView = getActivity().findViewById(R.id.imageView);
-        ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
-        ivRight = getActivity().findViewById(R.id.imageViewRight1);
-        tabLayout = getActivity().findViewById(R.id.tlHomePage);
-        mViewPager = getActivity().findViewById(R.id.vpHomePage);
-
-        ll = getActivity().findViewById(R.id.llData);
-
-        ivLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Increase Counter to move to next Image
-                if (currentImage == 0) {
-                    currentImage = mResources.length - 1;
-                    mViewPager.setCurrentItem(currentImage);
-                } else {
-                    currentImage--;
-                    mViewPager.setCurrentItem(currentImage);
-                }
-            }
-        });
-
-        ivRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentImage == mResources.length - 1) {
-                    currentImage = 0;
-                    mViewPager.setCurrentItem(currentImage);
-                } else {
-                    currentImage++;
-                    mViewPager.setCurrentItem(currentImage);
-                }
-            }
-        });
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                toSetOtherData();
-            } else {
-                Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void toSetOtherData() {
-        try {
-            CommonMethod.toCallLoader(getContext(), "Loading Data");
-//            new ToSetPDF().execute();
-            getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            if (getActivity() != null) {
-                getAllShownImagesPath(getActivity());
-            }
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    CommonMethod.toCloseLoader();
-                }
-            }, 2500);
-
-            toBindRecentPdf();
-            toBindRecentImages();
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-            Log.d("TAG", " ERROR3 " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
-        void setCurrentViewPagerItem(int i);
-    }
-
-    private class ToSetPDF extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            getfile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            toBindRecentPdf();
-            toBindRecentImages();
-//            //CommonMethod.toCloseLoader();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-//            Log.d("TaG", " Values " + Arrays.toString(values));
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-//            //CommonMethod.toCloseLoader();
-//            if (getContext() != null) {
-//                CommonMethod.toCallLoader(getContext(), "Loading....");
-//            }
-        }
-    }
-
+    // To Bind views
     private void toBindRecentImages() {
         try {
             if (view1 != null) {
                 ll.removeView(view1);
             }
-            if (getContext() != null) {
-//                //CommonMethod.toCloseLoader();
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                CommonMethod.toCallLoader(getContext(), "Loading....");
-                if (inflater != null) {
-                    view1 = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
+            if (prefManager.toGetImageList().size() != 0) {
+                if (getContext() != null) {
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    if (inflater != null) {
+                        view1 = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
 
-                    TextView tvHeader = view1.findViewById(R.id.tvRecent);
-                    TextView tvSeeMore = view1.findViewById(R.id.tvSeeMore);
+                        TextView tvHeader = view1.findViewById(R.id.tvRecent);
+                        TextView tvSeeMore = view1.findViewById(R.id.tvSeeMore);
 
-                    ViewPager vpDeals = view1.findViewById(R.id.vpRecentItem);
+                        ViewPager vpDeals = view1.findViewById(R.id.vpRecentItem);
 
-                    tvHeader.setText("Recent Images");
-                    tvSeeMore.setText("See More");
+                        tvHeader.setText("Recent Images");
+                        tvSeeMore.setText("See More");
 
-                    vpDeals.setClipToPadding(false);
-                    vpDeals.setOffscreenPageLimit(10);
-                    vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
-                    vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
-//                pdfHomePageImages = new PDFHomePageImages(getContext(), fileName);
-                    vpDeals.setAdapter(new PDFHomePageImages(getContext(), fileName));
-//                pdfHomePageImages.notifyDataSetChanged();
+                        vpDeals.setClipToPadding(false);
+                        vpDeals.setOffscreenPageLimit(10);
+                        vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                        vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
+                        vpDeals.setAdapter(new PDFHomePageImages(getContext(), prefManager.toGetImageList()));
 
-                    tvSeeMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            try {
-                                mListener.setCurrentViewPagerItem(4);
-                            } catch (Exception | Error e) {
-                                e.printStackTrace();
-                                //CommonMethod.toCloseLoader();
-                                Crashlytics.logException(e);
+                        tvSeeMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    mListener.setCurrentViewPagerItem(4);
+                                } catch (Exception | Error e) {
+                                    e.printStackTrace();
+                                    Crashlytics.logException(e);
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    ll.addView(view1);
-                    //CommonMethod.toCloseLoader();
+                        ll.addView(view1);
+                    }
                 }
+            } else {
+                ToGetImages.getAllShownImagesPath(getActivity());
             }
-//            //CommonMethod.toCloseLoader();
-//            //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
             Log.d("TAG", " ERROR4" + e.getMessage());
         }
-        //CommonMethod.toCloseLoader();
     }
 
     private void toBindRecentPdf() {
@@ -315,11 +231,9 @@ public class MainHomeFragment extends Fragment {
             if (view != null) {
                 ll.removeView(view);
             }
-            if (fileList.size() != 0) {
-//                //CommonMethod.toCloseLoader();
+            if (prefManager.toGetPDFList().size() != 0) {
                 if (getContext() != null) {
                     LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                    CommonMethod.toCallLoader(getContext(), "Loading....");
                     if (inflater != null) {
                         view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
 
@@ -338,7 +252,7 @@ public class MainHomeFragment extends Fragment {
                                     mListener.setCurrentViewPagerItem(1);
                                 } catch (Exception | Error e) {
                                     e.printStackTrace();
-                                    //CommonMethod.toCloseLoader();
+                                    CommonMethod.toCloseLoader();
                                     Crashlytics.logException(e);
                                     Log.d("TAG", " ERROR5 " + e.getMessage());
                                 }
@@ -349,100 +263,60 @@ public class MainHomeFragment extends Fragment {
                         vpDeals.setOffscreenPageLimit(10);
                         vpDeals.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
                         vpDeals.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
-//                pdfHomePage = new PDFHomePage(getContext(), list);
-                        vpDeals.setAdapter(new PDFHomePage(getContext(), fileList));
-//                pdfHomePage.notifyDataSetChanged();
-
+                        vpDeals.setAdapter(new PDFHomePage(getContext(), prefManager.toGetPDFList()));
                         ll.addView(view);
-//                        //CommonMethod.toCloseLoader();
                     }
                 }
+            } else {
+                ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), MainHomeFragment.this);
             }
-//            //CommonMethod.toCloseLoader();
-//            //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
             Log.d("TAG", " ERROR6 " + e.getMessage());
         }
-//        //CommonMethod.toCloseLoader();
     }
 
-    public ArrayList<File> getfile(final File dir) {
-//        Log.d("TAG ", " PATH : " + dir);
-
-        File listFile[] = dir.listFiles();
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) {
-                    getfile(listFile[i]);
-                } else {
-                    boolean booleanpdf = false;
-                    if (listFile[i].getName().endsWith(".pdf")) {
-                        for (int j = 0; j < fileList.size(); j++) {
-                            if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                booleanpdf = true;
-                            } else {
-                            }
-                        }
-                        if (booleanpdf) {
-                            booleanpdf = false;
-                        } else {
-                            fileList.add(listFile[i]);
-                        }
-                    }
-                }
-            }
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
         }
-//        Log.d("TAG", " pdf count " + fileList.size());
-        return fileList;
     }
 
-    public ArrayList<String> getAllShownImagesPath(final Activity activity) {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-//        CommonMethod.toCallLoader(getContext(), "Loading");
-            Cursor cursor;
-
-            int column_index_data, column_index_folder_name;
-
-            String absolutePathOfImage = null;
-
-            Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-            String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-
-            cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-
-            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
-            while (cursor.moveToNext()) {
-                absolutePathOfImage = cursor.getString(column_index_data);
-                fileName.add(absolutePathOfImage);
+            if (context instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) context;
             }
-
-            Log.d("TAG", " DATA " + fileName.size() + ":" + fileName);
-//            AppData.fileName = fileName;
-
         } catch (Exception | Error e) {
             e.printStackTrace();
-            Log.d("TAG", " ERROR 7" + e.getMessage());
-//            //CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
-        return fileName;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+
+        void setCurrentViewPagerItem(int i);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //CommonMethod.toCloseLoader();
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //CommonMethod.toCloseLoader();
+        CommonMethod.toReleaseMemory();
     }
 }

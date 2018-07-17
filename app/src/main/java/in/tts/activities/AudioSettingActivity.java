@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -75,9 +74,7 @@ public class AudioSettingActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
 
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
@@ -99,5 +96,4 @@ public class AudioSettingActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
-
 }

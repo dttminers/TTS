@@ -29,7 +29,6 @@ public class PDFAdapter extends ArrayAdapter<File> {
         this.al_pdf = al_pdf;
 
     }
-
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -48,13 +47,11 @@ public class PDFAdapter extends ArrayAdapter<File> {
     public View getView(final int position, View view, ViewGroup parent) {
         if (view == null) {
             CommonMethod.toCloseLoader();
-            if (getContext() != null) {
-                view = LayoutInflater.from(getContext()).inflate(R.layout.adapter_pdf, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.tv_filename = (TextView) view.findViewById(R.id.tv_name);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.adapter_pdf, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.tv_filename = (TextView) view.findViewById(R.id.tv_name);
 
-                view.setTag(viewHolder);
-            }
+            view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
 

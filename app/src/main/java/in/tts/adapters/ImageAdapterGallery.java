@@ -40,6 +40,8 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
                     .get()
                     .load("file://" + images.get(i).replaceAll("\\s", "%20"))
                     .resize(250,250)
+                    .onlyScaleDown()
+                    .centerCrop()
                     .into(viewHolder.picturesView);
         } catch (Exception | Error e) {
             e.printStackTrace();

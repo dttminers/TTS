@@ -11,6 +11,10 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class PrefManager {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -21,6 +25,12 @@ public class PrefManager {
 
     // Shared preferences file name
     private static final String PREF_NAME = "androidhive-welcome";
+
+    private static final String IMAGE_LIST = "IMAGE_LIST";
+    private static final String IMAGE_LIST_INFO = "IMAGE_LIST_INFO";
+
+    private static final String PDF_LIST = "PDF_LIST";
+    private static final String PDF_LIST_INFO = "PDF_LIST_INFO";
 
     private static final String USER_INFO = "USER_INFO";
     private static final String USER_INFO_PREFERS = "USER_INFO_PREFERS";
@@ -102,6 +112,65 @@ public class PrefManager {
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
+        }
+    }
+
+    public ArrayList<String> toGetPDFList(){
+            try {
+                String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
+//                Log.d("TAG", "toSetPDFFileList get "+ us);
+                if (us != null) {
+                    return new ArrayList<String>(Arrays.asList(us.replace("[","").replace("]","").split(",")));
+                } else {
+                    return null;
+                }
+            } catch (Exception| Error e){
+                e.printStackTrace();
+                Crashlytics.logException(e);
+                return null;
+            }
+    }
+
+    public void toSetPDFFileList(ArrayList<String> list){
+        try{
+            SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST, 0).edit();
+            editor.putString(PDF_LIST_INFO, list.toString());
+            editor.apply();
+            editor.commit();
+            Log.d("TAG", "toSetPDFFileList "+ list.size() );//+ list.toString());
+            return;
+        } catch (Exception| Error e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    public ArrayList<String> toGetImageList(){
+        try {
+            String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
+            if (us != null) {
+                return new ArrayList<String>(Arrays.asList(us.replace("[","").replace("]","").split(",")));
+            } else {
+                return null;
+            }
+        } catch (Exception| Error e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            return null;
+        }
+    }
+
+    public void toSetImageFileList(ArrayList<String> list){
+        try{
+            SharedPreferences.Editor editor = _context.getSharedPreferences(IMAGE_LIST, 0).edit();
+            editor.putString(IMAGE_LIST_INFO, list.toString());
+            editor.apply();
+            editor.commit();
+            Log.d("TAG", "toSetImageFileList "+ list.size());
+            return;
+        } catch (Exception| Error e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 

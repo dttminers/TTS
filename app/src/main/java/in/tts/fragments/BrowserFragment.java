@@ -8,13 +8,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
+
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
 public class BrowserFragment extends Fragment {
-    WebView webView;
 
     public BrowserFragment() {
     }
@@ -22,15 +23,18 @@ public class BrowserFragment extends Fragment {
     @Override
     @AddTrace(name = "onCreateBrowserFragment", enabled = true)
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_browser, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
-
+        try {
+            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     @Override
@@ -54,11 +58,13 @@ public class BrowserFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+        try {
+            if (context instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) context;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
