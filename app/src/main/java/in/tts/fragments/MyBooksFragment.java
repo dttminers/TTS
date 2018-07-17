@@ -171,17 +171,18 @@ public class MyBooksFragment extends Fragment {
                     Log.d("TAG", "update count 3: " + count +":"+ l);
                     list.add(prefManager.toGetPDFList().get(i));
                     pdfListAdapter.notifyItemInserted(count);
+                    pdfListAdapter.notifyItemRangeChanged(count,l);
                 }
                 count += 20;
                 nextPage++;
             } else {
-
-                l = extra;
+                l = count + extra;
                 Log.d("TAG", "update count 2: " + count +":"+ l);
                 for (int i = count; i < l; i++) {
                     Log.d("TAG", "update count 4: " + count +":"+ l);
                     list.add(prefManager.toGetPDFList().get(i));
                     pdfListAdapter.notifyItemInserted(count);
+                    pdfListAdapter.notifyItemRangeChanged(count,l);
                 }
             }
 
