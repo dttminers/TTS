@@ -92,6 +92,9 @@
     <string name="str_error_maximum_15">Maximum 15 Character</string>
     <string name="str_error_invalid_name">Only Character Allowed</string>
     <string name="str_error_pswd">Required at least 1 Uppercase letter, 1 Lowercase letter, 1 Number and 1 Special character</string>
+    <string name="str_forward">Forward</string>
+    <string name="str_bookmark">Bookmark</string>
+    <string name="str_refresh">Refresh</string>
 </resources>
 
     <!--%USERPROFILE%\AppData\Local\Temp

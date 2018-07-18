@@ -1,10 +1,11 @@
 package in.tts.activities;
 
-import android.content.DialogInterface;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -23,15 +25,17 @@ import in.tts.R;
 import in.tts.utils.CommonMethod;
 
 public class BrowserActivity extends AppCompatActivity {
-
+    private LinearLayout linearLayout;
     ProgressBar superProgressBar;
     WebView superWebView;
 
+
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         if (getIntent() != null) {
             Intent i = getIntent();
@@ -48,6 +52,7 @@ public class BrowserActivity extends AppCompatActivity {
             superWebView.getSettings().setJavaScriptEnabled(true);
             superWebView.getSettings().setSupportZoom(true);
             superWebView.getSettings().setBuiltInZoomControls(true);
+            superWebView.getSettings().setDisplayZoomControls(true);
             superWebView.getSettings().setLoadWithOverviewMode(true);
             superWebView.getSettings().setUseWideViewPort(true);
             superWebView.clearCache(true);
@@ -131,6 +136,11 @@ public class BrowserActivity extends AppCompatActivity {
 
             case R.id.menuReload:
                 superWebView.reload();
+
+            case R.id.menuBookmark:
+                Snackbar snackbar = Snackbar
+                        .make(findViewById(R.id.llBrowser), "Bookmark Successfully", Snackbar.LENGTH_SHORT);
+                snackbar.show();
 
                 break;
 
