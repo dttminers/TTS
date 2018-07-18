@@ -36,11 +36,11 @@ public class BookmarkListAdapter extends ArrayAdapter<File> {
 
     @Override
     public int getViewTypeCount() {
-        if (list.size() > 0) {
+//        if (list.size() > 0) {
             return list.size();
-        } else {
-            return 1;
-        }
+//        } else {
+//            return 0;
+//        }
     }
 
     @Override

@@ -63,7 +63,7 @@ public class MainHomeFragment extends Fragment {
     private ArrayList<String> imageFile;
     private PDFHomePageImages pdfHomePageImages;
 
-    PrefManager  prefManager;
+    PrefManager prefManager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -182,7 +182,7 @@ public class MainHomeFragment extends Fragment {
 //            if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
             pdfFile = new ArrayList<>();
-                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 //            } else {
 //                pdfFile = prefManager.toGetPDFList();
 //            }
@@ -191,8 +191,8 @@ public class MainHomeFragment extends Fragment {
 
 //            if (prefManager.toGetImageList() == null) {
 //                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
-               imageFile = new ArrayList<>();
-                getAllShownImagesPath();
+            imageFile = new ArrayList<>();
+            getAllShownImagesPath();
 //            } else {
 //                imageFile = prefManager.toGetImageList();
 //            }
@@ -237,6 +237,8 @@ public class MainHomeFragment extends Fragment {
                             } else {
                                 if (pdfFile.size() < 11) {
                                     pdfFile.add(listFile[i].getPath());
+                                } else {
+                                    break;
                                 }
                             }
                         }

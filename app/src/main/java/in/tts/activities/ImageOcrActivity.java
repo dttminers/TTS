@@ -133,6 +133,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             tvImgOcr.setText("");
+                            tts.toStop();
                             new toGetImage().execute();
                         }
                     });
