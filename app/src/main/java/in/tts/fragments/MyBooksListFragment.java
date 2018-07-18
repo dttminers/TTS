@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -87,17 +88,20 @@ public class MyBooksListFragment extends Fragment {
 
     public void toGetData() {
         try {
-            CommonMethod.toCallLoader(getContext(), "Loading");
             if (getActivity() != null) {
+                CommonMethod.toCallLoader(getContext(), "Loading");
                 file = new ArrayList<>();
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
 
                 getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+
                 RecyclerView recyclerView = getActivity().findViewById(R.id.rvList);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
+                CommonMethod.toCloseLoader();
+//                CommonMethod.toCloseLoader();
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
@@ -109,36 +113,38 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-//            AsyncTask.execute(new Runnable() {
-//                @Override
-//                public void run() {
-            File listFile[] = dir.listFiles();
-            if (listFile != null && listFile.length > 0) {
-                for (int i = 0; i < listFile.length; i++) {
-                    if (listFile[i].isDirectory()) {
-                        getFile(listFile[i]);
-                    } else {
-                        boolean booleanpdf = false;
-                        if (listFile[i].getName().endsWith(".pdf")) {
-                            for (int j = 0; j < file.size(); j++) {
-//                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                if (file.get(j).equals(listFile[i].getPath())) {
-                                    booleanpdf = true;
-                                } else {
-                                }
-                            }
-                            if (booleanpdf) {
-                                booleanpdf = false;
+//            CommonMethod.toCallLoader(getContext(), "Fetching files ");
+
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    File listFile[] = dir.listFiles();
+                    if (listFile != null && listFile.length > 0) {
+                        for (int i = 0; i < listFile.length; i++) {
+                            if (listFile[i].isDirectory()) {
+                                getFile(listFile[i]);
                             } else {
-                                file.add(listFile[i].getPath());
-                                pdfListAdapter.notifyItemChanged(file.size(), file);
+                                boolean booleanpdf = false;
+                                if (listFile[i].getName().endsWith(".pdf")) {
+                                    for (int j = 0; j < file.size(); j++) {
+//                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
+                                        if (file.get(j).equals(listFile[i].getPath())) {
+                                            booleanpdf = true;
+                                        } else {
+                                        }
+                                    }
+                                    if (booleanpdf) {
+                                        booleanpdf = false;
+                                    } else {
+                                        file.add(listFile[i].getPath());
+                                        pdfListAdapter.notifyItemChanged(file.size(), file);
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-//                }
-//            });
+            });
             Log.d("TAG", " pdf count " + file.size());
         } catch (Exception | Error e) {
             e.printStackTrace();

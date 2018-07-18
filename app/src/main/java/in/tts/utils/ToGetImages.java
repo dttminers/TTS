@@ -1,6 +1,7 @@
 package in.tts.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -8,11 +9,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import in.tts.model.PrefManager;
+
 public class ToGetImages {
 
     static ArrayList<String> imageFile = new ArrayList<>();
 
-    public static ArrayList<String> getAllShownImagesPath(final Activity activity) {
+    public static void getAllShownImagesPath(final Activity activity, Context context) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -43,6 +46,8 @@ public class ToGetImages {
                 }
             }
         });
-        return imageFile;
+        Log.d("TAG", "Data image " + imageFile.size());
+        new PrefManager(context).toSetImageFileList(imageFile);
+//        return imageFile;
     }
 }

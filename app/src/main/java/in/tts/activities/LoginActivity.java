@@ -78,8 +78,12 @@ public class LoginActivity extends AppCompatActivity {
     private void toLoadData() {
         try {
 //            PrefManager prefManager = new PrefManager(LoginActivity.this);
-//            prefManager.toSetImageFileList(ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath())));
-//            prefManager.toSetPDFFileList(ToGetImages.getAllShownImagesPath(LoginActivity.this));
+//            prefManager.toSetPDFFileList(
+                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
+//            );
+//            prefManager.toSetImageFileList(
+                    ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
+//            );
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

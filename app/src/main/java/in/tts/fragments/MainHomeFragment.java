@@ -89,18 +89,13 @@ public class MainHomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             toBindViews();
+            fn_permission();
             toBindTopBanners();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
             CommonMethod.toCloseLoader();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        fn_permission();
     }
 
     private void fn_permission() {
@@ -177,8 +172,8 @@ public class MainHomeFragment extends Fragment {
 
     public void toSetSomeData() {
         try {
-
             CommonMethod.toCallLoader(getContext(), "Loading....");
+            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size() );
 //            if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
             pdfFile = new ArrayList<>();
@@ -335,8 +330,6 @@ public class MainHomeFragment extends Fragment {
             }
 //                }
 //            });
-
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

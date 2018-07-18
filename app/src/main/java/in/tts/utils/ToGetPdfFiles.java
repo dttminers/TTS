@@ -1,5 +1,6 @@
 package in.tts.utils;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -9,13 +10,14 @@ import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.fragments.MainHomeFragment;
+import in.tts.model.PrefManager;
 
 public class ToGetPdfFiles {
 
     static ArrayList<String> fileList = new ArrayList<>();
 
     @AddTrace(name = "onGetPDF", enabled = true)
-    public static ArrayList<String> getFile(final File dir) {
+    public static void getFile(final File dir, final Context context) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -23,7 +25,7 @@ public class ToGetPdfFiles {
                 if (listFile != null && listFile.length > 0) {
                     for (int i = 0; i < listFile.length; i++) {
                         if (listFile[i].isDirectory()) {
-                            getFile(listFile[i]);
+                            getFile(listFile[i], context);
                         } else {
                             boolean booleanpdf = false;
                             if (listFile[i].getName().endsWith(".pdf")) {
@@ -49,6 +51,8 @@ public class ToGetPdfFiles {
                 }
             }
         });
-        return fileList;
+        Log.d("TAG", "DATA PDF " + fileList.size());
+        new PrefManager(context).toSetPDFFileList(fileList);
+//        return fileList;
     }
 }
