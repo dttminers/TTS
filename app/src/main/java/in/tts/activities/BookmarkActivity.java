@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import in.tts.R;
+import in.tts.adapters.BookMarkAdapter;
 import in.tts.adapters.BookmarkListAdapter;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
@@ -28,8 +32,9 @@ import in.tts.utils.CommonMethod;
 public class BookmarkActivity extends AppCompatActivity {
 
     ArrayList<String> list;
-    ListView listView;
-    BookmarkListAdapter adapter;
+    RecyclerView rv;
+//    ListView listView;
+    BookMarkAdapter adapter;
     LinearLayout linearLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
     PrefManager prefManager;
@@ -48,7 +53,8 @@ public class BookmarkActivity extends AppCompatActivity {
             prefManager = new PrefManager(BookmarkActivity.this);
             list = prefManager.populateSelectedSearch();
 
-            listView = findViewById(R.id.listView);
+//            listView = findViewById(R.id.listView);
+            rv = findViewById(R.id.rvBookmarkList);
             linearLayout = findViewById(R.id.emptyList);
 
             mSwipeRefreshLayout = findViewById(R.id.swipeToRefresh);
@@ -62,34 +68,34 @@ public class BookmarkActivity extends AppCompatActivity {
             });
 
             loadBookmarks();
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-
-                    Object o = listView.getAdapter().getItem(position);
-                    if (o instanceof Map) {
-                        Map map = (Map) o;
-                        Intent in = new Intent(BookmarkActivity.this, BrowserActivity.class);
-                        in.putExtra("url", list.get(position));
-                        startActivity(in);
-                    }
-
-                }
-            });
-
-            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Object o = listView.getAdapter().getItem(position);
-                    if (o instanceof Map) {
-                        Map map = (Map) o;
-                        deleteBookmark("Delete", list.get(position), position);
-                    }
-
-                    return true;
-                }
-            });
+//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//                public void onItemClick(AdapterView<?> parent, View view,
+//                                        int position, long id) {
+//
+//                    Object o = listView.getAdapter().getItem(position);
+//                    if (o instanceof Map) {
+//                        Map map = (Map) o;
+//                        Intent in = new Intent(BookmarkActivity.this, BrowserActivity.class);
+//                        in.putExtra("url", list.get(position));
+//                        startActivity(in);
+//                    }
+//
+//                }
+//            });
+//
+//            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                @Override
+//                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                    Object o = listView.getAdapter().getItem(position);
+//                    if (o instanceof Map) {
+//                        Map map = (Map) o;
+//                        deleteBookmark("Delete", list.get(position), position);
+//                    }
+//
+//                    return true;
+//                }
+//            });
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -98,15 +104,18 @@ public class BookmarkActivity extends AppCompatActivity {
 
     private void loadBookmarks() {
         try {
-
             if (list != null && list.size() > 0) {
-                adapter = new BookmarkListAdapter(BookmarkActivity.this, list);
-                listView.setAdapter(adapter);
+                Log.d("TAG", " URLS update hg  : " + list.size() );
+                adapter = new BookMarkAdapter(BookmarkActivity.this, list);
+                rv.setLayoutManager(new LinearLayoutManager(BookmarkActivity.this));
+                rv.setHasFixedSize(true);
+                rv.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
-                listView.setVisibility(View.VISIBLE);
+                rv.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.GONE);
             } else {
-                listView.setVisibility(View.GONE);
+                Log.d("TAG", " URLS update hgjh  : " );
+                rv.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
             }
 

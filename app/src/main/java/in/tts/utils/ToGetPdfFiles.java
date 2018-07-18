@@ -39,6 +39,8 @@ public class ToGetPdfFiles {
                                 } else {
                                     if (fileList.size() < 11) {
                                         fileList.add(listFile[i].getPath());
+                                    } else {
+                                        break;
                                     }
                                 }
                             }

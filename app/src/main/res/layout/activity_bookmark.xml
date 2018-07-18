@@ -10,10 +10,16 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
 
-        <ListView
-            android:id="@+id/listView"
+        <!--<ListView-->
+        <!--android:id="@+id/listView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvBookmarkList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@color/light" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
