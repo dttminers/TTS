@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_copy"
-        android:title="@string/copy"/>
+        android:title="@string/str_copy"/>
     <item
         android:id="@+id/action_paste"
-        android:title="@string/paste"/>
+        android:title="@string/str_paste"/>
     <item
         android:id="@+id/action_replace"
-        android:title="@string/replace"/>
+        android:title="@string/str_replace"/>
 </menu>

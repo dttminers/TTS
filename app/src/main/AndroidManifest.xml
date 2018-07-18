@@ -43,7 +43,7 @@
             android:value="ocr" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/str_fb_data" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="752c9b164b8b11cb297caceb967a4009f7433ab0" />

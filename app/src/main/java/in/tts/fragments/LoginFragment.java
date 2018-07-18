@@ -7,14 +7,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,6 +57,7 @@ import java.util.List;
 
 import in.tts.R;
 import in.tts.activities.AudioSettingActivity;
+import in.tts.activities.BrowserActivity;
 import in.tts.activities.LoginActivity;
 import in.tts.activities.MainActivity;
 import in.tts.model.PrefManager;
@@ -60,6 +67,8 @@ import in.tts.utils.CommonMethod;
 public class LoginFragment extends Fragment {
 
     private TextView mTvLogin;
+    private EditText mEdtEmail, mEdtPassword;
+    private Button mBtnLogin;
 
     // Google
     private GoogleSignInClient mGoogleSignInClient;
@@ -102,6 +111,93 @@ public class LoginFragment extends Fragment {
             ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 47, 0); // set size
 //            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
             mTvLogin.setText(ss1);
+
+            // E-mail & Password Validation...........
+
+            mEdtEmail = getActivity().findViewById(R.id.edtEmailIdLogin);
+            mEdtPassword = getActivity().findViewById(R.id.edtPasswordLogin);
+            mBtnLogin = getActivity().findViewById(R.id.btnLogin);
+
+            mEdtEmail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                        if (validateEmail()) {
+                            mEdtPassword.requestFocus();
+                            return true;
+                        } else {
+                            mEdtEmail.requestFocus();
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            mEdtPassword.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                        if (validatePassword()) {
+                            mBtnLogin.requestFocus();
+                            return true;
+                        } else {
+                            mEdtPassword.requestFocus();
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            mBtnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (validateEmail() && validatePassword()) {
+                        startActivity(new Intent(getContext(), MainActivity.class));
+                        CommonMethod.toDisplayToast(getContext(), "Login Successfully ");
+                    } else {
+                        CommonMethod.toDisplayToast(getContext(), "Please try again, Login failed");
+                    }
+                }
+
+            });
+
+            mEdtEmail.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    validateEmail();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    validateEmail();
+                }
+            });
+
+            mEdtPassword.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    validatePassword();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    validatePassword();
+                }
+            });
 
             // View
             getActivity().findViewById(R.id.llSignUp).setOnClickListener(new View.OnClickListener() {
@@ -261,6 +357,38 @@ public class LoginFragment extends Fragment {
             e.printStackTrace();
             Crashlytics.logException(e);
             CommonMethod.toDisplayToast(getContext(), " Click again  to login");
+        }
+    }
+
+    public boolean validateEmail() {
+        if (mEdtEmail.getText().toString().trim().length() == 0) {
+            mEdtEmail.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            return false;
+        } else if (CommonMethod.isValidEmail(mEdtEmail.getText().toString().trim())) {
+            mEdtEmail.setError(null);
+            return true;
+        } else {
+            mEdtEmail.setError(getString(R.string.str_error_valid_email));
+            return false;
+        }
+    }
+
+    public boolean validatePassword() {
+        if (mEdtPassword.getText().toString().trim().length() == 0) {
+            mEdtPassword.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            return false;
+        } else if (mEdtPassword.getText().toString().trim().length() < 8) {
+            mEdtPassword.setError(getString(R.string.str_error_minimum_8));
+            return false;
+        } else if (mEdtPassword.getText().toString().trim().length() > 15) {
+            mEdtPassword.setError(getString(R.string.str_error_maximum_15));
+            return false;
+        } else if (CommonMethod.isValidPassword(mEdtPassword.getText().toString().trim())) {
+            mEdtPassword.setError(getString(R.string.str_error_pswd));
+            return false;
+        } else {
+            mEdtPassword.setError(null);
+            return true;
         }
     }
 

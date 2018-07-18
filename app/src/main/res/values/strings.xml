@@ -10,17 +10,15 @@
     <string name="str_title_audio_settings">Audio Settings</string>
     <string name="str_title_our_other_apps">Our Other App</string>
     <string name="str_title_images">Images</string>
+    <string name="str_title_recent_voice">Recent Voice</string>
 
-    <string name="str_start_typing_here">Start typing here...</string>
+    <string name="str_start_typing_here">Start typing here…</string>
     <string name="str_send">Send</string>
     <string name="str_camera">Camera</string>
     <string name="str_settings">Settings</string>
     <string name="str_skip">Skip</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="btn_logout_from_google">str_logout</string>
-
-    <string name="facebook_app_id">218149285671521</string>
-    <string name="fb_login_protocol_scheme">fb218149285671521</string>
+    <string name="str_google_logout">Logout</string>
+    <string name="str_fb_data">218149285671521</string>
     <string name="str_login_to_get_access_to_read">Login to get access to read</string>
     <string name="str_username">Username</string>
     <string name="str_password">Password</string>
@@ -69,16 +67,12 @@
     <string name="str_recent_audios">Recent Audios</string>
     <string name="str_txt_message">No Text Available</string>
     <string name="str_more_options">More Options</string>
-    <string name="copy">copy</string>
-    <string name="paste">paste</string>
-    <string name="replace">share</string>
-
+    <string name="str_copy">copy</string>
+    <string name="str_paste">paste</string>
+    <string name="str_replace">share</string>
     <string name="str_reload">Reload</string>
     <string name="str_lbl_logout_from_app">Do you want to Logout from App ?</string>
-    <string name="str_title_recent_voice">Recent Voice</string>
-
-
-    <string name="str_50mins">50mins</string>
+    <string name="str_50mins">50 mins</string>
     <string name="str_60">60%</string>
     <string name="str_speak">Speak</string>
     <string name="str_left">left</string>
@@ -87,6 +81,16 @@
     <string name="str_login_data">Login to get access to read \nmore than millions books</string>
     <string name="str_pdf">pdf</string>
     <string name="str_100_remaining">100% Remaining</string>
+    <string name="str_field_cant_be_empty">Field can\'t be empty</string>
+    <string name="str_error_valid_email">Please enter valid Email-Id</string>
+    <string name="str_error_minimum_8">Minimum 8 characters</string>
+    <string name="str_error_maximum_15">Maximum 15 Character</string>
+    <string name="str_error_invalid_name">Only Character Allowed</string>
+    <string name="str_error_pswd">Required at least 1 Uppercase letter, 1 Lowercase letter, 1 Number and 1 Special character</string>
+    <string name="str_forward">Forward</string>
+    <string name="str_bookmark">Bookmark</string>
+    <string name="str_refresh">Refresh</string>
+
 </resources>
 
     <!--%USERPROFILE%\AppData\Local\Temp
