@@ -1,10 +1,7 @@
 package in.tts.activities;
 
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
@@ -19,30 +16,30 @@ import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import in.tts.R;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class BrowserActivity extends AppCompatActivity {
-    private LinearLayout linearLayout;
-    ProgressBar superProgressBar;
-    WebView superWebView;
 
-    String current_page_url;
-
-    // Bookmark
-    public static final String PREFERENCES = "PREFERENCES_NAME";
-    public static final String WEB_LINKS = "links";
-    public static final String WEB_TITLE = "title";
+    private ProgressBar superProgressBar;
+    private WebView superWebView;
+    private RelativeLayout rl;
+    private PrefManager prefManager;
+    private List<String> linkList;
+    private View menuBookMark;
+    private CheckBox cbMenu;
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -51,110 +48,147 @@ public class BrowserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_browser);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            prefManager = new PrefManager(BrowserActivity.this);
 
             if (getIntent() != null) {
-                Intent i = getIntent();
-                String URL_DATA = i.getStringExtra("Data");
-                CommonMethod.toDisplayToast(BrowserActivity.this, "ToDATa " + URL_DATA);
-
-
                 superProgressBar = findViewById(R.id.myProgressBar);
                 superWebView = findViewById(R.id.myWebView);
+                rl = findViewById(R.id.llBrowser);
 
                 superProgressBar.setMax(100);
 
-                superWebView.loadUrl("https://www.google.co.in/search?q=" + URL_DATA + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
-                superWebView.getSettings().setJavaScriptEnabled(true);
-                superWebView.getSettings().setSupportZoom(true);
-                superWebView.getSettings().setBuiltInZoomControls(true);
-                superWebView.getSettings().setDisplayZoomControls(true);
-                superWebView.getSettings().setLoadWithOverviewMode(true);
-                superWebView.getSettings().setUseWideViewPort(true);
-                superWebView.clearCache(true);
-                superWebView.clearHistory();
-                superWebView.setHorizontalScrollBarEnabled(true);
+                if (getIntent().getStringExtra("Data") != null) {
+                    superWebView.loadUrl("https://www.google.co.in/search?q="
+                            + getIntent().getStringExtra("Data")
+                            + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
+                } else if (getIntent().getStringExtra("url") != null) {
+                    superWebView.loadUrl("https://www.google.co.in/search?q="
+                            + getIntent().getStringExtra("url")
+                            + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
+
+            } else {
+                superWebView.loadUrl("https://www.google.co.in");
+            }
+            superWebView.getSettings().setJavaScriptEnabled(true);
+            superWebView.getSettings().setSupportZoom(true);
+            superWebView.getSettings().setBuiltInZoomControls(true);
+            superWebView.getSettings().setDisplayZoomControls(true);
+            superWebView.getSettings().setLoadWithOverviewMode(true);
+            superWebView.getSettings().setUseWideViewPort(true);
+            superWebView.clearCache(true);
+            superWebView.clearHistory();
+            superWebView.setHorizontalScrollBarEnabled(true);
+        }
+
+        superWebView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
             }
 
-            Log.d("TAG", "URL" + superWebView.getUrl());
-            superWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+        superWebView.setWebChromeClient(new WebChromeClient() {
 
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    super.onPageStarted(view, url, favicon);
-                }
-
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                }
-            });
-            superWebView.setWebChromeClient(new WebChromeClient() {
-
-                @Override
-                public void onProgressChanged(WebView view, int newProgress) {
-                    super.onProgressChanged(view, newProgress);
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                superProgressBar.setVisibility(View.VISIBLE);
+                superProgressBar.setProgress(newProgress);
+                if (newProgress == 100) {
+                    superProgressBar.setVisibility(View.GONE);
+                    linkList = prefManager.populateSelectedSearch();
+                    toUpdateBookMarkIcon();
+                } else {
                     superProgressBar.setVisibility(View.VISIBLE);
-                    superProgressBar.setProgress(newProgress);
-                    if (newProgress == 100) {
-                        superProgressBar.setVisibility(View.GONE);
-
-                    } else {
-                        superProgressBar.setVisibility(View.VISIBLE);
-
-                    }
-                }
-
-                @Override
-                public void onReceivedTitle(WebView view, String title) {
-                    super.onReceivedTitle(view, title);
-                    getSupportActionBar().setTitle(title);
-                }
-
-                @Override
-                public void onReceivedIcon(WebView view, Bitmap icon) {
-                    super.onReceivedIcon(view, icon);
-//                superImageView.setImageBitmap(icon);
 
                 }
-            });
+            }
 
-            superWebView.setDownloadListener(new DownloadListener() {
-                @Override
-                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                    Uri myUri = Uri.parse(url);
-                    Intent superIntent = new Intent(Intent.ACTION_VIEW);
-                    superIntent.setData(myUri);
-                    startActivity(superIntent);
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                getSupportActionBar().setTitle(title);
+            }
+
+            @Override
+            public void onReceivedIcon(WebView view, Bitmap icon) {
+                super.onReceivedIcon(view, icon);
+                ImageView iv = new ImageView(BrowserActivity.this);
+                iv.setImageBitmap(icon);
+                rl.addView(iv);
+            }
+        });
+
+        superWebView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                Uri myUri = Uri.parse(url);
+                Intent superIntent = new Intent(Intent.ACTION_VIEW);
+                superIntent.setData(myUri);
+                startActivity(superIntent);
+            }
+        });
+    } catch(Exception |
+    Error e)
+
+    {
+        e.printStackTrace();
+        Crashlytics.logException(e);
+    }
+
+}
+
+    private void toUpdateBookMarkIcon() {
+        try {
+            if (linkList != null) {
+                if (linkList.contains(superWebView.getUrl())) {
+                    cbMenu.setChecked(true);
+                } else {
+                    cbMenu.setChecked(false);
                 }
-            });
-        } catch (Exception| Error e){
+            } else {
+                linkList = new ArrayList<>();
+                cbMenu.setChecked(false);
+            }
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater myMenuInflater = getMenuInflater();
-        myMenuInflater.inflate(R.menu.browser, menu);
+        myMenuInflater.inflate(R.menu.browser_menu, menu);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        String links = sharedPreferences.getString(WEB_LINKS, null);
+        menuBookMark = menu.findItem(R.id.menuBookmark).getActionView();
+        cbMenu = menuBookMark.findViewById(R.id.cbBookmark);
+        cbMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbMenu.isChecked()) {
+                    toChangeData(true);
+                } else {
+                    toChangeData(false);
+                }
+            }
+        });
 
-        if (links != null) {
-
-            Gson gson = new Gson();
-            ArrayList<String> linkList = gson.fromJson(links, new TypeToken<ArrayList<String>>() {
-            }.getType());
-
+        linkList = prefManager.populateSelectedSearch();
+        if (linkList != null) {
             if (linkList.contains(superWebView.getUrl())) {
                 menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
             } else {
                 menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
             }
         } else {
+            linkList = new ArrayList<>();
             menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
         }
         return super.onCreateOptionsMenu(menu);
@@ -172,7 +206,7 @@ public class BrowserActivity extends AppCompatActivity {
                 GoForward();
                 break;
 
-            case R.id.bookmarks:
+            case R.id.menuBookmarksList:
                 startActivity(new Intent(BrowserActivity.this, BookmarkActivity.class));
                 break;
 
@@ -181,70 +215,25 @@ public class BrowserActivity extends AppCompatActivity {
                 break;
 
             case R.id.menuBookmark:
-                current_page_url = superWebView.getUrl();
-                toChangeData();
-
+                toChangeData(true);
                 break;
 
         }
         return true;
     }
 
-    private void toChangeData() {
+    private void toChangeData(boolean b) {
         try {
             String message;
-
-            SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-            String jsonLink = sharedPreferences.getString(WEB_LINKS, null);
-            String jsonTitle = sharedPreferences.getString(WEB_TITLE, null);
-
-
-            if (jsonLink != null && jsonTitle != null) {
-
-                Gson gson = new Gson();
-                ArrayList<String> linkList = gson.fromJson(jsonLink, new TypeToken<ArrayList<String>>() {
-                }.getType());
-
-                ArrayList<String> titleList = gson.fromJson(jsonTitle, new TypeToken<ArrayList<String>>() {
-                }.getType());
-
-                Log.d("TAG", "url " + current_page_url);
-                if (linkList.contains(current_page_url)) {
-                    linkList.remove(current_page_url);
-                    titleList.remove(superWebView.getTitle().trim());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(WEB_LINKS, new Gson().toJson(linkList));
-                    editor.putString(WEB_TITLE, new Gson().toJson(titleList));
-                    editor.apply();
-
-
-                    message = "Bookmark Removed";
-
-                } else {
-                    linkList.add(current_page_url);
-                    titleList.add(superWebView.getTitle().trim());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(WEB_LINKS, new Gson().toJson(linkList));
-                    editor.putString(WEB_TITLE, new Gson().toJson(titleList));
-                    editor.apply();
-
-                    message = "Bookmarked";
-                }
+            if (!b) {
+                linkList.remove(superWebView.getUrl().trim().replaceAll("\\s+", "%20"));
+                message = "Bookmark Removed";
             } else {
-
-                ArrayList<String> linkList = new ArrayList<>();
-                ArrayList<String> titleList = new ArrayList<>();
-                linkList.add(current_page_url);
-                titleList.add(superWebView.getTitle());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(WEB_LINKS, new Gson().toJson(linkList));
-                editor.putString(WEB_TITLE, new Gson().toJson(titleList));
-                editor.apply();
-
+                linkList.add(superWebView.getUrl().trim().replaceAll("\\s+", "%20"));
                 message = "Bookmarked";
             }
-
-            Snackbar snackbar = Snackbar.make(linearLayout, message, Snackbar.LENGTH_LONG);
+            prefManager.setSearchResult(linkList);
+            Snackbar snackbar = Snackbar.make(rl, message, Snackbar.LENGTH_LONG);
             snackbar.show();
         } catch (Exception | Error e) {
             e.printStackTrace();

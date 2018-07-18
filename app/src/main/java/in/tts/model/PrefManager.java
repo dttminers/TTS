@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class PrefManager {
     private SharedPreferences pref;
@@ -31,6 +32,12 @@ public class PrefManager {
 
     private static final String USER_INFO = "USER_INFO";
     private static final String USER_INFO_PREFERS = "USER_INFO_PREFERS";
+
+    // WEb BookMarks
+    // Bookmark
+    public static final String PREFERENCES = "PREFERENCES_NAME";
+    public static final String WEB_LINKS = "links";
+    public static final String WEB_TITLE = "title";
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
@@ -165,4 +172,32 @@ public class PrefManager {
         }
     }
 
+    public ArrayList<String> populateSelectedSearch() {
+        try {
+            String s = _context.getSharedPreferences(PREFERENCES, 0).getString(WEB_LINKS, null);
+            if (s != null) {
+                return new ArrayList<String>(Arrays.asList(s.replace("[", "").replace("]", "")
+                        .replaceAll("\\s+", "")
+                        .split(",")));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setSearchResult(List<String> selectedSearch) {
+        try {
+            SharedPreferences.Editor editor = _context.getSharedPreferences(PREFERENCES, 0).edit();
+            editor.putString(WEB_LINKS, selectedSearch.toString());
+            editor.apply();
+            editor.commit();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
+        }
+    }
 }
