@@ -63,6 +63,8 @@ public class MainHomeFragment extends Fragment {
     private ArrayList<String> imageFile;
     private PDFHomePageImages pdfHomePageImages;
 
+    PrefManager  prefManager;
+
     private OnFragmentInteractionListener mListener;
 
     public MainHomeFragment() {
@@ -116,6 +118,8 @@ public class MainHomeFragment extends Fragment {
 
     private void toBindViews() throws Exception, Error {
         if (getActivity() != null) {
+            prefManager = new PrefManager(getContext());
+
             imageView = getActivity().findViewById(R.id.imageView);
             ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
             ivRight = getActivity().findViewById(R.id.imageViewRight1);
@@ -173,7 +177,7 @@ public class MainHomeFragment extends Fragment {
 
     public void toSetSomeData() {
         try {
-            PrefManager prefManager = new PrefManager(getContext());
+
             CommonMethod.toCallLoader(getContext(), "Loading....");
 //            if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
@@ -329,6 +333,8 @@ public class MainHomeFragment extends Fragment {
             }
 //                }
 //            });
+
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

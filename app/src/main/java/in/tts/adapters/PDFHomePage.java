@@ -69,7 +69,7 @@ public class PDFHomePage extends PagerAdapter {
             ImageView iv = vg.findViewById(R.id.ivBi);
 
             Log.d("TAG", " FILE " + list.get(position));
-           file = new File(list.get(position).trim());
+            file = new File(list.get(position).trim());
             fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
 
             pdfRenderer = new PdfRenderer(fileDescriptor);

@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements
 
             fn_permission();
 
-            setCurrentViewPagerItem(2);
+            setCurrentViewPagerItem(0);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

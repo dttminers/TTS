@@ -28,19 +28,19 @@
                 android:id="@+id/menuReload"
                 android:icon="@drawable/ic_refresh_white_24dp"
                 android:title="@string/str_refresh"
-                app:showAsAction="always" />
+                app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/menuBack"
                 android:icon="@drawable/ic_arrow_back_black_24dp"
                 android:title="@string/str_previous"
-                app:showAsAction="always" />
+                app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/menuForward"
                 android:icon="@drawable/ic_arrow_forward_black_24dp"
                 android:title="@string/str_forward"
-                app:showAsAction="always" />
+                app:showAsAction="ifRoom" />
 
         </menu>
     </item>

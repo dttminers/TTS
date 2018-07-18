@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -211,6 +212,27 @@ public class BookmarkActivity extends AppCompatActivity {
                 dialogInterface.dismiss();
             }
         }).show();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    onBackPressed();
+                    break;
+                default:
+                    return true;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
 }
