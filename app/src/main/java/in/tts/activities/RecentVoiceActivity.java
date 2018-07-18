@@ -29,12 +29,7 @@ public class RecentVoiceActivity extends AppCompatActivity {
         CommonMethod.setAnalyticsData(RecentVoiceActivity.this, "MainTab", "Recent Voice", null);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-            getSupportActionBar().setTitle(getString(R.string.str_title_recent_voice));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+            CommonMethod.toSetTitle(getSupportActionBar(), RecentVoiceActivity.this, getString(R.string.str_title_recent_voice));
         }
 
 

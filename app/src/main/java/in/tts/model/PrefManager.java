@@ -20,9 +20,6 @@ public class PrefManager {
     private SharedPreferences.Editor editor;
     private Context _context;
 
-    // shared pref mode
-    private int PRIVATE_MODE = 0;
-
     // Shared preferences file name
     private static final String PREF_NAME = "androidhive-welcome";
 
@@ -39,7 +36,7 @@ public class PrefManager {
 
     public PrefManager(Context context) {
         _context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = _context.getSharedPreferences(PREF_NAME, 0);
         editor = pref.edit();
     }
 
@@ -52,7 +49,6 @@ public class PrefManager {
     public boolean isFirstTimeLaunch() {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
-
 
     public void getUserInfo() {
         try {
@@ -108,67 +104,62 @@ public class PrefManager {
             editor.apply();
             editor.commit();
             Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
-            return;
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
         }
     }
 
-    public ArrayList<String> toGetPDFList(){
-            try {
-                String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
-//                Log.d("TAG", "toSetPDFFileList get "+ us);
-                if (us != null) {
-                    return new ArrayList<String>(Arrays.asList(us.replace("[","").replace("]","").split(",")));
-                } else {
-                    return null;
-                }
-            } catch (Exception| Error e){
-                e.printStackTrace();
-                Crashlytics.logException(e);
-                return null;
-            }
-    }
-
-    public void toSetPDFFileList(ArrayList<String> list){
-        try{
-            SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST, 0).edit();
-            editor.putString(PDF_LIST_INFO, list.toString());
-            editor.apply();
-            editor.commit();
-            Log.d("TAG", "toSetPDFFileList "+ list.size() );//+ list.toString());
-            return;
-        } catch (Exception| Error e){
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-    }
-
-    public ArrayList<String> toGetImageList(){
+    public ArrayList<String> toGetPDFList() {
         try {
-            String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
+            String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
             if (us != null) {
-                return new ArrayList<String>(Arrays.asList(us.replace("[","").replace("]","").split(",")));
+                return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
-        } catch (Exception| Error e){
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
             return null;
         }
     }
 
-    public void toSetImageFileList(ArrayList<String> list){
-        try{
+    public void toSetPDFFileList(ArrayList<String> list) {
+        try {
+            SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST, 0).edit();
+            editor.putString(PDF_LIST_INFO, list.toString());
+            editor.apply();
+            editor.commit();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    public ArrayList<String> toGetImageList() {
+        try {
+            String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
+            if (us != null) {
+                return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+            } else {
+                return null;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            return null;
+        }
+    }
+
+    public void toSetImageFileList(ArrayList<String> list) {
+        try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(IMAGE_LIST, 0).edit();
             editor.putString(IMAGE_LIST_INFO, list.toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", "toSetImageFileList "+ list.size());
-            return;
-        } catch (Exception| Error e){
+            Log.d("TAG", "toSetImageFileList " + list.size());
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }

@@ -30,7 +30,7 @@ public class ToGetImages {
                                     .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
                                             null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
                     if (cursor != null) {
-                        while (cursor.moveToNext()) {
+                        while (cursor.moveToNext() && imageFile.size() < 11) {
                             String imageLocation = cursor.getString(1);
                             imageFile.add(imageLocation);
                             Log.d("TAG", "File Name " + imageLocation);
@@ -45,35 +45,4 @@ public class ToGetImages {
         });
         return imageFile;
     }
-
-//    public static ArrayList<String> getAllShownImagesPath(final Activity activity) {
-//        final ArrayList<String> imageFile = new ArrayList<>();
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                Cursor cursor;
-//
-//                int column_index_data, column_index_folder_name;
-//
-//                String absolutePathOfImage = null;
-//
-//                Uri uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-//
-//                String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-//
-//                cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-//
-//                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-//                column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-//
-//                while (cursor.moveToNext()) {
-//                    absolutePathOfImage = cursor.getString(column_index_data);
-//                    imageFile.add(absolutePathOfImage);
-//                }
-//
-//                Log.d("TAG", " DATA " + imageFile.size() + ":" + imageFile);
-//            }
-//        });
-//        return AppData.imageFile = imageFile;
-//    }
 }

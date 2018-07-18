@@ -1,24 +1,22 @@
 package in.tts.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Printer;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,9 +35,8 @@ public class ImageOcrActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private TextRecognizer textRecognizer;
     private Frame imageFrame;
-    private String imageText = "";
-    private SparseArray<TextBlock> textBlocks, items;
-    private TextBlock textBlock, item;
+    private SparseArray<TextBlock> items;
+    private TextBlock item;
     private StringBuilder stringBuilder;
     private View view;
 
@@ -51,21 +48,12 @@ public class ImageOcrActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_image_ocr);
-            Log.d("TAG", " path : " + getIntent().getStringExtra("PATH"));
+
             photoPath = getIntent().getStringExtra("PATH");
             tts = new TTS(ImageOcrActivity.this);
 
             if (getSupportActionBar() != null) {
-                getSupportActionBar().show();
-                if (photoPath != null) {
-                    getSupportActionBar().setTitle(photoPath.substring(photoPath.lastIndexOf("/")+1));
-                } else {
-                    getSupportActionBar().setTitle(getString(R.string.app_name));
-                }
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
-                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+                CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this, photoPath.substring(photoPath.lastIndexOf("/") + 1));
             }
 
             mRl = findViewById(R.id.rlImageOcrActivity);
@@ -76,8 +64,6 @@ public class ImageOcrActivity extends AppCompatActivity {
 
             ImageView mIvOcr = findViewById(R.id.imgOcr);
             mIvOcr.setImageBitmap(bitmap);
-
-//            toGetImage(bitmap);
             new toGetImage().execute();
             fn_permission();
         } catch (Exception | Error e) {
@@ -88,77 +74,21 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     private void fn_permission() {
         try {
-            Log.d("TAG", " pdf permission ");
+            if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
             if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//                if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                    Log.d("TAG", "Home0131 ");
-//                } else {
                 ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-//                    requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
-                Log.d("TAG", "Home0231 ");
-//                }
-            } else {
-                Log.d("TAG", "Home0331 ");
-//                toGetPDF();
             }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-
-    }
-
-    public void toGetImage(Bitmap bitmap) {
-        try {
-            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-            Frame imageFrame = new Frame.Builder()
-                    .setBitmap(bitmap)                 // your image bitmap
-                    .build();
-            String imageText = "";
-            SparseArray<TextBlock> textBlocks = textRecognizer.detect(imageFrame);
-            for (int i = 0; i < textBlocks.size(); i++) {
-                TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
-                imageText = textBlock.getValue();                   // return string
-                Log.d("TAG", " Result : " + i + ":" + imageText);
-            }
-            Log.d("TAG", " Result Final: " + imageText);
-
-            StringBuilder stringBuilder = new StringBuilder();
-            final SparseArray<TextBlock> items = textRecognizer.detect(imageFrame);
-            for (int i = 0; i < items.size(); i++) {
-                TextBlock item = items.valueAt(i);
-                stringBuilder.append(item.getValue());
-                stringBuilder.append("\n");
-                Log.d("TAG", "DATA : " + i + stringBuilder);
-            }
-            Log.d("TAG", " Final DATA " + stringBuilder);
-
+//            if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+//                ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1);
+//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    onBackPressed();
-                    break;
-                default:
-                    return true;
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 
     private class toGetImage extends AsyncTask<Void, Void, Void> {
         @Override
@@ -211,9 +141,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             try {
-//
-//                                tts.SpeakLoud(stringBuilder.toString());
-                            } catch (Exception| Error e){
+                                tts.SpeakLoud(stringBuilder.toString());
+                            } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 Crashlytics.logException(e);
                             }
@@ -241,28 +170,87 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu2, menu);
+        getMenuInflater().inflate(R.menu.image_menu, menu);
         return true;
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            switch (item.getItemId()) {
+                case R.id.actionCamera:
+                    startActivity(new Intent(ImageOcrActivity.this, CameraOcrActivity.class));
+                    break;
+
+                case R.id.actionSearch:
+                    break;
+
+                case R.id.settings:
+                    startActivity(new Intent(ImageOcrActivity.this, SettingActivity.class));
+                    break;
+
+                case R.id.audio_settings:
+                    startActivity(new Intent(ImageOcrActivity.this, AudioSettingActivity.class));
+                    break;
+
+                case R.id.recent_audios:
+                    startActivity(new Intent(ImageOcrActivity.this, RecentVoiceActivity.class));
+                    break;
+
+                case R.id.our_other_apps:
+                    startActivity(new Intent(ImageOcrActivity.this, OurOtherAppActivity.class));
+                    break;
+
+                case R.id.help:
+                    startActivity(new Intent(ImageOcrActivity.this, HelpActivity.class));
+                    break;
+
+                case android.R.id.home:
+                    onBackPressed();
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
+    @Override
     protected void onPause() {
         super.onPause();
-//        tts.toStop();
-        if (mRl != null) {
-            Log.d("TAG", "Count Rel " + mRl.getChildCount());
-            if (mRl.getChildCount() > 1) {
-                if (view != null) {
-                    mRl.removeView(view);
+        try {
+            tts.toStop();
+            if (mRl != null) {
+                if (mRl.getChildCount() > 1) {
+                    if (view != null) {
+                        mRl.removeView(view);
+                    }
                 }
             }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        tts.toShutDown();
+        try {
+            tts.toShutDown();
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
+        }
     }
 }

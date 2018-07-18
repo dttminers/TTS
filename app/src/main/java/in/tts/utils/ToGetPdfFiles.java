@@ -15,7 +15,7 @@ public class ToGetPdfFiles {
     static ArrayList<String> fileList = new ArrayList<>();
 
     @AddTrace(name = "onGetPDF", enabled = true)
-    public static ArrayList<String> getFile(final File dir, MainHomeFragment mainHomeFragment) {
+    public static ArrayList<String> getFile(final File dir) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -23,7 +23,7 @@ public class ToGetPdfFiles {
                 if (listFile != null && listFile.length > 0) {
                     for (int i = 0; i < listFile.length; i++) {
                         if (listFile[i].isDirectory()) {
-                            getFile(listFile[i], null);
+                            getFile(listFile[i]);
                         } else {
                             boolean booleanpdf = false;
                             if (listFile[i].getName().endsWith(".pdf")) {
@@ -37,18 +37,16 @@ public class ToGetPdfFiles {
                                 if (booleanpdf) {
                                     booleanpdf = false;
                                 } else {
-                                    fileList.add(listFile[i].getPath());
+                                    if (fileList.size() < 11) {
+                                        fileList.add(listFile[i].getPath());
+                                    }
                                 }
                             }
                         }
                     }
                 }
-//                if (mainHomeFragment != null){
-//                    mainHomeFragment.toSetSomeData();
-//                }
             }
         });
-        Log.d("TAG", " pdf count " + fileList.size());
         return fileList;
     }
 }

@@ -1,9 +1,7 @@
 package in.tts.activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,12 +16,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -32,7 +27,6 @@ import java.io.IOException;
 
 import in.tts.R;
 import in.tts.classes.TTS;
-import in.tts.utils.AppPermissions;
 import in.tts.utils.CommonMethod;
 
 public class CameraOcrActivity extends AppCompatActivity {
@@ -45,9 +39,9 @@ public class CameraOcrActivity extends AppCompatActivity {
     private View view;
     private TextRecognizer textRecognizer;
     private StringBuilder stringBuilder;
-    private TTS tts;
+    private TTS ttsFile;
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "CameraOcrActivity";
     private static final int requestPermissionID = 101;
 
     @Override
@@ -55,21 +49,15 @@ public class CameraOcrActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             if (getSupportActionBar() != null) {
-                getSupportActionBar().show();
-                getSupportActionBar().setTitle(getString(R.string.app_name));
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
-                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+                CommonMethod.toSetTitle(getSupportActionBar(), CameraOcrActivity.this, "");
             }
 
             setContentView(R.layout.activity_camera_ocr);
 
-            tts = new TTS(CameraOcrActivity.this);
+            ttsFile = new TTS(CameraOcrActivity.this);
             mCameraView = findViewById(R.id.surfaceView);
             mRlCamera = findViewById(R.id.rlCamera);
             mRlOCRData = findViewById(R.id.rlOcrData);
-
 
             // layout_ocr_image
             tvImgOcr = findViewById(R.id.tvImgOcr);
@@ -83,7 +71,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     tvImgOcr.setText("");
-                    AppPermissions.toCheckPermissionCamera(CameraOcrActivity.this, CameraOcrActivity.this, CameraOcrActivity.this);
+                    fn_permission();
                 }
             });
 
@@ -91,9 +79,8 @@ public class CameraOcrActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try {
-
-                        tts.SpeakLoud(stringBuilder.toString());
-                    } catch (Exception | Error e){
+                        ttsFile.SpeakLoud(stringBuilder.toString());
+                    } catch (Exception | Error e) {
                         e.printStackTrace();
                         Crashlytics.logException(e);
                     }
@@ -109,10 +96,27 @@ public class CameraOcrActivity extends AppCompatActivity {
                     CommonMethod.dpToPx(10, this)
             );
 
+            fn_permission();
 
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
 
-            AppPermissions.toCheckPermissionCamera(CameraOcrActivity.this, CameraOcrActivity.this, CameraOcrActivity.this);
-
+    private void fn_permission() {
+        try {
+            if ((ContextCompat.checkSelfPermission(CameraOcrActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(CameraOcrActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            if ((ContextCompat.checkSelfPermission(CameraOcrActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(CameraOcrActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+            if ((ContextCompat.checkSelfPermission(CameraOcrActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(CameraOcrActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+            } else {
+                startCameraSource();
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -170,7 +174,6 @@ public class CameraOcrActivity extends AppCompatActivity {
         }
     }
 
-
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             switch (item.getItemId()) {
@@ -195,7 +198,7 @@ public class CameraOcrActivity extends AppCompatActivity {
     public void startCameraSource() {
         try {
             //Create the TextRecognizer
-            final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+            textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
             if (!textRecognizer.isOperational()) {
                 Log.w(TAG, "Detector dependencies not loaded yet");
@@ -285,8 +288,14 @@ public class CameraOcrActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mRlOCRData != null) {
-            mRlOCRData.setVisibility(View.GONE);
+        try {
+            ttsFile.toStop();
+            if (mRlOCRData != null) {
+                mRlOCRData.setVisibility(View.GONE);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 }

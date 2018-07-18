@@ -1,10 +1,15 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +17,15 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.io.File;
+
 import in.tts.R;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.RegisterFragment;
-import in.tts.utils.AppPermissions;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,10 +49,37 @@ public class LoginActivity extends AppCompatActivity {
                 CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login3", null);
                 replaceMainTabsFragment(new LoginFragment());
             }
+            fn_permission();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
 
-            AppPermissions.toCheckPermissionRead(LoginActivity.this, LoginActivity.this, null, null, null,true);
-            AppPermissions.toCheckPermissionWrite(LoginActivity.this, LoginActivity.this);
-            AppPermissions.toCheckPermissionCamera(LoginActivity.this, LoginActivity.this, null);
+    private void fn_permission() {
+        try {
+            if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            } else {
+                toLoadData();
+            }
+            if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+            if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    private void toLoadData() {
+        try {
+            PrefManager prefManager = new PrefManager(LoginActivity.this);
+            prefManager.toSetImageFileList(ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath())));
+            prefManager.toSetPDFFileList(ToGetImages.getAllShownImagesPath(LoginActivity.this));
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

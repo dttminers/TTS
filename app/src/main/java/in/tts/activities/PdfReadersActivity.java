@@ -46,20 +46,12 @@ public class PdfReadersActivity extends AppCompatActivity {
             CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             if (getIntent().getExtras() != null) {
                 if (getIntent().getStringExtra("file") != null) {
-                    File file = new File( getIntent().getStringExtra("file").trim());
+                    File file = new File(getIntent().getStringExtra("file").trim());
 
                     if (getSupportActionBar() != null) {
-                        getSupportActionBar().show();
-                        if (file.getName() != null) {
-                            getSupportActionBar().setTitle(file.getName());
-                        } else {
-                            getSupportActionBar().setTitle(R.string.app_name);
-                        }
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                        getSupportActionBar().setDisplayShowHomeEnabled(true);
-                        getSupportActionBar().setDisplayShowTitleEnabled(true);
-                        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+                        CommonMethod.toSetTitle(getSupportActionBar(), PdfReadersActivity.this, file.getName());
                     }
+
                     stringBuilder = new StringBuilder();
                     fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
 

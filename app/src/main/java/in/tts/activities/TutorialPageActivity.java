@@ -1,11 +1,16 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,10 +24,13 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.io.File;
+
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
-import in.tts.utils.AppPermissions;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class TutorialPageActivity extends AppCompatActivity {
 
@@ -63,10 +71,24 @@ public class TutorialPageActivity extends AppCompatActivity {
             viewPager.setAdapter(new MyViewPagerAdapter());
             viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-            AppPermissions.toCheckPermissionRead(TutorialPageActivity.this, TutorialPageActivity.this, null, null, null,true);
-            AppPermissions.toCheckPermissionWrite(TutorialPageActivity.this, TutorialPageActivity.this);
-            AppPermissions.toCheckPermissionCamera(TutorialPageActivity.this, TutorialPageActivity.this, null);
+            fn_permission();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
 
+    private void fn_permission() {
+        try {
+            if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+            if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -84,7 +106,7 @@ public class TutorialPageActivity extends AppCompatActivity {
             if (User.getUser(TutorialPageActivity.this).getId() != null) {
                 startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
             } else {
-                startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                startActivity(new Intent(TutorialPageActivity.this, TutorialPageActivity.class).putExtra("LOGIN", "login"));
             }
             finish();
         } catch (Exception | Error e) {

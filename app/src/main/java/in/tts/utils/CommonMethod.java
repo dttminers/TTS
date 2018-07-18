@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -116,6 +117,25 @@ public class CommonMethod {
                 if (str != null) {
                     Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
                 }
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
+
+    public static void toSetTitle(ActionBar supportActionBar, Context context, String title) {
+        try {
+            supportActionBar.show();
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+            supportActionBar.setDisplayShowTitleEnabled(true);
+            supportActionBar.setHomeAsUpIndicator(ContextCompat.getDrawable(context, R.drawable.ic_left_white_24dp));
+
+            if (title != null) {
+                supportActionBar.setTitle(title);
+            } else {
+                supportActionBar.setTitle(context.getResources().getString(R.string.app_name));
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

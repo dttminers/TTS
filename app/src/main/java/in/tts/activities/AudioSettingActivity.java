@@ -25,12 +25,7 @@ public class AudioSettingActivity extends AppCompatActivity {
         CommonMethod.setAnalyticsData(AudioSettingActivity.this, "MainTab", "AudioSetting", null);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-            getSupportActionBar().setTitle(getString(R.string.str_title_audio_settings));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+            CommonMethod.toSetTitle(getSupportActionBar(), AudioSettingActivity.this, getString(R.string.str_title_audio_settings));
         }
 
 //        final SeekBar yourSeekbar = (SeekBar) findViewById(R.id.seek1);

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mRlPdfListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
     android:layout_marginBottom="1dp"
-    android:id="@+id/mRlPdfListItem"
     android:background="@color/white"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/tv_duration"
@@ -15,11 +15,18 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="10dp"
         android:ellipsize="end"
+        android:lines="1"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:singleLine="true"
         android:text="60 mins"
         android:textColor="@color/dark_pink_two"
         android:textSize="15sp" />
@@ -37,6 +44,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:layout_margin="3dp"
+            android:contentDescription="@string/str_pdf"
             android:src="@drawable/ic_pdf_text" />
     </RelativeLayout>
 
@@ -50,10 +58,14 @@
         android:layout_toEndOf="@+id/iv_image"
         android:layout_toStartOf="@id/tv_duration"
         android:ellipsize="end"
+        android:lines="1"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:paddingLeft="0dp"
         android:paddingRight="10dp"
-        android:text="name"
+        android:paddingStart="0dp"
+        android:singleLine="true"
+        android:text="@string/str_pdf"
         android:textColor="#000000"
         android:textSize="15sp" />
 
@@ -65,10 +77,14 @@
         android:layout_toEndOf="@+id/iv_image"
         android:layout_toStartOf="@id/tv_duration"
         android:ellipsize="end"
+        android:lines="1"
         android:maxLines="1"
         android:paddingEnd="10dp"
+        android:paddingLeft="0dp"
         android:paddingRight="10dp"
-        android:text="100% Remaining"
+        android:paddingStart="0dp"
+        android:singleLine="true"
+        android:text="@string/str_100_remaining"
         android:textColor="@color/dark_pink_two"
         android:textSize="15sp" />
 

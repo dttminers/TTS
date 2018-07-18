@@ -21,13 +21,8 @@ public class OurOtherAppActivity extends AppCompatActivity {
         CommonMethod.setAnalyticsData(OurOtherAppActivity.this, "MainTab", "OurOtherApp", null);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-            getSupportActionBar().setTitle(getString(R.string.str_title_our_other_apps));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
-            }
+            CommonMethod.toSetTitle(getSupportActionBar(), OurOtherAppActivity.this, getString(R.string.str_title_our_other_apps));
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -25,12 +25,7 @@ public class SettingActivity extends AppCompatActivity {
             CommonMethod.setAnalyticsData(SettingActivity.this, "MainTab", "Setting", null);
 
             if (getSupportActionBar() != null) {
-                getSupportActionBar().show();
-                getSupportActionBar().setTitle(R.string.str_title_settings);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
-                getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_left_white_24dp));
+                CommonMethod.toSetTitle(getSupportActionBar(), SettingActivity.this, getString(R.string.str_title_settings));
             } else {
                 getSupportActionBar().setTitle(R.string.app_name);
             }

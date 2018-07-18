@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import in.tts.R;
 import in.tts.adapters.PdfListAdapter;
 import in.tts.model.PrefManager;
-import in.tts.utils.AppPermissions;
 import in.tts.utils.CommonMethod;
 
 public class MyBooksFragment extends Fragment {
@@ -102,7 +101,7 @@ public class MyBooksFragment extends Fragment {
                 }
             });
 
-            AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, MyBooksFragment.this, null, false);
+//            AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, MyBooksFragment.this, null, false);
 
         } catch (Exception | Error e) {
             e.printStackTrace();
