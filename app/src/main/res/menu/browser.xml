@@ -6,27 +6,42 @@
     tools:ignore="AlwaysShowAction">
 
     <item
-        android:id="@+id/menuBack"
-        android:icon="@drawable/ic_arrow_back_black_24dp"
-        android:title="@string/str_previous"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/menuForward"
-        android:icon="@drawable/ic_arrow_forward_black_24dp"
-        android:title="@string/str_forward"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/menuBookmark"
         android:title="@string/str_bookmark"
         app:actionLayout="@layout/selecting_bookmark"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menuReload"
-        android:icon="@drawable/ic_refresh_white_24dp"
-        android:title="@string/str_refresh"
-        app:showAsAction="always" />
+        android:id="@+id/action_notification11"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        android:orderInCategory="500"
+        android:title="@string/str_more_options"
+        app:showAsAction="always">
 
+        <menu>
+            <item
+                android:id="@+id/bookmarks"
+                android:title="@string/str_bookmarks"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/menuReload"
+                android:icon="@drawable/ic_refresh_white_24dp"
+                android:title="@string/str_refresh"
+                app:showAsAction="always" />
+
+            <item
+                android:id="@+id/menuBack"
+                android:icon="@drawable/ic_arrow_back_black_24dp"
+                android:title="@string/str_previous"
+                app:showAsAction="always" />
+
+            <item
+                android:id="@+id/menuForward"
+                android:icon="@drawable/ic_arrow_forward_black_24dp"
+                android:title="@string/str_forward"
+                app:showAsAction="always" />
+
+        </menu>
+    </item>
 </menu>

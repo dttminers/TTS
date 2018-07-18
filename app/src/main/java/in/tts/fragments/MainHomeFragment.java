@@ -175,21 +175,23 @@ public class MainHomeFragment extends Fragment {
         try {
             PrefManager prefManager = new PrefManager(getContext());
             CommonMethod.toCallLoader(getContext(), "Loading....");
-            if (prefManager.toGetPDFList() == null) {
-                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-//                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            } else {
-                pdfFile = prefManager.toGetPDFList();
-            }
+//            if (prefManager.toGetPDFList() == null) {
+//                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+            pdfFile = new ArrayList<>();
+                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//            } else {
+//                pdfFile = prefManager.toGetPDFList();
+//            }
             pdfHomePage = new PDFHomePage(getContext(), pdfFile);
             toBindRecentPdf();
 
-            if (prefManager.toGetImageList() == null) {
-                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
-//                getAllShownImagesPath();
-            } else {
-                imageFile = prefManager.toGetImageList();
-            }
+//            if (prefManager.toGetImageList() == null) {
+//                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
+               imageFile = new ArrayList<>();
+                getAllShownImagesPath();
+//            } else {
+//                imageFile = prefManager.toGetImageList();
+//            }
             pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
             toBindRecentImages();
             CommonMethod.toCloseLoader();
