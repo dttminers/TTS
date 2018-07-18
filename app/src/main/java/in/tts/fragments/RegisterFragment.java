@@ -7,13 +7,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
@@ -45,6 +52,9 @@ import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 
 public class RegisterFragment extends Fragment {
+
+    private EditText mEdtEmail, mEdtPassword, mEdtCnfPwd;
+    private Button mBtnSignUp;
 
     // Google
     private GoogleSignInClient mGoogleSignInClient;
@@ -79,6 +89,133 @@ public class RegisterFragment extends Fragment {
         try {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
             FacebookSdk.sdkInitialize(getContext());
+
+            // E-mail & Password Validation...........
+
+            mEdtEmail = getActivity().findViewById(R.id.edtEmailIdReg);
+            mEdtPassword = getActivity().findViewById(R.id.edtPasswordReg);
+            mEdtCnfPwd = getActivity().findViewById(R.id.edtConfirmPasswordReg);
+            mBtnSignUp = getActivity().findViewById(R.id.btnSignUpReg);
+
+            mEdtEmail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                        if (validateEmail()) {
+                            mEdtPassword.requestFocus();
+                            return true;
+                        } else {
+                            mEdtEmail.requestFocus();
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            mEdtPassword.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                        if (validatePassword()) {
+                            mEdtCnfPwd.requestFocus();
+                            return true;
+                        } else {
+                            mEdtPassword.requestFocus();
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            mEdtCnfPwd.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                        if (validatePassword()) {
+                            mBtnSignUp.requestFocus();
+                            return true;
+                        } else {
+                            mEdtPassword.requestFocus();
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            mBtnSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (validateEmail() && validatePassword() && validateCnfPassword()) {
+                        if(mEdtPassword.getText().toString().trim().equals(mEdtCnfPwd.getText().toString().trim())) {
+                            startActivity(new Intent(getContext(), LoginActivity.class));
+                            CommonMethod.toDisplayToast(getContext(), " Register Successfully ");
+                        }else {
+                            CommonMethod.toDisplayToast(getContext(),"Password not match, please try again");
+                        }
+                    } else {
+                        CommonMethod.toDisplayToast(getContext(), "Please try again, Register failed");
+                    }
+                }
+
+            });
+
+            mEdtEmail.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    validateEmail();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    validateEmail();
+                }
+            });
+
+            mEdtCnfPwd.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    validateCnfPassword();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    validateCnfPassword();
+                }
+            });
+
+            mEdtPassword.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    validatePassword();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    validatePassword();
+                }
+            });
+
             //View
             getActivity().findViewById(R.id.txtAlreadyAccountReg).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -237,6 +374,57 @@ public class RegisterFragment extends Fragment {
             e.printStackTrace();
             Crashlytics.logException(e);
             CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
+        }
+    }
+
+    public boolean validateEmail() {
+        if (mEdtEmail.getText().toString().trim().length() == 0) {
+            mEdtEmail.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            return false;
+        } else if (CommonMethod.isValidEmail(mEdtEmail.getText().toString().trim())) {
+            mEdtEmail.setError(null);
+            return true;
+        } else {
+            mEdtEmail.setError(getString(R.string.str_error_valid_email));
+            return false;
+        }
+    }
+
+    public boolean validatePassword() {
+        if (mEdtPassword.getText().toString().trim().length() == 0) {
+            mEdtPassword.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            return false;
+        } else if (mEdtPassword.getText().toString().trim().length() < 8) {
+            mEdtPassword.setError(getString(R.string.str_error_minimum_8));
+            return false;
+        } else if (mEdtPassword.getText().toString().trim().length() > 15) {
+            mEdtPassword.setError(getString(R.string.str_error_maximum_15));
+            return false;
+        } else if (CommonMethod.isValidPassword(mEdtPassword.getText().toString().trim())) {
+            mEdtPassword.setError(getString(R.string.str_error_pswd));
+            return false;
+        } else {
+            mEdtPassword.setError(null);
+            return true;
+        }
+    }
+
+    public boolean validateCnfPassword() {
+        if (mEdtCnfPwd.getText().toString().trim().length() == 0) {
+            mEdtCnfPwd.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            return false;
+        } else if (mEdtCnfPwd.getText().toString().trim().length() < 8) {
+            mEdtCnfPwd.setError(getString(R.string.str_error_minimum_8));
+            return false;
+        } else if (mEdtCnfPwd.getText().toString().trim().length() > 15) {
+            mEdtCnfPwd.setError(getString(R.string.str_error_maximum_15));
+            return false;
+        } else if (CommonMethod.isValidPassword(mEdtCnfPwd.getText().toString().trim())) {
+            mEdtCnfPwd.setError(getString(R.string.str_error_pswd));
+            return false;
+        } else {
+            mEdtCnfPwd.setError(null);
+            return true;
         }
     }
 

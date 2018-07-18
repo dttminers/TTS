@@ -85,6 +85,13 @@
     <string name="str_right">right</string>
     <string name="str_listen_whatever_you_are_browsing">listen whatever you are browsing</string>
     <string name="str_login_data">Login to get access to read \nmore than millions books</string>
+
+    <string name="str_field_cant_be_empty">Field can\'t be empty</string>
+    <string name="str_error_valid_email">Please enter valid Email-Id</string>
+    <string name="str_error_minimum_8">Minimum 8 characters</string>
+    <string name="str_error_maximum_15">Maximum 15 Character</string>
+    <string name="str_error_invalid_name">Only Character Allowed</string>
+    <string name="str_error_pswd">Required at least 1 Uppercase letter, 1 Lowercase letter, 1 Number and 1 Special character</string>
 </resources>
 
     <!--%USERPROFILE%\AppData\Local\Temp

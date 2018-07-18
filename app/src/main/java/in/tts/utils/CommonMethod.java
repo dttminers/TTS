@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.regex.Pattern;
+
 import in.tts.R;
 
 public class CommonMethod {
@@ -33,6 +35,15 @@ public class CommonMethod {
     public static int dpToPx(int dp, Activity activity) {
         DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public static boolean isValidEmail(String email) {
+        return Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$").matcher(email).matches();
+    }
+
+    public static boolean isValidPassword(String str) {
+        //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
+        return Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}").matcher(str).matches();
     }
 
     public static String firstLetterCaps(String myString) {
