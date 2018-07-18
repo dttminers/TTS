@@ -29,6 +29,7 @@ import java.io.File;
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
+import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
 
@@ -101,12 +102,13 @@ public class TutorialPageActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         try {
+            CommonMethod.toCallLoader(TutorialPageActivity.this, "Loading...");
             prefManager.setFirstTimeLaunch(false);
             prefManager.getUserInfo();
             if (User.getUser(TutorialPageActivity.this).getId() != null) {
                 startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
             } else {
-                startActivity(new Intent(TutorialPageActivity.this, TutorialPageActivity.class).putExtra("LOGIN", "login"));
+                startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
             }
             finish();
         } catch (Exception | Error e) {
@@ -203,5 +205,11 @@ public class TutorialPageActivity extends AppCompatActivity {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toCloseLoader();
     }
 }
