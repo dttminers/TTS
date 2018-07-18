@@ -105,7 +105,11 @@
             android:label="@string/str_pdf"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.CameraOcrActivity" />
+        <activity
+            android:name=".activities.CameraOcrActivity"
+            android:label="@string/str_camera"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -119,6 +123,12 @@
         <activity
             android:name=".activities.BrowserActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.BookmarkActivity"
+            android:label="@string/str_bookmark"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 

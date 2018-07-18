@@ -2,7 +2,9 @@ package in.tts.activities;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
@@ -21,6 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
@@ -28,6 +36,13 @@ public class BrowserActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     ProgressBar superProgressBar;
     WebView superWebView;
+
+    String current_page_url ;
+
+        // Bookmark
+    public static final String PREFERENCES = "PREFERENCES_NAME";
+    public static final String WEB_LINKS = "links";
+    public static final String WEB_TITLE = "title";
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -119,6 +134,24 @@ public class BrowserActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater myMenuInflater = getMenuInflater();
         myMenuInflater.inflate(R.menu.browser, menu);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        String links = sharedPreferences.getString(WEB_LINKS, null);
+
+        if (links != null) {
+
+            Gson gson = new Gson();
+            ArrayList<String> linkList = gson.fromJson(links, new TypeToken<ArrayList<String>>() {
+            }.getType());
+
+            if (linkList.contains(superWebView.getUrl())) {
+                menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
+            } else {
+                menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+            }
+        } else {
+            menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -134,18 +167,82 @@ public class BrowserActivity extends AppCompatActivity {
                 GoForward();
                 break;
 
+            case R.id.bookmarks:
+                startActivity(new Intent(BrowserActivity.this, BookmarkActivity.class));
+                break;
+
             case R.id.menuReload:
                 superWebView.reload();
 
             case R.id.menuBookmark:
-                Snackbar snackbar = Snackbar
-                        .make(findViewById(R.id.llBrowser), "Bookmark Successfully", Snackbar.LENGTH_SHORT);
-                snackbar.show();
+                current_page_url = superWebView.getUrl();
+               toChangeData();
 
                 break;
 
         }
         return true;
+    }
+
+    private void toChangeData() {
+        try {
+            String message;
+
+            SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+            String jsonLink = sharedPreferences.getString(WEB_LINKS, null);
+            String jsonTitle = sharedPreferences.getString(WEB_TITLE, null);
+
+
+            if (jsonLink != null && jsonTitle != null) {
+
+                Gson gson = new Gson();
+                ArrayList<String> linkList = gson.fromJson(jsonLink, new TypeToken<ArrayList<String>>() {
+                }.getType());
+
+                ArrayList<String> titleList = gson.fromJson(jsonTitle, new TypeToken<ArrayList<String>>() {
+                }.getType());
+
+                if (linkList.contains(current_page_url)) {
+                    linkList.remove(current_page_url);
+                    titleList.remove(superWebView.getTitle().trim());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(WEB_LINKS, new Gson().toJson(linkList));
+                    editor.putString(WEB_TITLE, new Gson().toJson(titleList));
+                    editor.apply();
+
+
+                    message = "Bookmark Removed";
+
+                } else {
+                    linkList.add(current_page_url);
+                    titleList.add(superWebView.getTitle().trim());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(WEB_LINKS, new Gson().toJson(linkList));
+                    editor.putString(WEB_TITLE, new Gson().toJson(titleList));
+                    editor.apply();
+
+                    message = "Bookmarked";
+                }
+            } else {
+
+                ArrayList<String> linkList = new ArrayList<>();
+                ArrayList<String> titleList = new ArrayList<>();
+                linkList.add(current_page_url);
+                titleList.add(superWebView.getTitle());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(WEB_LINKS, new Gson().toJson(linkList));
+                editor.putString(WEB_TITLE, new Gson().toJson(titleList));
+                editor.apply();
+
+                message = "Bookmarked";
+            }
+
+            Snackbar snackbar = Snackbar.make(linearLayout, message, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        } catch (Exception| Error e){
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     private void GoForward() {
