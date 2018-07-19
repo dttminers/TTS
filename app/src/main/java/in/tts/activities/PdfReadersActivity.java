@@ -34,6 +34,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import in.tts.R;
 import in.tts.adapters.PdfPagesAdapter;
@@ -49,7 +50,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
-    private LinearLayout speakLayout;
+    private LinearLayout speakLayout, llCustom_loader;
     private Button reload, forward, playPause, backward, close;
 
     private ParcelFileDescriptor fileDescriptor;
@@ -61,8 +62,16 @@ public class PdfReadersActivity extends AppCompatActivity {
     private TextToSpeech tts;
     private boolean mProcessed = false;
     private int mStatus = 0;
+    private double startTime = 0;
+    private double finalTime = 0;
+
+    private int forwardTime = 5000;
+    private int backwardTime = 5000;
 
     private final String FILENAME = "/wpta_tts.wav";
+
+
+    public static int oneTimeOnly = 0;
 
 //    private ProgressDialog mProgressDialog;
 
@@ -86,6 +95,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                         }
 
                         rv = findViewById(R.id.rvPDFReader);
+                        llCustom_loader = findViewById(R.id.llCustom_loader);
 
                         speakLayout = findViewById(R.id.llPDFReader);
                         reload = findViewById(R.id.reload);
@@ -95,6 +105,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                         close = findViewById(R.id.close);
 
                         mMediaPlayer = new MediaPlayer();
+
 
                         tts = new TextToSpeech(PdfReadersActivity.this, new TextToSpeech.OnInitListener() {
                             @Override
@@ -139,12 +150,52 @@ public class PdfReadersActivity extends AppCompatActivity {
                             rv.setItemAnimator(new DefaultItemAnimator());
                             pdfPagesAdapter = new PdfPagesAdapter(PdfReadersActivity.this, list);
                             rv.setAdapter(pdfPagesAdapter);
+                            llCustom_loader.setVisibility(View.GONE);
                             CommonMethod.toCloseLoader();
                         } else {
                             CommonMethod.toCloseLoader();
                             CommonMethod.toDisplayToast(PdfReadersActivity.this, "Can't Open Pdf File");
                             finish();
                         }
+
+                        playPause.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(getApplicationContext(), "Pausing sound",Toast.LENGTH_SHORT).show();
+                                mMediaPlayer.pause();
+                                speakLayout.setVisibility(View.GONE);
+                            }
+                        });
+
+                        forward.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                int temp = (int)startTime;
+                                if((temp+forwardTime)<=finalTime){
+                                    startTime = startTime + forwardTime;
+                                    mMediaPlayer.seekTo((int) startTime);
+                                    Toast.makeText(getApplicationContext(),"You have Jumped forward 5 seconds",Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Cannot jump forward 5 seconds",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        backward.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                int temp = (int)startTime;
+
+                                if((temp-backwardTime)>0){
+                                    startTime = startTime - backwardTime;
+                                    mMediaPlayer.seekTo((int) startTime);
+                                    Toast.makeText(getApplicationContext(),"You have Jumped backward 5 seconds",Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Cannot jump backward 5 seconds",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
                         CommonMethod.toCloseLoader();
                     } else {
                         CommonMethod.toCloseLoader();
@@ -171,7 +222,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void setTts(TextToSpeech tts) {
         try {
-            if (Build.VERSION.SDK_INT >= 15) {
+//            if (Build.VERSION.SDK_INT >= 17) {
                 tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
 
@@ -200,24 +251,24 @@ public class PdfReadersActivity extends AppCompatActivity {
                     }
 
                 });
-            } else {
-                tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
-                    @Override
-
-
-                    public void onUtteranceCompleted(String utteranceId) {
-// Speech file is created
-                        mProcessed = true;
-
-// Initializes Media Player
-                        initializeMediaPlayer();
-
-// Start Playing Speech
-                        playMediaPlayer(0);
-                    }
-
-                });
-            }
+//            } else {
+//                tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+//                    @Override
+//
+//
+//                    public void onUtteranceCompleted(String utteranceId) {
+//// Speech file is created
+//                        mProcessed = true;
+//
+//// Initializes Media Player
+//                        initializeMediaPlayer();
+//
+//// Start Playing Speech
+//                        playMediaPlayer(0);
+//                    }
+//
+//                });
+//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -227,6 +278,7 @@ public class PdfReadersActivity extends AppCompatActivity {
     private void initializeMediaPlayer() {
         String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + FILENAME;
         Uri uri = Uri.parse("file://" + fileName);
+        Log.d("TAG", " PATH audio : " + fileName);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mMediaPlayer.setDataSource(getApplicationContext(), uri);
@@ -277,7 +329,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void toGetData(Bitmap bitmap) {
         try {
-            stringBuilder.append("next page...");
+//            stringBuilder.append("next page...");
             TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
             Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
 
@@ -312,6 +364,32 @@ public class PdfReadersActivity extends AppCompatActivity {
 
                 return;
             }
+
+            Toast.makeText(getApplicationContext(), "Playing sound",Toast.LENGTH_SHORT).show();
+            mMediaPlayer.start();
+
+            finalTime = mMediaPlayer.getDuration();
+            startTime = mMediaPlayer.getCurrentPosition();
+
+            if (oneTimeOnly == 0) {
+//                seekbar.setMax((int) finalTime);
+                oneTimeOnly = 1;
+            }
+
+            Log.d("TAG", " Start Time : "+ String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                    finalTime)))
+            );
+
+            Log.d("TAG", " End Time : "+ String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                    startTime)))
+            );
+
 
 //            mProgressDialog.show();
 
