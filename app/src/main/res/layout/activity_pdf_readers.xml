@@ -8,53 +8,60 @@
     tools:context=".activities.PdfReadersActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_weight="1"
+        android:id="@+id/rvPDFReader"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <LinearLayout android:background="@color/ttsRed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/llPDFReader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ttsRed"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/str_logo_image"
-                android:src="@drawable/rewind" />
+        <Button
+            android:id="@+id/reload"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/reload" />
 
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/str_logo_image"
-                android:src="@drawable/bckwd" />
+        <Button
+            android:id="@+id/backward"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="45dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/backward" />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/str_logo_image"
-                android:src="@drawable/play" />
+        <Button
+            android:id="@+id/playPause"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:background="@drawable/pause" />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/str_logo_image"
-                android:src="@drawable/forwad" />
+        <Button
+            android:id="@+id/forward"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/forward" />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/str_logo_image"
-                android:src="@drawable/close" />
+        <Button
+            android:id="@+id/close"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/close" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

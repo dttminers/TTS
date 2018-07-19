@@ -26,7 +26,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -45,11 +47,14 @@ public class MyBooksListFragment extends Fragment {
     private ArrayList<String> file;
     private PdfListAdapter pdfListAdapter;
     private PrefManager prefManager;
-    ProgressBar mProgress;
+    //    ProgressBar mProgress;
+    RecyclerView recyclerView;
+    //    RelativeLayout rl;
+    LinearLayout rl;
 
     int pStatus = 0;
     private Handler handler = new Handler();
-    TextView tv;
+//    TextView tv;
 
     private OnFragmentInteractionListener mListener;
 
@@ -86,6 +91,12 @@ public class MyBooksListFragment extends Fragment {
         try {
             prefManager = new PrefManager(getContext());
             file = new ArrayList<>();
+
+//            tv = (TextView) getActivity().findViewById(R.id.tv);
+//            mProgress = (ProgressBar) getActivity().findViewById(R.id.circularProgressbar);
+            recyclerView = getActivity().findViewById(R.id.rvList);
+            rl = getActivity().findViewById(R.id.llCustom_loader);
+
             fn_permission();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -106,65 +117,36 @@ public class MyBooksListFragment extends Fragment {
         }
     }
 
-
     public void toGetData() {
         try {
 
-            //CommonMethod.toCloseLoader();
-//            CommonMethod.toCallLoader(getContext(),"Getting files");
-            tv = (TextView) getActivity().findViewById(R.id.tv);
             Resources res = getResources();
             Drawable drawable = res.getDrawable(R.drawable.circular_progress_bar);
-            mProgress = (ProgressBar) getActivity().findViewById(R.id.circularProgressbar);
-            mProgress.setProgress(0);   // Main Progress
-            mProgress.setSecondaryProgress(100); // Secondary Progress
-            mProgress.setMax(100); // Maximum Progress
-            mProgress.setProgressDrawable(drawable);
+
+//            mProgress.setProgress(0);   // Main Progress
+//            mProgress.setSecondaryProgress(100); // Secondary Progress
+//            mProgress.setMax(100); // Maximum Progress
+//            mProgress.setProgressDrawable(drawable);
             if (getActivity() != null) {
-//                file = new ArrayList<>();
 
                 if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
                     file = prefManager.toGetPDFList();
-//                } else {
-//                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 }
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
 
 
-                RecyclerView recyclerView = getActivity().findViewById(R.id.rvList);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                //CommonMethod.toCloseLoader();
-                new Thread(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        while (pStatus < 100) {
-                            pStatus += 1;
-
-                            handler.post(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                                    mProgress.setProgress(pStatus);
-                                    tv.setText(pStatus + "%");
-                                }
-                            });
-                            try {
-                                // Sleep for 200 milliseconds.
-                                // Just to display the progress slowly
-                                Thread.sleep(16); //thread will take approx 3 seconds to finish
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }).start();
                 recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
+                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+
+
+//                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                rl.setVisibility(View.GONE);
+                pdfListAdapter.notifyItemChanged(file.size(), file);
             }
             //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
@@ -176,44 +158,76 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-            //CommonMethod.toCloseLoader();
-//            CommonMethod.toCallLoader(getContext(),"Getting files.....");
-            File listFile[] = dir.listFiles();
-            if (listFile != null && listFile.length > 0) {
-                for (int i = 0; i < listFile.length; i++) {
-                    if (listFile[i].isDirectory()) {
-                        getFile(listFile[i]);
-                    } else {
-                        boolean booleanpdf = false;
-                        if (listFile[i].getName().endsWith(".pdf")) {
-                            for (int j = 0; j < file.size(); j++) {
-//                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                if (file.get(j).equals(listFile[i].getPath())) {
-                                    booleanpdf = true;
-                                } else {
-                                }
-                            }
-                            if (booleanpdf) {
-                                booleanpdf = false;
+//            new Thread(new Runnable() {
+//
+//                @Override
+//                public void run() {
+//                    // TODO Auto-generated method stub
+//                    while (pStatus < 100) {
+//                        pStatus += 1;
+//
+//                        handler.post(new Runnable() {
+//
+//                            @Override
+//                            public void run() {
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("TAG", " FILE ::: " + dir);
+                    File listFile[] = dir.listFiles();
+                    if (listFile != null && listFile.length > 0) {
+                        for (int i = 0; i < listFile.length; i++) {
+                            if (listFile[i].isDirectory()) {
+                                getFile(listFile[i]);
                             } else {
-                                if (!prefManager.toGetPDFList().contains(listFile[i].getPath().trim())) {
-                                    file.add(listFile[i].getPath());
-                                    pdfListAdapter.notifyItemChanged(file.size(), file);
+                                boolean booleanpdf = false;
+                                if (listFile[i].getName().endsWith(".pdf")) {
+                                    for (int j = 0; j < file.size(); j++) {
+//                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
+                                        if (file.get(j).equals(listFile[i].getPath())) {
+                                            booleanpdf = true;
+                                        } else {
+                                        }
+                                    }
+                                    if (booleanpdf) {
+                                        booleanpdf = false;
+                                    } else {
+                                        if (!prefManager.toGetPDFList().contains(listFile[i].getPath().trim())) {
+                                            file.add(listFile[i].getPath());
+//                                            prefManager.toSetPDFFileList(file);
+                                        }
+                                    }
                                 }
                             }
+
+
                         }
                     }
+                    Log.d("TAG", " pdf count " + file.size());
 
+//                                mProgress.setProgress(pStatus);
+//                                tv.setText(pStatus + "%");
 
                 }
-            }
-            //CommonMethod.toCloseLoader();
-            Log.d("TAG", " pdf count " + file.size());
-            prefManager.toSetPDFFileList(file);
+
+
+            });
+//                        Log.d("TAG", " END");
+//                        try {
+//                            // Sleep for 200 milliseconds.
+//                            // Just to display the progress slowly
+//                            Thread.sleep(16); //thread will take approx 3 seconds to finish
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }).start();
+
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
-            //CommonMethod.toCloseLoader();
         }
     }
 

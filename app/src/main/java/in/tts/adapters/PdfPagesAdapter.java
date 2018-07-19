@@ -4,27 +4,24 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.activities.PdfReadersActivity;
 import in.tts.utils.TouchImageView;
 
-public class PdfPages extends RecyclerView.Adapter<PdfPages.ViewHolder> {
+public class PdfPagesAdapter extends RecyclerView.Adapter<PdfPagesAdapter.ViewHolder> {
 
     private ArrayList<Bitmap> pages;
     private Context context;
 
-    public PdfPages(Context ctx, ArrayList<Bitmap> list) {
+    public PdfPagesAdapter(Context ctx, ArrayList<Bitmap> list) {
         context = ctx;
         pages = list;
     }

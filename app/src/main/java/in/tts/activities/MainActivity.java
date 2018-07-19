@@ -1,6 +1,7 @@
 package in.tts.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import in.tts.classes.ToSetMore;
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.R;
@@ -124,48 +126,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            switch (item.getItemId()) {
-                case R.id.actionCamera:
-                    startActivity(new Intent(MainActivity.this, CameraOcrActivity.class));
-                    break;
-
-                case R.id.actionSearch:
-                    break;
-
-                case R.id.settings:
-                    startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                    break;
-
-                case R.id.audio_settings:
-                    startActivity(new Intent(MainActivity.this, AudioSettingActivity.class));
-                    break;
-
-                case R.id.recent_audios:
-                    startActivity(new Intent(MainActivity.this, RecentVoiceActivity.class));
-                    break;
-
-                case R.id.our_other_apps:
-                    startActivity(new Intent(MainActivity.this, OurOtherAppActivity.class));
-                    break;
-
-                case R.id.help:
-                    startActivity(new Intent(MainActivity.this, HelpActivity.class));
-                    break;
-
-                case android.R.id.home:
-                    onBackPressed();
-                    break;
-
-                default:
-                    break;
-            }
-//            CommonMethod.toCloseLoader();
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-            CommonMethod.toCloseLoader();
-        }
+        ToSetMore.MenuOptions(MainActivity.this, item);
         return super.onOptionsItemSelected(item);
     }
 

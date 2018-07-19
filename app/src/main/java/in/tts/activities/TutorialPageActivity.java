@@ -83,6 +83,8 @@ public class TutorialPageActivity extends AppCompatActivity {
         try {
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            } else {
+                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -93,6 +95,31 @@ public class TutorialPageActivity extends AppCompatActivity {
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+        }
+    }
+
+    private void toLoadData() {
+        if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            try {
+                PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
+//            prefManager.toSetPDFFileList(
+                if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
+                    if (!ToGetPdfFiles.isRunning()) {
+                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
+                    }
+                }
+//            );
+//            prefManager.toSetImageFileList(
+                if (prefManager.toGetImageList() == null && prefManager.toGetImageList().size() == 0) {
+                    if (!ToGetImages.isRunning()) {
+                        ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
+                    }
+                }
+//            );
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                Crashlytics.logException(e);
+            }
         }
     }
 

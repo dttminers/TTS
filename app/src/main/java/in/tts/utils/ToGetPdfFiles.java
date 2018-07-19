@@ -15,12 +15,14 @@ import in.tts.model.PrefManager;
 public class ToGetPdfFiles {
 
     static ArrayList<String> fileList = new ArrayList<>();
+    static boolean status = false;
 
     @AddTrace(name = "onGetPDF", enabled = true)
     public static void getFile(final File dir, final Context context) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                status = true;
                 File listFile[] = dir.listFiles();
                 if (listFile != null && listFile.length > 0) {
                     for (int i = 0; i < listFile.length; i++) {
@@ -54,5 +56,11 @@ public class ToGetPdfFiles {
                 }
             }
         });
+        status = false;
+    }
+
+    public static boolean isRunning() {
+        Log.d("TAG", "DATA PDF isRunning : " + status);
+        return status;
     }
 }

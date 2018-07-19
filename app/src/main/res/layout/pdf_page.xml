@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/light">
 
+    <!--<in.tts.services.TouchImageView-->
     <in.tts.utils.TouchImageView
         android:id="@+id/pages"
         android:layout_width="match_parent"

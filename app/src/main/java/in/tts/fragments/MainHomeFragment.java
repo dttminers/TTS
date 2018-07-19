@@ -174,7 +174,7 @@ public class MainHomeFragment extends Fragment {
     public void toSetSomeData() {
         try {
 //            CommonMethod.toCloseLoader();
-            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
+//            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
             if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 pdfFile = new ArrayList<>();
