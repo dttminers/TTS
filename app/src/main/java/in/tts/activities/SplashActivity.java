@@ -1,17 +1,26 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.perf.metrics.AddTrace;
+
+import java.io.File;
 
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetImages;
+import in.tts.utils.ToGetPdfFiles;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -41,6 +50,24 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, 3000);
+        if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                try {
+                    PrefManager prefManager = new PrefManager(SplashActivity.this);
+//            prefManager.toSetPDFFileList(
+                    if (prefManager.toGetPDFList()== null && prefManager.toGetPDFList().size() == 0) {
+                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
+                    }
+//            );
+//            prefManager.toSetImageFileList(
+                    if (prefManager.toGetImageList()== null && prefManager.toGetImageList().size() == 0) {
+                        ToGetImages.getAllShownImagesPath(SplashActivity.this, SplashActivity.this);
+                    }
+//            );
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                }
+            }
         CommonMethod.isSignedIn(SplashActivity.this);
     }
 

@@ -61,11 +61,11 @@ public class CommonMethod {
 
     public static void toCallLoader(Context context, String msg) {
         try {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
+//            if (dialog != null && dialog.isShowing()) {
+//                dialog.dismiss();
 //            } else {
 //                toCloseLoader();
-            }
+//            }
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

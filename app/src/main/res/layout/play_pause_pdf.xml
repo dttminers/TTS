@@ -17,7 +17,7 @@
             android:layout_margin="5dp"
             android:contentDescription="@string/str_logo_image"
             android:layout_gravity="center"
-            android:src="@drawable/rewind"/>
+            android:src="@drawable/reload"/>
 
         <ImageView
             android:layout_width="45dp"
@@ -25,15 +25,16 @@
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:contentDescription="@string/str_logo_image"
-            android:src="@drawable/bckwd"/>
+            android:src="@drawable/backward"/>
 
         <ImageView
+
             android:layout_width="50dp"
             android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:contentDescription="@string/str_logo_image"
-            android:src="@drawable/play"/>
+            android:src="@drawable/pause"/>
 
         <ImageView
             android:layout_width="50dp"
@@ -41,7 +42,7 @@
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:contentDescription="@string/str_logo_image"
-            android:src="@drawable/forwad"/>
+            android:src="@drawable/forward"/>
 
         <ImageView
             android:layout_width="50dp"

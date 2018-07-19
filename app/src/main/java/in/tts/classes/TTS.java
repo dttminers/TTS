@@ -34,7 +34,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                                 Log.e("TTS", "This Language is not supported");
                             }
                         } else {
-                            Log.e("TTS", "Initilization Failed!");
+                            Log.e("TTS", "Initialization Failed!");
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();

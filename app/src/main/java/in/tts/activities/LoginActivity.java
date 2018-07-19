@@ -77,12 +77,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private void toLoadData() {
         try {
-//            PrefManager prefManager = new PrefManager(LoginActivity.this);
+            PrefManager prefManager = new PrefManager(LoginActivity.this);
 //            prefManager.toSetPDFFileList(
+            ToGetImages.isRunning();
+            ToGetPdfFiles.isRunning();
+            if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
+                if (!ToGetPdfFiles.isRunning()) {
                     ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
+                }
+            }
 //            );
 //            prefManager.toSetImageFileList(
+            if (prefManager.toGetImageList() == null && prefManager.toGetImageList().size() == 0) {
+                if (!ToGetImages.isRunning()) {
                     ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
+                }
+            }
 //            );
         } catch (Exception | Error e) {
             e.printStackTrace();

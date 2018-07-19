@@ -14,11 +14,13 @@ import in.tts.model.PrefManager;
 public class ToGetImages {
 
     static ArrayList<String> imageFile = new ArrayList<>();
+    static boolean status;
 
     public static void getAllShownImagesPath(final Activity activity, final Context context) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                status = true;
                 // Find the last picture
                 String[] projection = new String[]{
                         MediaStore.Images.ImageColumns._ID,
@@ -50,5 +52,11 @@ public class ToGetImages {
             }
         });
 //        return imageFile;
+        status = false;
+    }
+
+    public static boolean isRunning(){
+        Log.d("TAG", "Data image isRunning : " + status);
+        return status;
     }
 }

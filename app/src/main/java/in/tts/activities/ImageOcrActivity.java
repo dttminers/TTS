@@ -1,7 +1,6 @@
 package in.tts.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,6 +26,7 @@ import com.google.android.gms.vision.text.TextRecognizer;
 
 import in.tts.*;
 import in.tts.classes.TTS;
+import in.tts.classes.ToSetMore;
 import in.tts.utils.CommonMethod;
 
 public class ImageOcrActivity extends AppCompatActivity {
@@ -177,46 +177,7 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            switch (item.getItemId()) {
-                case R.id.actionCamera:
-                    startActivity(new Intent(ImageOcrActivity.this, CameraOcrActivity.class));
-                    break;
-
-                case R.id.actionSearch:
-                    break;
-
-                case R.id.settings:
-                    startActivity(new Intent(ImageOcrActivity.this, SettingActivity.class));
-                    break;
-
-                case R.id.audio_settings:
-                    startActivity(new Intent(ImageOcrActivity.this, AudioSettingActivity.class));
-                    break;
-
-                case R.id.recent_audios:
-                    startActivity(new Intent(ImageOcrActivity.this, RecentVoiceActivity.class));
-                    break;
-
-                case R.id.our_other_apps:
-                    startActivity(new Intent(ImageOcrActivity.this, OurOtherAppActivity.class));
-                    break;
-
-                case R.id.help:
-                    startActivity(new Intent(ImageOcrActivity.this, HelpActivity.class));
-                    break;
-
-                case android.R.id.home:
-                    onBackPressed();
-                    break;
-
-                default:
-                    break;
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
+        ToSetMore.MenuOptions(ImageOcrActivity.this, item);
         return super.onOptionsItemSelected(item);
     }
 
@@ -224,7 +185,6 @@ public class ImageOcrActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
-
 
     @Override
     protected void onPause() {

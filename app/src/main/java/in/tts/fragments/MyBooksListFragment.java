@@ -100,16 +100,10 @@ public class MyBooksListFragment extends Fragment {
         try {
             if (getActivity() != null) {
                 CommonMethod.toCallLoader(getContext(), "Loading");
-//                file = new ArrayList<>();
-
                 if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
                     file = prefManager.toGetPDFList();
-//                } else {
-//                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 }
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
-                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-
 
                 RecyclerView recyclerView = getActivity().findViewById(R.id.rvList);
                 recyclerView.setHasFixedSize(true);
@@ -118,6 +112,8 @@ public class MyBooksListFragment extends Fragment {
                 pdfListAdapter.notifyDataSetChanged();
 
                 CommonMethod.toCloseLoader();
+                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
