@@ -1,11 +1,29 @@
 package in.tts.model;
 
-public class AudioSetting {
+import android.content.Context;
 
+public class AudioSetting {
+    private static transient AudioSetting audioSetting;
+    private final Context context;
     private String VoiceSelection;
     private String LangSelection;
     private String AccentSelection;
-    private float VoiceSpeed;
+    private int VoiceSpeed;
+
+    public AudioSetting(Context context){
+        this.context = context;
+    }
+
+    public static AudioSetting getAudioSetting(Context context) {
+        if (audioSetting == null) {
+            audioSetting = new AudioSetting(context);
+        }
+        return audioSetting;
+    }
+
+    public void setAudioSetting(AudioSetting audioSetting) {
+        audioSetting = audioSetting;
+    }
 
 
     public String getVoiceSelection() {
@@ -37,7 +55,7 @@ public class AudioSetting {
         return VoiceSpeed;
     }
 
-    public void setVoiceSpeed(float voiceSpeed) {
+    public void setVoiceSpeed(int voiceSpeed) {
         VoiceSpeed = voiceSpeed;
     }
 }

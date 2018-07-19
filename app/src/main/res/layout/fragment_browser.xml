@@ -43,8 +43,9 @@
             android:layout_height="30dp"
             android:text="search"
             android:layout_margin="5dp"
-            android:textColor="@color/white"
-            android:background="@color/ttsRed"
+            android:textColor="@color/ttsRed"
+            android:textSize="15sp"
+            android:background="@drawable/rounded_corner_button"
             android:layout_gravity="center"/>
 
     <TextView
