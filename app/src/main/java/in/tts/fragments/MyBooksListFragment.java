@@ -104,8 +104,8 @@ public class MyBooksListFragment extends Fragment {
 
                 if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
                     file = prefManager.toGetPDFList();
-                } else {
-                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//                } else {
+//                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 }
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
                 getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
