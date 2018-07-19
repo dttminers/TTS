@@ -73,10 +73,12 @@ public class MainHomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonMethod.toCloseLoader();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        CommonMethod.toCloseLoader();
         return inflater.inflate(R.layout.fragment_main_home, container, false);
     }
 
@@ -84,6 +86,7 @@ public class MainHomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
+            CommonMethod.toCloseLoader();
             toBindViews();
             fn_permission();
             toBindTopBanners();
@@ -153,6 +156,7 @@ public class MainHomeFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         try {
+            CommonMethod.toCloseLoader();
             if (requestCode == 1) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     toSetSomeData();
@@ -163,12 +167,13 @@ public class MainHomeFragment extends Fragment {
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
     public void toSetSomeData() {
         try {
-            CommonMethod.toCallLoader(getContext(), "Loading....");
+//            CommonMethod.toCloseLoader();
             Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
             if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
@@ -233,6 +238,7 @@ public class MainHomeFragment extends Fragment {
                     }
                 }
             }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -242,6 +248,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toBindRecentPdf() {
         try {
+//            CommonMethod.toCloseLoader();
             if (view != null) {
                 ll.removeView(view);
             }
@@ -291,6 +298,7 @@ public class MainHomeFragment extends Fragment {
 
     public void getAllShownImagesPath() {
         try {
+//            CommonMethod.toCloseLoader();
             String[] projection = new String[]{
                     MediaStore.Images.ImageColumns._ID,
                     MediaStore.Images.ImageColumns.DATA,
@@ -324,6 +332,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toBindRecentImages() {
         try {
+//            CommonMethod.toCloseLoader();
             if (view1 != null) {
                 ll.removeView(view1);
             }
@@ -364,6 +373,7 @@ public class MainHomeFragment extends Fragment {
                     }
                 }
             }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

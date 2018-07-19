@@ -221,7 +221,6 @@ public class LoginFragment extends Fragment {
                         CommonMethod.toCallLoader(getContext(), "Loading....");
                         getContext().startActivity(new Intent(getContext(), MainActivity.class));
                         getActivity().finish();
-//                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         CommonMethod.toCloseLoader();

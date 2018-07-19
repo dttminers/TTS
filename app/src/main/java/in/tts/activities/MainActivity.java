@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            CommonMethod.toCloseLoader();
             setContentView(R.layout.activity_main);
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
             toSetTitle(getResources().getString(R.string.app_name));
@@ -55,7 +54,9 @@ public class MainActivity extends AppCompatActivity implements
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
+                    CommonMethod.toCallLoader(MainActivity.this, "Please wait23000");
                     setCurrentViewPagerItem(tab.getPosition());
+                    CommonMethod.toCloseLoader();
                     CommonMethod.setAnalyticsData(MainActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
                 }
 
@@ -67,13 +68,12 @@ public class MainActivity extends AppCompatActivity implements
                 public void onTabReselected(TabLayout.Tab tab) {
                 }
             });
-
             fn_permission();
-
             setCurrentViewPagerItem(2);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
@@ -88,12 +88,13 @@ public class MainActivity extends AppCompatActivity implements
             if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
             }
+//            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
@@ -158,9 +160,11 @@ public class MainActivity extends AppCompatActivity implements
                 default:
                     break;
             }
+//            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -185,19 +189,25 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
     public void replacePage(Fragment fragment) {
         try {
+            CommonMethod.toCloseLoader();
+            CommonMethod.toCallLoader(this, "Please wait000");
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, fragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commitAllowingStateLoss();
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
@@ -209,46 +219,59 @@ public class MainActivity extends AppCompatActivity implements
             } else {
                 doExit();
             }
+//            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
     public void setCurrentViewPagerItem(int i) {
         try {
+
             tabLayout.getTabAt(i).select();
+//            CommonMethod.toCloseLoader();
             switch (i) {
                 case 0:
                     toSetTitle(getString(R.string.str_title_browse_it));
                     replacePage(new BrowserFragment());
+                    CommonMethod.toCloseLoader();
                     break;
                 case 1:
                     toSetTitle(getString(R.string.str_title_docs));
                     replacePage(new PdfFragment());
+                    CommonMethod.toCloseLoader();
                     break;
                 case 2:
+                    CommonMethod.toCloseLoader();
                     toSetTitle(getString(R.string.app_name));
                     replacePage(new MainHomeFragment());
                     break;
                 case 3:
                     toSetTitle(getString(R.string.str_title_make_your_own_read));
                     replacePage(new MakeYourOwnReadFragment());
+                    CommonMethod.toCloseLoader();
                     break;
                 case 4:
                     toSetTitle(getString(R.string.str_title_images));
                     replacePage(new GalleryFragment());
+                    CommonMethod.toCloseLoader();
                     break;
                 default:
+                    CommonMethod.toCloseLoader();
                     toSetTitle(getString(R.string.app_name));
                     tabLayout.getTabAt(2).select();
                     replacePage(new MainHomeFragment());
                     break;
             }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
+        CommonMethod.toCloseLoader();
     }
 
     private void doExit() {
@@ -267,9 +290,9 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
-
 
     @Override
     protected void onPause() {
@@ -281,18 +304,21 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         CommonMethod.toReleaseMemory();
+        CommonMethod.toCloseLoader();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         CommonMethod.toReleaseMemory();
+        CommonMethod.toCloseLoader();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         CommonMethod.toReleaseMemory();
+        CommonMethod.toCloseLoader();
     }
 
     @Override

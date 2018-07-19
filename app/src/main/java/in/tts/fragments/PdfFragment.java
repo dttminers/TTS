@@ -117,11 +117,13 @@ public class PdfFragment extends Fragment {
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
                 }
+
             });
 
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
+            CommonMethod.toCloseLoader();
         }
     }
 

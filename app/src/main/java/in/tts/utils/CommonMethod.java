@@ -32,6 +32,7 @@ import in.tts.R;
 
 public class CommonMethod {
     private static AlertDialog dialog;
+    private static TextView tvMsg;
 
     public static int dpToPx(int dp, Activity activity) {
         DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
@@ -61,11 +62,12 @@ public class CommonMethod {
 
     public static void toCallLoader(Context context, String msg) {
         try {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
+            Log.d("TAG", " LOADER stxt : " + msg);
+//            if (dialog != null && dialog.isShowing()) {
+//                dialog.dismiss();
 //            } else {
 //                toCloseLoader();
-            }
+//            }
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -80,7 +82,7 @@ public class CommonMethod {
                 dialog.setCancelable(false);
                 dialog.show();
 
-                TextView tvMsg = view.findViewById(R.id.txtLoaderMsg);
+                tvMsg = view.findViewById(R.id.txtLoaderMsg);
                 tvMsg.setText(msg);
             }
         } catch (Exception | Error e) {
@@ -92,9 +94,10 @@ public class CommonMethod {
     public static void toCloseLoader() {
         try {
             if (dialog != null && dialog.isShowing()) {
+                if(tvMsg != null) {
+                    Log.d("TAG", " LOADER ctxt : " + tvMsg.getText().toString());
+                }
                 dialog.dismiss();
-//            } else {
-//                toCloseLoader();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

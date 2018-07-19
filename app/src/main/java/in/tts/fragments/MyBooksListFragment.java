@@ -4,11 +4,14 @@ import android.Manifest;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -23,6 +26,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -40,6 +45,11 @@ public class MyBooksListFragment extends Fragment {
     private ArrayList<String> file;
     private PdfListAdapter pdfListAdapter;
     private PrefManager prefManager;
+    ProgressBar mProgress;
+
+    int pStatus = 0;
+    private Handler handler = new Handler();
+    TextView tv;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,6 +70,7 @@ public class MyBooksListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //CommonMethod.toCloseLoader();
         return inflater.inflate(R.layout.fragment_my_books_list, container, false);
     }
 
@@ -98,8 +109,18 @@ public class MyBooksListFragment extends Fragment {
 
     public void toGetData() {
         try {
+
+            //CommonMethod.toCloseLoader();
+//            CommonMethod.toCallLoader(getContext(),"Getting files");
+            tv = (TextView) getActivity().findViewById(R.id.tv);
+            Resources res = getResources();
+            Drawable drawable = res.getDrawable(R.drawable.circular_progress_bar);
+            mProgress = (ProgressBar) getActivity().findViewById(R.id.circularProgressbar);
+            mProgress.setProgress(0);   // Main Progress
+            mProgress.setSecondaryProgress(100); // Secondary Progress
+            mProgress.setMax(100); // Maximum Progress
+            mProgress.setProgressDrawable(drawable);
             if (getActivity() != null) {
-                CommonMethod.toCallLoader(getContext(), "Loading");
 //                file = new ArrayList<>();
 
                 if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
@@ -108,27 +129,55 @@ public class MyBooksListFragment extends Fragment {
 //                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 }
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
-                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 
 
                 RecyclerView recyclerView = getActivity().findViewById(R.id.rvList);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                //CommonMethod.toCloseLoader();
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        while (pStatus < 100) {
+                            pStatus += 1;
+
+                            handler.post(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                                    mProgress.setProgress(pStatus);
+                                    tv.setText(pStatus + "%");
+                                }
+                            });
+                            try {
+                                // Sleep for 200 milliseconds.
+                                // Just to display the progress slowly
+                                Thread.sleep(16); //thread will take approx 3 seconds to finish
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).start();
                 recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
-
-                CommonMethod.toCloseLoader();
             }
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
         }
     }
 
     public void getFile(final File dir) {
         try {
+            //CommonMethod.toCloseLoader();
+//            CommonMethod.toCallLoader(getContext(),"Getting files.....");
             File listFile[] = dir.listFiles();
             if (listFile != null && listFile.length > 0) {
                 for (int i = 0; i < listFile.length; i++) {
@@ -154,15 +203,17 @@ public class MyBooksListFragment extends Fragment {
                             }
                         }
                     }
+
+
                 }
             }
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
             Log.d("TAG", " pdf count " + file.size());
             prefManager.toSetPDFFileList(file);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
-            CommonMethod.toCloseLoader();
+            //CommonMethod.toCloseLoader();
         }
     }
 

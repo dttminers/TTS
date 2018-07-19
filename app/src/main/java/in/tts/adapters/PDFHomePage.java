@@ -70,44 +70,47 @@ public class PDFHomePage extends PagerAdapter {
 
             Log.d("TAG", " FILE " + list.get(position));
             file = new File(list.get(position).trim());
-            fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+            if (file.exists()) {
+                fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
 
-            pdfRenderer = new PdfRenderer(fileDescriptor);
 
-            // Make sure to close the current page before opening another one.
-            if (null != currentPage) {
-                currentPage.close();
-            }
-            //open a specific page in PDF file
-            currentPage = pdfRenderer.openPage(0);
-            // Important: the destination bitmap must be ARGB (not RGB).
+                pdfRenderer = new PdfRenderer(fileDescriptor);
+
+                // Make sure to close the current page before opening another one.
+                if (null != currentPage) {
+                    currentPage.close();
+                }
+                //open a specific page in PDF file
+                currentPage = pdfRenderer.openPage(0);
+                // Important: the destination bitmap must be ARGB (not RGB).
 //            Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
-            Bitmap bitmap = Bitmap.createBitmap(250, 300, Bitmap.Config.ARGB_8888);
-            // Here, we render the page onto the Bitmap.
-            currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-            iv.setImageBitmap(bitmap);
+                Bitmap bitmap = Bitmap.createBitmap(250, 300, Bitmap.Config.ARGB_8888);
+                // Here, we render the page onto the Bitmap.
+                currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                iv.setImageBitmap(bitmap);
 
-            cv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        Log.d("TAG", " TAGit : " + position);
-                        CommonMethod.toCallLoader(context, "Loading...");
-                        Intent intent = new Intent(context, PdfReadersActivity.class);
+                cv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            Log.d("TAG", " TAGit : " + position);
+                            CommonMethod.toCallLoader(context, "Loading...");
+                            Intent intent = new Intent(context, PdfReadersActivity.class);
 //                        intent.putExtra("position", position);
 //                        intent.putExtra("name", file.getName());
-                        intent.putExtra("file", list.get(position));
-                        context.startActivity(intent);
-                        CommonMethod.toReleaseMemory();
-                        CommonMethod.toCloseLoader();
-                    } catch (Exception | Error e) {
-                        e.printStackTrace();
-                        Crashlytics.logException(e);
+                            intent.putExtra("file", list.get(position));
+                            context.startActivity(intent);
+                            CommonMethod.toReleaseMemory();
+                            CommonMethod.toCloseLoader();
+                        } catch (Exception | Error e) {
+                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                        }
                     }
-                }
-            });
+                });
 
-            container.addView(vg);
+                container.addView(vg);
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
         }

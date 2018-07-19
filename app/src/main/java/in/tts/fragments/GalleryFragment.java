@@ -50,6 +50,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CommonMethod.toCloseLoader();
     }
 
     @Override

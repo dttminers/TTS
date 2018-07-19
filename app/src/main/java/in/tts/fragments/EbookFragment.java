@@ -29,6 +29,7 @@ public class EbookFragment extends Fragment {
     @AddTrace(name = "onCreateEbookFragment", enabled = true)
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        CommonMethod.toCloseLoader();
         return inflater.inflate(R.layout.fragment_ebook, container, false);
     }
 
