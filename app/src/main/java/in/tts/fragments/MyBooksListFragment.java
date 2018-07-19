@@ -115,7 +115,6 @@ public class MyBooksListFragment extends Fragment {
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(pdfListAdapter);
-
                 pdfListAdapter.notifyDataSetChanged();
 
                 CommonMethod.toCloseLoader();
@@ -130,10 +129,6 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
             File listFile[] = dir.listFiles();
             if (listFile != null && listFile.length > 0) {
                 for (int i = 0; i < listFile.length; i++) {
@@ -160,10 +155,10 @@ public class MyBooksListFragment extends Fragment {
                         }
                     }
                 }
-            }}});
+            }
             CommonMethod.toCloseLoader();
             Log.d("TAG", " pdf count " + file.size());
-
+            prefManager.toSetPDFFileList(file);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
