@@ -11,12 +11,12 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PrefManager {
+
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private Context _context;
@@ -32,6 +32,8 @@ public class PrefManager {
 
     private static final String USER_INFO = "USER_INFO";
     private static final String USER_INFO_PREFERS = "USER_INFO_PREFERS";
+    private static final String AUDIO_SETTING_INFO = "AUDIO_SETTING";
+    private static final String AUDIO_SETTING_PREFERS = "AUDIO_SETTING_PREFERS";
 
     // WEb BookMarks
     // Bookmark
@@ -111,6 +113,49 @@ public class PrefManager {
             editor.apply();
             editor.commit();
             Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            e.printStackTrace();
+        }
+    }
+
+    public void getAudioSetting(){
+        try{
+            String Audio = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).getString(AUDIO_SETTING_INFO, null);
+            if (Audio != null) {
+                AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
+                JSONObject audioJSON = new JSONObject(Audio);
+                Log.d("TAG", "getAudioInfo " + audioJSON);
+
+                if (!audioJSON.isNull("voice selection")) {
+                    audioSetting.setVoiceSelection(audioJSON.getString("voice selection"));
+                }
+                if (!audioJSON.isNull("lang selection")) {
+                    audioSetting.setLangSelection(audioJSON.getString("lang selection"));
+                }
+                if (!audioJSON.isNull("voice selection")) {
+                    audioSetting.setVoiceSelection(audioJSON.getString("voice selection"));
+                }
+                if (!audioJSON.isNull("accent selection")) {
+                    audioSetting.setAccentSelection(audioJSON.getString("accent selection"));
+                }
+                if (!audioJSON.isNull("voice speed")) {
+                    audioSetting.setVoiceSpeed(audioJSON.getInt("voice speed"));
+                }
+            }
+        }catch (Exception |Error e){
+            Crashlytics.logException(e);
+            e.printStackTrace();
+        }
+    }
+
+    public void setAudioSetting(){
+        try {
+            SharedPreferences.Editor editor = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).edit();
+            editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
+            editor.apply();
+            editor.commit();
+            Log.d("TAG", "getAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();

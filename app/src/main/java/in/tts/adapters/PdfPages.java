@@ -39,7 +39,7 @@ public class PdfPages extends RecyclerView.Adapter<PdfPages.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         try {
             viewHolder.pageView.setImageBitmap(pages.get(i));
-            viewHolder.tvPageNumber.setText(i + " / " + pages.size());
+            viewHolder.tvPageNumber.setText((i+1) + " / " + pages.size());
 //            Log.d("TAG", " Page " + i+ ":"+ pages.size());
 //            Toast.makeText(context, "Page " + i + "/" + pages.size(), Toast.LENGTH_SHORT).show();
         } catch (Exception | Error e) {
