@@ -48,11 +48,11 @@ public class ToGetPdfFiles {
                             }
                         }
                     }
+
+                    Log.d("TAG", "DATA PDF " + fileList.size());
+                    new PrefManager(context).toSetPDFFileList(fileList);
                 }
             }
         });
-        Log.d("TAG", "DATA PDF " + fileList.size());
-        new PrefManager(context).toSetPDFFileList(fileList);
-//        return fileList;
     }
 }

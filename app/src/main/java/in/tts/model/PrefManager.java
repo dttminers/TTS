@@ -148,6 +148,7 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
             if (us != null) {
+                Log.d("TAG", " toSetImageFileList get " + us);
                 return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
