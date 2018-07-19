@@ -1,12 +1,10 @@
 package in.tts.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -37,8 +35,6 @@ import in.tts.adapters.PDFHomePage;
 import in.tts.adapters.PDFHomePageImages;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.ToGetImages;
-import in.tts.utils.ToGetPdfFiles;
 
 public class MainHomeFragment extends Fragment {
 

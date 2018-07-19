@@ -1,12 +1,17 @@
 package in.tts.fragments;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -27,12 +32,14 @@ import java.util.ArrayList;
 import in.tts.R;
 import in.tts.adapters.ImageAdapterGallery;
 import in.tts.adapters.PdfListAdapter;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class MyBooksListFragment extends Fragment {
 
     private ArrayList<String> file;
     private PdfListAdapter pdfListAdapter;
+    private PrefManager prefManager;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,6 +73,8 @@ public class MyBooksListFragment extends Fragment {
         super.onStart();
         CommonMethod.toReleaseMemory();
         try {
+            prefManager = new PrefManager(getContext());
+            file = new ArrayList<>();
             fn_permission();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -86,20 +95,29 @@ public class MyBooksListFragment extends Fragment {
         }
     }
 
+
     public void toGetData() {
         try {
             if (getActivity() != null) {
                 CommonMethod.toCallLoader(getContext(), "Loading");
-                file = new ArrayList<>();
-                pdfListAdapter = new PdfListAdapter(getActivity(), file);
+//                file = new ArrayList<>();
 
+                if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
+                    file = prefManager.toGetPDFList();
+                } else {
+                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                }
+                pdfListAdapter = new PdfListAdapter(getActivity(), file);
                 getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+
 
                 RecyclerView recyclerView = getActivity().findViewById(R.id.rvList);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(pdfListAdapter);
+
                 pdfListAdapter.notifyDataSetChanged();
+
                 CommonMethod.toCloseLoader();
             }
             CommonMethod.toCloseLoader();
@@ -112,37 +130,40 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
+
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    File listFile[] = dir.listFiles();
-                    if (listFile != null && listFile.length > 0) {
-                        for (int i = 0; i < listFile.length; i++) {
-                            if (listFile[i].isDirectory()) {
-                                getFile(listFile[i]);
-                            } else {
-                                boolean booleanpdf = false;
-                                if (listFile[i].getName().endsWith(".pdf")) {
-                                    for (int j = 0; j < file.size(); j++) {
+            File listFile[] = dir.listFiles();
+            if (listFile != null && listFile.length > 0) {
+                for (int i = 0; i < listFile.length; i++) {
+                    if (listFile[i].isDirectory()) {
+                        getFile(listFile[i]);
+                    } else {
+                        boolean booleanpdf = false;
+                        if (listFile[i].getName().endsWith(".pdf")) {
+                            for (int j = 0; j < file.size(); j++) {
 //                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                        if (file.get(j).equals(listFile[i].getPath())) {
-                                            booleanpdf = true;
-                                        } else {
-                                        }
-                                    }
-                                    if (booleanpdf) {
-                                        booleanpdf = false;
-                                    } else {
-                                        file.add(listFile[i].getPath());
-                                        pdfListAdapter.notifyItemChanged(file.size(), file);
-                                    }
+                                if (file.get(j).equals(listFile[i].getPath())) {
+                                    booleanpdf = true;
+                                } else {
+                                }
+                            }
+                            if (booleanpdf) {
+                                booleanpdf = false;
+                            } else {
+                                if (!prefManager.toGetPDFList().contains(listFile[i].getPath().trim())) {
+                                    file.add(listFile[i].getPath());
+                                    pdfListAdapter.notifyItemChanged(file.size(), file);
                                 }
                             }
                         }
                     }
                 }
-            });
+            }}});
+            CommonMethod.toCloseLoader();
             Log.d("TAG", " pdf count " + file.size());
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
