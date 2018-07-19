@@ -21,6 +21,7 @@ public class PdfPagesAdapter extends RecyclerView.Adapter<PdfPagesAdapter.ViewHo
     private ArrayList<Bitmap> pages;
     private Context context;
 
+
     public PdfPagesAdapter(Context ctx, ArrayList<Bitmap> list) {
         context = ctx;
         pages = list;
@@ -52,7 +53,7 @@ public class PdfPagesAdapter extends RecyclerView.Adapter<PdfPagesAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TouchImageView pageView;
-        private TextView tvPageNumber;
+        public TextView tvPageNumber;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

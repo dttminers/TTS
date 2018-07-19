@@ -47,9 +47,7 @@ public class MyBooksListFragment extends Fragment {
     private ArrayList<String> file;
     private PdfListAdapter pdfListAdapter;
     private PrefManager prefManager;
-    //    ProgressBar mProgress;
     RecyclerView recyclerView;
-    //    RelativeLayout rl;
     LinearLayout rl;
 
     int pStatus = 0;
@@ -147,6 +145,7 @@ public class MyBooksListFragment extends Fragment {
 //                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 rl.setVisibility(View.GONE);
                 pdfListAdapter.notifyItemChanged(file.size(), file);
+                prefManager.toSetPDFFileList(file, true);
             }
             //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {

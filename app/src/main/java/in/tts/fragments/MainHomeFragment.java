@@ -15,12 +15,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,9 @@ import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class MainHomeFragment extends Fragment {
+
+    private NestedScrollView nsv;
+    private ProgressBar mLoading;
 
     // Main View Pager
     private ViewPager mViewPager;
@@ -114,6 +119,8 @@ public class MainHomeFragment extends Fragment {
         if (getActivity() != null) {
             prefManager = new PrefManager(getContext());
 
+            mLoading = getActivity().findViewById(R.id.progressBar100);
+            nsv = getActivity().findViewById(R.id.nsv);
             imageView = getActivity().findViewById(R.id.imageView);
             ivLeft = getActivity().findViewById(R.id.imageViewLeft1);
             ivRight = getActivity().findViewById(R.id.imageViewRight1);
@@ -195,6 +202,8 @@ public class MainHomeFragment extends Fragment {
             pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
             toBindRecentImages();
             CommonMethod.toCloseLoader();
+            nsv.setVisibility(View.VISIBLE);
+            mLoading.setVisibility(View.GONE);
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

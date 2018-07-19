@@ -119,8 +119,8 @@ public class PrefManager {
         }
     }
 
-    public void getAudioSetting(){
-        try{
+    public void getAudioSetting() {
+        try {
             String Audio = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).getString(AUDIO_SETTING_INFO, null);
             if (Audio != null) {
                 AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
@@ -143,13 +143,13 @@ public class PrefManager {
                     audioSetting.setVoiceSpeed(audioJSON.getInt("voice speed"));
                 }
             }
-        }catch (Exception |Error e){
+        } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
         }
     }
 
-    public void setAudioSetting(){
+    public void setAudioSetting() {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).edit();
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
@@ -177,9 +177,12 @@ public class PrefManager {
         }
     }
 
-    public void toSetPDFFileList(ArrayList<String> list) {
+    public void toSetPDFFileList(ArrayList<String> list, boolean status) {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST, 0).edit();
+            if (status) {
+                editor.clear();
+            }
             editor.putString(PDF_LIST_INFO, list.toString());
             editor.apply();
             editor.commit();

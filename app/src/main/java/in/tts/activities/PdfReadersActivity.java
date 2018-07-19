@@ -95,7 +95,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                         }
 
                         rv = findViewById(R.id.rvPDFReader);
-                        llCustom_loader = findViewById(R.id.llCustom_loader);
+                        llCustom_loader = findViewById(R.id.llCustom_loader12);
+                        rv.setVisibility(View.VISIBLE);
 
                         speakLayout = findViewById(R.id.llPDFReader);
                         reload = findViewById(R.id.reload);
@@ -151,6 +152,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                             pdfPagesAdapter = new PdfPagesAdapter(PdfReadersActivity.this, list);
                             rv.setAdapter(pdfPagesAdapter);
                             llCustom_loader.setVisibility(View.GONE);
+                            rv.setVisibility(View.VISIBLE);
                             CommonMethod.toCloseLoader();
                         } else {
                             CommonMethod.toCloseLoader();
@@ -161,7 +163,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                         playPause.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Toast.makeText(getApplicationContext(), "Pausing sound",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Pausing sound", Toast.LENGTH_SHORT).show();
                                 mMediaPlayer.pause();
                                 speakLayout.setVisibility(View.GONE);
                             }
@@ -170,13 +172,13 @@ public class PdfReadersActivity extends AppCompatActivity {
                         forward.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                int temp = (int)startTime;
-                                if((temp+forwardTime)<=finalTime){
+                                int temp = (int) startTime;
+                                if ((temp + forwardTime) <= finalTime) {
                                     startTime = startTime + forwardTime;
                                     mMediaPlayer.seekTo((int) startTime);
-                                    Toast.makeText(getApplicationContext(),"You have Jumped forward 5 seconds",Toast.LENGTH_SHORT).show();
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"Cannot jump forward 5 seconds",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "You have Jumped forward 5 seconds", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Cannot jump forward 5 seconds", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -184,14 +186,14 @@ public class PdfReadersActivity extends AppCompatActivity {
                         backward.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                int temp = (int)startTime;
+                                int temp = (int) startTime;
 
-                                if((temp-backwardTime)>0){
+                                if ((temp - backwardTime) > 0) {
                                     startTime = startTime - backwardTime;
                                     mMediaPlayer.seekTo((int) startTime);
-                                    Toast.makeText(getApplicationContext(),"You have Jumped backward 5 seconds",Toast.LENGTH_SHORT).show();
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"Cannot jump backward 5 seconds",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "You have Jumped backward 5 seconds", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Cannot jump backward 5 seconds", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -223,34 +225,34 @@ public class PdfReadersActivity extends AppCompatActivity {
     private void setTts(TextToSpeech tts) {
         try {
 //            if (Build.VERSION.SDK_INT >= 17) {
-                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
 
 
-                    public void onDone(String utteranceId) {
+                public void onDone(String utteranceId) {
 // Speech file is created
-                        mProcessed = true;
+                    mProcessed = true;
 
 // Initializes Media Player
-                        initializeMediaPlayer();
+                    initializeMediaPlayer();
 
 // Start Playing Speech
-                        playMediaPlayer(0);
-                    }
+                    playMediaPlayer(0);
+                }
 
-                    @Override
-
-
-                    public void onError(String utteranceId) {
-                    }
-
-                    @Override
+                @Override
 
 
-                    public void onStart(String utteranceId) {
-                    }
+                public void onError(String utteranceId) {
+                }
 
-                });
+                @Override
+
+
+                public void onStart(String utteranceId) {
+                }
+
+            });
 //            } else {
 //                tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
 //                    @Override
@@ -276,16 +278,20 @@ public class PdfReadersActivity extends AppCompatActivity {
     }
 
     private void initializeMediaPlayer() {
-        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + FILENAME;
-        Uri uri = Uri.parse("file://" + fileName);
-        Log.d("TAG", " PATH audio : " + fileName);
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mMediaPlayer.setDataSource(getApplicationContext(), uri);
-            mMediaPlayer.prepare();
-        } catch (Exception e) {
+            String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + FILENAME;
+            Uri uri = Uri.parse("file://" + fileName);
+            Log.d("TAG", " PATH audio : " + fileName);
+            if (uri != null) {
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setDataSource(getApplicationContext(), uri);
+                mMediaPlayer.prepare();
+            }
+        } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
+
     }
 
 
@@ -330,6 +336,7 @@ public class PdfReadersActivity extends AppCompatActivity {
     private void toGetData(Bitmap bitmap) {
         try {
 //            stringBuilder.append("next page...");
+            stringBuilder.append("\n");
             TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
             Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
 
@@ -341,7 +348,6 @@ public class PdfReadersActivity extends AppCompatActivity {
             }
 //            tts = new TTS(PdfReadersActivity.this);
 //            tts.SpeakLoud(stringBuilder.toString());
-            toSpeak(stringBuilder.toString());
             Log.d("TAG", " Final DATA " + stringBuilder);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -365,7 +371,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                 return;
             }
 
-            Toast.makeText(getApplicationContext(), "Playing sound",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
             mMediaPlayer.start();
 
             finalTime = mMediaPlayer.getDuration();
@@ -376,14 +382,14 @@ public class PdfReadersActivity extends AppCompatActivity {
                 oneTimeOnly = 1;
             }
 
-            Log.d("TAG", " Start Time : "+ String.format("%d min, %d sec",
+            Log.d("TAG", " Start Time : " + String.format("%d min, %d sec",
                     TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                     finalTime)))
             );
 
-            Log.d("TAG", " End Time : "+ String.format("%d min, %d sec",
+            Log.d("TAG", " End Time : " + String.format("%d min, %d sec",
                     TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
@@ -428,7 +434,14 @@ public class PdfReadersActivity extends AppCompatActivity {
                     break;
                 case R.id.menuSpeak:
                     Log.d("TAG ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
-                    toGetData(list.get(layoutManager.findFirstVisibleItemPosition()));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
+//                            showPage(i);
+                            toGetData(list.get(i));
+                            toSpeak(stringBuilder.toString());
+                        }
+                    }
+//                    toGetData(list.get(layoutManager.findFirstVisibleItemPosition()));
                     break;
                 default:
                     return true;
