@@ -101,7 +101,6 @@ public class MyBooksListFragment extends Fragment {
                 recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
                 CommonMethod.toCloseLoader();
-//                CommonMethod.toCloseLoader();
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
@@ -113,8 +112,6 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-//            CommonMethod.toCallLoader(getContext(), "Fetching files ");
-
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {

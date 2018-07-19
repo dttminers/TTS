@@ -173,24 +173,24 @@ public class MainHomeFragment extends Fragment {
     public void toSetSomeData() {
         try {
             CommonMethod.toCallLoader(getContext(), "Loading....");
-            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size() );
-//            if (prefManager.toGetPDFList() == null) {
+            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
+            if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            pdfFile = new ArrayList<>();
-            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-//            } else {
-//                pdfFile = prefManager.toGetPDFList();
-//            }
+                pdfFile = new ArrayList<>();
+                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+            } else {
+                pdfFile = prefManager.toGetPDFList();
+            }
             pdfHomePage = new PDFHomePage(getContext(), pdfFile);
             toBindRecentPdf();
 
-//            if (prefManager.toGetImageList() == null) {
+            if (prefManager.toGetImageList() == null) {
 //                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
-            imageFile = new ArrayList<>();
-            getAllShownImagesPath();
-//            } else {
-//                imageFile = prefManager.toGetImageList();
-//            }
+                imageFile = new ArrayList<>();
+                getAllShownImagesPath();
+            } else {
+                imageFile = prefManager.toGetImageList();
+            }
             pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
             toBindRecentImages();
             CommonMethod.toCloseLoader();
@@ -209,9 +209,6 @@ public class MainHomeFragment extends Fragment {
     // To Bind views
     public void getFile(final File dir) {
         try {
-//            AsyncTask.execute(new Runnable() {
-//                @Override
-//                public void run() {
             File listFile[] = dir.listFiles();
             if (listFile != null && listFile.length > 0) {
                 for (int i = 0; i < listFile.length; i++) {
@@ -240,9 +237,6 @@ public class MainHomeFragment extends Fragment {
                     }
                 }
             }
-//                }
-//            });
-            Log.d("TAG", " pdf count " + pdfFile.size());
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -301,9 +295,6 @@ public class MainHomeFragment extends Fragment {
 
     public void getAllShownImagesPath() {
         try {
-//            AsyncTask.execute(new Runnable() {
-//                @Override
-//                public void run() {
             String[] projection = new String[]{
                     MediaStore.Images.ImageColumns._ID,
                     MediaStore.Images.ImageColumns.DATA,
@@ -328,8 +319,6 @@ public class MainHomeFragment extends Fragment {
                     cursor.close();
                 }
             }
-//                }
-//            });
         } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);

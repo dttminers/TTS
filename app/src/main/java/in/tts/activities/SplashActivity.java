@@ -19,7 +19,6 @@ public class SplashActivity extends AppCompatActivity {
     @AddTrace(name = "onCreateSplashActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
 

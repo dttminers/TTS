@@ -15,7 +15,7 @@ public class ToGetImages {
 
     static ArrayList<String> imageFile = new ArrayList<>();
 
-    public static void getAllShownImagesPath(final Activity activity, Context context) {
+    public static void getAllShownImagesPath(final Activity activity, final Context context) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -44,10 +44,11 @@ public class ToGetImages {
                         cursor.close();
                     }
                 }
+                Log.d("TAG", "Data imaget " + imageFile.size());
+                new PrefManager(context).toSetImageFileList(imageFile);
+                Log.d("TAG", "Data image " + imageFile.size() +":"+ new PrefManager(context).toGetImageList());
             }
         });
-        Log.d("TAG", "Data image " + imageFile.size());
-        new PrefManager(context).toSetImageFileList(imageFile);
 //        return imageFile;
     }
 }

@@ -21,6 +21,13 @@ public class ReadIt extends Application {
             FirebaseAnalytics.getInstance(this);
             AppEventsLogger.activateApp(this);
             Fabric.with(this, new Crashlytics());
+
+            final Fabric fabric = new Fabric.Builder(this)
+                    .kits(new Crashlytics())
+                    .debuggable(true)
+                    .build();
+            Fabric.with(fabric);
+
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
