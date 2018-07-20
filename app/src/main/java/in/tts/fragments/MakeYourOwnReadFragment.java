@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.ActionMode;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -43,6 +44,7 @@ import static android.content.ClipDescription.CREATOR;
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MakeYourOwnReadFragment extends Fragment {
 
@@ -52,6 +54,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     private ImageView ivCopy, ivPaste, ivShare, ivSpeak;
     private ClipboardManager myClipboard;
     private ClipData myClip;
+    int sdk = android.os.Build.VERSION.SDK_INT;
 
     // class member variable to save the X,Y coordinates
     private float[] lastTouchDownXY = new float[2];
@@ -224,17 +227,33 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence text = editText.getText();//.subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-                    myClip = ClipData.newPlainText("text", text);
-                    myClipboard.setPrimaryClip(myClip);
-                    Toast.makeText(getContext(), "Text Copied : " + text, Toast.LENGTH_SHORT).show();
+//                    CharSequence text = editText.getText();//.subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
+//                    myClip = ClipData.newPlainText("text", text);
+//                    myClipboard.setPrimaryClip(myClip);
+//                    Toast.makeText(getContext(), "Text Copied : " + text, Toast.LENGTH_SHORT).show();
+
+                   String CopyText = editText.getText().toString();
+                    if(CopyText.length() != 0){
+                        if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                            clipboard.setText(CopyText);
+                            Toast.makeText(getApplicationContext(), "Text Copied to Clipboard", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                            android.content.ClipData clip = android.content.ClipData.newPlainText("Clip",CopyText);
+                            Toast.makeText(getApplicationContext(), "Text Copied to Clipboard", Toast.LENGTH_SHORT).show();
+                            clipboard.setPrimaryClip(clip);
+                        }}else{
+                        Toast.makeText(getApplicationContext(), "Nothing to Copy", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
             ivPaste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tvPaste.setVisibility(View.VISIBLE);
+
 
                     if (myClipboard.hasPrimaryClip()) {
                         ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
@@ -243,13 +262,33 @@ public class MakeYourOwnReadFragment extends Fragment {
                         Toast.makeText(getContext(), "Text Pasted : " + ptext, Toast.LENGTH_SHORT).show();
                     }
                 }
+
+//                    String pasteText;
+//
+//                    // TODO Auto-generated method stub
+//                    if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB){
+//                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                        pasteText = clipboard.getText().toString();
+//                        editText.setText(pasteText);
+//
+//                    }else{
+//
+//                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                        if(clipboard.hasPrimaryClip()== true){
+//                            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(1);
+//                            pasteText = item.getText().toString();
+//                            editText.setText(pasteText);
+//                        }else{
+//                            Toast.makeText(getApplicationContext(), "Nothing to Paste", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+
             });
 
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     tvShare.setVisibility(View.VISIBLE);
-
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
@@ -271,18 +310,18 @@ public class MakeYourOwnReadFragment extends Fragment {
             ivSpeak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tvSpeak.setVisibility(View.VISIBLE);
 
                     String toSpeak = editText.getText().toString();
+                    Log.d("Tag", " Speak : " + toSpeak);
                     Toast.makeText(getContext(), toSpeak, Toast.LENGTH_SHORT).show();
                     t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                 }
             });
 
-            Log.d("TAG", " Touch " + lastTouchDownXY[0] + " : " + lastTouchDownXY[1] + " :" + customView.getMeasuredHeight() + " : " + (lastTouchDownXY[1] - customView.getMeasuredHeight()));
+            Log.d("TAG", " Touch " + lastTouchDownXY[0] + " : " + lastTouchDownXY[1] + " :" + customView.getMeasuredHeight() + " : " + (lastTouchDownXY[1] + customView.getMeasuredHeight()));
             popupWindow.setOutsideTouchable(true);
             customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.NO_GRAVITY, (int) lastTouchDownXY[0], (int) lastTouchDownXY[1] + customView.getMeasuredHeight());
+            popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.NO_GRAVITY, (int) (lastTouchDownXY[0] - 10), ((int) lastTouchDownXY[1] + customView.getMeasuredHeight() + 170));
             //(int)event.getX(), (int)event.getY() - customView.getMeasuredHeight());
 
             getActivity().getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
