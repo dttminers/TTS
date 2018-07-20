@@ -43,6 +43,7 @@ public class BrowserActivity extends AppCompatActivity {
     private List<String> linkList;
     private View menuBookMark;
     private CheckBox cbMenu;
+    String historyUrl = "";
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -66,10 +67,7 @@ public class BrowserActivity extends AppCompatActivity {
                             + getIntent().getStringExtra("Data")
                             + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
                 } else if (getIntent().getStringExtra("url") != null) {
-                    superWebView.loadUrl("https://www.google.co.in/search?q="
-                            + getIntent().getStringExtra("url")
-                            + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
-
+                    superWebView.loadUrl(getIntent().getStringExtra("url"));
                 } else {
                     superWebView.loadUrl("https://www.google.co.in");
                 }
@@ -94,6 +92,7 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
+
                     startOfHistory();
                 }
             });
@@ -123,9 +122,10 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onReceivedIcon(WebView view, Bitmap icon) {
                     super.onReceivedIcon(view, icon);
-                    ImageView iv = new ImageView(BrowserActivity.this);
-                    iv.setImageBitmap(icon);
-                    rl.addView(iv);
+//                    ImageView iv = new ImageView(BrowserActivity.this);
+//                    iv.setImageBitmap(icon);
+//                    rl.addView(iv);
+
                 }
             });
 
@@ -151,7 +151,7 @@ public class BrowserActivity extends AppCompatActivity {
         try {
             Log.d("TAGWEB", "WEB Histroy");
             WebBackForwardList currentList = superWebView.copyBackForwardList();
-            Log.d("TAGWEB", " Web " + currentList.getCurrentItem() + ":"+currentList.getSize()+":"+ currentList.getCurrentItem());
+            Log.d("TAGWEB", " Web " + currentList.getCurrentItem() + ":" + currentList.getSize() + ":" + currentList.getCurrentItem());
             for (int i = 0; i < currentList.getSize(); i++) {
                 WebHistoryItem item = currentList.getItemAtIndex(i);
                 Log.d("TAGWEB", " web item " + item.getTitle());

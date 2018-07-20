@@ -45,6 +45,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 PrefManager prefManager = new PrefManager(SplashActivity.this);
                 prefManager.getUserInfo();
+
                 if (auth.getCurrentUser() != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 } else if (User.getUser(SplashActivity.this).getId() != null) {
