@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import org.json.JSONObject;
@@ -102,7 +104,9 @@ public class PrefManager {
             }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -115,7 +119,9 @@ public class PrefManager {
             Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -145,7 +151,9 @@ public class PrefManager {
             }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -158,7 +166,9 @@ public class PrefManager {
             Log.d("TAG", "getAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -166,13 +176,15 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
             if (us != null) {
-                return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             return null;
         }
     }
@@ -188,7 +200,9 @@ public class PrefManager {
             editor.commit();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -197,13 +211,15 @@ public class PrefManager {
             String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
             if (us != null) {
                 Log.d("TAG", " toSetImageFileList get " + us);
-                return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             return null;
         }
     }
@@ -217,7 +233,9 @@ public class PrefManager {
             Log.d("TAG", "toSetImageFileList " + list.size());
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -225,15 +243,22 @@ public class PrefManager {
         try {
             String s = _context.getSharedPreferences(PREFERENCES, 0).getString(WEB_LINKS, null);
             if (s != null) {
-                return new ArrayList<String>(Arrays.asList(s.replace("[", "").replace("]", "")
-                        .replaceAll("\\s+", "")
-                        .split(",")));
+                return new ArrayList<>(
+                        Arrays.asList(
+                                s.replace("[", "")
+                                        .replace("]", "")
+                                        .replaceAll("\\s+", "")
+                                        .split(",")
+                        )
+                );
             } else {
                 return null;
             }
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             return null;
         }
     }
@@ -244,9 +269,11 @@ public class PrefManager {
             editor.putString(WEB_LINKS, selectedSearch.toString());
             editor.apply();
             editor.commit();
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }

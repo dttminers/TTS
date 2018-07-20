@@ -3,9 +3,13 @@ package in.tts.classes;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+
 import java.util.Locale;
 
-/**
+/*
  * Created by Nilanchala
  * http://www.stacktips.com
  * http://stacktips.com/tutorials/android/android-texttospeech-example
@@ -18,8 +22,10 @@ public class TTSManager {
     public void init(Context context) {
         try {
             mTts = new TextToSpeech(context, onInitListener);
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 

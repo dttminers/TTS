@@ -1,11 +1,10 @@
 package in.tts.activities;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
@@ -36,8 +35,8 @@ public class HelpActivity extends AppCompatActivity {
                     return true;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
         return super.onOptionsItemSelected(item);
     }

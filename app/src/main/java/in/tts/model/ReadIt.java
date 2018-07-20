@@ -3,14 +3,17 @@ package in.tts.model;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.FacebookSdk;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import in.tts.R;
 import io.fabric.sdk.android.Fabric;
 
 public class ReadIt extends Application {
@@ -18,6 +21,10 @@ public class ReadIt extends Application {
     public void onCreate() {
         super.onCreate();
         try {
+            new FlurryAgent.Builder()
+                    .withLogEnabled(true)
+                    .build(this, getString(R.string.str_flurry_app));
+
             FirebaseAnalytics.getInstance(this);
             AppEventsLogger.activateApp(this);
             Fabric.with(this, new Crashlytics());
@@ -30,7 +37,9 @@ public class ReadIt extends Application {
 
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 

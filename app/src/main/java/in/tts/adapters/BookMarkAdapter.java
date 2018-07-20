@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
@@ -41,8 +41,8 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
             viewHolder.tv_title.setText(list.get(position));
             viewHolder.tv_link.setText(list.get(position));
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -71,8 +71,8 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
                             in.putExtra("url", list.get(getAdapterPosition()));
                             context.startActivity(in);
                         } catch (Exception | Error e) {
-                            e.printStackTrace();
-                            Crashlytics.logException(e);
+                            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                            Crashlytics.logException(e); FirebaseCrash.report(e);
                         }
                     }
                 });
@@ -85,8 +85,8 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
                     }
                 });
             } catch (Exception | Error e) {
-                e.printStackTrace();
-                Crashlytics.logException(e);
+                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e); FirebaseCrash.report(e);
             }
         }
     }
@@ -107,8 +107,8 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
                                 notifyItemRangeChanged(position, list.size());
                                 dialogInterface.dismiss();
                             } catch (Exception | Error e) {
-                                e.printStackTrace();
-                                Crashlytics.logException(e);
+                                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e); FirebaseCrash.report(e);
                             }
                         }
                     }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -118,8 +118,8 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
                 }
             }).show();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 }

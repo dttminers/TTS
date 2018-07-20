@@ -5,11 +5,10 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.util.Log;
 
 import java.util.HashMap;
 
-/**
+/*
  * A TTS (Text-To-Speech) wrapper with extended functionality, designed to be robust and easy to use.
  *https://gist.github.com/LukasKnuth/0c0d17b343483d25aca2
  * @author Lukas Knuth
@@ -29,19 +28,19 @@ public final class TTTS implements TextToSpeech.OnUtteranceCompletedListener {
     };
 
     public interface InitCallback{
-        /**
+        /*
          * Initialisation was successful, work with the TTS.
          */
         public void initSuccess(TTS tts);
 
-        /**
+        /*
          * There was an error while initialising the engine.
          * @param reason error-number, as returned by {@link android.speech.tts.TextToSpeech.OnInitListener#onInit(int)}.
          */
         public void initFail(int reason);
     }
 
-    /**
+    /*
      * Creates a new Text-To-Speech engine.
      * @param callback will be called, once the engine is initialised and ready for usage.
      * @throws java.lang.IllegalStateException you can't initialize this object with a
@@ -81,7 +80,7 @@ public final class TTTS implements TextToSpeech.OnUtteranceCompletedListener {
         });
     }
 
-    /**
+    /*
      * Shutdown the TTS-Engine.
      * @param stop_immediately whether the TTS-engine should let any previously queued speeches
      *                         finish, or stop them (and the engine) immediatly.
@@ -93,7 +92,7 @@ public final class TTTS implements TextToSpeech.OnUtteranceCompletedListener {
         tts.shutdown();
     }
 
-    /**
+    /*
      * <p>Queue a text for reading out. This will only queue this text and waits, until any earlier
      *  text's are done playing. Also, Music volume will be lowered (if supported by the current
      *  media-player) while the text is spoken.</p>

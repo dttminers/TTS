@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import java.io.File;
@@ -51,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
             }
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -95,8 +95,8 @@ public class LoginActivity extends AppCompatActivity {
             }
 //            );
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -115,8 +115,8 @@ public class LoginActivity extends AppCompatActivity {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
             fragment.onActivityResult(requestCode, resultCode, data);
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

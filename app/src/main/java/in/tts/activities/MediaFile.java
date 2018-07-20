@@ -1,36 +1,10 @@
 package in.tts.activities;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.HashMap;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-import android.speech.tts.UtteranceProgressListener;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import in.tts.R;
 //
@@ -133,7 +107,7 @@ import in.tts.R;
 //// Setting a horizontal style progress bar
 //        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //
-///** Setting a message for this progress dialog
+///* Setting a message for this progress dialog
 // * Use the method setTitle(), for setting a title
 // * for the dialog window
 // *  */
@@ -294,7 +268,7 @@ import in.tts.R;
 //            mMediaPlayer.setDataSource(getApplicationContext(), uri);
 //            mMediaPlayer.prepare();
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
 //        }
 //    }
 // 
@@ -391,7 +365,7 @@ public class MediaFile extends AppCompatActivity {
 //                        // Just to display the progress slowly
 //                        Thread.sleep(16); //thread will take approx 3 seconds to finish
 //                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
+//                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
 //                    }
 //                }
 //            }

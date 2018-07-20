@@ -2,16 +2,13 @@ package in.tts.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,20 +21,19 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -47,17 +43,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 
 import in.tts.R;
-import in.tts.activities.AudioSettingActivity;
-import in.tts.activities.BrowserActivity;
 import in.tts.activities.LoginActivity;
 import in.tts.activities.MainActivity;
 import in.tts.model.PrefManager;
@@ -82,6 +70,8 @@ public class LoginFragment extends Fragment {
     private ProfileTracker profileTracker;
     private LoginManager mFbLoginManager;
 
+    private FirebaseAuth mAuth;
+
     // Parameters
     private int RC_SIGN_IN = 123;
     private static final String EMAIL = "email";
@@ -104,6 +94,10 @@ public class LoginFragment extends Fragment {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Login", null);
 
             FacebookSdk.sdkInitialize(getContext());
+            mAuth = FirebaseAuth.getInstance();
+
+//            FirebaseUser currentUser = mAuth.getCurrentUser();
+//            updateUI(currentUser);
 
             mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
@@ -208,9 +202,9 @@ public class LoginFragment extends Fragment {
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
                         getActivity().finish();
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });
@@ -222,9 +216,9 @@ public class LoginFragment extends Fragment {
                         getContext().startActivity(new Intent(getContext(), MainActivity.class));
                         getActivity().finish();
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });
@@ -245,9 +239,9 @@ public class LoginFragment extends Fragment {
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                         CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                         Log.d("TAG", " Login" + e.getMessage());
                     }
                 }
@@ -322,8 +316,8 @@ public class LoginFragment extends Fragment {
                                     profileTracker.startTracking();
                                 } catch (Exception | Error e) {
                                     CommonMethod.toCloseLoader();
-                                    e.printStackTrace();
-                                    Crashlytics.logException(e);
+                                    e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    Crashlytics.logException(e); FirebaseCrash.report(e);
                                     CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                                 }
                             }
@@ -353,8 +347,8 @@ public class LoginFragment extends Fragment {
 
         } catch (Exception | Error e) {
             CommonMethod.toCloseLoader();
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
             CommonMethod.toDisplayToast(getContext(), " Click again  to login");
         }
     }
@@ -403,9 +397,9 @@ public class LoginFragment extends Fragment {
             }
             callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -429,9 +423,9 @@ public class LoginFragment extends Fragment {
                 toExit();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -446,9 +440,9 @@ public class LoginFragment extends Fragment {
             getActivity().finish();
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -485,8 +479,8 @@ public class LoginFragment extends Fragment {
                 mListener = (OnFragmentInteractionListener) context;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

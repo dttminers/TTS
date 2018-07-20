@@ -16,7 +16,6 @@
         android:orientation="vertical">
 
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -200,8 +199,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:seekbar_max="3"
+            android:progressTint="@color/dark_pink_two"
             android:secondaryProgress="10"
             android:progress="1"
+            android:thumbTint="@color/dark_pink_two"
+            android:tickMark="@color/dark_pink_two"
+            android:tickMarkTint="@color/dark_pink_two"
             app:seekbar_marginLeft="10dp"
             app:seekbar_marginRight="10dp" />
 

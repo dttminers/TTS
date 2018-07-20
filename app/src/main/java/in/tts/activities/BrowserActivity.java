@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +30,6 @@ import java.util.List;
 
 import in.tts.R;
 import in.tts.model.PrefManager;
-import in.tts.utils.CommonMethod;
 
 public class BrowserActivity extends AppCompatActivity {
 
@@ -134,8 +132,7 @@ public class BrowserActivity extends AppCompatActivity {
                     startActivity(superIntent);
                 }
             });
-        } catch (Exception |
-                Error e) {
+        } catch (Exception | Error e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
@@ -155,7 +152,6 @@ public class BrowserActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
         }
     }
 
@@ -234,7 +230,6 @@ public class BrowserActivity extends AppCompatActivity {
             snackbar.show();
         } catch (Exception | Error e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
         }
     }
 
@@ -255,3 +250,34 @@ public class BrowserActivity extends AppCompatActivity {
         }
     }
 }
+
+/*
+*  @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+
+        if(url.toLowerCase().contains("/favicon.ico")) {
+            try {
+                return new WebResourceResponse("image/png", null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    @SuppressLint("NewApi")
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+
+        if(!request.isForMainFrame() && request.getUrl().getPath().endsWith("/favicon.ico")) {
+            try {
+                return new WebResourceResponse("image/png", null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+    */

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llSetting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    android:orientation="vertical"
+    tools:context=".activities.SettingActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fontFamily="sans-serif"
+        android:padding="2dp"
+        android:text="@string/str_data_usage"
+        android:textColor="@color/warm_grey"
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:id="@+id/pbSetting1"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:max="100"
+        android:maxHeight="5dp"
+        android:minHeight="3dp"
+        android:progress="10"
+        android:progressTint="@color/dark_pink_two"
+        android:secondaryProgress="10" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif"
+        android:padding="2dp"
+        android:text="@string/str_storage_usage"
+        android:textColor="@color/warm_grey"
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:id="@+id/pbSetting2"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:max="100"
+        android:maxHeight="5dp"
+        android:minHeight="3dp"
+        android:progress="10"
+        android:progressTint="@color/dark_pink_two"
+        android:secondaryProgress="10" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/warm_grey" />
+
+    <RelativeLayout
+        android:id="@+id/rlLogout"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/ivLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/str_logo_image"
+            android:padding="2dp"
+            android:src="@drawable/ic_logout" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ivLogout"
+            android:fontFamily="sans-serif"
+            android:text="@string/str_logout"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

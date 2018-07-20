@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
@@ -105,8 +105,8 @@ public class MyBooksFragment extends Fragment {
 //            AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, MyBooksFragment.this, null, false);
 
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -130,8 +130,8 @@ public class MyBooksFragment extends Fragment {
 //                AppPermissions.toCheckPermissionRead(getContext(), getActivity(), null, MyBooksFragment.this);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -154,9 +154,9 @@ public class MyBooksFragment extends Fragment {
             pdfListAdapter.notifyDataSetChanged();
             count += 20;
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toReleaseMemory();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
         CommonMethod.toReleaseMemory();
     }
@@ -189,9 +189,9 @@ public class MyBooksFragment extends Fragment {
 
 
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toReleaseMemory();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -228,8 +228,8 @@ public class MyBooksFragment extends Fragment {
                 mListener = (OnFragmentInteractionListener) context;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

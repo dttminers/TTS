@@ -1,7 +1,6 @@
 package in.tts.activities;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,10 +8,12 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
 
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 public class AudioSettingActivity extends AppCompatActivity {
@@ -56,7 +57,7 @@ public class AudioSettingActivity extends AppCompatActivity {
 //
 //            }
 //        });
-        final RelativeLayout rlEng = (RelativeLayout) findViewById(R.id.rlEnglish);
+        final RelativeLayout rlEng = findViewById(R.id.rlEnglish);
 
         RadioGroup rg = (RadioGroup) findViewById(R.id.rgLanguageSel);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -81,8 +82,8 @@ public class AudioSettingActivity extends AppCompatActivity {
                     return true;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
         return super.onOptionsItemSelected(item);
     }

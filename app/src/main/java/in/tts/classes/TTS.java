@@ -4,13 +4,12 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.HashMap;
@@ -37,14 +36,14 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             Log.e("TTS", "Initialization Failed!");
                         }
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
-                        Crashlytics.logException(e);
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

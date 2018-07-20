@@ -9,7 +9,6 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.io.File;
 import java.util.ArrayList;
 
-import in.tts.fragments.MainHomeFragment;
 import in.tts.model.PrefManager;
 
 public class ToGetPdfFiles {
@@ -35,7 +34,6 @@ public class ToGetPdfFiles {
 //                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
                                     if (fileList.get(j).equals(listFile[i].getPath())) {
                                         booleanpdf = true;
-                                    } else {
                                     }
                                 }
                                 if (booleanpdf) {

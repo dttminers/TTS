@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -33,12 +35,12 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import in.tts.R;
 import in.tts.adapters.PdfPagesAdapter;
-import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
 import in.tts.utils.CommonMethod;
 
@@ -56,12 +58,15 @@ public class PdfReadersActivity extends AppCompatActivity {
     private ParcelFileDescriptor fileDescriptor;
     private PdfRenderer pdfRenderer;
     private PdfRenderer.Page currentPage;
+
     private StringBuilder stringBuilder;
     private ArrayList<Bitmap> list = new ArrayList<Bitmap>();
-    //    private TTS tts;
+
     private TextToSpeech tts;
+
     private boolean mProcessed = false;
     private int mStatus = 0;
+
     private double startTime = 0;
     private double finalTime = 0;
 
@@ -70,10 +75,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private final String FILENAME = "/wpta_tts.wav";
 
-
     public static int oneTimeOnly = 0;
-
-//    private ProgressDialog mProgressDialog;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -114,21 +116,22 @@ public class PdfReadersActivity extends AppCompatActivity {
                                 try {
                                     mStatus = i;
                                     setTts(tts);
-//                                    if (i != TextToSpeech.ERROR) {
-//                                        tts.setLanguage(Locale.UK);
+                                    if (i != TextToSpeech.ERROR) {
+                                        tts.setLanguage(Locale.UK);
+                                    }
+//                                    if (i == TextToSpeech.SUCCESS) {
+
+//                                        if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
+//                                                || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                                            Log.e("TTS", "This Language is not supported");
+//                                        }
 //                                    }
-////                                    if (i == TextToSpeech.SUCCESS) {
-////
-////                                        if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
-////                                                || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
-////                                            Log.e("TTS", "This Language is not supported");
-////                                        }
-////                                    }
-//                                    else {
-//                                        Log.e("TTS", "Initialization Failed!");
-//                                    }
+                                    else {
+                                        Log.e("TTS", "Initialization Failed!");
+                                    }
                                 } catch (Exception | Error e) {
                                     e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                     Crashlytics.logException(e);
                                 }
                             }
@@ -217,6 +220,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
@@ -224,19 +228,11 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void setTts(TextToSpeech tts) {
         try {
-//            if (Build.VERSION.SDK_INT >= 17) {
             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override
-
-
                 public void onDone(String utteranceId) {
-// Speech file is created
                     mProcessed = true;
-
-// Initializes Media Player
                     initializeMediaPlayer();
-
-// Start Playing Speech
                     playMediaPlayer(0);
                 }
 
@@ -253,27 +249,11 @@ public class PdfReadersActivity extends AppCompatActivity {
                 }
 
             });
-//            } else {
-//                tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
-//                    @Override
-//
-//
-//                    public void onUtteranceCompleted(String utteranceId) {
-//// Speech file is created
-//                        mProcessed = true;
-//
-//// Initializes Media Player
-//                        initializeMediaPlayer();
-//
-//// Start Playing Speech
-//                        playMediaPlayer(0);
-//                    }
-//
-//                });
-//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+
         }
     }
 
@@ -289,20 +269,18 @@ public class PdfReadersActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
         }
-
     }
 
 
     private void playMediaPlayer(int status) {
-//        mProgressDialog.dismiss();
-
-// Start Playing
+        // Start Playing
         if (status == 0) {
             mMediaPlayer.start();
         }
-// Pause Playing
+        // Pause Playing
         if (status == 1) {
             mMediaPlayer.pause();
         }
@@ -326,16 +304,15 @@ public class PdfReadersActivity extends AppCompatActivity {
             currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             // showing bitmap to an imageview
             list.add(bitmap);
-//            toGetData(bitmap);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
         }
     }
 
     private void toGetData(Bitmap bitmap) {
         try {
-//            stringBuilder.append("next page...");
             stringBuilder.append("\n");
             TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
             Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
@@ -346,11 +323,11 @@ public class PdfReadersActivity extends AppCompatActivity {
                 stringBuilder.append(item.getValue());
                 stringBuilder.append("\n");
             }
-//            tts = new TTS(PdfReadersActivity.this);
-//            tts.SpeakLoud(stringBuilder.toString());
+
             Log.d("TAG", " Final DATA " + stringBuilder);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
         }
     }
@@ -358,16 +335,11 @@ public class PdfReadersActivity extends AppCompatActivity {
     private void toSpeak(String string) {
         if (mStatus == TextToSpeech.SUCCESS) {
 
-// Getting reference to the Button
-
-//            btnSpeak.setText("Pause");
             speakLayout.setVisibility(View.VISIBLE);
 
             if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
                 playMediaPlayer(1);
-//                btnSpeak.setText("Speak");
                 speakLayout.setVisibility(View.GONE);
-
                 return;
             }
 
@@ -379,6 +351,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
             if (oneTimeOnly == 0) {
 //                seekbar.setMax((int) finalTime);
+                Log.d("TAG", "SPEAKING : " + ((int) finalTime));
                 oneTimeOnly = 1;
             }
 
@@ -397,13 +370,8 @@ public class PdfReadersActivity extends AppCompatActivity {
             );
 
 
-//            mProgressDialog.show();
-
-// Getting reference to the EditText et_content
-
-            HashMap<String, String> myHashRender = new HashMap();
-            String utteranceID = "wpta";
-            myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceID);
+            HashMap<String, String> myHashRender = new HashMap<>();
+            myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
 
 
             String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + FILENAME;
@@ -414,8 +382,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                 playMediaPlayer(0);
             }
         } else {
-            String msg = "TextToSpeech Engine is not initialized";
-            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+//            String msg = "TextToSpeech Engine is not initialized";
+            Toast.makeText(getBaseContext(), "Unable to Speak", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -438,8 +406,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                         for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
 //                            showPage(i);
                             toGetData(list.get(i));
-                            toSpeak(stringBuilder.toString());
                         }
+                        toSpeak(stringBuilder.toString());
                     }
 //                    toGetData(list.get(layoutManager.findFirstVisibleItemPosition()));
                     break;
@@ -448,6 +416,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
         }
         return super.onOptionsItemSelected(item);
@@ -468,6 +437,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -481,6 +451,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }

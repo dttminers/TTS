@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -67,8 +67,8 @@ public class ImageOcrActivity extends AppCompatActivity {
             new toGetImage().execute();
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -84,8 +84,8 @@ public class ImageOcrActivity extends AppCompatActivity {
 //                ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1);
 //            }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -144,8 +144,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                             try {
                                 tts.SpeakLoud(stringBuilder.toString());
                             } catch (Exception | Error e) {
-                                e.printStackTrace();
-                                Crashlytics.logException(e);
+                                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e); FirebaseCrash.report(e);
                             }
                         }
                     });
@@ -163,8 +163,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }
 
             } catch (Exception | Error e) {
-                Crashlytics.logException(e);
-                e.printStackTrace();
+                Crashlytics.logException(e); FirebaseCrash.report(e);
+                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             }
         }
     }
@@ -199,8 +199,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception | Error e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -210,8 +210,8 @@ public class ImageOcrActivity extends AppCompatActivity {
         try {
             tts.toShutDown();
         } catch (Exception | Error e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }

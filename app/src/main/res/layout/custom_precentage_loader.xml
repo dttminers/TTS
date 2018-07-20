@@ -21,6 +21,7 @@
         />
 
     <ImageView
+        android:contentDescription="@string/app_name"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/white_circle"
