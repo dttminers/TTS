@@ -3,6 +3,7 @@ package in.tts.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
@@ -26,6 +29,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import in.tts.R;
@@ -57,7 +62,15 @@ public class CommonMethod {
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
+        bundle.putString("DeviceId",  Secure.getString(context.getContentResolver(), Secure.ANDROID_ID));
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        Map<String, String> articleParams = new HashMap<>();
+        articleParams.put("PAGE", id);
+        articleParams.put("SUB_PAGE", name);
+        articleParams.put("DATA", contentType);
+        articleParams.put("DeviceId", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID));
+        FlurryAgent.logEvent("Article_Read", articleParams, true);
     }
 
     public static void toCallLoader(Context context, String msg) {
@@ -83,21 +96,25 @@ public class CommonMethod {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     public static void toCloseLoader() {
         try {
             if (dialog != null && dialog.isShowing()) {
-                if(tvMsg != null) {
+                if (tvMsg != null) {
                     Log.d("TAG", " LOADER ctxt : " + tvMsg.getText().toString());
                 }
                 dialog.dismiss();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -116,7 +133,9 @@ public class CommonMethod {
             Log.d("TAG ", "signed Facebook 3 :" + Profile.getCurrentProfile());
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
         return false;
     }
@@ -130,7 +149,9 @@ public class CommonMethod {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -149,7 +170,9 @@ public class CommonMethod {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 }

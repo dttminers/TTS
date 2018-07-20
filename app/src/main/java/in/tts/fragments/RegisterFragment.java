@@ -22,7 +22,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -225,9 +225,9 @@ public class RegisterFragment extends Fragment {
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "login"));
                         getActivity().finish();
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });
@@ -240,9 +240,9 @@ public class RegisterFragment extends Fragment {
                         getActivity().finish();
 //                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });
@@ -263,9 +263,9 @@ public class RegisterFragment extends Fragment {
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                         CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
-                        e.printStackTrace();
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                         Log.d("TAG", " Login" + e.getMessage());
                     }
                 }
@@ -340,8 +340,8 @@ public class RegisterFragment extends Fragment {
                                     profileTracker.startTracking();
                                 } catch (Exception | Error e) {
                                     CommonMethod.toCloseLoader();
-                                    e.printStackTrace();
-                                    Crashlytics.logException(e);
+                                    e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    Crashlytics.logException(e); FirebaseCrash.report(e);
                                     CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                                 }
                             }
@@ -371,8 +371,8 @@ public class RegisterFragment extends Fragment {
 
         } catch (Exception | Error e) {
             CommonMethod.toCloseLoader();
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
             CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
         }
     }
@@ -460,9 +460,9 @@ public class RegisterFragment extends Fragment {
                 toExit();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -477,9 +477,9 @@ public class RegisterFragment extends Fragment {
             getActivity().finish();
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

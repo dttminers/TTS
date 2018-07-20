@@ -294,7 +294,7 @@ import in.tts.R;
 //            mMediaPlayer.setDataSource(getApplicationContext(), uri);
 //            mMediaPlayer.prepare();
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
 //        }
 //    }
 // 
@@ -391,7 +391,7 @@ public class MediaFile extends AppCompatActivity {
 //                        // Just to display the progress slowly
 //                        Thread.sleep(16); //thread will take approx 3 seconds to finish
 //                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
+//                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
 //                    }
 //                }
 //            }

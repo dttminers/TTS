@@ -22,7 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,8 +138,8 @@ public class BrowserActivity extends AppCompatActivity {
     Error e)
 
     {
-        e.printStackTrace();
-        Crashlytics.logException(e);
+        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        Crashlytics.logException(e); FirebaseCrash.report(e);
     }
 
 }
@@ -157,8 +157,8 @@ public class BrowserActivity extends AppCompatActivity {
                 cbMenu.setChecked(false);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -236,8 +236,8 @@ public class BrowserActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(rl, message, Snackbar.LENGTH_LONG);
             snackbar.show();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -46,8 +46,8 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
                     .fit()
                     .into(viewHolder.picturesView);
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -70,8 +70,8 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
                         context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", images.get(getAdapterPosition())));
                         CommonMethod.toReleaseMemory();
                     } catch (Exception| Error e){
-                        e.printStackTrace();
-                        Crashlytics.logException(e);
+                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });

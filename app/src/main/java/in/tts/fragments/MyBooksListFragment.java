@@ -31,7 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,8 +99,8 @@ public class MyBooksListFragment extends Fragment {
 
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -112,8 +112,8 @@ public class MyBooksListFragment extends Fragment {
                 toGetData();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -150,8 +150,8 @@ public class MyBooksListFragment extends Fragment {
             }
             //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
             //CommonMethod.toCloseLoader();
         }
     }
@@ -218,7 +218,7 @@ public class MyBooksListFragment extends Fragment {
 //                            // Just to display the progress slowly
 //                            Thread.sleep(16); //thread will take approx 3 seconds to finish
 //                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
+//                            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
 //                        }
 //                    }
 //                }
@@ -226,8 +226,8 @@ public class MyBooksListFragment extends Fragment {
 
 
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 

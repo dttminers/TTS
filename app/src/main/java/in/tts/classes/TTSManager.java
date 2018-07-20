@@ -19,7 +19,7 @@ public class TTSManager {
         try {
             mTts = new TextToSpeech(context, onInitListener);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 

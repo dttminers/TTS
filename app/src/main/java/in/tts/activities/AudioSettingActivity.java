@@ -8,11 +8,14 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 public class AudioSettingActivity extends AppCompatActivity {
@@ -81,8 +84,8 @@ public class AudioSettingActivity extends AppCompatActivity {
                     return true;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
         return super.onOptionsItemSelected(item);
     }

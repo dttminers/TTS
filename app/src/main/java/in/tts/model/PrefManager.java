@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import org.json.JSONObject;
@@ -101,8 +101,8 @@ public class PrefManager {
                 }
             }
         } catch (Exception | Error e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -114,8 +114,8 @@ public class PrefManager {
             editor.commit();
             Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -144,8 +144,8 @@ public class PrefManager {
                 }
             }
         }catch (Exception |Error e){
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -157,8 +157,8 @@ public class PrefManager {
             editor.commit();
             Log.d("TAG", "getAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -171,8 +171,8 @@ public class PrefManager {
                 return null;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
             return null;
         }
     }
@@ -184,8 +184,8 @@ public class PrefManager {
             editor.apply();
             editor.commit();
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -199,8 +199,8 @@ public class PrefManager {
                 return null;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
             return null;
         }
     }
@@ -213,8 +213,8 @@ public class PrefManager {
             editor.commit();
             Log.d("TAG", "toSetImageFileList " + list.size());
         } catch (Exception | Error e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e); FirebaseCrash.report(e);
         }
     }
 
@@ -229,8 +229,8 @@ public class PrefManager {
                 return null;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             return null;
         }
     }
@@ -242,8 +242,8 @@ public class PrefManager {
             editor.apply();
             editor.commit();
         } catch (Exception e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }

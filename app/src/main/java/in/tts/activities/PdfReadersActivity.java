@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -128,7 +130,9 @@ public class PdfReadersActivity extends AppCompatActivity {
 //                                    }
                                 } catch (Exception | Error e) {
                                     e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                     Crashlytics.logException(e);
+                                    FirebaseCrash.report(e);
                                 }
                             }
                         });
@@ -161,7 +165,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                         playPause.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Toast.makeText(getApplicationContext(), "Pausing sound",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Pausing sound", Toast.LENGTH_SHORT).show();
                                 mMediaPlayer.pause();
                                 speakLayout.setVisibility(View.GONE);
                             }
@@ -170,13 +174,13 @@ public class PdfReadersActivity extends AppCompatActivity {
                         forward.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                int temp = (int)startTime;
-                                if((temp+forwardTime)<=finalTime){
+                                int temp = (int) startTime;
+                                if ((temp + forwardTime) <= finalTime) {
                                     startTime = startTime + forwardTime;
                                     mMediaPlayer.seekTo((int) startTime);
-                                    Toast.makeText(getApplicationContext(),"You have Jumped forward 5 seconds",Toast.LENGTH_SHORT).show();
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"Cannot jump forward 5 seconds",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "You have Jumped forward 5 seconds", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Cannot jump forward 5 seconds", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -184,14 +188,14 @@ public class PdfReadersActivity extends AppCompatActivity {
                         backward.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                int temp = (int)startTime;
+                                int temp = (int) startTime;
 
-                                if((temp-backwardTime)>0){
+                                if ((temp - backwardTime) > 0) {
                                     startTime = startTime - backwardTime;
                                     mMediaPlayer.seekTo((int) startTime);
-                                    Toast.makeText(getApplicationContext(),"You have Jumped backward 5 seconds",Toast.LENGTH_SHORT).show();
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"Cannot jump backward 5 seconds",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "You have Jumped backward 5 seconds", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Cannot jump backward 5 seconds", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -215,42 +219,44 @@ public class PdfReadersActivity extends AppCompatActivity {
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     private void setTts(TextToSpeech tts) {
         try {
 //            if (Build.VERSION.SDK_INT >= 17) {
-                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
 
 
-                    public void onDone(String utteranceId) {
+                public void onDone(String utteranceId) {
 // Speech file is created
-                        mProcessed = true;
+                    mProcessed = true;
 
 // Initializes Media Player
-                        initializeMediaPlayer();
+                    initializeMediaPlayer();
 
 // Start Playing Speech
-                        playMediaPlayer(0);
-                    }
+                    playMediaPlayer(0);
+                }
 
-                    @Override
-
-
-                    public void onError(String utteranceId) {
-                    }
-
-                    @Override
+                @Override
 
 
-                    public void onStart(String utteranceId) {
-                    }
+                public void onError(String utteranceId) {
+                }
 
-                });
+                @Override
+
+
+                public void onStart(String utteranceId) {
+                }
+
+            });
 //            } else {
 //                tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
 //                    @Override
@@ -271,7 +277,9 @@ public class PdfReadersActivity extends AppCompatActivity {
 //            }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -285,6 +293,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             mMediaPlayer.prepare();
         } catch (Exception e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -323,7 +332,9 @@ public class PdfReadersActivity extends AppCompatActivity {
 //            toGetData(bitmap);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -345,7 +356,9 @@ public class PdfReadersActivity extends AppCompatActivity {
             Log.d("TAG", " Final DATA " + stringBuilder);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -365,7 +378,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                 return;
             }
 
-            Toast.makeText(getApplicationContext(), "Playing sound",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
             mMediaPlayer.start();
 
             finalTime = mMediaPlayer.getDuration();
@@ -376,14 +389,14 @@ public class PdfReadersActivity extends AppCompatActivity {
                 oneTimeOnly = 1;
             }
 
-            Log.d("TAG", " Start Time : "+ String.format("%d min, %d sec",
+            Log.d("TAG", " Start Time : " + String.format("%d min, %d sec",
                     TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                     finalTime)))
             );
 
-            Log.d("TAG", " End Time : "+ String.format("%d min, %d sec",
+            Log.d("TAG", " End Time : " + String.format("%d min, %d sec",
                     TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
@@ -435,7 +448,9 @@ public class PdfReadersActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -454,7 +469,9 @@ public class PdfReadersActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -467,7 +484,9 @@ public class PdfReadersActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }
