@@ -77,6 +77,16 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     public static int oneTimeOnly = 0;
 
+    //Scroll
+    private int previousTotal = 0; // The total number of items in the dataset after the last load
+    private boolean loading = true; // True if we are still waiting for the last set of data to load.
+    private int visibleThreshold = 1; // The minimum amount of items to have below your current scroll position before loading more.
+    int firstVisibleItem, visibleItemCount, totalItemCount;
+
+    private int currentPagep = 1;
+
+//    RecyclerViewPositionHelper mRecyclerViewHelper;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +154,9 @@ public class PdfReadersActivity extends AppCompatActivity {
                         pdfRenderer = new PdfRenderer(fileDescriptor);
                         for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
                             showPage(i);
+                            if (i < 5) {
+                                toGetData(list.get(i));
+                            }
                         }
 
                         if (list.size() > 0) {
@@ -157,6 +170,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                             llCustom_loader.setVisibility(View.GONE);
                             rv.setVisibility(View.VISIBLE);
                             CommonMethod.toCloseLoader();
+
                         } else {
                             CommonMethod.toCloseLoader();
                             CommonMethod.toDisplayToast(PdfReadersActivity.this, "Can't Open Pdf File");
@@ -201,6 +215,38 @@ public class PdfReadersActivity extends AppCompatActivity {
                             }
                         });
 
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            rv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                                @Override
+                                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                                    visibleItemCount = layoutManager.getChildCount();
+                                    totalItemCount = layoutManager.getItemCount();
+                                    firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+//                                    pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+                                    Log.d("TAGPDF", "onScroll " + visibleItemCount + ":" + totalItemCount + ":" + firstVisibleItem + ":" + ":" + visibleThreshold + loading + ":" + totalItemCount + ":" + previousTotal + ":" + currentPagep);
+
+                                    if (loading) {
+                                        if (totalItemCount > previousTotal) {
+                                            loading = false;
+                                            previousTotal = totalItemCount;
+                                        }
+                                    }
+
+                                    Log.d("TAGPDF", "onScroll " + (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)));
+
+                                    if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                                        // End has been reached
+                                        // Do something
+                                        currentPagep++;
+                                        Log.d("TAGPDF", " Current Page 1 " + currentPagep);
+//                                        onLoadMore(currentPage);
+                                        loading = true;
+                                    }
+                                }
+                            });
+                        }
+
                         CommonMethod.toCloseLoader();
                     } else {
                         CommonMethod.toCloseLoader();
@@ -231,6 +277,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override
                 public void onDone(String utteranceId) {
+                    Log.d("TAGPDF", "TTS utterance onDone : " + utteranceId);
                     mProcessed = true;
                     initializeMediaPlayer();
                     playMediaPlayer(0);
@@ -240,12 +287,14 @@ public class PdfReadersActivity extends AppCompatActivity {
 
 
                 public void onError(String utteranceId) {
+                    Log.d("TAGPDF", "TTS utterance error : " + utteranceId);
                 }
 
                 @Override
 
 
                 public void onStart(String utteranceId) {
+                    Log.d("TAGPDF", "TTS utterance onStart : " + utteranceId);
                 }
 
             });
@@ -253,7 +302,6 @@ public class PdfReadersActivity extends AppCompatActivity {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-
         }
     }
 
@@ -261,7 +309,7 @@ public class PdfReadersActivity extends AppCompatActivity {
         try {
             String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + FILENAME;
             Uri uri = Uri.parse("file://" + fileName);
-            Log.d("TAG", " PATH audio : " + fileName);
+            Log.d("TAGPDF", " PATH audio : " + fileName);
             if (uri != null) {
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setDataSource(getApplicationContext(), uri);
@@ -324,7 +372,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                 stringBuilder.append("\n");
             }
 
-            Log.d("TAG", " Final DATA " + stringBuilder);
+            Log.d("TAGPDF", " Final DATA " + stringBuilder);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -343,7 +391,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                 return;
             }
 
-            Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
+
             mMediaPlayer.start();
 
             finalTime = mMediaPlayer.getDuration();
@@ -351,24 +399,23 @@ public class PdfReadersActivity extends AppCompatActivity {
 
             if (oneTimeOnly == 0) {
 //                seekbar.setMax((int) finalTime);
-                Log.d("TAG", "SPEAKING : " + ((int) finalTime));
+                Log.d("TAGPDF", "SPEAKING : " + ((int) finalTime));
                 oneTimeOnly = 1;
             }
 
-            Log.d("TAG", " Start Time : " + String.format("%d min, %d sec",
+            Log.d("TAGPDF", " Start Time : " + String.format("%d min, %d sec",
                     TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                     finalTime)))
             );
 
-            Log.d("TAG", " End Time : " + String.format("%d min, %d sec",
+            Log.d("TAGPDF", " End Time : " + String.format("%d min, %d sec",
                     TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                     TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                     startTime)))
             );
-
 
             HashMap<String, String> myHashRender = new HashMap<>();
             myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
@@ -378,6 +425,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
             if (!mProcessed) {
                 int status = tts.synthesizeToFile(string, myHashRender, fileName);
+                Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
             } else {
                 playMediaPlayer(0);
             }
@@ -401,15 +449,9 @@ public class PdfReadersActivity extends AppCompatActivity {
                     onBackPressed();
                     break;
                 case R.id.menuSpeak:
-                    Log.d("TAG ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
-//                            showPage(i);
-                            toGetData(list.get(i));
-                        }
-                        toSpeak(stringBuilder.toString());
-                    }
-//                    toGetData(list.get(layoutManager.findFirstVisibleItemPosition()));
+                    Log.d("TAGPDF", " Current Page 12 " + currentPagep);
+                    Log.d("TAGPDF ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
+                    toSpeak(stringBuilder.toString());
                     break;
                 default:
                     return true;

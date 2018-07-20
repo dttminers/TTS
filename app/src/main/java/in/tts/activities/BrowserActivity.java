@@ -7,12 +7,15 @@ import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
+import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
+import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
@@ -21,7 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,82 +70,107 @@ public class BrowserActivity extends AppCompatActivity {
                             + getIntent().getStringExtra("url")
                             + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
 
-            } else {
-                superWebView.loadUrl("https://www.google.co.in");
-            }
-            superWebView.getSettings().setJavaScriptEnabled(true);
-            superWebView.getSettings().setSupportZoom(true);
-            superWebView.getSettings().setBuiltInZoomControls(true);
-            superWebView.getSettings().setDisplayZoomControls(true);
-            superWebView.getSettings().setLoadWithOverviewMode(true);
-            superWebView.getSettings().setUseWideViewPort(true);
-            superWebView.clearCache(true);
-            superWebView.clearHistory();
-            superWebView.setHorizontalScrollBarEnabled(true);
-        }
-
-        superWebView.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-        });
-        superWebView.setWebChromeClient(new WebChromeClient() {
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                superProgressBar.setVisibility(View.VISIBLE);
-                superProgressBar.setProgress(newProgress);
-                if (newProgress == 100) {
-                    superProgressBar.setVisibility(View.GONE);
-                    linkList = prefManager.populateSelectedSearch();
-                    toUpdateBookMarkIcon();
                 } else {
-                    superProgressBar.setVisibility(View.VISIBLE);
-
+                    superWebView.loadUrl("https://www.google.co.in");
                 }
+                superWebView.getSettings().setJavaScriptEnabled(true);
+                superWebView.getSettings().setSupportZoom(true);
+                superWebView.getSettings().setBuiltInZoomControls(true);
+                superWebView.getSettings().setDisplayZoomControls(true);
+                superWebView.getSettings().setLoadWithOverviewMode(true);
+                superWebView.getSettings().setUseWideViewPort(true);
+                superWebView.clearCache(true);
+//                superWebView.clearHistory();
+                superWebView.setHorizontalScrollBarEnabled(true);
             }
 
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                getSupportActionBar().setTitle(title);
-            }
+            superWebView.setWebViewClient(new WebViewClient() {
 
-            @Override
-            public void onReceivedIcon(WebView view, Bitmap icon) {
-                super.onReceivedIcon(view, icon);
-                ImageView iv = new ImageView(BrowserActivity.this);
-                iv.setImageBitmap(icon);
-                rl.addView(iv);
-            }
-        });
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                }
 
-        superWebView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                Uri myUri = Uri.parse(url);
-                Intent superIntent = new Intent(Intent.ACTION_VIEW);
-                superIntent.setData(myUri);
-                startActivity(superIntent);
-            }
-        });
-    } catch(Exception |
-    Error e)
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    startOfHistory();
+                }
+            });
+            superWebView.setWebChromeClient(new WebChromeClient() {
 
-    {
-        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-        Crashlytics.logException(e); FirebaseCrash.report(e);
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    super.onProgressChanged(view, newProgress);
+                    superProgressBar.setVisibility(View.VISIBLE);
+                    superProgressBar.setProgress(newProgress);
+                    if (newProgress == 100) {
+                        superProgressBar.setVisibility(View.GONE);
+                        linkList = prefManager.populateSelectedSearch();
+                        toUpdateBookMarkIcon();
+                    } else {
+                        superProgressBar.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onReceivedTitle(WebView view, String title) {
+                    super.onReceivedTitle(view, title);
+                    getSupportActionBar().setTitle(title);
+                }
+
+                @Override
+                public void onReceivedIcon(WebView view, Bitmap icon) {
+                    super.onReceivedIcon(view, icon);
+                    ImageView iv = new ImageView(BrowserActivity.this);
+                    iv.setImageBitmap(icon);
+                    rl.addView(iv);
+                }
+            });
+
+            superWebView.setDownloadListener(new DownloadListener() {
+                @Override
+                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                    Uri myUri = Uri.parse(url);
+                    Intent superIntent = new Intent(Intent.ACTION_VIEW);
+                    superIntent.setData(myUri);
+                    startActivity(superIntent);
+                }
+            });
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
-}
+    public boolean startOfHistory() {
+        try {
+            Log.d("TAGWEB", "WEB Histroy");
+            WebBackForwardList currentList = superWebView.copyBackForwardList();
+            Log.d("TAGWEB", " Web " + currentList.getCurrentItem() + ":"+currentList.getSize()+":"+ currentList.getCurrentItem());
+            for (int i = 0; i < currentList.getSize(); i++) {
+                WebHistoryItem item = currentList.getItemAtIndex(i);
+                Log.d("TAGWEB", " web item " + item.getTitle());
+                if (item != null) { // Null-fence in case they haven't called loadUrl yet (CB-2458)
+                    String url = item.getUrl();
+                    String currentUrl = superWebView.getUrl();
+                    Log.d("TAGWEB", i + ". The current URL is: " + currentUrl);
+                    Log.d("TAGWEB", i + ". The URL at item 0 is:" + url);
+//                    return currentUrl.equals(url);
+                }
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+        return false;
+    }
 
     private void toUpdateBookMarkIcon() {
         try {
@@ -155,8 +185,10 @@ public class BrowserActivity extends AppCompatActivity {
                 cbMenu.setChecked(false);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -234,8 +266,10 @@ public class BrowserActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(rl, message, Snackbar.LENGTH_LONG);
             snackbar.show();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
