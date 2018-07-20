@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -50,6 +51,8 @@ public class PdfReadersActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private PdfPagesAdapter pdfPagesAdapter;
 
+    private ProgressBar progressBarSpeak;
+
     private MediaPlayer mMediaPlayer;
 
     private LinearLayout speakLayout, llCustom_loader;
@@ -61,6 +64,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private StringBuilder stringBuilder;
     private ArrayList<Bitmap> list = new ArrayList<Bitmap>();
+
 
     private TextToSpeech tts;
 
@@ -117,6 +121,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                         backward = findViewById(R.id.backward);
                         close = findViewById(R.id.close);
 
+                        progressBarSpeak = findViewById(R.id.progressBarSpeak);
+
                         mMediaPlayer = new MediaPlayer();
 
 
@@ -154,9 +160,9 @@ public class PdfReadersActivity extends AppCompatActivity {
                         pdfRenderer = new PdfRenderer(fileDescriptor);
                         for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
                             showPage(i);
-                            if (i < 5) {
-                                toGetData(list.get(i));
-                            }
+//                            if (i < 5) {
+//                                toGetData(list.get(i));
+//                            }
                         }
 
                         if (list.size() > 0) {
@@ -324,12 +330,15 @@ public class PdfReadersActivity extends AppCompatActivity {
 
 
     private void playMediaPlayer(int status) {
+        progressBarSpeak.setVisibility(View.GONE);
         // Start Playing
         if (status == 0) {
+            speakLayout.setVisibility(View.VISIBLE);
             mMediaPlayer.start();
         }
         // Pause Playing
         if (status == 1) {
+            speakLayout.setVisibility(View.GONE);
             mMediaPlayer.pause();
         }
     }
@@ -384,10 +393,12 @@ public class PdfReadersActivity extends AppCompatActivity {
         if (mStatus == TextToSpeech.SUCCESS) {
 
             speakLayout.setVisibility(View.VISIBLE);
+            progressBarSpeak.setVisibility(View.GONE);
 
             if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
                 playMediaPlayer(1);
                 speakLayout.setVisibility(View.GONE);
+                progressBarSpeak.setVisibility(View.GONE);
                 return;
             }
 
@@ -426,10 +437,14 @@ public class PdfReadersActivity extends AppCompatActivity {
             if (!mProcessed) {
                 int status = tts.synthesizeToFile(string, myHashRender, fileName);
                 Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
+                speakLayout.setVisibility(View.VISIBLE);
+                progressBarSpeak.setVisibility(View.GONE);
             } else {
                 playMediaPlayer(0);
             }
         } else {
+            speakLayout.setVisibility(View.GONE);
+            progressBarSpeak.setVisibility(View.GONE);
 //            String msg = "TextToSpeech Engine is not initialized";
             Toast.makeText(getBaseContext(), "Unable to Speak", Toast.LENGTH_SHORT).show();
         }
@@ -451,6 +466,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                 case R.id.menuSpeak:
                     Log.d("TAGPDF", " Current Page 12 " + currentPagep);
                     Log.d("TAGPDF ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
+                    progressBarSpeak.setVisibility(View.VISIBLE);
+                    toGetData(list.get(visibleItemCount + totalItemCount));
                     toSpeak(stringBuilder.toString());
                     break;
                 default:

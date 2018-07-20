@@ -64,6 +64,16 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBarSpeak"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:layout_margin="10dp" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/llCustom_loader12"
         android:layout_width="match_parent"

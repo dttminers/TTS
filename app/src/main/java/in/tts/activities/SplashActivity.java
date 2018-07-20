@@ -27,7 +27,7 @@ import in.tts.utils.ToGetPdfFiles;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private FirebaseAuth auth;
+//    private FirebaseAuth auth;
 
     @Override
     @AddTrace(name = "onCreateSplashActivity", enabled = true)
@@ -37,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
+//        auth = FirebaseAuth.getInstance();
         CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
         new Handler().postDelayed(new Runnable() {
@@ -46,9 +46,10 @@ public class SplashActivity extends AppCompatActivity {
                 PrefManager prefManager = new PrefManager(SplashActivity.this);
                 prefManager.getUserInfo();
 
-                if (auth.getCurrentUser() != null) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                } else if (User.getUser(SplashActivity.this).getId() != null) {
+//                if (auth.getCurrentUser() != null) {
+//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                } else
+                    if (User.getUser(SplashActivity.this).getId() != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 } else {
                     if (prefManager.isFirstTimeLaunch()) {

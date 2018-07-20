@@ -97,7 +97,7 @@ public class PDFHomePage extends PagerAdapter {
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
                             CommonMethod.toReleaseMemory();
-                            CommonMethod.toCloseLoader();
+//                            CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
                             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                             Crashlytics.logException(e); FirebaseCrash.report(e);

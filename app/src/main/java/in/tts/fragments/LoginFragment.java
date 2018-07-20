@@ -159,6 +159,12 @@ public class LoginFragment extends Fragment {
                     if (validateEmail() && validatePassword()) {
 //                        startActivity(new Intent(getContext(), MainActivity.class));
 //                        CommonMethod.toDisplayToast(getContext(), "Login Successfully ");
+                        User user = User.getUser(getContext());
+                        user.setLoginFrom(3);
+                        user.setId(String.valueOf(System.currentTimeMillis()));
+                        user.setEmail(mEdtEmail.getText().toString());
+                        toExit();
+
                         //authenticate user
                         auth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
                                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
