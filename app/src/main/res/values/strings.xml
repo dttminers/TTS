@@ -67,9 +67,8 @@
     <string name="str_recent_audios">Recent Audios</string>
     <string name="str_txt_message">No Text Available</string>
     <string name="str_more_options">More Options</string>
-    <string name="str_copy">copy</string>
-    <string name="str_paste">paste</string>
-    <string name="str_replace">share</string>
+    <string name="str_copy">Copy</string>
+    <string name="str_replace">Share</string>
     <string name="str_reload">Reload</string>
     <string name="str_lbl_logout_from_app">Do you want to Logout from App ?</string>
     <string name="str_50mins">50 mins</string>
@@ -90,6 +89,9 @@
     <string name="str_forward">Forward</string>
     <string name="str_bookmark">Bookmark</string>
     <string name="str_refresh">Refresh</string>
+    <string name="str_share">Share</string>
+    <string name="str_paste">Paste</string>
+    <string name="str_speak_tv">Speak</string>
 
 </resources>
 

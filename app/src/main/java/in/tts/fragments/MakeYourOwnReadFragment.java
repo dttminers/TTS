@@ -48,6 +48,7 @@ public class MakeYourOwnReadFragment extends Fragment {
 
     private EditText editText;
     private TextToSpeech t1;
+    private TextView tvCopy, tvPaste, tvShare, tvSpeak;
     private ImageView ivCopy, ivPaste, ivShare, ivSpeak;
     private ClipboardManager myClipboard;
     private ClipData myClip;
@@ -84,6 +85,8 @@ public class MakeYourOwnReadFragment extends Fragment {
             setHasOptionsMenu(true);
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "MakeYourRead", null);
             editText = getActivity().findViewById(R.id.edMakeRead);
+
+
             // the purpose of the touch listener is just to store the touch X,Y coordinates
             editText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -143,6 +146,7 @@ public class MakeYourOwnReadFragment extends Fragment {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void popup() {
         try {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -165,11 +169,61 @@ public class MakeYourOwnReadFragment extends Fragment {
             ivShare = customView.findViewById(R.id.ivShare);
             ivSpeak = customView.findViewById(R.id.ivSpeak);
 
+            tvCopy = customView.findViewById(R.id.tv_copy);
+            tvPaste = customView.findViewById(R.id.tv_paste);
+            tvShare = customView.findViewById(R.id.tv_share);
+            tvSpeak = customView.findViewById(R.id.tv_speak);
+
             myClipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+
+            ivCopy.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    tvCopy.setVisibility(View.VISIBLE);
+                    tvPaste.setVisibility(View.GONE);
+                    tvShare.setVisibility(View.GONE);
+                    tvSpeak.setVisibility(View.GONE);
+                    return false;
+                }
+            });
+
+            ivPaste.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    tvCopy.setVisibility(View.GONE);
+                    tvPaste.setVisibility(View.VISIBLE);
+                    tvShare.setVisibility(View.GONE);
+                    tvSpeak.setVisibility(View.GONE);
+                    return false;
+                }
+            });
+
+            ivShare.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    tvCopy.setVisibility(View.GONE);
+                    tvPaste.setVisibility(View.GONE);
+                    tvShare.setVisibility(View.VISIBLE);
+                    tvSpeak.setVisibility(View.GONE);
+                    return false;
+                }
+            });
+
+            ivSpeak.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    tvCopy.setVisibility(View.GONE);
+                    tvPaste.setVisibility(View.GONE);
+                    tvShare.setVisibility(View.GONE);
+                    tvSpeak.setVisibility(View.VISIBLE);
+                    return false;
+                }
+            });
 
             ivCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     CharSequence text = editText.getText();//.subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
                     myClip = ClipData.newPlainText("text", text);
                     myClipboard.setPrimaryClip(myClip);
@@ -180,6 +234,8 @@ public class MakeYourOwnReadFragment extends Fragment {
             ivPaste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    tvPaste.setVisibility(View.VISIBLE);
+
                     if (myClipboard.hasPrimaryClip()) {
                         ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
                         String ptext = item.getText().toString();
@@ -192,6 +248,8 @@ public class MakeYourOwnReadFragment extends Fragment {
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    tvShare.setVisibility(View.VISIBLE);
+
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
@@ -213,6 +271,8 @@ public class MakeYourOwnReadFragment extends Fragment {
             ivSpeak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    tvSpeak.setVisibility(View.VISIBLE);
+
                     String toSpeak = editText.getText().toString();
                     Toast.makeText(getContext(), toSpeak, Toast.LENGTH_SHORT).show();
                     t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
