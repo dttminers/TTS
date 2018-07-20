@@ -1,10 +1,6 @@
 package in.tts.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -14,18 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import in.tts.R;
 import in.tts.adapters.BookMarkAdapter;
-import in.tts.adapters.BookmarkListAdapter;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 

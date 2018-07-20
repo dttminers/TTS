@@ -3,15 +3,12 @@ package in.tts.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,11 +20,9 @@ import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgen
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 
 import in.tts.R;
 import in.tts.activities.PdfReadersActivity;
-import in.tts.fragments.MyBooksFragment;
 import in.tts.utils.CommonMethod;
 
 public class PDFHomePage extends PagerAdapter {
@@ -43,6 +38,7 @@ public class PDFHomePage extends PagerAdapter {
     public PDFHomePage(Context ctx, ArrayList<String> listfile) {
         context = ctx;
         list = listfile;
+        Log.d("TAG", " PDFHomePage : " + list.size());
     }
 
     @Override
@@ -83,7 +79,7 @@ public class PDFHomePage extends PagerAdapter {
                 //open a specific page in PDF file
                 currentPage = pdfRenderer.openPage(0);
                 // Important: the destination bitmap must be ARGB (not RGB).
-//            Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
+//                  Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
                 Bitmap bitmap = Bitmap.createBitmap(250, 300, Bitmap.Config.ARGB_8888);
                 // Here, we render the page onto the Bitmap.
                 currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
@@ -123,7 +119,7 @@ public class PDFHomePage extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
     }
 }

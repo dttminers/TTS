@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
@@ -17,7 +17,6 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
 import in.tts.activities.BrowserActivity;
-import in.tts.activities.MainActivity;
 import in.tts.utils.CommonMethod;
 
 public class BrowserFragment extends Fragment {
@@ -29,7 +28,7 @@ public class BrowserFragment extends Fragment {
 
     @Override
     @AddTrace(name = "onCreateBrowserFragment", enabled = true)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_browser, container, false);
     }
 

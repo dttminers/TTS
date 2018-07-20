@@ -23,8 +23,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.io.IOException;
-
 import in.tts.R;
 import in.tts.classes.TTS;
 import in.tts.utils.CommonMethod;
@@ -164,7 +162,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                         return;
                     }
                     mCameraSource.start(mCameraView.getHolder());
-                } catch (IOException e) {
+                } catch (Exception | Error e) {
                     e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                 }
             }
@@ -212,7 +210,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                         .setRequestedFps(2.0f)
                         .build();
 
-                /**
+                /*
                  * Add call back to SurfaceView and check if camera permission is granted.
                  * If permission is granted we can start our cameraSource and pass it to surfaceView
                  */
@@ -231,7 +229,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                                                 return;
                                             }
                                             mCameraSource.start(mCameraView.getHolder());
-                                        } catch (IOException e) {
+                                        } catch (Exception|Error e) {
                                             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                         }
                                     }
@@ -252,7 +250,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                     public void release() {
                     }
 
-                    /**
+                    /*
                      * Detect all the text from camera using TextBlock and the values into a stringBuilder
                      * which will then be set to the textView.
                      * */

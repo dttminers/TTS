@@ -8,9 +8,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.TextView;
 
-/**
+/*
  * Created by nor on 11/23/2015.
  */
 public class ZoomTextView extends android.support.v7.widget.AppCompatTextView {
@@ -44,7 +43,7 @@ public class ZoomTextView extends android.support.v7.widget.AppCompatTextView {
 
     }
 
-    /***
+    /**
      * @param zoomLimit
      * Default value is 3, 3 means text can zoom 3 times the default size
      */

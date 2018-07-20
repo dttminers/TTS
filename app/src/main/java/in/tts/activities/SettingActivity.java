@@ -2,19 +2,25 @@ package in.tts.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
+import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 
 public class SettingActivity extends AppCompatActivity {
+
+    private RelativeLayout rlLogout;
 
     @Override
     @AddTrace(name = "onCreateSettingActivity", enabled = true)
@@ -30,15 +36,33 @@ public class SettingActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(R.string.app_name);
             }
 
-            findViewById(R.id.rlLogout).setOnClickListener(new View.OnClickListener() {
+            rlLogout = findViewById(R.id.rlLogout);
+
+            if (User.getUser(SettingActivity.this).getId() != null) {
+                rlLogout.setVisibility(View.VISIBLE);
+            } else {
+                rlLogout.setVisibility(View.GONE);
+            }
+
+            rlLogout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    doExit();
+                    try {
+                        FirebaseAuth.getInstance().signOut();
+                        doExit();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    }
                 }
             });
+
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -56,8 +80,10 @@ public class SettingActivity extends AppCompatActivity {
             alertDialog.setTitle(getResources().getString(R.string.app_name));
             alertDialog.show();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -71,8 +97,10 @@ public class SettingActivity extends AppCompatActivity {
                     return true;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
         return super.onOptionsItemSelected(item);
     }

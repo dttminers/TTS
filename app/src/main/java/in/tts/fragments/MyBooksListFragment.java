@@ -1,25 +1,19 @@
 package in.tts.fragments;
 
 import android.Manifest;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,9 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 
@@ -37,7 +28,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.adapters.ImageAdapterGallery;
 import in.tts.adapters.PdfListAdapter;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
@@ -47,9 +37,7 @@ public class MyBooksListFragment extends Fragment {
     private ArrayList<String> file;
     private PdfListAdapter pdfListAdapter;
     private PrefManager prefManager;
-    //    ProgressBar mProgress;
     RecyclerView recyclerView;
-    //    RelativeLayout rl;
     LinearLayout rl;
 
     int pStatus = 0;
@@ -147,6 +135,7 @@ public class MyBooksListFragment extends Fragment {
 //                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
                 rl.setVisibility(View.GONE);
                 pdfListAdapter.notifyItemChanged(file.size(), file);
+                prefManager.toSetPDFFileList(file, true);
             }
             //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {

@@ -1,16 +1,14 @@
 package in.tts.activities;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent;
+import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
-import com.google.firebase.crash.FirebaseCrash;
 
 import in.tts.R;
 import in.tts.utils.CommonMethod;
@@ -59,7 +57,7 @@ public class AudioSettingActivity extends AppCompatActivity {
 //
 //            }
 //        });
-        final RelativeLayout rlEng = (RelativeLayout) findViewById(R.id.rlEnglish);
+        final RelativeLayout rlEng = findViewById(R.id.rlEnglish);
 
         RadioGroup rg = (RadioGroup) findViewById(R.id.rgLanguageSel);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

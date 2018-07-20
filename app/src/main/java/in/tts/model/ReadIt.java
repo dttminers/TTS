@@ -2,12 +2,12 @@ package in.tts.model;
 
 import android.app.Application;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent;
+import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
@@ -36,8 +36,10 @@ public class ReadIt extends Application {
             Fabric.with(fabric);
 
         } catch (Exception | Error e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 

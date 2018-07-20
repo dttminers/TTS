@@ -10,10 +10,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Date;

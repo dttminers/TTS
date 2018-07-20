@@ -21,7 +21,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
@@ -191,7 +190,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
-    /**
+    /*
      * Returns false if image is in initial, unzoomed state. False, otherwise.
      *
      * @return true if image is zoomed
@@ -200,7 +199,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return normalizedScale != 1;
     }
 
-    /**
+    /*
      * Return a Rect representing the zoomed image.
      *
      * @return rect representing zoomed image
@@ -217,7 +216,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return new RectF(topLeft.x / w, topLeft.y / h, bottomRight.x / w, bottomRight.y / h);
     }
 
-    /**
+    /*
      * Save the current matrix and view dimensions
      * in the prevMatrix and prevView variables.
      */
@@ -283,7 +282,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         savePreviousImageValues();
     }
 
-    /**
+    /*
      * Get the max zoom multiplier.
      *
      * @return max zoom multiplier.
@@ -292,7 +291,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return maxScale;
     }
 
-    /**
+    /*
      * Set the max zoom multiplier. Default value: 3.
      *
      * @param max max zoom multiplier.
@@ -302,7 +301,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         superMaxScale = SUPER_MAX_MULTIPLIER * maxScale;
     }
 
-    /**
+    /*
      * Get the min zoom multiplier.
      *
      * @return min zoom multiplier.
@@ -311,7 +310,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return minScale;
     }
 
-    /**
+    /*
      * Set the min zoom multiplier. Default value: 1.
      *
      * @param min min zoom multiplier.
@@ -321,7 +320,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         superMinScale = SUPER_MIN_MULTIPLIER * minScale;
     }
 
-    /**
+    /*
      * Get the current zoom. This is the zoom relative to the initial
      * scale, not the original resource.
      *
@@ -331,7 +330,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return normalizedScale;
     }
 
-    /**
+    /*
      * Reset zoom and translation to initial state.
      */
     public void resetZoom() {
@@ -339,7 +338,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fitImageToView();
     }
 
-    /**
+    /*
      * Set zoom to the specified scale. Image will be centered by default.
      *
      * @param scale
@@ -348,7 +347,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         setZoom(scale, 0.5f, 0.5f);
     }
 
-    /**
+    /*
      * Set zoom to the specified scale. Image will be centered around the point
      * (focusX, focusY). These floats range from 0 to 1 and denote the focus point
      * as a fraction from the left and top of the view. For example, the top left
@@ -362,7 +361,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         setZoom(scale, focusX, focusY, mScaleType);
     }
 
-    /**
+    /*
      * Set zoom to the specified scale. Image will be centered around the point
      * (focusX, focusY). These floats range from 0 to 1 and denote the focus point
      * as a fraction from the left and top of the view. For example, the top left
@@ -397,7 +396,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         setImageMatrix(matrix);
     }
 
-    /**
+    /*
      * Set zoom parameters equal to another TouchImageView. Including scale, position,
      * and ScaleType.
      *
@@ -408,7 +407,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         setZoom(img.getCurrentZoom(), center.x, center.y, img.getScaleType());
     }
 
-    /**
+    /*
      * Return the point at the center of the zoomed image. The PointF coordinates range
      * in value between 0 and 1 and the focus point is denoted as a fraction from the left
      * and top of the view. For example, the top left corner of the image would be (0, 0).
@@ -430,7 +429,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return point;
     }
 
-    /**
+    /*
      * Set the focus point of the zoomed image. The focus points are denoted as a fraction from the
      * left and top of the view. The focus points can range in value between 0 and 1.
      *
@@ -441,7 +440,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         setZoom(normalizedScale, focusX, focusY);
     }
 
-    /**
+    /*
      * Performs boundary checking and fixes the image matrix if it
      * is out of bounds.
      */
@@ -458,7 +457,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
-    /**
+    /*
      * When transitioning from zooming from focus to zoom from center (or vice versa)
      * the image can become unaligned within the view. This is apparent when zooming
      * quickly. When the content size is less than the view size, the content will often
@@ -540,7 +539,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fitImageToView();
     }
 
-    /**
+    /*
      * If the normalizedScale is equal to 1, then the image is made to fit the screen. Otherwise,
      * it is made to fit the screen according to the dimensions of the previous image matrix. This
      * allows the image to maintain its zoom after rotation.
@@ -656,7 +655,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         setImageMatrix(matrix);
     }
 
-    /**
+    /*
      * Set view dimensions based on layout params
      *
      * @param mode
@@ -686,7 +685,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return viewSize;
     }
 
-    /**
+    /*
      * After rotating, the matrix needs to be translated. This function finds the area of image
      * which was previously centered and adjusts translations so that is again the center, post-rotation.
      *
@@ -774,7 +773,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fixScaleTrans();
     }
 
-    /**
+    /*
      * This function will transform the coordinates in the touch event to the coordinate
      * system of the drawable that the imageview contain
      *
@@ -801,7 +800,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return new PointF(finalX, finalY);
     }
 
-    /**
+    /*
      * Inverse of transformCoordTouchToBitmap. This function will transform the coordinates in the
      * drawable's coordinate system to the view's coordinate system.
      *
@@ -842,7 +841,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         public void onMove();
     }
 
-    /**
+    /*
      * Gesture Listener detects a single click or long click and passes that on
      * to the view's listener.
      *
@@ -901,7 +900,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
-    /**
+    /*
      * Responsible for all touch events. Handles the heavy lifting of drag and also sends
      * touch events to Scale Detector and Gesture Detector.
      *
@@ -971,7 +970,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
-    /**
+    /*
      * ScaleListener detects user two finger scaling and scales image.
      *
      * @author Ortiz
@@ -1018,7 +1017,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
-    /**
+    /*
      * DoubleTapZoom calls a series of runnables which apply
      * an animated zoom in/out graphic to the image.
      *
@@ -1083,7 +1082,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             }
         }
 
-        /**
+        /*
          * Interpolate between where the image should start and end in order to translate
          * the image so that the point that is touched is what ends up centered at the end
          * of the zoom.
@@ -1097,7 +1096,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             matrix.postTranslate(targetX - curr.x, targetY - curr.y);
         }
 
-        /**
+        /*
          * Use interpolator to get t
          *
          * @return
@@ -1109,7 +1108,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             return interpolator.getInterpolation(elapsed);
         }
 
-        /**
+        /*
          * Interpolate the current targeted zoom and get the delta
          * from the current zoom.
          *
@@ -1122,7 +1121,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
-    /**
+    /*
      * Fling launches sequential runnables which apply
      * the fling graphic to the image. The values for the translation
      * are interpolated by the Scroller.

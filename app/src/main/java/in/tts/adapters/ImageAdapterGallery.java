@@ -41,9 +41,9 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
             Picasso
                     .get()
                     .load("file://" + images.get(i).trim().replaceAll("\\s", "%20"))
-//                    .resize(250,250)
-//                    .onlyScaleDown()
-                    .fit()
+                    .resize(250,250)
+                    .onlyScaleDown()
+                    .centerCrop()
                     .into(viewHolder.picturesView);
         } catch (Exception | Error e) {
             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

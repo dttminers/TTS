@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import org.json.JSONObject;
@@ -101,8 +103,10 @@ public class PrefManager {
                 }
             }
         } catch (Exception | Error e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -114,13 +118,15 @@ public class PrefManager {
             editor.commit();
             Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
-    public void getAudioSetting(){
-        try{
+    public void getAudioSetting() {
+        try {
             String Audio = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).getString(AUDIO_SETTING_INFO, null);
             if (Audio != null) {
                 AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
@@ -143,13 +149,15 @@ public class PrefManager {
                     audioSetting.setVoiceSpeed(audioJSON.getInt("voice speed"));
                 }
             }
-        }catch (Exception |Error e){
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
-    public void setAudioSetting(){
+    public void setAudioSetting() {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).edit();
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
@@ -157,8 +165,10 @@ public class PrefManager {
             editor.commit();
             Log.d("TAG", "getAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -166,26 +176,33 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
             if (us != null) {
-                return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             return null;
         }
     }
 
-    public void toSetPDFFileList(ArrayList<String> list) {
+    public void toSetPDFFileList(ArrayList<String> list, boolean status) {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST, 0).edit();
+            if (status) {
+                editor.clear();
+            }
             editor.putString(PDF_LIST_INFO, list.toString());
             editor.apply();
             editor.commit();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -194,13 +211,15 @@ public class PrefManager {
             String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
             if (us != null) {
                 Log.d("TAG", " toSetImageFileList get " + us);
-                return new ArrayList<String>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             return null;
         }
     }
@@ -213,8 +232,10 @@ public class PrefManager {
             editor.commit();
             Log.d("TAG", "toSetImageFileList " + list.size());
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -222,15 +243,22 @@ public class PrefManager {
         try {
             String s = _context.getSharedPreferences(PREFERENCES, 0).getString(WEB_LINKS, null);
             if (s != null) {
-                return new ArrayList<String>(Arrays.asList(s.replace("[", "").replace("]", "")
-                        .replaceAll("\\s+", "")
-                        .split(",")));
+                return new ArrayList<>(
+                        Arrays.asList(
+                                s.replace("[", "")
+                                        .replace("]", "")
+                                        .replaceAll("\\s+", "")
+                                        .split(",")
+                        )
+                );
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             return null;
         }
     }
@@ -241,9 +269,11 @@ public class PrefManager {
             editor.putString(WEB_LINKS, selectedSearch.toString());
             editor.apply();
             editor.commit();
-        } catch (Exception e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }

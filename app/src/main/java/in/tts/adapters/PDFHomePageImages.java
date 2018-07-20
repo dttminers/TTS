@@ -48,9 +48,9 @@ public class PDFHomePageImages extends PagerAdapter {
             ImageView iv = vg.findViewById(R.id.ivItem);
             Picasso.get()
                     .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
-//                    .resize(250, 250)
-//                    .onlyScaleDown()
-                    .fit()
+                    .resize(250, 250)
+                    .onlyScaleDown()
+                    .centerCrop()
                     .into(iv);
 
             iv.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +78,7 @@ public class PDFHomePageImages extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
     }
 }

@@ -1,16 +1,12 @@
 package in.tts.adapters;
 
 import android.content.Context;
-import android.graphics.Movie;
-import android.speech.tts.Voice;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -52,8 +48,8 @@ public class RecentVoiceAdapter extends RecyclerView.Adapter<RecentVoiceAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            Filename = (TextView) itemView.findViewById(R.id.tv_file_name);
-            FileSize = (TextView) itemView.findViewById(R.id.tv_file_size);
+            Filename = itemView.findViewById(R.id.tv_file_name);
+            FileSize = itemView.findViewById(R.id.tv_file_size);
         }
     }
 }

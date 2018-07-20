@@ -1,12 +1,11 @@
 package in.tts.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.perf.metrics.AddTrace;
@@ -43,13 +42,14 @@ public class PDFAdapter extends ArrayAdapter<File> {
         }
     }
 
+    @NonNull
     @Override
-    public View getView(final int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, @NonNull ViewGroup parent) {
         if (view == null) {
             CommonMethod.toCloseLoader();
             view = LayoutInflater.from(getContext()).inflate(R.layout.adapter_pdf, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.tv_filename = (TextView) view.findViewById(R.id.tv_name);
+            viewHolder.tv_filename = view.findViewById(R.id.tv_name);
 
             view.setTag(viewHolder);
         } else {
