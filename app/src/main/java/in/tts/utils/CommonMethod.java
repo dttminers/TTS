@@ -2,6 +2,7 @@ package in.tts.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
@@ -167,5 +168,11 @@ public class CommonMethod {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
+
+    // Online Connection checking Code.................
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return !(connectivityManager == null || connectivityManager.getActiveNetworkInfo() == null || !connectivityManager.getActiveNetworkInfo().isConnected());
     }
 }

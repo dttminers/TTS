@@ -71,7 +71,7 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
                             Intent intent = new Intent(context, PdfReadersActivity.class);
                             intent.putExtra("file", list.get(getAdapterPosition()));
                             context.startActivity(intent);
-//                        CommonMethod.toCloseLoader();
+                        CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
