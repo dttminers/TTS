@@ -79,33 +79,33 @@ public class AudioSettingActivity extends AppCompatActivity {
             }
         });
 
-        rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i) {
-                    case R.id.rbMale:
-                        // do operations specific to this selection
-                        Log.d("TAG voiceSel", " male " + i);
-                        Toast.makeText(getBaseContext(), rbMale.getText(), Toast.LENGTH_SHORT).show();
-                         audioSetting.setVoiceSelection(String.valueOf(i));
-                        prefData();
-                        break;
-
-                    case R.id.rbFemale:
-                        // do operations specific to this selection
-                        Log.d("TAG voiceSel", " female " + i);
-                        Toast.makeText(getBaseContext(), rbFemale.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setVoiceSelection(String.valueOf(i));
-                        prefData();
-                        break;
-
-//                    default:
-//                        new AudioSetting(AudioSettingActivity.this).setVoiceSelection(String.valueOf(R.id.rbFemale));
+//        rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+//                switch (i) {
+//                    case R.id.rbMale:
+//                        // do operations specific to this selection
+//                        Log.d("TAG voiceSel", " male " + i);
+//                        Toast.makeText(getBaseContext(), rbMale.getText(), Toast.LENGTH_SHORT).show();
+//                         audioSetting.setVoiceSelection(String.valueOf(i));
 //                        prefData();
 //                        break;
-                }
-            }
-        });
+//
+//                    case R.id.rbFemale:
+//                        // do operations specific to this selection
+//                        Log.d("TAG voiceSel", " female " + i);
+//                        Toast.makeText(getBaseContext(), rbFemale.getText(), Toast.LENGTH_SHORT).show();
+//                        audioSetting.setVoiceSelection(String.valueOf(i));
+//                        prefData();
+//                        break;
+//
+////                    default:
+////                        new AudioSetting(AudioSettingActivity.this).setVoiceSelection(String.valueOf(R.id.rbFemale));
+////                        prefData();
+////                        break;
+//                }
+//            }
+//        });
 
         rgLangSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -164,7 +164,7 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbAccent1:
                         // do operations specific to this selection
                         Log.d("TAG accentSel", " british " + i);
-                        Toast.makeText(getBaseContext(), rbAccent1.getText(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), rbAccent1.getText(), Toast.LENGTH_SHORT).show();
                         audioSetting.setAccentSelection(String.valueOf(i));
                         prefData();
                         break;
@@ -172,7 +172,7 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbAccent2:
                         // do operations specific to this selection
                         Log.d("TAG accentSel", " american " + i);
-                        Toast.makeText(getBaseContext(), rbAccent2.getText(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), rbAccent2.getText(), Toast.LENGTH_SHORT).show();
                         audioSetting.setAccentSelection(String.valueOf(i));
                         prefData();
                         break;
@@ -184,7 +184,27 @@ public class AudioSettingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        onCheckedChanged(rgVoiceSel,0);
     }
+
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+        if (rbMale.isChecked()) {
+            audioSetting.setVoiceSelection(String.valueOf(checkedId));
+            prefData();
+            Toast.makeText(AudioSettingActivity.this, "Male", Toast.LENGTH_SHORT).show();
+        } else {
+            audioSetting.setVoiceSelection(String.valueOf(checkedId));
+            prefData();
+            Toast.makeText(AudioSettingActivity.this, "Female", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+
 
     public void prefData() {
         new PrefManager(AudioSettingActivity.this).setAudioSetting();
