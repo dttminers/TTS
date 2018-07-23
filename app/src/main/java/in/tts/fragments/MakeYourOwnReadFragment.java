@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -106,12 +107,18 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     KeyBoard.openKeyboard(getActivity());
+                    Log.d("TAG DATA ", "EDITTEXT " + editText.getSelectionStart() + ":" + editText.getSelectionEnd() + ":" + Math.max(editText.getSelectionStart(), 0) + ":" + Math.max(editText.getSelectionEnd(), 0));
                 }
             });
             editText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    try {
                     popup();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
                     return false;
                 }
             });

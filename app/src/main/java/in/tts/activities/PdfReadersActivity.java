@@ -44,6 +44,13 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+//import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+//import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+//
+//import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+//import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+//import cafe.adriel.androidaudioconverter.model.AudioFormat;
+
 import in.tts.R;
 import in.tts.adapters.PdfPagesAdapter;
 import in.tts.classes.ToSetMore;
@@ -299,7 +306,10 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void initializeMediaPlayer() {
         try {
-            String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
+            String fileName =
+                    //Environment.getDownloadCacheDirectory().getAbsolutePath()
+                    Environment.getExternalStorageDirectory().getAbsolutePath()
+                            + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
             Uri uri = Uri.parse("file://" + fileName);
             Log.d("TAGPDF", " PATH audio 1: " + fileName);
             if (uri != null) {
@@ -382,6 +392,24 @@ public class PdfReadersActivity extends AppCompatActivity {
             Log.d("TAGPDF", " Final_DATA 2 " + text);
             toSpeak(text);
 //            toSpeak(stringBuilder.toString());
+
+//            File wavFile = new File(Environment.getExternalStorageDirectory(), "recorded_audio.wav");
+//            IConvertCallback callback = new IConvertCallback() {
+//                @Override
+//                public void onSuccess(File convertedFile) {
+//                    Toast.makeText(PdfReadersActivity.this, "SUCCESS: " + convertedFile.getPath(), Toast.LENGTH_LONG).show();
+//                }
+//                @Override
+//                public void onFailure(Exception error) {
+//                    Toast.makeText(PdfReadersActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//            };
+//            Toast.makeText(this, "Converting audio file...", Toast.LENGTH_SHORT).show();
+//            AndroidAudioConverter.with(this)
+//                    .setFile(file)
+//                    .setFormat(AudioFormat.MP3)
+//                    .setCallback(callback)
+//                    .convert();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -432,7 +460,10 @@ public class PdfReadersActivity extends AppCompatActivity {
             myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
 
 
-            String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
+            String fileName =
+//                    Environment.getDownloadCacheDirectory().getAbsolutePath()
+                    Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
             Log.d("TAGPDF", " PATH audio : " + fileName);
 
             if (!mProcessed) {

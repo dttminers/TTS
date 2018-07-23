@@ -18,6 +18,8 @@ import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.folioreader.FolioReader;
+import com.folioreader.ui.folio.activity.FolioActivity;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
@@ -86,6 +88,13 @@ public class PDFHomePage extends PagerAdapter {
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
                             CommonMethod.toCloseLoader();
+//                            FolioReader folioReader = FolioReader.getInstance(context);
+                            Log.d("TAG", "PDF FILE" + list.get(position)+":"+ file.getAbsolutePath());
+//                            folioReader.openBook("file://"+list.get(position));
+//                            Intent intent = new Intent(context, FolioActivity.class);
+//                            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.ASSETS);
+//                            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "Akshipta_Resume.pdf");
+//                            context.startActivity(intent);
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

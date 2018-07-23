@@ -13,6 +13,8 @@ import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+//import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+//import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 import in.tts.R;
 import io.fabric.sdk.android.Fabric;
 
@@ -34,6 +36,17 @@ public class ReadIt extends Application {
                     .debuggable(true)
                     .build();
             Fabric.with(fabric);
+
+//            AndroidAudioConverter.load(this, new ILoadCallback() {
+//                @Override
+//                public void onSuccess() {
+//                    // Great!
+//                }
+//                @Override
+//                public void onFailure(Exception error) {
+//                    // FFmpeg is not supported by device
+//                }
+//            });
 
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
