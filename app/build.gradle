@@ -4,7 +4,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
+//    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.flurry.android:ads:11.1.1@aar'
     implementation 'com.flurry.android:analytics:11.1.1@aar'
 
-    implementation 'com.folioreader:folioreader:0.4.0'
+//    implementation 'com.folioreader:folioreader:0.4.0'
 
     implementation 'com.facebook.android:facebook-login:4.34.0'
 
