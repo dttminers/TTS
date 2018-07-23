@@ -99,10 +99,10 @@ public class AudioSettingActivity extends AppCompatActivity {
                         prefData();
                         break;
 
-                    default:
-                        new AudioSetting(AudioSettingActivity.this).setVoiceSelection(String.valueOf(R.id.rbFemale));
-                        prefData();
-                        break;
+//                    default:
+//                        new AudioSetting(AudioSettingActivity.this).setVoiceSelection(String.valueOf(R.id.rbFemale));
+//                        prefData();
+//                        break;
                 }
             }
         });
@@ -142,16 +142,16 @@ public class AudioSettingActivity extends AppCompatActivity {
 
                     case R.id.rbTamilLs:
                         // do operations specific to this selection
-                        Log.d("TAG voiceSel", " tamil " + i);
+                        Log.d("TAG LangSelection", " tamil " + i);
                         Toast.makeText(getBaseContext(), rbTamil.getText(), Toast.LENGTH_SHORT).show();
                         audioSetting.setLangSelection(String.valueOf(i));
                         prefData();
                         break;
 
-                    default:
-                        audioSetting.setLangSelection(String.valueOf(R.id.rbEnglishLs));
-                        prefData();
-                        break;
+//                    default:
+//                        audioSetting.setLangSelection(String.valueOf(R.id.rbEnglishLs));
+//                        prefData();
+//                        break;
                 }
 
             }

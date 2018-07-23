@@ -33,6 +33,9 @@ import java.util.List;
 
 import in.tts.R;
 import in.tts.model.PrefManager;
+import in.tts.utils.CommonMethod;
+
+import static java.security.AccessController.getContext;
 
 public class BrowserActivity extends AppCompatActivity {
 
@@ -51,6 +54,7 @@ public class BrowserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            checkInternetConnection();
             setContentView(R.layout.activity_browser);
 
             prefManager = new PrefManager(BrowserActivity.this);
@@ -144,6 +148,19 @@ public class BrowserActivity extends AppCompatActivity {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+        }
+    }
+
+    private void checkInternetConnection() {
+        try {
+            if (CommonMethod.isOnline(BrowserActivity.this)) {
+                new BrowserActivity();
+            } else {
+                CommonMethod.toDisplayToast(BrowserActivity.this,getResources().getString(R.string.lbl_no_check_internet));
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace(); Crashlytics.logException(e);
+
         }
     }
 

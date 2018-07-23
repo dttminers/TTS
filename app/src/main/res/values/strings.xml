@@ -95,6 +95,7 @@
     <string name="str_speak_tv">Speak</string>
     <string name="auth_failed">Please try again, Login failed</string>
     <string name="minimum_password" />
+    <string name="lbl_no_check_internet">No Internet Connection</string>
 
 </resources>
 

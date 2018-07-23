@@ -2,17 +2,24 @@ package in.tts.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
+
+import java.text.DecimalFormat;
 
 import in.tts.R;
 import in.tts.model.User;
@@ -21,12 +28,15 @@ import in.tts.utils.CommonMethod;
 public class SettingActivity extends AppCompatActivity {
 
     private RelativeLayout rlLogout;
+    private ProgressBar pbData, pbStorage;
+    private TextView tvUsed, tvFree;
 
     @Override
     @AddTrace(name = "onCreateSettingActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
             setContentView(R.layout.activity_setting);
             CommonMethod.setAnalyticsData(SettingActivity.this, "MainTab", "Setting", null);
 
@@ -37,6 +47,32 @@ public class SettingActivity extends AppCompatActivity {
             }
 
             rlLogout = findViewById(R.id.rlLogout);
+            pbData = findViewById(R.id.pbSetting1);
+            pbStorage = findViewById(R.id.pbSetting2);
+            tvFree = findViewById(R.id.tvFree);
+            tvUsed = findViewById(R.id.tvUsed);
+
+            tvUsed.setVisibility(View.VISIBLE);
+
+            final float totalSpace = DeviceMemory.getInternalStorageSpace();
+            final float occupiedSpace = DeviceMemory.getInternalUsedSpace();
+            final float freeSpace = DeviceMemory.getInternalFreeSpace();
+            final DecimalFormat outputFormat = new DecimalFormat("#.##");
+
+            Log.d("TAG","Storage occu"  +occupiedSpace);
+            Log.d("TAG","Storage total" +totalSpace);
+
+            if (null != pbStorage) {
+                pbStorage.setMax((int) totalSpace);
+                pbStorage.setProgress((int)occupiedSpace);
+            }
+            if (null != tvUsed) {
+                tvUsed.setText(outputFormat.format(occupiedSpace) + " MB");
+            }
+
+            if (null != tvFree) {
+                tvFree.setText(outputFormat.format(freeSpace) + " MB");
+            }
 
             if (User.getUser(SettingActivity.this).getId() != null) {
                 rlLogout.setVisibility(View.VISIBLE);
@@ -63,6 +99,32 @@ public class SettingActivity extends AppCompatActivity {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+        }
+    }
+
+    public static class DeviceMemory {
+
+        public static float getInternalStorageSpace() {
+            StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+            //StatFs statFs = new StatFs("/data");
+            float total = ((float)statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
+            return total;
+        }
+
+        public static float getInternalFreeSpace() {
+            StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+            //StatFs statFs = new StatFs("/data");
+            float free  = ((float)statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
+            return free;
+        }
+
+        public static float getInternalUsedSpace() {
+            StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+            //StatFs statFs = new StatFs("/data");
+            float total = ((float)statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
+            float free  = ((float)statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
+            float busy  = total - free;
+            return busy;
         }
     }
 
