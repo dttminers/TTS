@@ -18,6 +18,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
 import in.tts.activities.BrowserActivity;
+import in.tts.model.Browser;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.TouchImageView;
 
@@ -28,6 +29,7 @@ public class BrowserFragment extends Fragment {
 
     public BrowserFragment() {
     }
+
 
     @Override
     @AddTrace(name = "onCreateBrowserFragment", enabled = true)

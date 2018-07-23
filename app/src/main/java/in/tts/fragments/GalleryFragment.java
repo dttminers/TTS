@@ -19,9 +19,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import java.util.ArrayList;
@@ -29,12 +32,12 @@ import java.util.ArrayList;
 import in.tts.R;
 
 import in.tts.adapters.ImageAdapterGallery;
-import in.tts.utils.CommonMethod;
 
 public class GalleryFragment extends Fragment {
 
     private ArrayList<String> imageFile;
     private ImageAdapterGallery imageAdapterGallery;
+    private ProgressBar mLoading;
 
     public GalleryFragment() {
     }
@@ -50,18 +53,19 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CommonMethod.toCloseLoader();
+        mLoading = getActivity().findViewById(R.id.progressBarPic);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        CommonMethod.toReleaseMemory();
         try {
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -73,14 +77,15 @@ public class GalleryFragment extends Fragment {
                 toGetData();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     public void toGetData() {
         try {
-            CommonMethod.toCallLoader(getContext(), "Loading");
             if (getActivity() != null) {
                 imageFile = new ArrayList<>();
                 imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
@@ -91,46 +96,49 @@ public class GalleryFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                 recyclerView.setAdapter(imageAdapterGallery);
                 imageAdapterGallery.notifyDataSetChanged();
+                mLoading.setVisibility(View.GONE);
             }
-            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            CommonMethod.toCloseLoader();
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     public void getAllShownImagesPath(Activity activity) {
-        try{
-        String[] projection = new String[]{
-                MediaStore.Images.ImageColumns._ID,
-                MediaStore.Images.ImageColumns.DATA,
-                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                MediaStore.Images.ImageColumns.DATE_TAKEN,
-                MediaStore.Images.ImageColumns.MIME_TYPE
-        };
-        if (activity != null) {
-            Cursor cursor =
-                    activity.getContentResolver()
-                            .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-                                    null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    String imageLocation = cursor.getString(1);
-                    imageFile.add(imageLocation);
-                    imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
-                    Log.d("TAG", "File Name " + imageLocation);
+        try {
+            String[] projection = new String[]{
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
+                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+                    MediaStore.Images.ImageColumns.MIME_TYPE
+            };
+            if (activity != null) {
+                Log.d("TAG", " PATH N " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Cursor cursor =
+                        activity.getContentResolver()
+                                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
+                                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        String imageLocation = cursor.getString(1);
+                        imageFile.add(imageLocation);
+                        imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
+                        Log.d("TAG", "File Name " + imageLocation);
+                    }
+                    Log.d("TAG", "Count Image Files " + imageFile.size());
                 }
-                Log.d("TAG", "Count Image Files " + imageFile.size());
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            CommonMethod.toCloseLoader();
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -169,8 +177,10 @@ public class GalleryFragment extends Fragment {
                 mListener = (OnFragmentInteractionListener) context;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 

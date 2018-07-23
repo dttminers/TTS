@@ -133,7 +133,8 @@ public class TutorialPageActivity extends AppCompatActivity {
             prefManager.setFirstTimeLaunch(false);
             prefManager.getUserInfo();
             if (User.getUser(TutorialPageActivity.this).getId() != null) {
-                startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
+//                startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
+                startActivity(new Intent(TutorialPageActivity.this, HomeActivity.class));
             } else {
                 startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
             }

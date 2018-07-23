@@ -43,6 +43,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 
 import in.tts.R;
+import in.tts.activities.HomeActivity;
 import in.tts.activities.LoginActivity;
 import in.tts.activities.MainActivity;
 import in.tts.model.PrefManager;
@@ -234,7 +235,8 @@ public class RegisterFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         CommonMethod.toCallLoader(getContext(), "Loading....");
-                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
+//                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
+                        getContext().startActivity(new Intent(getContext(), HomeActivity.class));
                         getActivity().finish();
 //                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
@@ -471,7 +473,8 @@ public class RegisterFragment extends Fragment {
             CommonMethod.toDisplayToast(getContext(), "Login Successful");
             CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
-            startActivity(new Intent(getContext(), MainActivity.class));
+//            startActivity(new Intent(getContext(), MainActivity.class));
+            startActivity(new Intent(getContext(), HomeActivity.class));
             getActivity().finish();
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {

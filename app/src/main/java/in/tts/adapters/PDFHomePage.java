@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ public class PDFHomePage extends PagerAdapter {
             CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
 
-            Log.d("TAG", " FILE " + list.get(position));
+            Log.d("TAG", " FILE " + list.get(position).trim());
             file = new File(list.get(position).trim());
             if (file.exists()) {
                 fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
@@ -96,11 +98,12 @@ public class PDFHomePage extends PagerAdapter {
 //                        intent.putExtra("name", file.getName());
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
-                            CommonMethod.toReleaseMemory();
-//                            CommonMethod.toCloseLoader();
+                            CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
-                            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                            Crashlytics.logException(e); FirebaseCrash.report(e);
+                            e.printStackTrace();
+                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                            Crashlytics.logException(e);
+                            FirebaseCrash.report(e);
                         }
                     }
                 });
@@ -108,7 +111,8 @@ public class PDFHomePage extends PagerAdapter {
                 container.addView(vg);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
         return vg;
     }

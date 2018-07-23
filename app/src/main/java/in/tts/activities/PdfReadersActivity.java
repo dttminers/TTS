@@ -239,7 +239,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    Log.d("TAGPDF", "onScroll " + (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)));
+                                    Log.d("TAGPDF", "onScrollA1 " + (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) + ":" + ((totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)));
+                                    Log.d("TAGPDF", "onScrollA2 " + (totalItemCount - visibleItemCount) + ":" + (firstVisibleItem + visibleThreshold) + ":" + loading);
 
                                     if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                                         // End has been reached

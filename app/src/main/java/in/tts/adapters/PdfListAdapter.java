@@ -40,7 +40,6 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull PdfListAdapter.ViewHolder viewHolder, int i) {
         try {
-            Log.d("TAG", "Bind " + i + ":" + list.size());
             viewHolder.mtv.setText(new File(list.get(i)).getName());
         } catch (Exception | Error e) {
             e.printStackTrace();

@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -57,17 +59,21 @@ public class PDFHomePageImages extends PagerAdapter {
                 @Override
                 public void onClick(View view) {
                     try {
+                        CommonMethod.toCallLoader(context, "Loading...");
                         context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", l.get(position)));
-                        CommonMethod.toReleaseMemory();
-                    } catch (Exception| Error e){
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                        CommonMethod.toCloseLoader();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
             container.addView(vg);
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
         return vg;
     }

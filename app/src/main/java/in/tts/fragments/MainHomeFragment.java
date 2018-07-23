@@ -71,7 +71,7 @@ public class MainHomeFragment extends Fragment {
     public MainHomeFragment() {
     }
 
-    public static MainHomeFragment newInstance(String param1, String param2) {
+    public static MainHomeFragment newInstance() {
         return new MainHomeFragment();
     }
 

@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,20 +39,14 @@ public class MyBooksListFragment extends Fragment {
 
     private ArrayList<String> file;
     private PdfListAdapter pdfListAdapter;
-    private PrefManager prefManager;
-    RecyclerView recyclerView;
-    LinearLayout rl;
-
-    int pStatus = 0;
-    private Handler handler = new Handler();
-//    TextView tv;
+    private RecyclerView recyclerView;
+    private LinearLayout llCustom_loader;
 
     private OnFragmentInteractionListener mListener;
 
     public MyBooksListFragment() {
         // Required empty public constructor
     }
-
 
     public static MyBooksListFragment newInstance() {
         return new MyBooksListFragment();
@@ -63,7 +60,6 @@ public class MyBooksListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //CommonMethod.toCloseLoader();
         return inflater.inflate(R.layout.fragment_my_books_list, container, false);
     }
 
@@ -77,18 +73,17 @@ public class MyBooksListFragment extends Fragment {
         super.onStart();
         CommonMethod.toReleaseMemory();
         try {
-            prefManager = new PrefManager(getContext());
             file = new ArrayList<>();
 
-//            tv = (TextView) getActivity().findViewById(R.id.tv);
-//            mProgress = (ProgressBar) getActivity().findViewById(R.id.circularProgressbar);
             recyclerView = getActivity().findViewById(R.id.rvList);
-            rl = getActivity().findViewById(R.id.llCustom_loader);
+            llCustom_loader = getActivity().findViewById(R.id.llCustom_loader);
 
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -100,123 +95,74 @@ public class MyBooksListFragment extends Fragment {
                 toGetData();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     public void toGetData() {
         try {
-
-            Resources res = getResources();
-            Drawable drawable = res.getDrawable(R.drawable.circular_progress_bar);
-
-//            mProgress.setProgress(0);   // Main Progress
-//            mProgress.setSecondaryProgress(100); // Secondary Progress
-//            mProgress.setMax(100); // Maximum Progress
-//            mProgress.setProgressDrawable(drawable);
             if (getActivity() != null) {
-
-                if (prefManager.toGetPDFList() != null && prefManager.toGetPDFList().size() != 0) {
-                    file = prefManager.toGetPDFList();
-                }
-                pdfListAdapter = new PdfListAdapter(getActivity(), file);
-
-
                 recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(layoutManager);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+                recyclerView.addItemDecoration(dividerItemDecoration);
 
-
-                recyclerView.setAdapter(pdfListAdapter);
-                pdfListAdapter.notifyDataSetChanged();
                 getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 
+                Log.d("TAG", " Load pdf " + file.size());
+                pdfListAdapter = new PdfListAdapter(getActivity(), file);
+                recyclerView.setAdapter(pdfListAdapter);
+                pdfListAdapter.notifyDataSetChanged();
 
-//                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                rl.setVisibility(View.GONE);
-                pdfListAdapter.notifyItemChanged(file.size(), file);
-                prefManager.toSetPDFFileList(file, true);
+                llCustom_loader.setVisibility(View.GONE);
+
             }
-            //CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            //CommonMethod.toCloseLoader();
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     public void getFile(final File dir) {
         try {
-//            new Thread(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    // TODO Auto-generated method stub
-//                    while (pStatus < 100) {
-//                        pStatus += 1;
-//
-//                        handler.post(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("TAG", " FILE ::: " + dir);
-                    File listFile[] = dir.listFiles();
-                    if (listFile != null && listFile.length > 0) {
-                        for (int i = 0; i < listFile.length; i++) {
-                            if (listFile[i].isDirectory()) {
-                                getFile(listFile[i]);
-                            } else {
-                                boolean booleanpdf = false;
-                                if (listFile[i].getName().endsWith(".pdf")) {
-                                    for (int j = 0; j < file.size(); j++) {
-//                                    if (fileList.get(j).getName().equals(listFile[i].getName())) {
-                                        if (file.get(j).equals(listFile[i].getPath())) {
-                                            booleanpdf = true;
-                                        } else {
-                                        }
-                                    }
-                                    if (booleanpdf) {
-                                        booleanpdf = false;
-                                    } else {
-                                        if (!prefManager.toGetPDFList().contains(listFile[i].getPath().trim())) {
-                                            file.add(listFile[i].getPath());
-//                                            prefManager.toSetPDFFileList(file);
-                                        }
-                                    }
+            Log.d("TAG", " FILE ::: " + dir);
+            File listFile[] = dir.listFiles();
+            if (listFile != null && listFile.length > 0) {
+                for (int i = 0; i < listFile.length; i++) {
+                    if (listFile[i].isDirectory()) {
+                        getFile(listFile[i]);
+                    } else {
+                        boolean booleanpdf = false;
+                        if (listFile[i].getName().endsWith(".pdf")) {
+                            for (int j = 0; j < file.size(); j++) {
+                                if (file.get(j).equals(listFile[i].getPath())) {
+                                    booleanpdf = true;
+                                } else {
                                 }
                             }
-
-
+                            if (booleanpdf) {
+                                booleanpdf = false;
+                            } else {
+                                Log.d("TAG", " FILE IS  " + (file.contains(listFile[i].getPath().trim())) + ":" + listFile[i].getPath().trim());
+                                file.add(listFile[i].getPath());
+                            }
                         }
                     }
-                    Log.d("TAG", " pdf count " + file.size());
 
-//                                mProgress.setProgress(pStatus);
-//                                tv.setText(pStatus + "%");
 
                 }
-
-
-            });
-//                        Log.d("TAG", " END");
-//                        try {
-//                            // Sleep for 200 milliseconds.
-//                            // Just to display the progress slowly
-//                            Thread.sleep(16); //thread will take approx 3 seconds to finish
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-//                        }
-//                    }
-//                }
-//            }).start();
-
-
+            }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
