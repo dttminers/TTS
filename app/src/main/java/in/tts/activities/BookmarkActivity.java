@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -97,7 +96,6 @@ public class BookmarkActivity extends AppCompatActivity {
     private void loadBookmarks() {
         try {
             if (list != null && list.size() > 0) {
-                Log.d("TAG", " URLS update hg  : " + list.size() );
                 adapter = new BookMarkAdapter(BookmarkActivity.this, list);
                 rv.setLayoutManager(new LinearLayoutManager(BookmarkActivity.this));
                 rv.setHasFixedSize(true);
@@ -106,7 +104,6 @@ public class BookmarkActivity extends AppCompatActivity {
                 rv.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.GONE);
             } else {
-                Log.d("TAG", " URLS update hgjh  : " );
                 rv.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
             }

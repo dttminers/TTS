@@ -37,7 +37,6 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         try {
-            Log.d("TAG", " PATH " + "file://" + images.get(i).trim().replaceAll("\\s", "%20"));
             Picasso
                     .get()
                     .load("file://" + images.get(i).trim().replaceAll("\\s", "%20"))

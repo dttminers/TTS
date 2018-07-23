@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -38,25 +37,20 @@ public class ToGetImages {
                         while (cursor.moveToNext() && imageFile.size() < 11) {
                             String imageLocation = cursor.getString(1);
                             imageFile.add(imageLocation);
-                            Log.d("TAG", "File Name " + imageLocation);
                         }
-                        Log.d("TAG", "Count Image Files " + imageFile.size());
                     }
                     if (cursor != null) {
                         cursor.close();
                     }
                 }
-                Log.d("TAG", "Data imaget " + imageFile.size());
                 new PrefManager(context).toSetImageFileList(imageFile);
-                Log.d("TAG", "Data image " + imageFile.size() +":"+ new PrefManager(context).toGetImageList());
+
             }
         });
-//        return imageFile;
         status = false;
     }
 
     public static boolean isRunning(){
-        Log.d("TAG", "Data image isRunning : " + status);
         return status;
     }
 }

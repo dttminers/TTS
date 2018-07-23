@@ -38,8 +38,6 @@ public class PdfPagesAdapter extends RecyclerView.Adapter<PdfPagesAdapter.ViewHo
         try {
             viewHolder.pageView.setImageBitmap(pages.get(i));
             viewHolder.tvPageNumber.setText((i+1) + " / " + pages.size());
-//            Log.d("TAG", " Page " + i+ ":"+ pages.size());
-//            Toast.makeText(context, "Page " + i + "/" + pages.size(), Toast.LENGTH_SHORT).show();
         } catch (Exception | Error e) {
             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e); FirebaseCrash.report(e);

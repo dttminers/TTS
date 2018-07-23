@@ -11,9 +11,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.ActionMode;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -96,7 +94,6 @@ public class MakeYourOwnReadFragment extends Fragment {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         lastTouchDownXY[0] = event.getX();
                         lastTouchDownXY[1] = event.getY();
-                        Log.d("TAG", " points " + lastTouchDownXY[0] + lastTouchDownXY[1]);
                     }
 
                     // let the touch event pass on to whoever needs it
@@ -293,7 +290,6 @@ public class MakeYourOwnReadFragment extends Fragment {
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
-                    Log.d("TAG", "SHARE : " + sharingIntent.getExtras());
                     getContext().startActivity(Intent.createChooser(sharingIntent, "Share"));
                 }
             });
@@ -312,13 +308,10 @@ public class MakeYourOwnReadFragment extends Fragment {
                 public void onClick(View v) {
 
                     String toSpeak = editText.getText().toString();
-                    Log.d("Tag", " Speak : " + toSpeak);
                     Toast.makeText(getContext(), toSpeak, Toast.LENGTH_SHORT).show();
                     t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                 }
             });
-
-            Log.d("TAG", " Touch " + lastTouchDownXY[0] + " : " + lastTouchDownXY[1] + " :" + customView.getMeasuredHeight() + " : " + (lastTouchDownXY[1] + customView.getMeasuredHeight()));
             popupWindow.setOutsideTouchable(true);
             customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.NO_GRAVITY, (int) (lastTouchDownXY[0] - 10), ((int) lastTouchDownXY[1] + customView.getMeasuredHeight() + 170));

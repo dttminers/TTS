@@ -1,6 +1,5 @@
 package in.tts.fragments;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +43,6 @@ import java.util.Arrays;
 import in.tts.R;
 import in.tts.activities.HomeActivity;
 import in.tts.activities.LoginActivity;
-import in.tts.activities.MainActivity;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
@@ -88,8 +85,6 @@ public class RegisterFragment extends Fragment {
         try {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
             FacebookSdk.sdkInitialize(getContext());
-
-            // E-mail & Password Validation...........
 
             mEdtEmail = getActivity().findViewById(R.id.edtEmailIdReg);
             mEdtPassword = getActivity().findViewById(R.id.edtPasswordReg);
@@ -235,10 +230,9 @@ public class RegisterFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         CommonMethod.toCallLoader(getContext(), "Loading....");
-//                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
                         getContext().startActivity(new Intent(getContext(), HomeActivity.class));
                         getActivity().finish();
-//                        CommonMethod.toCloseLoader();
+                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
@@ -266,7 +260,6 @@ public class RegisterFragment extends Fragment {
                         e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
                         Crashlytics.logException(e); FirebaseCrash.report(e);
-                        Log.d("TAG", " Login" + e.getMessage());
                     }
                 }
             });
@@ -280,16 +273,13 @@ public class RegisterFragment extends Fragment {
             accessTokenTracker = new AccessTokenTracker() {
                 @Override
                 protected void onCurrentAccessTokenChanged(AccessToken oldToken, AccessToken newToken) {
-                    Log.d("TAG", " fb 5 " + oldToken + " : " + newToken);
                 }
             };
 
             profileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
-//                    displayMessage(newProfile);
-                    Log.d("TAG", " fb 6 " + oldProfile + " : " + newProfile);
-                    Log.d("TAG", " fb 7 " + newProfile.getId() + " : " + newProfile.getFirstName());
+
 
                 }
             };
@@ -299,24 +289,19 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
-                    Log.d("TAG", " fb 1 " + mFbLoginManager.getAuthType() + AccessToken.getCurrentAccessToken() + " : " + accessTokenTracker.isTracking() + profileTracker.isTracking());
                     if (accessTokenTracker.isTracking()) {
-                        Log.d("TAG", " fb 2 " + accessTokenTracker.isTracking());
                         mFbLoginManager.logOut();
                         accessTokenTracker.stopTracking();
                         profileTracker.stopTracking();
                         CommonMethod.toCloseLoader();
                         CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                     } else {
-                        Log.d("TAG", " fb 3 " + accessTokenTracker.isTracking());
-                        accessTokenTracker.startTracking();
+                       accessTokenTracker.startTracking();
                         mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
                         mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
                             public void onSuccess(LoginResult loginResult) {
                                 try {
-
-                                    Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
                                     AccessToken accessToken = loginResult.getAccessToken();
                                     ProfileTracker profileTracker = new ProfileTracker() {
                                         @Override
@@ -331,7 +316,6 @@ public class RegisterFragment extends Fragment {
                                                 user.setName(currentProfile.getName());
                                                 user.setLoginFrom(2);
                                                 user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                                Log.d("TAG", "Userinfo fb  " + new Gson().toJson(User.getUser(getContext())));
                                                 CommonMethod.toCloseLoader();
                                                 toExit();
                                             }
@@ -348,7 +332,6 @@ public class RegisterFragment extends Fragment {
 
                             @Override
                             public void onCancel() {
-                                Log.d("TAG", " fb is cancel");
                                 CommonMethod.toCloseLoader();
                                 CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                             }
@@ -356,7 +339,6 @@ public class RegisterFragment extends Fragment {
                             @Override
                             public void onError(FacebookException e) {
                                 // here write code when get error
-                                Log.d("TAG", "fb onError " + e.getMessage());
                                 CommonMethod.toCloseLoader();
                                 CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                             }
@@ -431,7 +413,6 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("TAG", " fb  result " + resultCode + ":" + requestCode + " :");
         // Google
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -446,8 +427,6 @@ public class RegisterFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Login successful from Google");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
-                Log.d("TAG", " Name : " + account.getDisplayName());
-                Log.d("TAG", " ID : " + account.getId());
                 User user = User.getUser(getContext());
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());
@@ -520,9 +499,6 @@ public class RegisterFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
         }
     }
 

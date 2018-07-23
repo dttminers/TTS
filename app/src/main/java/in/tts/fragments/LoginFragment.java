@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +52,6 @@ import java.util.Arrays;
 import in.tts.R;
 import in.tts.activities.HomeActivity;
 import in.tts.activities.LoginActivity;
-import in.tts.activities.MainActivity;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
@@ -102,18 +100,11 @@ public class LoginFragment extends Fragment {
             FacebookSdk.sdkInitialize(getContext());
             //Get Firebase auth instance
             auth = FirebaseAuth.getInstance();
-
-//            FirebaseUser currentUser = mAuth.getCurrentUser();
-//            updateUI(currentUser);
-
             mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
             SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
             ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 47, 0); // set size
-//            ss1.setSpan(new ForegroundColorSpan(Color.WHITE), 38, 49, 0);// set color
             mTvLogin.setText(ss1);
-
-            // E-mail & Password Validation...........
 
             mEdtEmail = getActivity().findViewById(R.id.edtEmailIdLogin);
             mEdtPassword = getActivity().findViewById(R.id.edtPasswordLogin);
@@ -158,8 +149,6 @@ public class LoginFragment extends Fragment {
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Login...");
                     if (validateEmail() && validatePassword()) {
-//                        startActivity(new Intent(getContext(), MainActivity.class));
-//                        CommonMethod.toDisplayToast(getContext(), "Login Successfully ");
                         User user = User.getUser(getContext());
                         user.setLoginFrom(3);
                         user.setId(String.valueOf(System.currentTimeMillis()));
@@ -171,10 +160,6 @@ public class LoginFragment extends Fragment {
                                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        // If sign in fails, display a message to the user. If sign in succeeds
-                                        // the auth state listener will be notified and logic to handle the
-                                        // signed in user can be handled in the listener.
-//                            progressBar.setVisibility(View.GONE);
                                         if (!task.isSuccessful()) {
                                             // there was an error
                                             if (mEdtPassword.getText().toString().length() < 8) {
@@ -187,8 +172,6 @@ public class LoginFragment extends Fragment {
                                             User user = User.getUser(getContext());
                                             user.setLoginFrom(3);
                                             user.setEmail(mEdtEmail.getText().toString());
-//                                        user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                            Log.d("TAG", "Userinfo email  " + new Gson().toJson(User.getUser(getContext())));
                                             CommonMethod.toCloseLoader();
                                             toExit();
                                         }
@@ -290,7 +273,6 @@ public class LoginFragment extends Fragment {
                         CommonMethod.toCloseLoader();
                         Crashlytics.logException(e);
                         FirebaseCrash.report(e);
-                        Log.d("TAG", " Login" + e.getMessage());
                     }
                 }
             });
@@ -304,16 +286,12 @@ public class LoginFragment extends Fragment {
             accessTokenTracker = new AccessTokenTracker() {
                 @Override
                 protected void onCurrentAccessTokenChanged(AccessToken oldToken, AccessToken newToken) {
-                    Log.d("TAG", " fb 5 " + oldToken + " : " + newToken);
                 }
             };
 
             profileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
-//                    displayMessage(newProfile);
-                    Log.d("TAG", " fb 6 " + oldProfile + " : " + newProfile);
-                    Log.d("TAG", " fb 7 " + newProfile.getId() + " : " + newProfile.getFirstName());
 
                 }
             };
@@ -323,24 +301,19 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
-                    Log.d("TAG", " fb 1 " + mFbLoginManager.getAuthType() + AccessToken.getCurrentAccessToken() + " : " + accessTokenTracker.isTracking() + profileTracker.isTracking());
                     if (accessTokenTracker.isTracking()) {
-                        Log.d("TAG", " fb 2 " + accessTokenTracker.isTracking());
                         mFbLoginManager.logOut();
                         accessTokenTracker.stopTracking();
                         profileTracker.stopTracking();
                         CommonMethod.toCloseLoader();
                         CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                     } else {
-                        Log.d("TAG", " fb 3 " + accessTokenTracker.isTracking());
                         accessTokenTracker.startTracking();
                         mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
                         mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
                             public void onSuccess(LoginResult loginResult) {
                                 try {
-
-                                    Log.d("TAG", " 00 fb " + loginResult.getAccessToken());
                                     AccessToken accessToken = loginResult.getAccessToken();
                                     ProfileTracker profileTracker = new ProfileTracker() {
                                         @Override
@@ -355,7 +328,6 @@ public class LoginFragment extends Fragment {
                                                 user.setName(currentProfile.getName());
                                                 user.setLoginFrom(2);
                                                 user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                                Log.d("TAG", "Userinfo fb  " + new Gson().toJson(User.getUser(getContext())));
                                                 CommonMethod.toCloseLoader();
                                                 toExit();
                                             }
@@ -374,15 +346,12 @@ public class LoginFragment extends Fragment {
 
                             @Override
                             public void onCancel() {
-                                Log.d("TAG", " fb is cancel");
                                 CommonMethod.toCloseLoader();
                                 CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                             }
 
                             @Override
                             public void onError(FacebookException e) {
-                                // here write code when get error
-                                Log.d("TAG", "fb onError " + e.getMessage());
                                 CommonMethod.toCloseLoader();
                                 CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                             }
@@ -441,7 +410,6 @@ public class LoginFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Log.d("TAG", " fb  result " + resultCode + ":" + requestCode + " :");
             // Google
             if (requestCode == RC_SIGN_IN) {
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -463,8 +431,6 @@ public class LoginFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Login successful from Google");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
-                Log.d("TAG", " Name : " + account.getDisplayName());
-                Log.d("TAG", " ID : " + account.getId());
                 User user = User.getUser(getContext());
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());

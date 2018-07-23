@@ -40,7 +40,6 @@ public class PDFHomePage extends PagerAdapter {
     public PDFHomePage(Context ctx, ArrayList<String> listfile) {
         context = ctx;
         list = listfile;
-        Log.d("TAG", " PDFHomePage : " + list.size());
     }
 
     @Override
@@ -66,7 +65,6 @@ public class PDFHomePage extends PagerAdapter {
             CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
 
-            Log.d("TAG", " FILE " + list.get(position).trim());
             file = new File(list.get(position).trim());
             if (file.exists()) {
                 fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
@@ -91,11 +89,8 @@ public class PDFHomePage extends PagerAdapter {
                     @Override
                     public void onClick(View view) {
                         try {
-                            Log.d("TAG", " TAGit : " + position);
                             CommonMethod.toCallLoader(context, "Loading...");
                             Intent intent = new Intent(context, PdfReadersActivity.class);
-//                        intent.putExtra("position", position);
-//                        intent.putExtra("name", file.getName());
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
                             CommonMethod.toCloseLoader();

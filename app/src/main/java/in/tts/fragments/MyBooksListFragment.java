@@ -3,13 +3,9 @@ package in.tts.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -17,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +27,6 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.adapters.PdfListAdapter;
-import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class MyBooksListFragment extends Fragment {
@@ -113,7 +107,6 @@ public class MyBooksListFragment extends Fragment {
 
                 getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 
-                Log.d("TAG", " Load pdf " + file.size());
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
                 recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
@@ -131,7 +124,6 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-            Log.d("TAG", " FILE ::: " + dir);
             File listFile[] = dir.listFiles();
             if (listFile != null && listFile.length > 0) {
                 for (int i = 0; i < listFile.length; i++) {
@@ -149,7 +141,6 @@ public class MyBooksListFragment extends Fragment {
                             if (booleanpdf) {
                                 booleanpdf = false;
                             } else {
-                                Log.d("TAG", " FILE IS  " + (file.contains(listFile[i].getPath().trim())) + ":" + listFile[i].getPath().trim());
                                 file.add(listFile[i].getPath());
                             }
                         }

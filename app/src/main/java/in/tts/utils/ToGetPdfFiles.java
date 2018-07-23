@@ -2,7 +2,6 @@ package in.tts.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.firebase.perf.metrics.AddTrace;
 
@@ -48,8 +47,6 @@ public class ToGetPdfFiles {
                             }
                         }
                     }
-
-                    Log.d("TAG", "DATA PDF " + fileList.size());
                     new PrefManager(context).toSetPDFFileList(fileList, false);
                 }
             }
@@ -58,7 +55,6 @@ public class ToGetPdfFiles {
     }
 
     public static boolean isRunning() {
-        Log.d("TAG", "DATA PDF isRunning : " + status);
         return status;
     }
 }
