@@ -32,12 +32,14 @@ public class BrowserFragment extends Fragment {
     @Override
     @AddTrace(name = "onCreateBrowserFragment", enabled = true)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        CommonMethod.toCallLoader(getContext(), "Please wait");
         return inflater.inflate(R.layout.fragment_browser, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CommonMethod.toCloseLoader();
         CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
         editText = getActivity().findViewById(R.id.edtBrowser);
         button = getActivity().findViewById(R.id.btnSearch);
@@ -58,38 +60,66 @@ public class BrowserFragment extends Fragment {
         ivBookmark1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CommonMethod.toCallLoader(getContext(), "Please wait");
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
                                 .putExtra("url", "https://www.wikipedia.org/"));
+                CommonMethod.toCloseLoader();
             }
         });
 
         ivBookmark2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CommonMethod.toCallLoader(getContext(), "Please wait");
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
                                 .putExtra("url", "https://www.amazon.in"));
+                CommonMethod.toCloseLoader();
             }
         });
 
         ivBookmark3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CommonMethod.toCallLoader(getContext(), "Please wait");
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.xerox.com/"));
+//                                .putExtra("url", "https://www.xerox.com/"));
+                                .putExtra("url", "http://drive.google.com/viewerng/viewer?embedded=true&url=https://saidnazulfiqar.files.wordpress.com/2008/04/cambridge-english-grammar-understanding-the-basics.pdf"));
+                CommonMethod.toCloseLoader();
             }
         });
 
         // Recent page ......
+
+        ivRecent1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonMethod.toCallLoader(getContext(), "Please wait");
+                startActivity(
+                        new Intent(getContext(), BrowserActivity.class)
+                                .putExtra("url", "https://www.facebook.com/"));
+                CommonMethod.toCloseLoader();
+            }
+        });
+
+        ivRecent2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(
+                        new Intent(getContext(), BrowserActivity.class)
+                                .putExtra("url", "https://www.wikipedia.org/"));
+            }
+        });
 
         ivRecent3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.wikipedia.org/"));
+                                .putExtra("url", "https://www.blogger.com"));
+                CommonMethod.toCloseLoader();
             }
         });
 
@@ -98,7 +128,8 @@ public class BrowserFragment extends Fragment {
             public void onClick(View view) {
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.wikipedia.org/"));
+                                .putExtra("url", "https://www.swiggy.com/"));
+                CommonMethod.toCloseLoader();
             }
         });
 
@@ -107,7 +138,8 @@ public class BrowserFragment extends Fragment {
             public void onClick(View view) {
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.wikipedia.org/"));
+                                .putExtra("url", "http://dttminer.com/"));
+                CommonMethod.toCloseLoader();
             }
         });
 
@@ -116,7 +148,8 @@ public class BrowserFragment extends Fragment {
             public void onClick(View view) {
                 startActivity(
                         new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.wikipedia.org/"));
+                                .putExtra("url", "https://twitter.com/login?lang=en"));
+                CommonMethod.toCloseLoader();
             }
         });
 
@@ -124,6 +157,7 @@ public class BrowserFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CommonMethod.toCallLoader(getContext(), "Please wait");
                 if (editText != null && editText.getText().toString().trim().length() != 0) {
                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
@@ -132,12 +166,15 @@ public class BrowserFragment extends Fragment {
                 } else {
                     CommonMethod.toDisplayToast(getContext(), "To Data Found");
                 }
+                CommonMethod.toCloseLoader();
             }
         });
+
         try {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
         } catch (Exception | Error e) {
             e.printStackTrace();
+            CommonMethod.toCloseLoader();
         }
     }
 
@@ -146,6 +183,7 @@ public class BrowserFragment extends Fragment {
     public void onPause() {
         super.onPause();
         CommonMethod.toReleaseMemory();
+        CommonMethod.toCloseLoader();
     }
 
     private OnFragmentInteractionListener mListener;

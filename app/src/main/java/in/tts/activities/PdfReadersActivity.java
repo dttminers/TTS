@@ -161,8 +161,11 @@ public class PdfReadersActivity extends AppCompatActivity {
                         for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
                             showPage(i);
 //                            if (i < 5) {
-//                                toGetData(list.get(i));
 //                            }
+                        }
+
+                        for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
+                            toGetData(list.get(i));
                         }
 
                         if (list.size() > 0) {
@@ -464,11 +467,26 @@ public class PdfReadersActivity extends AppCompatActivity {
                     onBackPressed();
                     break;
                 case R.id.menuSpeak:
-                    Log.d("TAGPDF", " Current Page 12 " + currentPagep);
-                    Log.d("TAGPDF ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
-                    progressBarSpeak.setVisibility(View.VISIBLE);
-                    toGetData(list.get(visibleItemCount + totalItemCount));
-                    toSpeak(stringBuilder.toString());
+                    try {
+                        Log.d("TAGPDF", " Current Page 12 " + currentPagep);
+                        Log.d("TAGPDF ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
+                        progressBarSpeak.setVisibility(View.VISIBLE);
+//                    toGetData(list.get(visibleItemCount + totalItemCount));
+//                        if (list.size()< 1) {
+//                            toGetData(list.get(0));
+//                        } else {
+//                            toGetData(list.get(visibleItemCount + totalItemCount));
+//                        }
+                        if (stringBuilder.toString().trim().length() != 0) {
+                            toSpeak(stringBuilder.toString());
+                        } else {
+                            Toast.makeText(PdfReadersActivity.this, "unable to find data", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                    }
                     break;
                 default:
                     return true;

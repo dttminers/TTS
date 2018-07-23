@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
+import in.tts.model.AudioSetting;
+
 public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
@@ -35,12 +37,16 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                         } else {
                             Log.e("TTS", "Initialization Failed!");
                         }
+
                     } catch (Exception | Error e) {
                         e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         Crashlytics.logException(e); FirebaseCrash.report(e);
                     }
                 }
             });
+
+            tts.setPitch((float) new AudioSetting(context).getVoiceSpeed());
+
         } catch (Exception | Error e) {
             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e); FirebaseCrash.report(e);

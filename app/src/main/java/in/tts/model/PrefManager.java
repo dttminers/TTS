@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class PrefManager {
 
@@ -131,22 +132,30 @@ public class PrefManager {
             if (Audio != null) {
                 AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
                 JSONObject audioJSON = new JSONObject(Audio);
-                Log.d("TAG", "getAudioInfo " + audioJSON);
+                Log.d("TAG SEEK", "getAudioInfo " + audioJSON);
 
-                if (!audioJSON.isNull("voice selection")) {
-                    audioSetting.setVoiceSelection(audioJSON.getString("voice selection"));
+                if (!audioJSON.isNull("VoiceSelection")) {
+                    audioSetting.setVoiceSelection(audioJSON.getString("VoiceSelection"));
+                }else {
+                    audioSetting.setVoiceSelection("female");
                 }
-                if (!audioJSON.isNull("lang selection")) {
-                    audioSetting.setLangSelection(audioJSON.getString("lang selection"));
+
+                if (!audioJSON.isNull("LangSelection")) {
+                    audioSetting.setLangSelection(audioJSON.getString("LangSelection"));
+                }else {
+                    audioSetting.setLangSelection(String.valueOf(new Locale("en")));
                 }
-                if (!audioJSON.isNull("voice selection")) {
-                    audioSetting.setVoiceSelection(audioJSON.getString("voice selection"));
+
+                if (!audioJSON.isNull("AccentSelection")) {
+                    audioSetting.setAccentSelection(audioJSON.getString("AccentSelection"));
+                }else {
+                    audioSetting.setAccentSelection(String.valueOf(Locale.US));
                 }
-                if (!audioJSON.isNull("accent selection")) {
-                    audioSetting.setAccentSelection(audioJSON.getString("accent selection"));
-                }
-                if (!audioJSON.isNull("voice speed")) {
-                    audioSetting.setVoiceSpeed(audioJSON.getInt("voice speed"));
+
+                if (!audioJSON.isNull("VoiceSpeed")) {
+                    audioSetting.setVoiceSpeed(audioJSON.getInt("VoiceSpeed"));
+                }else {
+                    audioSetting.setVoiceSpeed(1);
                 }
             }
         } catch (Exception | Error e) {
@@ -163,7 +172,7 @@ public class PrefManager {
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", "getAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
+            Log.d("TAG SEEK", "setAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -176,7 +185,7 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
             if (us != null) {
-                return new ArrayList<>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
@@ -211,7 +220,7 @@ public class PrefManager {
             String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
             if (us != null) {
                 Log.d("TAG", " toSetImageFileList get " + us);
-                return new ArrayList<>(Arrays.asList(us.replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
@@ -241,13 +250,14 @@ public class PrefManager {
 
     public ArrayList<String> populateSelectedSearch() {
         try {
-            String s = _context.getSharedPreferences(PREFERENCES, 0).getString(WEB_LINKS, null);
+            String s = _context.getSharedPreferences(PREFERENCES, 0).getString(WEB_LINKS, null).trim();
             if (s != null) {
                 return new ArrayList<>(
                         Arrays.asList(
-                                s.replace("[", "")
+                                s.trim().replaceAll("\\s+", "")
+                                        .replace("[", "")
                                         .replace("]", "")
-                                        .replaceAll("\\s+", "")
+
                                         .split(",")
                         )
                 );

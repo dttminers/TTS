@@ -33,7 +33,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="20dp"
         android:text="Best Sellers"
         android:textSize="15sp" />
 

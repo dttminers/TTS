@@ -64,7 +64,7 @@ public class PDFHomePage extends PagerAdapter {
             CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
 
-            Log.d("TAG", " FILE " + list.get(position));
+            Log.d("TAG", " FILE " + list.get(position).trim());
             file = new File(list.get(position).trim());
             if (file.exists()) {
                 fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
@@ -97,7 +97,7 @@ public class PDFHomePage extends PagerAdapter {
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
                             CommonMethod.toReleaseMemory();
-//                            CommonMethod.toCloseLoader();
+                            CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
                             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                             Crashlytics.logException(e); FirebaseCrash.report(e);
