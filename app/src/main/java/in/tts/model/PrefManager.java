@@ -136,26 +136,26 @@ public class PrefManager {
 
                 if (!audioJSON.isNull("VoiceSelection")) {
                     audioSetting.setVoiceSelection(audioJSON.getString("VoiceSelection"));
-                }else {
-                    audioSetting.setVoiceSelection("female");
+//                }else {
+//                    audioSetting.setVoiceSelection("female");
                 }
 
                 if (!audioJSON.isNull("LangSelection")) {
                     audioSetting.setLangSelection(audioJSON.getString("LangSelection"));
-                }else {
-                    audioSetting.setLangSelection(String.valueOf(new Locale("en")));
+//                }else {
+//                    audioSetting.setLangSelection(String.valueOf(new Locale("en")));
                 }
 
                 if (!audioJSON.isNull("AccentSelection")) {
                     audioSetting.setAccentSelection(audioJSON.getString("AccentSelection"));
-                }else {
-                    audioSetting.setAccentSelection(String.valueOf(Locale.US));
+//                }else {
+//                    audioSetting.setAccentSelection(String.valueOf(Locale.US));
                 }
 
                 if (!audioJSON.isNull("VoiceSpeed")) {
                     audioSetting.setVoiceSpeed(audioJSON.getInt("VoiceSpeed"));
-                }else {
-                    audioSetting.setVoiceSpeed(1);
+//                }else {
+//                    audioSetting.setVoiceSpeed(1);
                 }
             }
         } catch (Exception | Error e) {
