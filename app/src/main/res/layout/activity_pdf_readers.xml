@@ -5,62 +5,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/rlPdfReader"
     tools:context=".activities.PdfReadersActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvPDFReader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <LinearLayout
-        android:id="@+id/llPDFReader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rvPDFReader"
-        android:background="@color/ttsRed"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/reload"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/reload" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPDFReader"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/backward"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="45dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/backward" />
+        <LinearLayout
+            android:id="@+id/llPDFReader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ttsRed"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-        <Button
-            android:id="@+id/playPause"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center"
-            android:background="@drawable/pause" />
+            <Button
+                android:id="@+id/reload"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/reload" />
 
-        <Button
-            android:id="@+id/forward"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/forward" />
+            <Button
+                android:id="@+id/backward"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="45dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/backward" />
 
-        <Button
-            android:id="@+id/close"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/close" />
+            <Button
+                android:id="@+id/playPause"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/pause" />
+
+            <Button
+                android:id="@+id/forward"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/forward" />
+
+            <Button
+                android:id="@+id/close"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/close" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -71,8 +79,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:visibility="gone" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/llCustom_loader12"

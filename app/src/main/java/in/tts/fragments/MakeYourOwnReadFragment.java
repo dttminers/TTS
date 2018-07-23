@@ -36,6 +36,7 @@ import java.util.Locale;
 
 import in.tts.R;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.KeyBoard;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -100,6 +101,13 @@ public class MakeYourOwnReadFragment extends Fragment {
                     return false;
                 }
             });
+
+            editText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    KeyBoard.openKeyboard(getActivity());
+                }
+            });
             editText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -114,7 +122,6 @@ public class MakeYourOwnReadFragment extends Fragment {
                     @Override
                     public void onCreateContextMenu(ContextMenu menu, View v,
                                                     ContextMenu.ContextMenuInfo menuInfo) {
-
                         menu.clear();
                     }
                 });

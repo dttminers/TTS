@@ -19,6 +19,7 @@
         android:maxLines="25"
         android:textColor="@color/black"
         android:padding="10dp"
+        android:longClickable="false"
         android:textIsSelectable="true"
         android:textColorHint="@color/black1"
         android:textSize="15sp" />

@@ -24,4 +24,5 @@
         android:contentDescription="@string/str_content_image"
         android:src="@drawable/ic_coming_soon" />
 
+
 </RelativeLayout>
