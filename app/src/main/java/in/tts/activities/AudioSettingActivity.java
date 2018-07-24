@@ -43,7 +43,8 @@ public class AudioSettingActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             CommonMethod.toSetTitle(getSupportActionBar(), AudioSettingActivity.this, getString(R.string.str_title_audio_settings));
         }
-        audioSetting = new AudioSetting(AudioSettingActivity.this);
+//        audioSetting = new AudioSetting(AudioSettingActivity.this);
+        audioSetting = AudioSetting.getAudioSetting(AudioSettingActivity.this);
 
         rgVoiceSel = findViewById(R.id.rgVoice);
         rbMale = findViewById(R.id.rbMale);
@@ -93,7 +94,6 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbEnglishLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " english " + i);
-//                        Toast.makeText(getBaseContext(), rbEnglish.getText(), Toast.LENGTH_SHORT).show();
 //                        audioSetting.setLangSelection(String.valueOf(i));
                         audioSetting.setLangSelection(String.valueOf(Locale.ENGLISH));
                         prefData();
@@ -102,7 +102,6 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbHindiLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " hindi " + i);
-                        Toast.makeText(getBaseContext(), rbHindi.getText(), Toast.LENGTH_SHORT).show();
 //                        audioSetting.setVoiceSelection(String.valueOf(i));
                         audioSetting.setLangSelection(String.valueOf(Locale.CHINA));
                         prefData();
@@ -111,7 +110,6 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbMarathiLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " marathi " + i);
-                        Toast.makeText(getBaseContext(), rbMarathi.getText(), Toast.LENGTH_SHORT).show();
 //                        audioSetting.setLangSelection(String.valueOf(i));
                         audioSetting.setLangSelection(String.valueOf(Locale.FRANCE));
                         prefData();
@@ -120,7 +118,6 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbTamilLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " tamil " + i);
-                        Toast.makeText(getBaseContext(), rbTamil.getText(), Toast.LENGTH_SHORT).show();
 //                        audioSetting.setLangSelection(String.valueOf(i));
                         audioSetting.setLangSelection(String.valueOf(Locale.GERMANY));
                         prefData();
@@ -144,7 +141,6 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbAccent1:
                         // do operations specific to this selection
                         Log.d("TAG accentSel", " british " + i);
-//                        Toast.makeText(getApplicationContext(), rbAccent1.getText(), Toast.LENGTH_SHORT).show();
                         audioSetting.setAccentSelection(String.valueOf(Locale.UK));
                         prefData();
                         break;
@@ -152,7 +148,6 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbAccent2:
                         // do operations specific to this selection
                         Log.d("TAG accentSel", " american " + i);
-//                        Toast.makeText(getApplicationContext(), rbAccent2.getText(), Toast.LENGTH_SHORT).show();
 //                        audioSetting.setAccentSelection(String.valueOf(i));
                         audioSetting.setAccentSelection(String.valueOf(Locale.KOREA));
                         prefData();
@@ -165,29 +160,25 @@ public class AudioSettingActivity extends AppCompatActivity {
                 }
             }
         });
-
-        onCheckedChanged(rgVoiceSel, 0);
+        rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (rbMale.isChecked()) {
+                    audioSetting.setVoiceSelection("Male");
+                    prefData();
+//                    Toast.makeText(AudioSettingActivity.this, "Male", Toast.LENGTH_SHORT).show();
+                } else {
+                    audioSetting.setVoiceSelection("Female");
+                    prefData();
+//                    Toast.makeText(AudioSettingActivity.this, "Female", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
-
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-        if (rbMale.isChecked()) {
-            audioSetting.setVoiceSelection("Male");
-            prefData();
-            Toast.makeText(AudioSettingActivity.this, "Male", Toast.LENGTH_SHORT).show();
-        } else {
-            audioSetting.setVoiceSelection("Female");
-            prefData();
-            Toast.makeText(AudioSettingActivity.this, "Female", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     public void prefData() {
-//        new PrefManager(AudioSettingActivity.this).setAudioSetting();
-//        new PrefManager(AudioSettingActivity.this).getAudioSetting();
         PrefManager prefManager = new PrefManager(AudioSettingActivity.this);
-        audioSetting.getVoiceSpeed();
+//        audioSetting.getVoiceSpeed();
         prefManager.setAudioSetting();
         prefManager.getAudioSetting();
     }

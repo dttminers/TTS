@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Trace;
 
 public class User {
+
     private static Trace mTrace;
     private static transient User user;
     private transient Context context;
