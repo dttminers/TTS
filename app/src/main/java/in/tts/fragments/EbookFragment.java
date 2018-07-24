@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,22 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.util.ArrayList;
+
 import in.tts.R;
+import in.tts.adapters.CustomPagerAdapter;
+import in.tts.adapters.PDFHomePageImages;
 import in.tts.utils.CommonMethod;
 
 public class EbookFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
+    private ViewPager mViewPager;
+
+    private ArrayList<String> imageFile;
+    private PDFHomePageImages pdfHomePageImages;
+    private int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
 
     public EbookFragment() {
         // Required empty public constructor
@@ -38,6 +48,9 @@ public class EbookFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc Free eBooks", null);
+
+            mViewPager = getActivity().findViewById(R.id.vpEbook);
+
         } catch (Exception | Error e) {
             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e); FirebaseCrash.report(e);

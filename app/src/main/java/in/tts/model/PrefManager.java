@@ -35,7 +35,8 @@ public class PrefManager {
 
     private static final String USER_INFO = "USER_INFO";
     private static final String USER_INFO_PREFERS = "USER_INFO_PREFERS";
-    private static final String AUDIO_SETTING_INFO = "AUDIO_SETTING";
+
+    private static final String AUDIO_SETTING_INFO = "AUDIO_SETTING_INFO";
     private static final String AUDIO_SETTING_PREFERS = "AUDIO_SETTING_PREFERS";
 
     // WEb BookMarks
@@ -132,30 +133,26 @@ public class PrefManager {
             if (Audio != null) {
                 AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
                 JSONObject audioJSON = new JSONObject(Audio);
-                Log.d("TAG SEEK", "getAudioInfo " + audioJSON);
+                Log.d("TAG SEEK", "getAudioInfo : " + audioJSON);
 
                 if (!audioJSON.isNull("VoiceSelection")) {
                     audioSetting.setVoiceSelection(audioJSON.getString("VoiceSelection"));
-//                }else {
-//                    audioSetting.setVoiceSelection("female");
                 }
 
                 if (!audioJSON.isNull("LangSelection")) {
                     audioSetting.setLangSelection(audioJSON.getString("LangSelection"));
-//                }else {
-//                    audioSetting.setLangSelection(String.valueOf(new Locale("en")));
                 }
 
                 if (!audioJSON.isNull("AccentSelection")) {
                     audioSetting.setAccentSelection(audioJSON.getString("AccentSelection"));
-//                }else {
-//                    audioSetting.setAccentSelection(String.valueOf(Locale.US));
                 }
 
                 if (!audioJSON.isNull("VoiceSpeed")) {
                     audioSetting.setVoiceSpeed(audioJSON.getInt("VoiceSpeed"));
-//                }else {
-//                    audioSetting.setVoiceSpeed(1);
+                    Log.d("TAG", " json Audio VoiceSpeed 1 " + audioJSON.getInt("VoiceSpeed"));
+                }else {
+                    Log.d("TAG", " json Audio VoiceSpeed 2 " );
+                    audioSetting.setVoiceSpeed(1);
                 }
             }
         } catch (Exception | Error e) {
@@ -172,7 +169,7 @@ public class PrefManager {
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG SEEK", "setAudioInfo " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
+            Log.d("TAG SEEK", "setAudioInfo : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);

@@ -23,13 +23,15 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.vsa.seekbarindicated.SeekBarIndicated;
 
+import java.util.Locale;
+
 public class AudioSettingActivity extends AppCompatActivity {
 
     private SeekBarIndicated seekBarIndicated;
     private RadioGroup rgVoiceSel, rgLangSel, rgAccentSel;
     private RadioButton rbMale, rbFemale, rbEnglish, rbHindi, rbMarathi, rbTamil, rbAccent1, rbAccent2;
     private AudioSetting audioSetting;
-    private  RelativeLayout rlEng;
+    private RelativeLayout rlEng;
 
     @Override
     @AddTrace(name = "onCreateAudioSettingActivity", enabled = true)
@@ -41,7 +43,8 @@ public class AudioSettingActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             CommonMethod.toSetTitle(getSupportActionBar(), AudioSettingActivity.this, getString(R.string.str_title_audio_settings));
         }
-        audioSetting = new AudioSetting(AudioSettingActivity.this);
+//        audioSetting = new AudioSetting(AudioSettingActivity.this);
+        audioSetting = AudioSetting.getAudioSetting(AudioSettingActivity.this);
 
         rgVoiceSel = findViewById(R.id.rgVoice);
         rbMale = findViewById(R.id.rbMale);
@@ -79,34 +82,6 @@ public class AudioSettingActivity extends AppCompatActivity {
             }
         });
 
-//        rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-//                switch (i) {
-//                    case R.id.rbMale:
-//                        // do operations specific to this selection
-//                        Log.d("TAG voiceSel", " male " + i);
-//                        Toast.makeText(getBaseContext(), rbMale.getText(), Toast.LENGTH_SHORT).show();
-//                         audioSetting.setVoiceSelection(String.valueOf(i));
-//                        prefData();
-//                        break;
-//
-//                    case R.id.rbFemale:
-//                        // do operations specific to this selection
-//                        Log.d("TAG voiceSel", " female " + i);
-//                        Toast.makeText(getBaseContext(), rbFemale.getText(), Toast.LENGTH_SHORT).show();
-//                        audioSetting.setVoiceSelection(String.valueOf(i));
-//                        prefData();
-//                        break;
-//
-////                    default:
-////                        new AudioSetting(AudioSettingActivity.this).setVoiceSelection(String.valueOf(R.id.rbFemale));
-////                        prefData();
-////                        break;
-//                }
-//            }
-//        });
-
         rgLangSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -119,36 +94,38 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbEnglishLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " english " + i);
-                        Toast.makeText(getBaseContext(), rbEnglish.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setLangSelection(String.valueOf(i));
+//                        audioSetting.setLangSelection(String.valueOf(i));
+                        audioSetting.setLangSelection(String.valueOf(Locale.ENGLISH));
                         prefData();
                         break;
 
                     case R.id.rbHindiLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " hindi " + i);
-                        Toast.makeText(getBaseContext(), rbHindi.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setVoiceSelection(String.valueOf(i));
+//                        audioSetting.setVoiceSelection(String.valueOf(i));
+                        audioSetting.setLangSelection(String.valueOf(Locale.CHINA));
                         prefData();
                         break;
 
                     case R.id.rbMarathiLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " marathi " + i);
-                        Toast.makeText(getBaseContext(), rbMarathi.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setLangSelection(String.valueOf(i));
+//                        audioSetting.setLangSelection(String.valueOf(i));
+                        audioSetting.setLangSelection(String.valueOf(Locale.FRANCE));
                         prefData();
                         break;
 
                     case R.id.rbTamilLs:
                         // do operations specific to this selection
                         Log.d("TAG LangSelection", " tamil " + i);
-                        Toast.makeText(getBaseContext(), rbTamil.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setLangSelection(String.valueOf(i));
+//                        audioSetting.setLangSelection(String.valueOf(i));
+                        audioSetting.setLangSelection(String.valueOf(Locale.GERMANY));
                         prefData();
                         break;
 
-//                    default:
+                    default:
+                        audioSetting.setLangSelection(String.valueOf(Locale.ENGLISH));
+                        prefData();
 //                        audioSetting.setLangSelection(String.valueOf(R.id.rbEnglishLs));
 //                        prefData();
 //                        break;
@@ -164,16 +141,15 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case R.id.rbAccent1:
                         // do operations specific to this selection
                         Log.d("TAG accentSel", " british " + i);
-                        Toast.makeText(getApplicationContext(), rbAccent1.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setAccentSelection(String.valueOf(i));
+                        audioSetting.setAccentSelection(String.valueOf(Locale.UK));
                         prefData();
                         break;
 
                     case R.id.rbAccent2:
                         // do operations specific to this selection
                         Log.d("TAG accentSel", " american " + i);
-                        Toast.makeText(getApplicationContext(), rbAccent2.getText(), Toast.LENGTH_SHORT).show();
-                        audioSetting.setAccentSelection(String.valueOf(i));
+//                        audioSetting.setAccentSelection(String.valueOf(i));
+                        audioSetting.setAccentSelection(String.valueOf(Locale.KOREA));
                         prefData();
                         break;
 
@@ -184,31 +160,27 @@ public class AudioSettingActivity extends AppCompatActivity {
                 }
             }
         });
-
-        onCheckedChanged(rgVoiceSel,0);
+        rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (rbMale.isChecked()) {
+                    audioSetting.setVoiceSelection("Male");
+                    prefData();
+//                    Toast.makeText(AudioSettingActivity.this, "Male", Toast.LENGTH_SHORT).show();
+                } else {
+                    audioSetting.setVoiceSelection("Female");
+                    prefData();
+//                    Toast.makeText(AudioSettingActivity.this, "Female", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
-
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-        if (rbMale.isChecked()) {
-            audioSetting.setVoiceSelection(String.valueOf(checkedId));
-            prefData();
-            Toast.makeText(AudioSettingActivity.this, "Male", Toast.LENGTH_SHORT).show();
-        } else {
-            audioSetting.setVoiceSelection(String.valueOf(checkedId));
-            prefData();
-            Toast.makeText(AudioSettingActivity.this, "Female", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
-
-
 
     public void prefData() {
-        new PrefManager(AudioSettingActivity.this).setAudioSetting();
-        new PrefManager(AudioSettingActivity.this).getAudioSetting();
+        PrefManager prefManager = new PrefManager(AudioSettingActivity.this);
+//        audioSetting.getVoiceSpeed();
+        prefManager.setAudioSetting();
+        prefManager.getAudioSetting();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -43,7 +43,6 @@ public class PDFHomePageImages extends PagerAdapter {
         return view == object;
     }
 
-    @NonNull
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
@@ -53,8 +52,6 @@ public class PDFHomePageImages extends PagerAdapter {
             Picasso.get()
                     .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
                     .resize(300, 300)
-                    .onlyScaleDown()
-                    .centerCrop()
                     .into(iv);
 
             iv.setOnClickListener(new View.OnClickListener() {
@@ -72,11 +69,12 @@ public class PDFHomePageImages extends PagerAdapter {
                     }
                 }
             });
-            container.addView(vg);
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
+        container.addView(vg);
         return vg;
     }
 

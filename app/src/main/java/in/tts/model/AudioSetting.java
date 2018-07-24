@@ -1,6 +1,7 @@
 package in.tts.model;
 
 import android.content.Context;
+import android.os.Trace;
 import android.util.Log;
 
 import java.util.Locale;
@@ -12,26 +13,29 @@ public class AudioSetting {
     private String VoiceSelection ;
     private String LangSelection ;//= String.valueOf(new Locale("en"));
     private String AccentSelection ;//= String.valueOf(Locale.US);
-    private int VoiceSpeed ;//= 1;
+    private int VoiceSpeed =10;//= 1;
 
-    public AudioSetting(Context context){
+
+    public AudioSetting(Context context) {
         this.context = context;
     }
 
     public static AudioSetting getAudioSetting(Context context) {
-//        Log.d("TAG SEEK", "DATA1 " + audioSetting.getVoiceSpeed());
-        if (audioSetting == null) {
-//            Log.d("TAG SEEK", "DATA2 " + audioSetting.getVoiceSpeed());
-            audioSetting = new AudioSetting(context);
+        try {
+//            Log.d("Tag", " audioSetting " + audioSetting.getVoiceSpeed() + ":" + audioSetting.getLangSelection());
+            if (audioSetting == null) {
+                audioSetting = new AudioSetting(context);
+            }
+        } catch (Exception| Error e){
+            e.printStackTrace();
+
         }
-        Log.d("TAG SEEK", "DATA3 " + audioSetting.getVoiceSpeed());
         return audioSetting;
     }
 
-    public void setAudioSetting(AudioSetting audioSetting) {
-        audioSetting = audioSetting;
+    public void setAudioSetting(AudioSetting audioSettin) {
+        audioSetting = audioSettin;
     }
-
 
     public String getVoiceSelection() {
         return VoiceSelection;
@@ -40,7 +44,6 @@ public class AudioSetting {
     public void setVoiceSelection(String voiceSelection) {
        VoiceSelection = voiceSelection;
     }
-
 
     public String getLangSelection() {
         return LangSelection;
