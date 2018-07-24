@@ -61,11 +61,10 @@ public class SplashActivity extends AppCompatActivity {
 ////                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
 //                    finish();
 //                }
-                startActivity(new Intent(SplashActivity.this, AudioSettingActivity.class));
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
             }
         }, 3000);
         if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED))
-
         {
             try {
                 PrefManager prefManager = new PrefManager(SplashActivity.this);
