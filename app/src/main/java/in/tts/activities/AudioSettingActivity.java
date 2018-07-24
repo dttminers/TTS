@@ -178,7 +178,6 @@ public class AudioSettingActivity extends AppCompatActivity {
 
     public void prefData() {
         PrefManager prefManager = new PrefManager(AudioSettingActivity.this);
-//        audioSetting.getVoiceSpeed();
         prefManager.setAudioSetting();
         prefManager.getAudioSetting();
     }

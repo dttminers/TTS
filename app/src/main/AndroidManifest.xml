@@ -13,6 +13,8 @@
     <!-- Permission required to draw floating widget over other apps -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
 
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -138,8 +140,15 @@
             android:windowSoftInputMode="adjustResize|adjustPan" />
 
         <!--<activity-->
-            <!--android:name="com.folioreader.ui.folio.activity.FolioActivity"-->
-            <!--android:theme="@style/AppTheme.NoActionBar" />-->
+        <!--android:name="com.folioreader.ui.folio.activity.FolioActivity"-->
+        <!--android:theme="@style/AppTheme.NoActionBar" />-->
+
+        <service android:name=".services.MediaPlayerService" />
+        <!--Services-->
+        <service
+            android:name=".services.ClipboardMonitorService"
+            android:exported="false"
+            android:label="Clipboard Monitor" />
     </application>
 
-</manifest> <!-- Services --><!-- <service --><!-- android:name=".services.ClipboardMonitorService" --><!-- android:exported="false" --><!-- android:label="Clipboard Monitor" /> -->
+</manifest>

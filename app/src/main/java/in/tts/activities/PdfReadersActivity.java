@@ -90,6 +90,14 @@ public class PdfReadersActivity extends AppCompatActivity {
     private int backwardTime = 5000;
 
 //    private final String FILENAME = "/wpta_tts.wav";
+    private final String FILENAME =
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+//        Environment.getDownloadCacheDirectory().getAbsolutePath()
+        + "/AUD_"
+                + System.currentTimeMillis()
+                /*+ "_" + file.getName().substring(0, 5) */
+//                + ".wav";
+    +".mp3";
 
     public static int oneTimeOnly = 0;
 
@@ -306,12 +314,12 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void initializeMediaPlayer() {
         try {
-            String fileName =
+//            String fileName =
                     //Environment.getDownloadCacheDirectory().getAbsolutePath()
-                    Environment.getExternalStorageDirectory().getAbsolutePath()
-                            + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
-            Uri uri = Uri.parse("file://" + fileName);
-            Log.d("TAGPDF", " PATH audio 1: " + fileName);
+//                    Environment.getExternalStorageDirectory().getAbsolutePath()
+//                            + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
+            Uri uri = Uri.parse("file://" + FILENAME);
+            Log.d("TAGPDF", " PATH audio 1: " + FILENAME);
             if (uri != null) {
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setDataSource(getApplicationContext(), uri);
@@ -342,9 +350,6 @@ public class PdfReadersActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void showPage(final int index) {
         try {
-//            AsyncTask.execute(new Runnable() {
-//                @Override
-//                public void run() {
             if (pdfRenderer.getPageCount() <= index) {
                 return;
             }
@@ -360,7 +365,6 @@ public class PdfReadersActivity extends AppCompatActivity {
             currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             // showing bitmap to an imageview
             list.add(bitmap);
-//                } });
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -370,7 +374,6 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void toGetData(Bitmap bitmap, int pos) {
         try {
-//            stringBuilder.append("\n");
             stringBuilder = new StringBuilder();
             TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
             Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
@@ -391,25 +394,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             String text = PdfTextExtractor.getTextFromPage(pr, pos).toString();
             Log.d("TAGPDF", " Final_DATA 2 " + text);
             toSpeak(text);
-//            toSpeak(stringBuilder.toString());
 
-//            File wavFile = new File(Environment.getExternalStorageDirectory(), "recorded_audio.wav");
-//            IConvertCallback callback = new IConvertCallback() {
-//                @Override
-//                public void onSuccess(File convertedFile) {
-//                    Toast.makeText(PdfReadersActivity.this, "SUCCESS: " + convertedFile.getPath(), Toast.LENGTH_LONG).show();
-//                }
-//                @Override
-//                public void onFailure(Exception error) {
-//                    Toast.makeText(PdfReadersActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//            };
-//            Toast.makeText(this, "Converting audio file...", Toast.LENGTH_SHORT).show();
-//            AndroidAudioConverter.with(this)
-//                    .setFile(file)
-//                    .setFormat(AudioFormat.MP3)
-//                    .setCallback(callback)
-//                    .convert();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -425,7 +410,6 @@ public class PdfReadersActivity extends AppCompatActivity {
 
             if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
                 playMediaPlayer(1);
-//                speakLayout.setVisibility(View.GONE);
                 progressBarSpeak.setVisibility(View.GONE);
                 return;
             }
@@ -460,14 +444,14 @@ public class PdfReadersActivity extends AppCompatActivity {
             myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
 
 
-            String fileName =
-//                    Environment.getDownloadCacheDirectory().getAbsolutePath()
-                    Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
-            Log.d("TAGPDF", " PATH audio : " + fileName);
+//            String fileName =
+////                    Environment.getDownloadCacheDirectory().getAbsolutePath()
+//                    Environment.getExternalStorageDirectory().getAbsolutePath()
+//                    + "/" + System.currentTimeMillis() + "_" + file.getName().substring(0, 5) + ".wav";
+            Log.d("TAGPDF", " PATH audio : " + FILENAME);
 
             if (!mProcessed) {
-                int status = tts.synthesizeToFile(string, myHashRender, fileName);
+                int status = tts.synthesizeToFile(string, myHashRender, FILENAME);
                 Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
                 speakLayout.setVisibility(View.VISIBLE);
                 progressBarSpeak.setVisibility(View.GONE);
@@ -495,22 +479,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                     break;
                 case R.id.menuSpeak:
                     try {
-//                        Log.d("TAGPDF", " Current Page 12 " + currentPagep + (firstVisibleItem + visibleThreshold));
-//                        Log.d("TAGPDF ", " PAGE PDF : " + layoutManager.findFirstVisibleItemPosition() + ":" + layoutManager.findFirstCompletelyVisibleItemPosition() + ":" + layoutManager.findLastCompletelyVisibleItemPosition() + ":" + layoutManager.findLastVisibleItemPosition());
                         progressBarSpeak.setVisibility(View.VISIBLE);
-
                         toGetData(list.get(firstVisibleItem + visibleThreshold), (firstVisibleItem + visibleThreshold));
-//                    toGetData(list.get(visibleItemCount + totalItemCount));
-//                        if (list.size()< 1) {
-//                            toGetData(list.get(0));
-//                        } else {
-//                            toGetData(list.get(visibleItemCount + totalItemCount));
-//                        }
-//                        if (stringBuilder.toString().trim().length() != 0) {
-//                            toSpeak(stringBuilder.toString());
-//                        } else {
-//                            Toast.makeText(PdfReadersActivity.this, "unable to find data", Toast.LENGTH_SHORT).show();
-//                        }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

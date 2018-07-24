@@ -23,6 +23,8 @@ import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -56,7 +58,7 @@ public class CommonMethod {
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
-        bundle.putString("DeviceId",  Secure.getString(context.getContentResolver(), Secure.ANDROID_ID));
+        bundle.putString("DeviceId", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID));
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         Map<String, String> articleParams = new HashMap<>();
@@ -174,5 +176,24 @@ public class CommonMethod {
     public static boolean isOnline(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return !(connectivityManager == null || connectivityManager.getActiveNetworkInfo() == null || !connectivityManager.getActiveNetworkInfo().isConnected());
+    }
+
+    public static String getFileSize(File file) {
+        DecimalFormat format = new DecimalFormat("#.##");
+        long MiB = 1024 * 1024;
+        long KiB = 1024;
+
+        if (!file.isFile()) {
+            throw new IllegalArgumentException("Expected a file");
+        }
+        final double length = file.length();
+
+        if (length > MiB) {
+            return format.format(length / MiB) + " MiB";
+        }
+        if (length > KiB) {
+            return format.format(length / KiB) + " KiB";
+        }
+        return format.format(length) + " B";
     }
 }

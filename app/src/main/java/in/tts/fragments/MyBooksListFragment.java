@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -105,11 +106,11 @@ public class MyBooksListFragment extends Fragment {
                 DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
                 recyclerView.addItemDecoration(dividerItemDecoration);
 
-                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
-                recyclerView.setAdapter(pdfListAdapter);
+//                recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
+
+                new toGet().execute();
 
                 llCustom_loader.setVisibility(View.GONE);
 
@@ -179,5 +180,21 @@ public class MyBooksListFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class toGet extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            recyclerView.setAdapter(pdfListAdapter);
+            pdfListAdapter.notifyDataSetChanged();
+        }
     }
 }
