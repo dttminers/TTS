@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
 //                } else
                 if (User.getUser(SplashActivity.this).getId() != null) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 } else {
                     if (prefManager.isFirstTimeLaunch()) {
@@ -61,10 +61,21 @@ public class SplashActivity extends AppCompatActivity {
 //                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
                 }
+//                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+//                } else {
+//                    if (prefManager.isFirstTimeLaunch()) {
+//                        startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+//                    } else {
+//                        startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+//                    }
+////                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+//                    finish();
+//                }
+//                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//>>>>>>> 4f8f69b801b0dd610e913c6a67459a1b78400269
             }
         }, 3000);
         if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED))
-
         {
             try {
                 PrefManager prefManager = new PrefManager(SplashActivity.this);

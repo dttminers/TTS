@@ -9,7 +9,9 @@ import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.HashMap;
@@ -21,17 +23,21 @@ import in.tts.model.AudioSetting;
 public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
+    private AudioSetting audioSetting;
 
     public TTS(Context context) {
         try {
+            audioSetting = AudioSetting.getAudioSetting(context);
             tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int i) {
                     try {
+                        Log.d("TAG", " DATA LAng " + toSetLanguage() + ":" + audioSetting.getLangSelection());
+                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
                         if (i == TextToSpeech.SUCCESS) {
 
-                            if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
-                                    || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
+                            if (lang == TextToSpeech.LANG_MISSING_DATA
+                                    || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
                                 Log.e("TTS", "This Language is not supported");
                             }
                         } else {
@@ -39,17 +45,21 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                         }
 
                     } catch (Exception | Error e) {
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
 
-            tts.setPitch((float) new AudioSetting(context).getVoiceSpeed());
+            tts.setPitch((float) audioSetting.getVoiceSpeed());
 
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -68,8 +78,9 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     }
 
-    public int SetLanguage() {
-        return tts.setLanguage(Locale.US);
+    public int toSetLanguage() throws Exception, Error {
+        Log.d("TAG ", " toSetLanguage " + audioSetting.getAccentSelection());
+        return tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
     }
 
 //    @Override

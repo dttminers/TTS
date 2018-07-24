@@ -20,10 +20,6 @@ import java.util.Locale;
 
 public class PrefManager {
 
-    private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
-    private Context _context;
-
     // Shared preferences file name
     private static final String PREF_NAME = "androidhive-welcome";
 
@@ -39,13 +35,14 @@ public class PrefManager {
     private static final String AUDIO_SETTING_INFO = "AUDIO_SETTING_INFO";
     private static final String AUDIO_SETTING_PREFERS = "AUDIO_SETTING_PREFERS";
 
-    // WEb BookMarks
-    // Bookmark
-    public static final String PREFERENCES = "PREFERENCES_NAME";
-    public static final String WEB_LINKS = "links";
-    public static final String WEB_TITLE = "title";
+    private static final String WEB_PREFERENCES = "WEB_PREFERENCES";
+    private static final String WEB_LINKS = "WEB_LINKS";
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private Context _context;
 
     public PrefManager(Context context) {
         _context = context;
@@ -69,7 +66,6 @@ public class PrefManager {
             if (us != null) {
                 User user = User.getUser(_context);
                 JSONObject userJSON = new JSONObject(us);
-                Log.d("TAG", "getUserinfo " + userJSON);
 
                 if (!userJSON.isNull("email")) {
                     user.setEmail(userJSON.getString("email"));
@@ -118,7 +114,6 @@ public class PrefManager {
             editor.putString(USER_INFO, new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", "getUserinfo " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -140,7 +135,7 @@ public class PrefManager {
                 }
 
                 if (!audioJSON.isNull("LangSelection")) {
-                    audioSetting.setLangSelection(audioJSON.getString("LangSelection"));
+                    audioSetting.setLangSelection(fromString(audioJSON.getString("LangSelection")));
                 }
 
                 if (!audioJSON.isNull("AccentSelection")) {
@@ -150,8 +145,8 @@ public class PrefManager {
                 if (!audioJSON.isNull("VoiceSpeed")) {
                     audioSetting.setVoiceSpeed(audioJSON.getInt("VoiceSpeed"));
                     Log.d("TAG", " json Audio VoiceSpeed 1 " + audioJSON.getInt("VoiceSpeed"));
-                }else {
-                    Log.d("TAG", " json Audio VoiceSpeed 2 " );
+                } else {
+                    Log.d("TAG", " json Audio VoiceSpeed 2 ");
                     audioSetting.setVoiceSpeed(1);
                 }
             }
@@ -163,13 +158,21 @@ public class PrefManager {
         }
     }
 
+    public Locale fromString(String locale) {
+        String parts[] = locale.split("_", -1);
+        if (parts.length == 1) return new Locale(parts[0]);
+        else if (parts.length == 2
+                || (parts.length == 3 && parts[2].startsWith("#")))
+            return new Locale(parts[0], parts[1]);
+        else return new Locale(parts[0], parts[1], parts[2]);
+    }
+
     public void setAudioSetting() {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).edit();
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG SEEK", "setAudioInfo : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -216,7 +219,6 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(IMAGE_LIST, 0).getString(IMAGE_LIST_INFO, null);
             if (us != null) {
-                Log.d("TAG", " toSetImageFileList get " + us);
                 return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
@@ -236,7 +238,6 @@ public class PrefManager {
             editor.putString(IMAGE_LIST_INFO, list.toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", "toSetImageFileList " + list.size());
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -247,17 +248,9 @@ public class PrefManager {
 
     public ArrayList<String> populateSelectedSearch() {
         try {
-            String s = _context.getSharedPreferences(PREFERENCES, 0).getString(WEB_LINKS, null).trim();
+            String s = _context.getSharedPreferences(WEB_PREFERENCES, 0).getString(WEB_LINKS, null);
             if (s != null) {
-                return new ArrayList<>(
-                        Arrays.asList(
-                                s.trim().replaceAll("\\s+", "")
-                                        .replace("[", "")
-                                        .replace("]", "")
-
-                                        .split(",")
-                        )
-                );
+                return new ArrayList<>(Arrays.asList(s.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
             }
@@ -272,7 +265,7 @@ public class PrefManager {
 
     public void setSearchResult(List<String> selectedSearch) {
         try {
-            SharedPreferences.Editor editor = _context.getSharedPreferences(PREFERENCES, 0).edit();
+            SharedPreferences.Editor editor = _context.getSharedPreferences(WEB_PREFERENCES, 0).edit();
             editor.putString(WEB_LINKS, selectedSearch.toString());
             editor.apply();
             editor.commit();

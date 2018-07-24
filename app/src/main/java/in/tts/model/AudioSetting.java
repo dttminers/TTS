@@ -1,7 +1,6 @@
 package in.tts.model;
 
 import android.content.Context;
-import android.os.Trace;
 import android.util.Log;
 
 import java.util.Locale;
@@ -11,7 +10,7 @@ public class AudioSetting {
     private static transient AudioSetting audioSetting;
     private transient Context context;
     private String VoiceSelection ;
-    private String LangSelection ;//= String.valueOf(new Locale("en"));
+    private Locale LangSelection ;//= String.valueOf(new Locale("en"));
     private String AccentSelection ;//= String.valueOf(Locale.US);
     private int VoiceSpeed =10;//= 1;
 
@@ -45,11 +44,11 @@ public class AudioSetting {
        VoiceSelection = voiceSelection;
     }
 
-    public String getLangSelection() {
+    public Locale getLangSelection() {
         return LangSelection;
     }
 
-    public void setLangSelection(String langSelection) {
+    public void setLangSelection(Locale langSelection) {
         LangSelection = langSelection;
     }
 

@@ -72,6 +72,13 @@ public class ImageOcrActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        new toGetImage().execute();
+    }
+
     private void fn_permission() {
         try {
             if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
