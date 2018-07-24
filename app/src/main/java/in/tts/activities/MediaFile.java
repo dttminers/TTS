@@ -5,9 +5,85 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+//import com.github.barteksc.pdfviewer.util.FitPolicy;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
+import com.shockwave.pdfium.PdfDocument;
+
+import java.util.List;
 
 import in.tts.R;
-//
+
+public class MediaFile extends AppCompatActivity {
+
+    private PDFView pdfView;
+
+    int pageNumber = 0;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        setContentView(R.layout.main_pdfreader);
+
+        pdfView = findViewById(R.id.pdfView);
+
+        pdfView.fromAsset("Akshipta_Resume.pdf")
+                .defaultPage(0)
+                .onPageChange(new OnPageChangeListener() {
+                    @Override
+                    public void onPageChanged(int page, int pageCount) {
+                        pageNumber = page;
+                        setTitle(String.format("%s %s / %s", "Page ", page + 1, pageCount));
+                    }
+                })
+                .enableAnnotationRendering(true)
+                .onLoad(new OnLoadCompleteListener() {
+                    @Override
+                    public void loadComplete(int nbPages) {
+
+                    }
+                })
+                .scrollHandle(new DefaultScrollHandle(this))
+                .spacing(10) // in dp
+                .onPageError(new OnPageErrorListener() {
+                    @Override
+                    public void onPageError(int page, Throwable t) {
+
+                    }
+                })
+                .load();
+
+        PdfDocument.Meta meta = pdfView.getDocumentMeta();
+        Log.e("TAG", "title = " + meta.getTitle());
+        Log.e("TAG", "author = " + meta.getAuthor());
+        Log.e("TAG", "subject = " + meta.getSubject());
+        Log.e("TAG", "keywords = " + meta.getKeywords());
+        Log.e("TAG", "creator = " + meta.getCreator());
+        Log.e("TAG", "producer = " + meta.getProducer());
+        Log.e("TAG", "creationDate = " + meta.getCreationDate());
+        Log.e("TAG", "modDate = " + meta.getModDate());
+
+        printBookmarksTree(pdfView.getTableOfContents(), "-");
+    }
+
+    public void printBookmarksTree(List<PdfDocument.Bookmark> tree, String sep) {
+        for (PdfDocument.Bookmark b : tree) {
+
+            Log.e("TAG", String.format("%s %s, p %d", sep, b.getTitle(), b.getPageIdx()));
+
+            if (b.hasChildren()) {
+                printBookmarksTree(b.getChildren(), sep + "-");
+            }
+        }
+    }
+}
+
 //public class MediaFile extends Activity implements TextToSpeech.OnInitListener {
 //
 //    private TextToSpeech mTts;
@@ -21,7 +97,6 @@ import in.tts.R;
 //    private final String FILENAME = "wpta_tts.wav";
 //
 //    private ProgressDialog mProgressDialog;
-//
 //
 //    @SuppressWarnings("deprecation")
 //
@@ -171,7 +246,6 @@ import in.tts.R;
 //
 //
 //            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//// TODO Auto-generated method stub
 //            }
 //
 //            @Override
@@ -179,7 +253,6 @@ import in.tts.R;
 //
 //            public void beforeTextChanged(CharSequence s, int start, int count,
 //                                          int after) {
-//// TODO Auto-generated method stub
 //            }
 //
 //            @Override
@@ -289,11 +362,6 @@ import in.tts.R;
 //    }
 //}
 //
-public class MediaFile extends AppCompatActivity {
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        setContentView(R.layout.main);
 //        MediaPlayer mediaPlayer = MediaPlayer.create(MediaFile.this, R.raw.sound_file_1);
 //        mediaPlayer.start();
 //        Uri myUri = Uri.parse("https://soundcloud.com/uri-music/black-flag-2"); // initialize Uri here
@@ -302,9 +370,9 @@ public class MediaFile extends AppCompatActivity {
 //        mediaPlayer.setDataSource(getApplicationContext(), myUri);
 //        mediaPlayer.prepare();
 //        mediaPlayer.start();
-    }
+//    }
 //<<<<<<< HEAD
-}
+//}
 ////
 ////package com.example.parsaniahardik.progressanimation;
 //
@@ -346,7 +414,6 @@ public class MediaFile extends AppCompatActivity {
 //
 //            @Override
 //            public void run() {
-//                // TODO Auto-generated method stub
 //                while (pStatus < 100) {
 //                    pStatus += 1;
 //
@@ -354,7 +421,6 @@ public class MediaFile extends AppCompatActivity {
 //
 //                        @Override
 //                        public void run() {
-//                            // TODO Auto-generated method stub
 //                            mProgress.setProgress(pStatus);
 //                            tv.setText(pStatus + "%");
 //
@@ -372,7 +438,4 @@ public class MediaFile extends AppCompatActivity {
 //        }).start();
 //    }
 //}
-////
-//=======
 //}
-//>>>>>>> ab37b3bf2ed5b12ac8021aabe0df16606aeb18d4

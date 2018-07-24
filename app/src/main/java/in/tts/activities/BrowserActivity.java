@@ -143,6 +143,14 @@ public class BrowserActivity extends AppCompatActivity {
                 }
             });
 
+            superWebView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(BrowserActivity.this, "jhjm ", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -156,10 +164,11 @@ public class BrowserActivity extends AppCompatActivity {
             if (CommonMethod.isOnline(BrowserActivity.this)) {
                 new BrowserActivity();
             } else {
-                CommonMethod.toDisplayToast(BrowserActivity.this,getResources().getString(R.string.lbl_no_check_internet));
+                CommonMethod.toDisplayToast(BrowserActivity.this, getResources().getString(R.string.lbl_no_check_internet));
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); Crashlytics.logException(e);
+            e.printStackTrace();
+            Crashlytics.logException(e);
 
         }
     }

@@ -116,7 +116,7 @@ public class GalleryFragment extends Fragment {
                     MediaStore.Images.ImageColumns.MIME_TYPE
             };
             if (activity != null) {
-                Log.d("TAG", " PATH N " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                Log.d("TAG", " PATH N " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 Cursor cursor =
                         activity.getContentResolver()
                                 .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
@@ -126,9 +126,8 @@ public class GalleryFragment extends Fragment {
                         String imageLocation = cursor.getString(1);
                         imageFile.add(imageLocation);
                         imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
-                        Log.d("TAG", "File Name " + imageLocation);
                     }
-                    Log.d("TAG", "Count Image Files " + imageFile.size());
+//                    Log.d("TAG", "Count Image Files " + imageFile.size());
                 }
                 if (cursor != null) {
                     cursor.close();
