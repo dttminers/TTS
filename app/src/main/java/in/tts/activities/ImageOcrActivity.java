@@ -1,5 +1,6 @@
 package in.tts.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,10 +20,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 import in.tts.*;
 import in.tts.classes.TTS;
@@ -67,16 +73,25 @@ public class ImageOcrActivity extends AppCompatActivity {
             new toGetImage().execute();
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
+        try {
+            super.onResume();
 
-        new toGetImage().execute();
+            new toGetImage().execute();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     private void fn_permission() {
@@ -91,17 +106,21 @@ public class ImageOcrActivity extends AppCompatActivity {
 //                ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1);
 //            }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     private class toGetImage extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-            imageFrame = new Frame.Builder().setBitmap(bitmap).build();
+            try {
+                textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+                imageFrame = new Frame.Builder().setBitmap(bitmap).build();
 
 //            textBlocks = textRecognizer.detect(imageFrame);
 //            for (int i = 0; i < textBlocks.size(); i++) {
@@ -111,17 +130,25 @@ public class ImageOcrActivity extends AppCompatActivity {
 //            }
 //            Log.d("TAG", " Result Final: " + imageText);
 
-            stringBuilder = new StringBuilder();
-            items = textRecognizer.detect(imageFrame);
-            for (int i = 0; i < items.size(); i++) {
-                item = items.valueAt(i);
-                stringBuilder.append(item.getValue());
-                stringBuilder.append("\n");
+                stringBuilder = new StringBuilder();
+                items = textRecognizer.detect(imageFrame);
+                for (int i = 0; i < items.size(); i++) {
+                    item = items.valueAt(i);
+                    stringBuilder.append(item.getValue());
+                    stringBuilder.append("\n");
+                }
+                Log.d("TAG", " Final DATA " + stringBuilder);
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
             }
-            Log.d("TAG", " Final DATA " + stringBuilder);
             return null;
         }
 
+
+        @SuppressLint("InflateParams")
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -139,9 +166,16 @@ public class ImageOcrActivity extends AppCompatActivity {
                     ivReload.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            tvImgOcr.setText("");
-                            tts.toStop();
-                            new toGetImage().execute();
+                            try {
+                                tvImgOcr.setText("");
+                                tts.toStop();
+                                new toGetImage().execute();
+                            } catch (Exception | Error e) {
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
+                            }
                         }
                     });
 
@@ -150,9 +184,12 @@ public class ImageOcrActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             try {
                                 tts.SpeakLoud(stringBuilder.toString());
+                                tts.toSaveAudioFile(stringBuilder.toString(), DateFormat.getDateTimeInstance().format(new Date()) + ".wav");
                             } catch (Exception | Error e) {
-                                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                Crashlytics.logException(e); FirebaseCrash.report(e);
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
                             }
                         }
                     });
@@ -170,21 +207,27 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }
 
             } catch (Exception | Error e) {
-                Crashlytics.logException(e); FirebaseCrash.report(e);
-                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.image_menu, menu);
+        if (menu != null) {
+            getMenuInflater().inflate(R.menu.image_menu, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        ToSetMore.MenuOptions(ImageOcrActivity.this, item);
+        if (item != null) {
+            ToSetMore.MenuOptions(ImageOcrActivity.this, item);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -206,8 +249,10 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception | Error e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 
@@ -216,9 +261,18 @@ public class ImageOcrActivity extends AppCompatActivity {
         super.onDestroy();
         try {
             tts.toShutDown();
+            if (mRl != null) {
+                if (mRl.getChildCount() > 1) {
+                    if (view != null) {
+                        mRl.removeView(view);
+                    }
+                }
+            }
         } catch (Exception | Error e) {
-            Crashlytics.logException(e); FirebaseCrash.report(e);
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
 }

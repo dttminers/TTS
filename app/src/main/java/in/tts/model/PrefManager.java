@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import in.tts.utils.CommonMethod;
+
 public class PrefManager {
 
     // Shared preferences file name
@@ -128,26 +130,30 @@ public class PrefManager {
             if (Audio != null) {
                 AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
                 JSONObject audioJSON = new JSONObject(Audio);
-                Log.d("TAG SEEK", "getAudioInfo : " + audioJSON);
+                Log.d("TAG ", "getAudioSetting : " + audioJSON);
 
                 if (!audioJSON.isNull("VoiceSelection")) {
                     audioSetting.setVoiceSelection(audioJSON.getString("VoiceSelection"));
+                } else {
+                    audioSetting.setVoiceSelection("Female");
                 }
 
                 if (!audioJSON.isNull("LangSelection")) {
-                    audioSetting.setLangSelection(fromString(audioJSON.getString("LangSelection")));
+                    audioSetting.setLangSelection(CommonMethod.LocaleFromString(audioJSON.getString("LangSelection")));
+                } else {
+                    audioSetting.setLangSelection(Locale.US);
                 }
 
                 if (!audioJSON.isNull("AccentSelection")) {
                     audioSetting.setAccentSelection(audioJSON.getString("AccentSelection"));
+                } else {
+                    audioSetting.setLangSelection(Locale.US);
                 }
 
                 if (!audioJSON.isNull("VoiceSpeed")) {
                     audioSetting.setVoiceSpeed(audioJSON.getInt("VoiceSpeed"));
-                    Log.d("TAG", " json Audio VoiceSpeed 1 " + audioJSON.getInt("VoiceSpeed"));
                 } else {
-                    Log.d("TAG", " json Audio VoiceSpeed 2 ");
-                    audioSetting.setVoiceSpeed(1);
+                    audioSetting.setVoiceSpeed(0);
                 }
             }
         } catch (Exception | Error e) {
@@ -158,21 +164,13 @@ public class PrefManager {
         }
     }
 
-    public Locale fromString(String locale) {
-        String parts[] = locale.split("_", -1);
-        if (parts.length == 1) return new Locale(parts[0]);
-        else if (parts.length == 2
-                || (parts.length == 3 && parts[2].startsWith("#")))
-            return new Locale(parts[0], parts[1]);
-        else return new Locale(parts[0], parts[1], parts[2]);
-    }
-
     public void setAudioSetting() {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).edit();
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
             editor.apply();
             editor.commit();
+            Log.d("TAG ", "setAudioSetting : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);

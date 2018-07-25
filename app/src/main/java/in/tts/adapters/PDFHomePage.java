@@ -86,12 +86,12 @@ public class PDFHomePage extends PagerAdapter {
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
                             CommonMethod.toCloseLoader();
-                            Log.d("TAG", "PDF FILE" + list.get(position)+":"+ file.getAbsolutePath());
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                             Crashlytics.logException(e);
                             FirebaseCrash.report(e);
+                            CommonMethod.toCloseLoader();
                         }
                     }
                 });
@@ -99,6 +99,9 @@ public class PDFHomePage extends PagerAdapter {
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toCloseLoader();
         }
         container.addView(vg);
         return vg;

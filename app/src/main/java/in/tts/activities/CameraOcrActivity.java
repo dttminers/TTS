@@ -17,11 +17,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 import in.tts.R;
 import in.tts.classes.TTS;
@@ -78,9 +83,12 @@ public class CameraOcrActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     try {
                         ttsFile.SpeakLoud(stringBuilder.toString());
+                        ttsFile.toSaveAudioFile(stringBuilder.toString(), DateFormat.getDateTimeInstance().format(new Date()) + ".wav");
                     } catch (Exception | Error e) {
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
@@ -97,9 +105,18 @@ public class CameraOcrActivity extends AppCompatActivity {
             fn_permission();
 
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        toHideLayout();
+        fn_permission();
     }
 
     private void fn_permission() {
@@ -116,8 +133,10 @@ public class CameraOcrActivity extends AppCompatActivity {
                 startCameraSource();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -129,8 +148,10 @@ public class CameraOcrActivity extends AppCompatActivity {
             ivReload.setVisibility(View.GONE);
             view.setVisibility(View.GONE);
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -142,8 +163,10 @@ public class CameraOcrActivity extends AppCompatActivity {
             ivReload.setVisibility(View.VISIBLE);
             view.setVisibility(View.VISIBLE);
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -163,12 +186,15 @@ public class CameraOcrActivity extends AppCompatActivity {
                     }
                     mCameraSource.start(mCameraView.getHolder());
                 } catch (Exception | Error e) {
-                    e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    e.printStackTrace();
+                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                 }
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -182,8 +208,10 @@ public class CameraOcrActivity extends AppCompatActivity {
                     return true;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -229,8 +257,9 @@ public class CameraOcrActivity extends AppCompatActivity {
                                                 return;
                                             }
                                             mCameraSource.start(mCameraView.getHolder());
-                                        } catch (Exception|Error e) {
-                                            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                        } catch (Exception | Error e) {
+                                            e.printStackTrace();
+                                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                         }
                                     }
 
@@ -267,10 +296,8 @@ public class CameraOcrActivity extends AppCompatActivity {
                                         stringBuilder.append(item.getValue());
                                         stringBuilder.append("\n");
                                     }
-//                                    mRlOCRData.setVisibility(View.VISIBLE);
                                     tvImgOcr.setText(stringBuilder.toString().trim());
                                     toShowLayout();
-//                                    Toast.makeText(CameraOcrActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -278,8 +305,10 @@ public class CameraOcrActivity extends AppCompatActivity {
                 });
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -292,8 +321,26 @@ public class CameraOcrActivity extends AppCompatActivity {
                 mRlOCRData.setVisibility(View.GONE);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            ttsFile.toStop();
+            if (mRlOCRData != null) {
+                mRlOCRData.setVisibility(View.GONE);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 }

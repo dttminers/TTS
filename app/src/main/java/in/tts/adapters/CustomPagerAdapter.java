@@ -41,12 +41,6 @@ public class CustomPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
         ImageView imageView = itemView.findViewById(R.id.imageView);
         imageView.setImageResource(mResources[position]);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mContext.startActivity(new Intent(mContext, MediaFile.class));
-            }
-        });
 
         container.addView(itemView);
         return itemView;

@@ -2,7 +2,9 @@ package in.tts.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.ImageOcrActivity;
+import in.tts.activities.MediaFile;
 import in.tts.utils.CommonMethod;
 
 public class PDFHomePageImages extends PagerAdapter {
@@ -43,15 +46,20 @@ public class PDFHomePageImages extends PagerAdapter {
         return view == object;
     }
 
+    @NonNull
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            Log.d("TAG", " IMAGES " + position + ("file://" + l.get(position).trim().replaceAll("\\s+", "%20")));
+            Log.d("TAG", " IMAGES " + position +":"+ l.get(position).trim().replaceAll("\\s+", "%20"));
             Picasso.get()
                     .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
-                    .resize(300, 300)
+                    .placeholder(R.color.light3)
+                    .error(R.color.grey)
+                    .resize(250,250)
+                    .onlyScaleDown()
+                    .centerCrop()
                     .into(iv);
 
             iv.setOnClickListener(new View.OnClickListener() {
@@ -61,11 +69,13 @@ public class PDFHomePageImages extends PagerAdapter {
                         CommonMethod.toCallLoader(context, "Loading...");
                         context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", l.get(position)));
                         CommonMethod.toCloseLoader();
+//                        context.startActivity(new Intent(context, MediaFile.class));
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         Crashlytics.logException(e);
                         FirebaseCrash.report(e);
+                        CommonMethod.toCloseLoader();
                     }
                 }
             });
@@ -73,6 +83,9 @@ public class PDFHomePageImages extends PagerAdapter {
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toCloseLoader();
         }
         container.addView(vg);
         return vg;

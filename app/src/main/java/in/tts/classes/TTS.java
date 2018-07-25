@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
@@ -19,20 +20,32 @@ import java.util.Locale;
 import java.util.Set;
 
 import in.tts.model.AudioSetting;
+import in.tts.utils.CommonMethod;
+
 
 public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
+    private Context mContext;
     private AudioSetting audioSetting;
 
     public TTS(Context context) {
         try {
-            audioSetting = AudioSetting.getAudioSetting(context);
-            tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+            mContext = context;
+            audioSetting = AudioSetting.getAudioSetting(mContext);
+            tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
+
                 @Override
                 public void onInit(int i) {
                     try {
-                        Log.d("TAG", " DATA LAng " + toSetLanguage() + ":" + audioSetting.getLangSelection());
+
+//                        tts.setPitch((float) 0.6);
+                        tts.setSpeechRate(audioSetting.getVoiceSpeed());
+
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            //tts.getVoices() +
+                            Log.d("TAG", " DATA LAng " +  toSetLanguage() + ":" + audioSetting.getLangSelection());
+//                        }
                         int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
                         if (i == TextToSpeech.SUCCESS) {
 
@@ -51,9 +64,9 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                         FirebaseCrash.report(e);
                     }
                 }
-            });
+            }, "com.google.android.tts");
 
-            tts.setPitch((float) audioSetting.getVoiceSpeed());
+//            tts.setEngineByname("com.google.android.tts");
 
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -63,19 +76,45 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
         }
     }
 
-    public void SpeakLoud(String text) {
+    public void SpeakLoud(String text) throws Exception, Error {
         if (!isSpeaking()) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         } else {
             tts.speak(text, TextToSpeech.QUEUE_ADD, null);
         }
-//        HashMap<String, String> myHashRender = new HashMap();
-//        String wakeUpText = "Are you up yet?";
-//        String destFileName = "/sdcard/myAppCache/wakeUp.wav";
-//        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
-//        tts.synthesizeToFile(text, myHashRender, Environment.DIRECTORY_DOWNLOADS+"/"+System.currentTimeMillis()+"wakeUp.wav");
-//        Log.d("TAG", " path : " + Environment.DIRECTORY_DOWNLOADS+System.currentTimeMillis()+"wakeUp.wav");
+    }
 
+    public String toSaveAudioFile(String text, String mAudioFilename) throws Exception, Error {
+        File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
+        Log.d("TAG", "Sound PATH " + mMainFolder.exists());
+
+        if (!mMainFolder.exists()) {
+            mMainFolder.mkdirs();
+        }
+//        } else {
+            File audio = new File(mMainFolder + "/" + mAudioFilename);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tts.synthesizeToFile(text, null, audio, "READ_IT");
+            } else {
+                HashMap<String, String> hm = new HashMap();
+                hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
+                tts.synthesizeToFile(text, hm, audio.getPath());
+            }
+            Log.d("TAG", " sound_path" + audio.getAbsolutePath());
+            return audio.getAbsolutePath();
+//        }
+//        } else {
+//            if (mContext != null) {
+//                CommonMethod.toDisplayToast(mContext, "Unable to create audio file");
+//            }
+//            return null;
+//        }
+//        } else {
+//            if (mContext != null) {
+//                CommonMethod.toDisplayToast(mContext, "Unable to create audio File");
+//            }
+//            return null;
+//        }
     }
 
     public int toSetLanguage() throws Exception, Error {
@@ -83,30 +122,19 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
         return tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
     }
 
-//    @Override
-//    public void onInit(int status) {
-//
-//        if (status == TextToSpeech.SUCCESS) {
-//
-//            if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
-//                    || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
-//                Log.e("TTS", "This Language is not supported");
-////                speakloud();
-//            }
-//        } else {
-//            Log.e("TTS", "Initilization Failed!");
-//        }
-//
-//    }
 
-    public void toStop() {
+    public boolean isSpeaking() throws Exception, Error {
+        return tts.isSpeaking();
+    }
+
+    public void toStop() throws Exception, Error {
         // Don't forget to shutdown tts!
         if (tts != null) {
             tts.stop();
         }
     }
 
-    public void toShutDown() {
+    public void toShutDown() throws Exception, Error {
         // Don't forget to shutdown tts!
         if (tts != null) {
             tts.stop();
@@ -117,10 +145,6 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.playEarcon(earcon, queueMode, params, utteranceId);
         }
-    }
-
-    public boolean isSpeaking() {
-        return tts.isSpeaking();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -205,3 +229,36 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
         }
     }
 }
+
+//    @Override
+//    public void onInit(int status) {
+//
+//        if (status == TextToSpeech.SUCCESS) {
+//
+//            if (SetLanguage() == TextToSpeech.LANG_MISSING_DATA
+//                    || SetLanguage() == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                Log.e("TTS", "This Language is not supported");
+////                speakloud();
+//            }
+//        } else {
+//            Log.e("TTS", "Initilization Failed!");
+//        }
+//
+//    }
+
+//        tts.setOnUtteranceCompletedListener(new TextToSpeech
+//                .OnUtteranceCompletedListener() {
+//            public void onUtteranceCompleted(String uid) {
+//                if (uid.equals("READ_IT")) {
+//                    Toast.makeText(this, "Saved to " +
+//                            mAudioFilename, Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
+
+//        HashMap<String, String> myHashRender = new HashMap();
+//        String wakeUpText = "Are you up yet?";
+//        String destFileName = "/sdcard/myAppCache/wakeUp.wav";
+//        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
+//        tts.synthesizeToFile(text, myHashRender, Environment.DIRECTORY_DOWNLOADS+"/"+System.currentTimeMillis()+"wakeUp.wav");
+//        Log.d("TAG", " path : " + Environment.DIRECTORY_DOWNLOADS+System.currentTimeMillis()+"wakeUp.wav");

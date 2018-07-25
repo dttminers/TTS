@@ -7,17 +7,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 //import com.github.barteksc.pdfviewer.util.FitPolicy;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
+import com.google.firebase.crash.FirebaseCrash;
 import com.shockwave.pdfium.PdfDocument;
 
 import java.util.List;
 
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 public class MediaFile extends AppCompatActivity {
 
@@ -30,53 +34,63 @@ public class MediaFile extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
         setContentView(R.layout.main_pdfreader);
+        try {
 
-        pdfView = findViewById(R.id.pdfView);
+            if (getSupportActionBar() != null) {
+                CommonMethod.toSetTitle(getSupportActionBar(), MediaFile.this, "Media");
+            }
 
-        pdfView.fromAsset("Akshipta_Resume.pdf")
-                .defaultPage(0)
-                .onPageChange(new OnPageChangeListener() {
-                    @Override
-                    public void onPageChanged(int page, int pageCount) {
-                        pageNumber = page;
-                        setTitle(String.format("%s %s / %s", "Page ", page + 1, pageCount));
-                    }
-                })
-                .enableAnnotationRendering(true)
-                .onLoad(new OnLoadCompleteListener() {
-                    @Override
-                    public void loadComplete(int nbPages) {
+            pdfView = findViewById(R.id.pdfView);
 
-                    }
-                })
-                .scrollHandle(new DefaultScrollHandle(this))
-                .spacing(10) // in dp
-                .onPageError(new OnPageErrorListener() {
-                    @Override
-                    public void onPageError(int page, Throwable t) {
+            pdfView.fromAsset("Akshipta_Resume.pdf")
+                    .defaultPage(0)
+                    .onPageChange(new OnPageChangeListener() {
+                        @Override
+                        public void onPageChanged(int page, int pageCount) {
+                            pageNumber = page;
+                            setTitle(String.format("%s %s / %s", "Page ", page + 1, pageCount));
+                        }
+                    })
+                    .enableAnnotationRendering(true)
+                    .onLoad(new OnLoadCompleteListener() {
+                        @Override
+                        public void loadComplete(int nbPages) {
 
-                    }
-                })
-                .load();
+                        }
+                    })
+                    .scrollHandle(new DefaultScrollHandle(this))
+                    .spacing(10) // in dp
+                    .onPageError(new OnPageErrorListener() {
+                        @Override
+                        public void onPageError(int page, Throwable t) {
 
-        PdfDocument.Meta meta = pdfView.getDocumentMeta();
-        Log.e("TAG", "title = " + meta.getTitle());
-        Log.e("TAG", "author = " + meta.getAuthor());
-        Log.e("TAG", "subject = " + meta.getSubject());
-        Log.e("TAG", "keywords = " + meta.getKeywords());
-        Log.e("TAG", "creator = " + meta.getCreator());
-        Log.e("TAG", "producer = " + meta.getProducer());
-        Log.e("TAG", "creationDate = " + meta.getCreationDate());
-        Log.e("TAG", "modDate = " + meta.getModDate());
+                        }
+                    })
+                    .load();
 
-        printBookmarksTree(pdfView.getTableOfContents(), "-");
+            PdfDocument.Meta meta = pdfView.getDocumentMeta();
+            Log.d("TAG", "title 1= " + pdfView.getCurrentPage() +":"+ pdfView.getPageCount()+":"+ pdfView.getChildCount());
+            Log.d("TAG", "title = " + meta.getTitle());
+            Log.d("TAG", "author = " + meta.getAuthor());
+            Log.d("TAG", "subject = " + meta.getSubject());
+            Log.d("TAG", "keywords = " + meta.getKeywords());
+            Log.d("TAG", "creator = " + meta.getCreator());
+            Log.d("TAG", "producer = " + meta.getProducer());
+            Log.d("TAG", "creationDate = " + meta.getCreationDate());
+            Log.d("TAG", "modDate = " + meta.getModDate());
+
+            printBookmarksTree(pdfView.getTableOfContents(), "-");
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     public void printBookmarksTree(List<PdfDocument.Bookmark> tree, String sep) {
         for (PdfDocument.Bookmark b : tree) {
-
-            Log.e("TAG", String.format("%s %s, p %d", sep, b.getTitle(), b.getPageIdx()));
-
+            Log.d("TAG", String.format("%s %s, p %d", sep, b.getTitle(), b.getPageIdx()));
             if (b.hasChildren()) {
                 printBookmarksTree(b.getChildren(), sep + "-");
             }

@@ -26,7 +26,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,8 +98,10 @@ public class MainHomeFragment extends Fragment {
             fn_permission();
             toBindTopBanners();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -110,8 +114,10 @@ public class MainHomeFragment extends Fragment {
                 toSetSomeData();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -172,8 +178,10 @@ public class MainHomeFragment extends Fragment {
                 }
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -205,8 +213,10 @@ public class MainHomeFragment extends Fragment {
             nsv.setVisibility(View.VISIBLE);
             mLoading.setVisibility(View.GONE);
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -249,8 +259,10 @@ public class MainHomeFragment extends Fragment {
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -281,9 +293,11 @@ public class MainHomeFragment extends Fragment {
                                 try {
                                     mListener.setCurrentViewPagerItem(1);
                                 } catch (Exception | Error e) {
-                                    e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                     CommonMethod.toCloseLoader();
-                                    Crashlytics.logException(e); FirebaseCrash.report(e);
+                                    Crashlytics.logException(e);
+                                    FirebaseCrash.report(e);
                                     Log.d("TAG", " ERROR5 " + e.getMessage());
                                 }
                             }
@@ -299,8 +313,10 @@ public class MainHomeFragment extends Fragment {
                 }
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -333,8 +349,10 @@ public class MainHomeFragment extends Fragment {
                 }
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -372,8 +390,10 @@ public class MainHomeFragment extends Fragment {
                                 try {
                                     mListener.setCurrentViewPagerItem(4);
                                 } catch (Exception | Error e) {
-                                    e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e); FirebaseCrash.report(e);
+                                    e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    Crashlytics.logException(e);
+                                    FirebaseCrash.report(e);
                                 }
                             }
                         });
@@ -384,8 +404,10 @@ public class MainHomeFragment extends Fragment {
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -404,8 +426,10 @@ public class MainHomeFragment extends Fragment {
                 mListener = (OnFragmentInteractionListener) context;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 

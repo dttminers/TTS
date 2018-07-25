@@ -26,6 +26,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -195,5 +196,14 @@ public class CommonMethod {
             return format.format(length / KiB) + " KiB";
         }
         return format.format(length) + " B";
+    }
+
+    public static Locale LocaleFromString(String locale) {
+        String parts[] = locale.split("_", -1);
+        if (parts.length == 1) return new Locale(parts[0]);
+        else if (parts.length == 2
+                || (parts.length == 3 && parts[2].startsWith("#")))
+            return new Locale(parts[0], parts[1]);
+        else return new Locale(parts[0], parts[1], parts[2]);
     }
 }
