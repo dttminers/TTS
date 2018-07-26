@@ -21,6 +21,7 @@ import java.io.File;
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
+import in.tts.services.ClipboardMonitorService;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
@@ -33,70 +34,58 @@ public class SplashActivity extends AppCompatActivity {
     @AddTrace(name = "onCreateSplashActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_splash);
+        try {
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.activity_splash);
+            startService(new Intent(this, ClipboardMonitorService.class));
 
-        //Get Firebase auth instance
+            //Get Firebase auth instance
 //        auth = FirebaseAuth.getInstance();
-        CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
+            CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                PrefManager prefManager = new PrefManager(SplashActivity.this);
-                prefManager.getUserInfo();
+            PrefManager prefManager = new PrefManager(SplashActivity.this);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PrefManager prefManager = new PrefManager(SplashActivity.this);
+                    prefManager.getUserInfo();
 
 //                if (auth.getCurrentUser() != null) {
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
 //                } else
-                if (User.getUser(SplashActivity.this).getId() != null) {
+                    if (User.getUser(SplashActivity.this).getId() != null) {
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                } else {
-                    if (prefManager.isFirstTimeLaunch()) {
-                        startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     } else {
-                        startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-                    }
+                        if (prefManager.isFirstTimeLaunch()) {
+                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+                        } else {
+                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                        }
 //                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                    finish();
+                        finish();
+                    }
                 }
-//                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-//                } else {
-//                    if (prefManager.isFirstTimeLaunch()) {
-//                        startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
-//                    } else {
-//                        startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-//                    }
-////                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-//                    finish();
-//                }
-//                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//>>>>>>> 4f8f69b801b0dd610e913c6a67459a1b78400269
-            }
-        }, 3000);
-        if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED))
-        {
-            try {
-                PrefManager prefManager = new PrefManager(SplashActivity.this);
-//            prefManager.toSetPDFFileList(
-                if (prefManager.toGetPDFList() == null) {
+            }, 3000);
+            prefManager.getAudioSetting();
+            if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                try {
                     ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
-                }
-//            );
-//            prefManager.toSetImageFileList(
-                if (prefManager.toGetImageList() == null) {
                     ToGetImages.getAllShownImagesPath(SplashActivity.this, SplashActivity.this);
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    Crashlytics.logException(e);
+                    FirebaseCrash.report(e);
                 }
-//            );
-            } catch (Exception | Error e) {
-                e.printStackTrace();
-                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e);
-                FirebaseCrash.report(e);
             }
+            CommonMethod.isSignedIn(SplashActivity.this);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
-        CommonMethod.isSignedIn(SplashActivity.this);
     }
 
     @Override

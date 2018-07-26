@@ -26,12 +26,12 @@ import in.tts.utils.CommonMethod;
 public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
-    private Context mContext;
+//    private Context mContext;
     private AudioSetting audioSetting;
 
-    public TTS(Context context) {
+    public TTS(Context mContext) {
         try {
-            mContext = context;
+//            mContext = context;
             audioSetting = AudioSetting.getAudioSetting(mContext);
             tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
 
@@ -48,7 +48,6 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 //                        }
                         int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
                         if (i == TextToSpeech.SUCCESS) {
-
                             if (lang == TextToSpeech.LANG_MISSING_DATA
                                     || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
                                 Log.e("TTS", "This Language is not supported");
@@ -92,15 +91,15 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             mMainFolder.mkdirs();
         }
 //        } else {
-            File audio = new File(mMainFolder + "/" + mAudioFilename);
+            File audio = new File(mMainFolder + "/" +System.currentTimeMillis()+".mp3");//;+ mAudioFilename);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 tts.synthesizeToFile(text, null, audio, "READ_IT");
             } else {
-                HashMap<String, String> hm = new HashMap();
+                HashMap<String, String> hm = new HashMap<>();
                 hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
                 tts.synthesizeToFile(text, hm, audio.getPath());
             }
-            Log.d("TAG", " sound_path" + audio.getAbsolutePath());
+            Log.d("TAG", " sound_path" + audio.getAbsolutePath() +":"+ CommonMethod.getFileSize(audio));
             return audio.getAbsolutePath();
 //        }
 //        } else {

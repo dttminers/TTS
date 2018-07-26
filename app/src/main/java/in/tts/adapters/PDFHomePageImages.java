@@ -2,9 +2,7 @@ package in.tts.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +15,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
@@ -52,12 +51,13 @@ public class PDFHomePageImages extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            Log.d("TAG", " IMAGES " + position +":"+ l.get(position).trim().replaceAll("\\s+", "%20"));
+            Log.d("TAG", " IMAGES " + position + ":" + l.get(position).trim().replaceAll("\\s+", "%20"));
             Picasso.get()
-                    .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
+                    .load(new File(l.get(position)))
+//                    .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
                     .placeholder(R.color.light3)
                     .error(R.color.grey)
-                    .resize(250,250)
+                    .resize(250, 250)
                     .onlyScaleDown()
                     .centerCrop()
                     .into(iv);
@@ -66,10 +66,10 @@ public class PDFHomePageImages extends PagerAdapter {
                 @Override
                 public void onClick(View view) {
                     try {
+                        Log.d("TAG", " Image " + l.get(position));
                         CommonMethod.toCallLoader(context, "Loading...");
                         context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", l.get(position)));
                         CommonMethod.toCloseLoader();
-//                        context.startActivity(new Intent(context, MediaFile.class));
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

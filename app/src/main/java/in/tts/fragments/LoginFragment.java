@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,11 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -74,7 +78,10 @@ public class LoginFragment extends Fragment {
     private ProfileTracker profileTracker;
     private LoginManager mFbLoginManager;
 
-    private FirebaseAuth auth;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private User user;
 
     // Parameters
     private int RC_SIGN_IN = 123;
@@ -89,6 +96,19 @@ public class LoginFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
     @Override
     @AddTrace(name = "onCreateLoginFragment", enabled = true)
@@ -97,9 +117,8 @@ public class LoginFragment extends Fragment {
         try {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Login", null);
 
+            user = User.getUser(getContext());
             FacebookSdk.sdkInitialize(getContext());
-            //Get Firebase auth instance
-            auth = FirebaseAuth.getInstance();
             mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
             SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
@@ -109,6 +128,33 @@ public class LoginFragment extends Fragment {
             mEdtEmail = getActivity().findViewById(R.id.edtEmailIdLogin);
             mEdtPassword = getActivity().findViewById(R.id.edtPasswordLogin);
             mBtnLogin = getActivity().findViewById(R.id.btnLogin);
+
+
+            //Get Firebase auth instance
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser account = firebaseAuth.getCurrentUser();
+//                    signInButton.setVisibility(View.GONE);
+//                    signOutButton.setVisibility(View.VISIBLE);
+                    if (account != null) {
+                        // User is signed in
+                        Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
+                        user.setEmail(account.getEmail());
+                        user.setId(account.getUid());
+                        user.setName(account.getDisplayName());
+                        user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
+                        user.setLoginFrom(1);
+                        toExit();
+                    } else {
+                        // User is signed out
+                        Log.d("TAG", "onAuthStateChanged:signed_out");
+                    }
+                    // ...
+                }
+            };
+
 
             mEdtEmail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                 @Override
@@ -149,34 +195,34 @@ public class LoginFragment extends Fragment {
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Login...");
                     if (validateEmail() && validatePassword()) {
-                        User user = User.getUser(getContext());
+                        user = User.getUser(getContext());
                         user.setLoginFrom(3);
                         user.setId(String.valueOf(System.currentTimeMillis()));
                         user.setEmail(mEdtEmail.getText().toString());
                         toExit();
 
                         //authenticate user
-                        auth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
-                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (!task.isSuccessful()) {
-                                            // there was an error
-                                            if (mEdtPassword.getText().toString().length() < 8) {
-                                                mEdtPassword.setError(getString(R.string.str_error_minimum_8));
-                                            } else {
-                                                Toast.makeText(getContext(), getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-                                            }
-                                        } else {
-//
-                                            User user = User.getUser(getContext());
-                                            user.setLoginFrom(3);
-                                            user.setEmail(mEdtEmail.getText().toString());
-                                            CommonMethod.toCloseLoader();
-                                            toExit();
-                                        }
-                                    }
-                                });
+//                        mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
+//                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                                        if (!task.isSuccessful()) {
+//                                            // there was an error
+//                                            if (mEdtPassword.getText().toString().length() < 8) {
+//                                                mEdtPassword.setError(getString(R.string.str_error_minimum_8));
+//                                            } else {
+//                                                Toast.makeText(getContext(), getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+//                                            }
+//                                        } else {
+////
+//                                            user = User.getUser(getContext());
+//                                            user.setLoginFrom(3);
+//                                            user.setEmail(mEdtEmail.getText().toString());
+//                                            CommonMethod.toCloseLoader();
+//                                            toExit();
+//                                        }
+//                                    }
+//                                });
                     } else {
                         CommonMethod.toDisplayToast(getContext(), "Please try again, Login failed");
                     }
@@ -321,7 +367,7 @@ public class LoginFragment extends Fragment {
                                             if (currentProfile != null) {
                                                 this.stopTracking();
                                                 Profile.setCurrentProfile(currentProfile);
-                                                User user = User.getUser(getContext());
+                                                user = User.getUser(getContext());
                                                 user.setId(currentProfile.getId());
                                                 user.setName1(currentProfile.getFirstName());
                                                 user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
@@ -431,7 +477,8 @@ public class LoginFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Login successful from Google");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
-                User user = User.getUser(getContext());
+                firebaseAuthWithGoogle(account);
+                user = User.getUser(getContext());
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());
                 user.setFcmToken(account.getIdToken());
@@ -443,7 +490,7 @@ public class LoginFragment extends Fragment {
                 toExit();
             }
         } catch (ApiException e
-                ){
+                ) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
@@ -476,6 +523,28 @@ public class LoginFragment extends Fragment {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "signInWithCredential", task.getException());
+                            Toast.makeText(getContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override

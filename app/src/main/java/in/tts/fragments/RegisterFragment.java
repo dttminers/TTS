@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +19,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -68,6 +79,11 @@ public class RegisterFragment extends Fragment {
     private int RC_SIGN_IN = 123;
     private static final String EMAIL = "email";
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private User user;
+
     public RegisterFragment() {
     }
 
@@ -77,6 +93,20 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @Override
@@ -90,6 +120,31 @@ public class RegisterFragment extends Fragment {
             mEdtPassword = getActivity().findViewById(R.id.edtPasswordReg);
             mEdtCnfPwd = getActivity().findViewById(R.id.edtConfirmPasswordReg);
             mBtnSignUp = getActivity().findViewById(R.id.btnSignUpReg);
+
+            //Get Firebase auth instance
+            mAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser account = firebaseAuth.getCurrentUser();
+//                    signInButton.setVisibility(View.GONE);
+//                    signOutButton.setVisibility(View.VISIBLE);
+                    if (account != null) {
+                        // User is signed in
+                        Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
+                        user.setEmail(account.getEmail());
+                        user.setId(account.getUid());
+                        user.setName(account.getDisplayName());
+                        user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
+                        user.setLoginFrom(1);
+                        toExit();
+                    } else {
+                        // User is signed out
+                        Log.d("TAG", "onAuthStateChanged:signed_out");
+                    }
+                    // ...
+                }
+            };
 
             mEdtEmail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                 @Override
@@ -146,15 +201,38 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (validateEmail() && validatePassword() && validateCnfPassword()) {
-                        if(mEdtPassword.getText().toString().trim().equals(mEdtCnfPwd.getText().toString().trim())) {
+                        if (mEdtPassword.getText().toString().trim().equals(mEdtCnfPwd.getText().toString().trim())) {
                             startActivity(new Intent(getContext(), LoginActivity.class));
                             CommonMethod.toDisplayToast(getContext(), " Register Successfully ");
-                        }else {
-                            CommonMethod.toDisplayToast(getContext(),"Password not match, please try again");
+                        } else {
+                            CommonMethod.toDisplayToast(getContext(), "Password not match, please try again");
                         }
                     } else {
                         CommonMethod.toDisplayToast(getContext(), "Please try again, Register failed");
                     }
+                    //authenticate user
+//                    mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
+//                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<AuthResult> task) {
+//                                    if (!task.isSuccessful()) {
+//                                        // there was an error
+//                                        if (mEdtPassword.getText().toString().length() < 8) {
+//                                            mEdtPassword.setError(getString(R.string.str_error_minimum_8));
+//                                        } else {
+//                                            Toast.makeText(getContext(), getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+//                                        }
+//                                    } else {
+////
+//                                        user = User.getUser(getContext());
+//                                        user.setLoginFrom(3);
+//                                        user.setEmail(mEdtEmail.getText().toString());
+//                                        CommonMethod.toCloseLoader();
+//                                        toExit();
+//                                    }
+//                                }
+//                            });
+
                 }
 
             });
@@ -219,9 +297,11 @@ public class RegisterFragment extends Fragment {
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "login"));
                         getActivity().finish();
                     } catch (Exception | Error e) {
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
@@ -234,9 +314,11 @@ public class RegisterFragment extends Fragment {
                         getActivity().finish();
                         CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
@@ -257,9 +339,11 @@ public class RegisterFragment extends Fragment {
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                         CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         CommonMethod.toCloseLoader();
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
@@ -296,7 +380,7 @@ public class RegisterFragment extends Fragment {
                         CommonMethod.toCloseLoader();
                         CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                     } else {
-                       accessTokenTracker.startTracking();
+                        accessTokenTracker.startTracking();
                         mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
                         mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
@@ -309,7 +393,7 @@ public class RegisterFragment extends Fragment {
                                             if (currentProfile != null) {
                                                 this.stopTracking();
                                                 Profile.setCurrentProfile(currentProfile);
-                                                User user = User.getUser(getContext());
+                                                user = User.getUser(getContext());
                                                 user.setId(currentProfile.getId());
                                                 user.setName1(currentProfile.getFirstName());
                                                 user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
@@ -324,8 +408,10 @@ public class RegisterFragment extends Fragment {
                                     profileTracker.startTracking();
                                 } catch (Exception | Error e) {
                                     CommonMethod.toCloseLoader();
-                                    e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e); FirebaseCrash.report(e);
+                                    e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    Crashlytics.logException(e);
+                                    FirebaseCrash.report(e);
                                     CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
                                 }
                             }
@@ -353,8 +439,10 @@ public class RegisterFragment extends Fragment {
 
         } catch (Exception | Error e) {
             CommonMethod.toCloseLoader();
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
         }
     }
@@ -426,8 +514,10 @@ public class RegisterFragment extends Fragment {
         try {
             CommonMethod.toCallLoader(getContext(), "Login successful from Google");
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
             if (account != null) {
-                User user = User.getUser(getContext());
+                firebaseAuthWithGoogle(account);
+                user = User.getUser(getContext());
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());
                 user.setFcmToken(account.getIdToken());
@@ -439,9 +529,11 @@ public class RegisterFragment extends Fragment {
                 toExit();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -457,18 +549,35 @@ public class RegisterFragment extends Fragment {
             getActivity().finish();
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        CommonMethod.toReleaseMemory();
-    }
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
 
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "signInWithCredential", task.getException());
+                            Toast.makeText(getContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 
     @Override
     public void onPause() {

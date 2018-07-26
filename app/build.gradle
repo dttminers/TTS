@@ -3,15 +3,23 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
+
+
     maven { url 'https://maven.fabric.io/public' }
-//    maven { url "https://jitpack.io" }
+    maven {
+        url 'https://customers.pspdfkit.com/maven/'
+        credentials {
+            username 'pspdfkit'
+            password 'TRIAL-fzwkat7BsRkamww--2m9hPM712XKtZMNS8Zzg04jZLPG7-8tC_NsW1DP37AonhbAZXkJgxwe8ufF4etkKCzhwA'
+        }
+    }
 }
 
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "in.tts"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0 Alpha"
@@ -51,11 +59,7 @@ dependencies {
     implementation 'com.flurry.android:ads:11.1.1@aar'
     implementation 'com.flurry.android:analytics:11.1.1@aar'
 
-//    implementation 'com.folioreader:folioreader:0.4.0'
-
     implementation 'com.facebook.android:facebook-login:4.34.0'
-
-//    implementation 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
 
     implementation 'com.google.code.gson:gson:2.8.2'
 
@@ -80,6 +84,6 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+    implementation 'com.pspdfkit:pspdfkit-demo:4.7.1'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -27,6 +27,9 @@ import com.flurry.android.FlurryAgent;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +53,9 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private ProgressBar progressBarSpeak;
 
-    private MediaPlayer mMediaPlayer;
+//    private MediaPlayer mMediaPlayer;
+
+    private MediaPlayer mediaPlayer;
 
     private LinearLayout speakLayout, llCustom_loader;
     private Button reload, forward, playPause, backward, close;
@@ -111,7 +116,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
                         progressBarSpeak = findViewById(R.id.progressBarSpeak);
 
-                        mMediaPlayer = new MediaPlayer();
+//                        mMediaPlayer = new MediaPlayer();
                         mTts = new TTS(PdfReadersActivity.this);
 
                         stringBuilder = new StringBuilder();
@@ -142,7 +147,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 Toast.makeText(getApplicationContext(), "Pausing sound", Toast.LENGTH_SHORT).show();
-                                mMediaPlayer.pause();
+//                                mMediaPlayer.pause();
+//                                playMediaPlayer(1);
                             }
                         });
 
@@ -152,7 +158,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                                 int temp = (int) startTime;
                                 if ((temp + forwardTime) <= finalTime) {
                                     startTime = startTime + forwardTime;
-                                    mMediaPlayer.seekTo((int) startTime);
+//                                    mMediaPlayer.seekTo((int) startTime);
                                     Toast.makeText(getApplicationContext(), "You have Jumped forward 5 seconds", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Cannot jump forward 5 seconds", Toast.LENGTH_SHORT).show();
@@ -167,7 +173,7 @@ public class PdfReadersActivity extends AppCompatActivity {
 
                                 if ((temp - backwardTime) > 0) {
                                     startTime = startTime - backwardTime;
-                                    mMediaPlayer.seekTo((int) startTime);
+//                                    mMediaPlayer.seekTo((int) startTime);
                                     Toast.makeText(getApplicationContext(), "You have Jumped backward 5 seconds", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Cannot jump backward 5 seconds", Toast.LENGTH_SHORT).show();
@@ -261,51 +267,90 @@ public class PdfReadersActivity extends AppCompatActivity {
             speakLayout.setVisibility(View.VISIBLE);
             progressBarSpeak.setVisibility(View.GONE);
 
-            if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-                playMediaPlayer(1);
-                progressBarSpeak.setVisibility(View.GONE);
-                return;
-            }
 
-            if (mMediaPlayer != null) {
-                mMediaPlayer.start();
-
-                finalTime = mMediaPlayer.getDuration();
-                startTime = mMediaPlayer.getCurrentPosition();
-
-                if (oneTimeOnly == 0) {
-//                seekbar.setMax((int) finalTime);
-                    Log.d("TAGPDF", "SPEAKING : " + ((int) finalTime));
-                    oneTimeOnly = 1;
-                }
-
-                Log.d("TAGPDF", " Start Time : " + String.format("%d min, %d sec",
-                        TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                        finalTime)))
-                );
-
-                Log.d("TAGPDF", " End Time : " + String.format("%d min, %d sec",
-                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                        startTime)))
-                );
-
-                if (FileName != null) {
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            try {
+//                mediaPlayer.setDataSource("http://www.virginmegastore.me/Library/Music/CD_001214/Tracks/Track1.mp3");
+                File file = new File(FileName);
+                FileInputStream fis = new FileInputStream(file);
+                mediaPlayer.setDataSource(fis.getFD());
+                if (file.exists()) {
+                    Log.d("TAGPDF", " PATH" + file.getTotalSpace());
                     Uri uri = Uri.parse("file://" + FileName);
-                    Log.d("TAGPDF", " PATH audio 1: " + FileName);
-                    if (uri != null) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mMediaPlayer.setDataSource(getApplicationContext(), uri);
-                        mMediaPlayer.prepare();
-                        playMediaPlayer(0);
-                    }
-                } else {
-                    CommonMethod.toDisplayToast(PdfReadersActivity.this, " No data to read");
+                    Log.d("TAGPDF", " PATH " +uri.isAbsolute());
+//                            mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
+//                    mediaPlayer.setDataSource("file://"+ FileName);
+                    mediaPlayer.prepareAsync();
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mediaPlayer.start();
+                        }
+                    });
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+//            mediaPlayer = MediaPlayer.create(PdfReadersActivity.this, Uri.parse("file://" + FileName) );
+//            mediaPlayer = MediaPlayer.create(PdfReadersActivity.this, Uri.fromFile(new File(FileName)));
+
+//            if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+//                playMediaPlayer(1);
+//                progressBarSpeak.setVisibility(View.GONE);
+//                return;
+//            }
+
+//            if (mMediaPlayer != null) {
+////                mMediaPlayer.start();
+//                if (FileName != null) {
+////                    Uri uri = Uri.parse("file://" + FileName);
+//                    Uri uri = Uri.fromFile(new File(FileName));
+            Log.d("TAGPDF", " PATH audio 1: " + FileName);//+ " : " + uri.getPath());
+//                    if (uri != null) {
+//                        try {
+//                            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                            mMediaPlayer.setDataSource(PdfReadersActivity.this, uri);
+////                        mMediaPlayer.prepare();
+//                            mMediaPlayer.prepareAsync();
+////                            playMediaPlayer(0);
+//
+//                            finalTime = mMediaPlayer.getDuration();
+//                            startTime = mMediaPlayer.getCurrentPosition();
+//
+//                            if (oneTimeOnly == 0) {
+////                seekbar.setMax((int) finalTime);
+//                                Log.d("TAGPDF", "SPEAKING : " + ((int) finalTime));
+//                                oneTimeOnly = 1;
+//                            }
+//
+//                            Log.d("TAGPDF", " Start Time : " + String.format("%d min, %d sec",
+//                                    TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+//                                    TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+//                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+//                                                    finalTime)))
+//                            );
+//
+//                            Log.d("TAGPDF", " End Time : " + String.format("%d min, %d sec",
+//                                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+//                                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+//                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+//                                                    startTime)))
+//                            );
+//
+//                        } catch (Exception | Error e) {
+//                            e.printStackTrace();
+//                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//                            Crashlytics.logException(e);
+//                            CommonMethod.toDisplayToast(PdfReadersActivity.this, " Failed to play sound");
+//                        }
+//                    }
+//                } else {
+//                    CommonMethod.toDisplayToast(PdfReadersActivity.this, " No data to read");
+//                }
+//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -313,20 +358,19 @@ public class PdfReadersActivity extends AppCompatActivity {
         }
     }
 
-    private void playMediaPlayer(int status) {
-        progressBarSpeak.setVisibility(View.GONE);
-        // Start Playing
-        if (status == 0) {
-            speakLayout.setVisibility(View.VISIBLE);
-
-            mMediaPlayer.start();
-        }
-        // Pause Playing
-        if (status == 1) {
-            speakLayout.setVisibility(View.GONE);
-            mMediaPlayer.pause();
-        }
-    }
+//    private void playMediaPlayer(int status) {
+//        progressBarSpeak.setVisibility(View.GONE);
+//        // Start Playing
+//        if (status == 0) {
+//            speakLayout.setVisibility(View.VISIBLE);
+//            mMediaPlayer.start();
+//        }
+//        // Pause Playing
+//        if (status == 1) {
+//            speakLayout.setVisibility(View.GONE);
+//            mMediaPlayer.pause();
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

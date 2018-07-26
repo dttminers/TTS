@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
@@ -59,12 +60,12 @@ public class SettingActivity extends AppCompatActivity {
             final float freeSpace = DeviceMemory.getInternalFreeSpace();
             final DecimalFormat outputFormat = new DecimalFormat("#.##");
 
-            Log.d("TAG","Storage occu"  +occupiedSpace);
-            Log.d("TAG","Storage total" +totalSpace);
+            Log.d("TAG", "Storage occu" + occupiedSpace);
+            Log.d("TAG", "Storage total" + totalSpace);
 
             if (null != pbStorage) {
                 pbStorage.setMax((int) totalSpace);
-                pbStorage.setProgress((int)occupiedSpace);
+                pbStorage.setProgress((int) occupiedSpace);
             }
             if (null != tvUsed) {
                 tvUsed.setText(outputFormat.format(occupiedSpace) + " MB");
@@ -85,6 +86,16 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     try {
                         FirebaseAuth.getInstance().signOut();
+                        //                        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+//                                new ResultCallback<Status>() {
+//                                    @Override
+//                                    public void onResult(Status status) {
+//                                        signInButton.setVisibility(View.VISIBLE);
+//                                        signOutButton.setVisibility(View.GONE);
+//                                        emailTextView.setText(" ".toString());
+//                                        nameTextView.setText(" ".toString());
+//                                    }
+//                                });
                         doExit();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -107,23 +118,23 @@ public class SettingActivity extends AppCompatActivity {
         public static float getInternalStorageSpace() {
             StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
             //StatFs statFs = new StatFs("/data");
-            float total = ((float)statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
+            float total = ((float) statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
             return total;
         }
 
         public static float getInternalFreeSpace() {
             StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
             //StatFs statFs = new StatFs("/data");
-            float free  = ((float)statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
+            float free = ((float) statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
             return free;
         }
 
         public static float getInternalUsedSpace() {
             StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
             //StatFs statFs = new StatFs("/data");
-            float total = ((float)statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
-            float free  = ((float)statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
-            float busy  = total - free;
+            float total = ((float) statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
+            float free = ((float) statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
+            float busy = total - free;
             return busy;
         }
     }

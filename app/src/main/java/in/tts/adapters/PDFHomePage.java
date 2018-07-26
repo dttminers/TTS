@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
@@ -19,11 +20,14 @@ import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
+import com.pspdfkit.configuration.activity.PdfActivityConfiguration;
+import com.pspdfkit.ui.PdfActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.activities.MediaFile;
 import in.tts.activities.PdfReadersActivity;
 import in.tts.utils.CommonMethod;
 
@@ -57,14 +61,14 @@ public class PDFHomePage extends PagerAdapter {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
-    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+    public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
 
             CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
-
+            Log.d("TAG", " PDF " + position + ":" + list.get(position));
             file = new File(list.get(position).trim());
             if (file.exists()) {
                 fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
@@ -85,6 +89,13 @@ public class PDFHomePage extends PagerAdapter {
                             Intent intent = new Intent(context, PdfReadersActivity.class);
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
+//
+//                            // Using the configuration builder, you can define options for the activity.
+//                            final PdfActivityConfiguration config = new PdfActivityConfiguration.Builder(context).build();
+//                            // Launch the activity, viewing the PDF document directly from the assets.
+//                            PdfActivity.showDocument(context, Uri.parse("file://" + list.get(position)), config);
+////                            context.startActivity(new Intent(context, MediaFile.class));
+
                             CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
                             e.printStackTrace();

@@ -1,6 +1,8 @@
 package in.tts.activities;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.tts.R;
+import in.tts.classes.ClipBoard;
+import in.tts.model.Browser;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
@@ -57,8 +61,11 @@ public class BrowserActivity extends AppCompatActivity {
             checkInternetConnection();
             setContentView(R.layout.activity_browser);
 
-            prefManager = new PrefManager(BrowserActivity.this);
+            if (getSupportActionBar() != null) {
+                CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.app_name));
+            }
 
+            prefManager = new PrefManager(BrowserActivity.this);
             if (getIntent() != null) {
                 superProgressBar = findViewById(R.id.myProgressBar);
                 superWebView = findViewById(R.id.myWebView);
@@ -75,6 +82,8 @@ public class BrowserActivity extends AppCompatActivity {
                 } else {
                     superWebView.loadUrl("https://www.google.co.in");
                 }
+
+//                superWebView.setHapticFeedbackEnabled(false);
                 superWebView.getSettings().setJavaScriptEnabled(true);
                 superWebView.getSettings().setSupportZoom(true);
                 superWebView.getSettings().setBuiltInZoomControls(true);
@@ -82,7 +91,6 @@ public class BrowserActivity extends AppCompatActivity {
                 superWebView.getSettings().setLoadWithOverviewMode(true);
                 superWebView.getSettings().setUseWideViewPort(true);
                 superWebView.clearCache(true);
-//                superWebView.clearHistory();
                 superWebView.setHorizontalScrollBarEnabled(true);
             }
 
@@ -105,22 +113,39 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     super.onProgressChanged(view, newProgress);
-                    superProgressBar.setVisibility(View.VISIBLE);
-                    superProgressBar.setProgress(newProgress);
-                    if (newProgress == 100) {
-                        superProgressBar.setVisibility(View.GONE);
-                        linkList = prefManager.populateSelectedSearch();
-                        toUpdateBookMarkIcon();
-                    } else {
+                    try {
                         superProgressBar.setVisibility(View.VISIBLE);
+                        superProgressBar.setProgress(newProgress);
+                        if (newProgress == 100) {
+                            superProgressBar.setVisibility(View.GONE);
+                            linkList = prefManager.populateSelectedSearch();
+                            toUpdateBookMarkIcon();
+                        } else {
+                            superProgressBar.setVisibility(View.VISIBLE);
 
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
 
                 @Override
                 public void onReceivedTitle(WebView view, String title) {
                     super.onReceivedTitle(view, title);
-                    getSupportActionBar().setTitle(title);
+                    try {
+//                        getSupportActionBar().setTitle(title);
+                        if (getSupportActionBar() != null) {
+                            CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, title);
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                 }
 
                 @Override
@@ -136,17 +161,51 @@ public class BrowserActivity extends AppCompatActivity {
             superWebView.setDownloadListener(new DownloadListener() {
                 @Override
                 public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                    Uri myUri = Uri.parse(url);
-                    Intent superIntent = new Intent(Intent.ACTION_VIEW);
-                    superIntent.setData(myUri);
-                    startActivity(superIntent);
+                    try {
+                        Uri myUri = Uri.parse(url);
+                        Intent superIntent = new Intent(Intent.ACTION_VIEW);
+                        superIntent.setData(myUri);
+                        startActivity(superIntent);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
+                }
+            });
+
+            // Get clipboard manager object.
+            Object clipboardService = getSystemService(CLIPBOARD_SERVICE);
+            final ClipboardManager clipboardManager = (ClipboardManager) clipboardService;
+            superWebView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        ClipData clipData = ClipData.newPlainText("", "");
+                        clipboardManager.setPrimaryClip(clipData);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                 }
             });
 
             superWebView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(BrowserActivity.this, "jhjm ", Toast.LENGTH_SHORT).show();
+
+//                    try {
+//                        ClipData clipData = ClipData.newPlainText("", "");
+//                        clipboardManager.setPrimaryClip(clipData);
+                        ClipBoard.ToPopup(BrowserActivity.this, BrowserActivity.this, null);
+//                    } catch (Exception | Error e) {
+//                        e.printStackTrace();
+//                        Crashlytics.logException(e);
+//                    }
+////                    Toast.makeText(BrowserActivity.this, "jhjm ", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             });
@@ -168,8 +227,9 @@ public class BrowserActivity extends AppCompatActivity {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-
+            FirebaseCrash.report(e);
         }
     }
 
@@ -220,60 +280,77 @@ public class BrowserActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater myMenuInflater = getMenuInflater();
-        myMenuInflater.inflate(R.menu.browser_menu, menu);
+        try {
+            MenuInflater myMenuInflater = getMenuInflater();
+            myMenuInflater.inflate(R.menu.browser_menu, menu);
 
-        menuBookMark = menu.findItem(R.id.menuBookmark).getActionView();
-        cbMenu = menuBookMark.findViewById(R.id.cbBookmark);
-        cbMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (cbMenu.isChecked()) {
-                    toChangeData(true);
-                } else {
-                    toChangeData(false);
+            menuBookMark = menu.findItem(R.id.menuBookmark).getActionView();
+            cbMenu = menuBookMark.findViewById(R.id.cbBookmark);
+            cbMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (cbMenu.isChecked()) {
+                        toChangeData(true);
+                    } else {
+                        toChangeData(false);
+                    }
                 }
-            }
-        });
+            });
 
-        linkList = prefManager.populateSelectedSearch();
-        if (linkList != null) {
-            if (linkList.contains(superWebView.getUrl())) {
-                menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
+            linkList = prefManager.populateSelectedSearch();
+            if (linkList != null) {
+                if (linkList.contains(superWebView.getUrl())) {
+                    menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
+                } else {
+                    menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+                }
             } else {
+                linkList = new ArrayList<>();
                 menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
             }
-        } else {
-            linkList = new ArrayList<>();
-            menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        try {
+            switch (item.getItemId()) {
 
-            case R.id.menuBack:
-                onBackPressed();
-                break;
+                case R.id.menuBack:
+                    onBackPressed();
+                    break;
 
-            case R.id.menuForward:
-                GoForward();
-                break;
+                case R.id.menuForward:
+                    GoForward();
+                    break;
 
-            case R.id.menuBookmarksList:
-                startActivity(new Intent(BrowserActivity.this, BookmarkActivity.class));
-                break;
+                case R.id.menuBookmarksList:
+                    startActivity(new Intent(BrowserActivity.this, BookmarkActivity.class));
+                    break;
 
-            case R.id.menuReload:
-                superWebView.reload();
-                break;
+                case R.id.menuReload:
+                    superWebView.reload();
+                    break;
 
-            case R.id.menuBookmark:
-                toChangeData(true);
-                break;
+                case R.id.menuBookmark:
+                    toChangeData(true);
+                    break;
 
+                case android.R.id.home:
+                    onBackPressed();
+                    break;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
         return true;
     }
@@ -300,21 +377,36 @@ public class BrowserActivity extends AppCompatActivity {
     }
 
     private void GoForward() {
-        if (superWebView.canGoForward()) {
-            superWebView.goForward();
-        } else {
-            Toast.makeText(this, "Can't go further!", Toast.LENGTH_SHORT).show();
+        try {
+            if (superWebView.canGoForward()) {
+                superWebView.goForward();
+            } else {
+                Toast.makeText(this, "Can't go further!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (superWebView.canGoBack()) {
-            superWebView.goBack();
-        } else {
-            finish();
+        try {
+            if (superWebView.canGoBack()) {
+                superWebView.goBack();
+            } else {
+                finish();
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
+
 }
 
 /*

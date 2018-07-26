@@ -12,7 +12,7 @@ public class AudioSetting {
     private String VoiceSelection ;
     private Locale LangSelection ;//= String.valueOf(new Locale("en"));
     private String AccentSelection ;//= String.valueOf(Locale.US);
-    private int VoiceSpeed =10;//= 1;
+    private int VoiceSpeed =0;//= 1;
 
 
     public AudioSetting(Context context) {
