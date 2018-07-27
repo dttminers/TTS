@@ -42,15 +42,21 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 //                        tts.setPitch((float) 0.6);
                         tts.setSpeechRate(audioSetting.getVoiceSpeed());
 
+//                        int lang = tts.setLanguage(new Locale("hi_IN"));
+//                      int lang =  tts.setLanguage(Locale.UK);
+                      int lang =  tts.setLanguage(new Locale("hin"));
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             //tts.getVoices() +
-                            Log.d("TAG", " DATA LAng " +  toSetLanguage() + ":" + audioSetting.getLangSelection());
+                            Log.d("TAG", " DATA LAng " +  ":" + audioSetting.getLangSelection() +":"+ lang+":"+ tts.getLanguage() +":"+tts.getAvailableLanguages());
 //                        }
-                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
+//                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
+
                         if (i == TextToSpeech.SUCCESS) {
                             if (lang == TextToSpeech.LANG_MISSING_DATA
                                     || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
                                 Log.e("TTS", "This Language is not supported");
+                            } else {
+                                Log.d("TTS", " Else ");
                             }
                         } else {
                             Log.e("TTS", "Initialization Failed!");
@@ -64,9 +70,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                     }
                 }
             }, "com.google.android.tts");
-
 //            tts.setEngineByname("com.google.android.tts");
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -77,9 +81,9 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     public void SpeakLoud(String text) throws Exception, Error {
         if (!isSpeaking()) {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(text +": हिन्दी", TextToSpeech.QUEUE_FLUSH, null);
         } else {
-            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+            tts.speak(text+":: हिन्दी ", TextToSpeech.QUEUE_ADD, null);
         }
     }
 
@@ -116,7 +120,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 //        }
     }
 
-    public int toSetLanguage() throws Exception, Error {
+    public int toSeLanguage() throws Exception, Error {
         Log.d("TAG ", " toSetLanguage " + audioSetting.getAccentSelection());
         return tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
     }

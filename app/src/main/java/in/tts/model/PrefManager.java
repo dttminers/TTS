@@ -127,11 +127,10 @@ public class PrefManager {
     public void getAudioSetting() {
         try {
             String Audio = _context.getSharedPreferences(AUDIO_SETTING_PREFERS, 0).getString(AUDIO_SETTING_INFO, null);
+            AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
             if (Audio != null) {
-                AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
                 JSONObject audioJSON = new JSONObject(Audio);
                 Log.d("TAG ", "getAudioSetting : " + audioJSON);
-
                 if (!audioJSON.isNull("VoiceSelection")) {
                     audioSetting.setVoiceSelection(audioJSON.getString("VoiceSelection"));
                 } else {
@@ -147,7 +146,7 @@ public class PrefManager {
                 if (!audioJSON.isNull("AccentSelection")) {
                     audioSetting.setAccentSelection(audioJSON.getString("AccentSelection"));
                 } else {
-                    audioSetting.setLangSelection(Locale.US);
+                    audioSetting.setAccentSelection("Locale.US");
                 }
 
                 if (!audioJSON.isNull("VoiceSpeed")) {
@@ -155,6 +154,13 @@ public class PrefManager {
                 } else {
                     audioSetting.setVoiceSpeed(0);
                 }
+                Log.d("TAG ", "getAudioSetting : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
+            } else {
+                Log.d("TAG ", "getAudioSetting : null");
+                audioSetting.setVoiceSelection("Male");
+                audioSetting.setLangSelection(Locale.US);
+                audioSetting.setVoiceSpeed(0);
+                audioSetting.setAccentSelection("Locale.US");
             }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);

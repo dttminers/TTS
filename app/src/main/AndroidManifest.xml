@@ -153,16 +153,13 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|adjustPan" />
 
-        <activity
-            android:name="com.pspdfkit.ui.PdfActivity"
-            android:windowSoftInputMode="adjustNothing" />
-
         <service android:name=".services.MediaPlayerService" />
         <!--Services-->
         <service
             android:name=".services.ClipboardMonitorService"
             android:exported="false"
             android:label="Clipboard Monitor" />
+        <!--<service android:name=".services.MusicService" />-->
     </application>
 
 </manifest>

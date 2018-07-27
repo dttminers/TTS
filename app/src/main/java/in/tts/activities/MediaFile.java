@@ -7,15 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
-import com.pspdfkit.document.processor.NewPage;
-import com.pspdfkit.document.processor.PdfProcessor;
-import com.pspdfkit.document.processor.PdfProcessorTask;
 
 import java.io.File;
 
@@ -23,7 +21,6 @@ import in.tts.R;
 import in.tts.utils.CommonMethod;
 
 public class MediaFile extends AppCompatActivity {
-
     @Override
     @AddTrace(name = "onCreateHelpActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,30 +42,6 @@ public class MediaFile extends AppCompatActivity {
 //                .enableAnnotationRendering(false)
 //                .password(null)
 //                .load();
-
-        createNewDocumentFromCanvas(MediaFile.this);
-    }
-
-    private void createNewDocumentFromCanvas(Context context) {
-        final File outputFile = new File("/storage/emulated/0/Download/easymock_tutorial.pdf");//new File(context.getFilesDir(), "new-document.pdf");
-
-        // Create a canvas based on an A4 page.
-        final NewPage pageCanvas = NewPage.fromCanvas( NewPage.PAGE_SIZE_A4, new NewPage.OnDrawCanvasCallback() {
-            @Override
-            public void onDrawCanvas(Canvas canvas) {
-                Paint paint = new Paint();
-                paint.setStyle(Paint.Style.STROKE);
-                Path path = new Path();
-                path.cubicTo(0f, 0f, 100f, 300f, 400f, 300f);
-                canvas.drawPath(path, paint);
-            }
-        }).build();
-
-        // Create a new processor task, passing in the new page definition.
-        final PdfProcessorTask task = PdfProcessorTask.newPage(pageCanvas);
-
-        // Start document processing.
-        PdfProcessor.processDocument(task, outputFile);
     }
 
 

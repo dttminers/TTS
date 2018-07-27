@@ -51,15 +51,25 @@ public class PDFHomePageImages extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            Log.d("TAG", " IMAGES " + position + ":" + l.get(position).trim().replaceAll("\\s+", "%20"));
+            Log.d("TAG", " IMAGES " + position + ":" + l.get(position).replaceAll("\\s", "%20")+":"+l.get(position));
+//            Picasso.get()
+//                    .load("file://" + l.get(position).trim().replaceAll("\\s", "%20"))
+////                    .load(new File(l.get(position)))
+////                    .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
+//                    .placeholder(R.color.light3)
+//                    .error(R.color.grey)
+//                    .resize(250, 250)
+//                    .onlyScaleDown()
+//                    .centerCrop()
+//                    .into(iv);
+
             Picasso.get()
-                    .load(new File(l.get(position)))
-//                    .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
-                    .placeholder(R.color.light3)
-                    .error(R.color.grey)
-                    .resize(250, 250)
+                    .load("file://" + l.get(position).replaceAll("\\s", "%20"))
+                    .resize(250,250)
                     .onlyScaleDown()
                     .centerCrop()
+                    .error(R.color.grey)
+                    .placeholder(R.color.light3)
                     .into(iv);
 
             iv.setOnClickListener(new View.OnClickListener() {

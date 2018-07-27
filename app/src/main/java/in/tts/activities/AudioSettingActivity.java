@@ -21,7 +21,11 @@ import in.tts.utils.CommonMethod;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.google.gson.Gson;
 import com.vsa.seekbarindicated.SeekBarIndicated;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Locale;
 
@@ -32,161 +36,45 @@ public class AudioSettingActivity extends AppCompatActivity {
     private RadioButton rbMale, rbFemale, rbEnglish, rbHindi, rbMarathi, rbTamil, rbAccent1, rbAccent2;
     private AudioSetting audioSetting;
     private RelativeLayout rlEng;
+    private PrefManager prefManager;
 
     @Override
     @AddTrace(name = "onCreateAudioSettingActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-        setContentView(R.layout.activity_audio_setting);
-        CommonMethod.setAnalyticsData(AudioSettingActivity.this, "MainTab", "AudioSetting", null);
+        try {
+            setContentView(R.layout.activity_audio_setting);
+            CommonMethod.setAnalyticsData(AudioSettingActivity.this, "MainTab", "AudioSetting", null);
 
-        if (getSupportActionBar() != null) {
-            CommonMethod.toSetTitle(getSupportActionBar(), AudioSettingActivity.this, getString(R.string.str_title_audio_settings));
-        }
-
-        audioSetting = AudioSetting.getAudioSetting(AudioSettingActivity.this);
-
-        rgVoiceSel = findViewById(R.id.rgVoice);
-        rbMale = findViewById(R.id.rbMale);
-        rbFemale = findViewById(R.id.rbFemale);
-
-        rgLangSel = (RadioGroup) findViewById(R.id.rgLanguageSel);
-        rbEnglish = findViewById(R.id.rbEnglishLs);
-        rbHindi = findViewById(R.id.rbHindiLs);
-        rbMarathi = findViewById(R.id.rbMarathiLs);
-        rbTamil = findViewById(R.id.rbTamilLs);
-
-        rgAccentSel = findViewById(R.id.rgAccentSel);
-        rbAccent1 = findViewById(R.id.rbAccent1);
-        rbAccent2 = findViewById(R.id.rbAccent2);
-
-        seekBarIndicated = findViewById(R.id.seek1);
-
-        rlEng = findViewById(R.id.rlEnglish);
-
-        if (audioSetting != null) {
-            seekBarIndicated.setValue((int) audioSetting.getVoiceSpeed());
-            if (audioSetting.getLangSelection().toString() != null) {
-                switch (audioSetting.getLangSelection().toString()) {
-                    case "hin_IND":
-                        toSetLanguageSelection(rbHindi, rbEnglish, rbMarathi, rbTamil, false);
-                        break;
-
-                    case "mar_IND":
-                        toSetLanguageSelection(rbMarathi, rbHindi, rbTamil, rbEnglish, false);
-                        break;
-
-                    case "ta_IND":
-                        toSetLanguageSelection(rbTamil, rbHindi, rbEnglish, rbMarathi, false);
-                        break;
-
-                    case "en":
-                        toSetEnglish();
-                        break;
-
-                    default:
-                        toSetEnglish();
-                        break;
-                }
-            } else {
-                toSetEnglish();
+            if (getSupportActionBar() != null) {
+                CommonMethod.toSetTitle(getSupportActionBar(), AudioSettingActivity.this, getString(R.string.str_title_audio_settings));
             }
 
-            switch (audioSetting.getVoiceSelection()) {
-                case "Male":
-                    rbMale.setChecked(true);
-                    rbFemale.setChecked(false);
-                    break;
+            prefManager = new PrefManager(AudioSettingActivity.this);
+            prefManager.getAudioSetting();
+            audioSetting = AudioSetting.getAudioSetting(AudioSettingActivity.this);
 
-                case "Female":
-                    rbFemale.setChecked(true);
-                    rbMale.setChecked(false);
-            }
-        }
+            rgVoiceSel = findViewById(R.id.rgVoice);
+            rbMale = findViewById(R.id.rbMale);
+            rbFemale = findViewById(R.id.rbFemale);
 
+            rgLangSel = (RadioGroup) findViewById(R.id.rgLanguageSel);
+            rbEnglish = findViewById(R.id.rbEnglishLs);
+            rbHindi = findViewById(R.id.rbHindiLs);
+            rbMarathi = findViewById(R.id.rbMarathiLs);
+            rbTamil = findViewById(R.id.rbTamilLs);
 
-        seekBarIndicated.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                audioSetting.setVoiceSpeed(progress);
-                Log.d("TAG SEEK", " onProgressChanged " + progress + ":" + fromUser + audioSetting.getVoiceSpeed());
-                prefData();
-            }
+            rgAccentSel = findViewById(R.id.rgAccentSel);
+            rbAccent1 = findViewById(R.id.rbAccent1);
+            rbAccent2 = findViewById(R.id.rbAccent2);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+            seekBarIndicated = findViewById(R.id.seek1);
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+            rlEng = findViewById(R.id.rlEnglish);
 
-        rgLangSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.rbEnglishLs) {
-                    rlEng.setVisibility(View.VISIBLE);
-                } else {
-                    rlEng.setVisibility(View.GONE);
-                }
-                switch (i) {
-                    case R.id.rbEnglishLs:
-                        audioSetting.setLangSelection(Locale.ENGLISH);
-                        break;
+            toSetDefaultValue();
 
-                    case R.id.rbHindiLs:
-                        audioSetting.setLangSelection(new Locale("hin", "IND"));
-                        break;
-
-                    case R.id.rbMarathiLs:
-                        audioSetting.setLangSelection(new Locale("mar", "IND"));
-                        break;
-
-                    case R.id.rbTamilLs:
-                        audioSetting.setLangSelection(new Locale("ta", "IND"));
-                        break;
-
-                    default:
-                        audioSetting.setLangSelection(Locale.ENGLISH);
-                        break;
-                }
-                prefData();
-            }
-        });
-
-        rgAccentSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i) {
-                    case R.id.rbAccent1:
-                        audioSetting.setAccentSelection(String.valueOf(Locale.UK));
-                        break;
-
-                    case R.id.rbAccent2:
-                        audioSetting.setAccentSelection(String.valueOf(Locale.US));
-                        break;
-
-                    default:
-                        audioSetting.setAccentSelection(String.valueOf(R.id.rbAccent1));
-                        prefData();
-                        break;
-                }
-                prefData();
-            }
-        });
-        rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (rbMale.isChecked()) {
-                    audioSetting.setVoiceSelection("Male");
-                } else {
-                    audioSetting.setVoiceSelection("Female");
-                }
-                prefData();
-            }
-        });
+            toClickListener();
 
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -196,26 +84,200 @@ public class AudioSettingActivity extends AppCompatActivity {
         }
     }
 
-    private void toSetEnglish() {
-        toSetLanguageSelection(rbEnglish, rbHindi, rbTamil, rbMarathi, true);
-        if (audioSetting.getAccentSelection() != null) {
-            switch (audioSetting.getAccentSelection()) {
-                case "en":
-                    rbAccent1.setChecked(true);
-                    rbAccent2.setChecked(false);
-                    break;
-                case "en1":
-                    rbAccent1.setChecked(false);
-                    rbAccent2.setChecked(true);
-                    break;
-                default:
-                    rbAccent1.setChecked(true);
-                    rbAccent2.setChecked(false);
-                    break;
+    private void toClickListener() {
+        try {
+            seekBarIndicated.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    audioSetting.setVoiceSpeed(progress);
+                    Log.d("TAG SEEK", " onProgressChanged " + progress + ":" + fromUser + audioSetting.getVoiceSpeed());
+                    setPrefData();
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+            rgLangSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    try {
+                        if (i == R.id.rbEnglishLs) {
+                            rlEng.setVisibility(View.VISIBLE);
+                        } else {
+                            rlEng.setVisibility(View.GONE);
+                        }
+                        switch (i) {
+                            case R.id.rbEnglishLs:
+                                audioSetting.setLangSelection(Locale.ENGLISH);
+                                setPrefData();
+                                break;
+
+                            case R.id.rbHindiLs:
+                                audioSetting.setLangSelection(new Locale("hin", "IND"));
+                                setPrefData();
+                                break;
+
+                            case R.id.rbMarathiLs:
+                                audioSetting.setLangSelection(new Locale("mar", "IND"));
+                                setPrefData();
+                                break;
+
+                            case R.id.rbTamilLs:
+                                audioSetting.setLangSelection(new Locale("ta", "IND"));
+                                setPrefData();
+                                break;
+
+                            default:
+                                audioSetting.setLangSelection(Locale.ENGLISH);
+                                setPrefData();
+                                break;
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
+                }
+            });
+
+            rgAccentSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    try {
+                        switch (i) {
+                            case R.id.rbAccent1:
+                                audioSetting.setAccentSelection(String.valueOf(Locale.UK));
+                                setPrefData();
+                                break;
+
+                            case R.id.rbAccent2:
+                                audioSetting.setAccentSelection(String.valueOf(Locale.US));
+                                setPrefData();
+                                break;
+
+                            default:
+                                audioSetting.setAccentSelection(String.valueOf(R.id.rbAccent1));
+                                setPrefData();
+                                break;
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
+                }
+            });
+            rgVoiceSel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    try {
+                        if (rbMale.isChecked()) {
+                            audioSetting.setVoiceSelection("Male");
+                            setPrefData();
+                        } else {
+                            audioSetting.setVoiceSelection("Female");
+                            setPrefData();
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toSetDefaultValue() {
+        try {
+            if (audioSetting != null) {
+                seekBarIndicated.setValue((int) audioSetting.getVoiceSpeed());
+                if (audioSetting.getLangSelection().toString() != null) {
+                    switch (audioSetting.getLangSelection().toString()) {
+                        case "hin_IND":
+                            toSetLanguageSelection(rbHindi, rbEnglish, rbMarathi, rbTamil, false);
+                            break;
+
+                        case "mar_IND":
+                            toSetLanguageSelection(rbMarathi, rbHindi, rbTamil, rbEnglish, false);
+                            break;
+
+                        case "ta_IND":
+                            toSetLanguageSelection(rbTamil, rbHindi, rbEnglish, rbMarathi, false);
+                            break;
+
+                        case "en":
+                            toSetEnglish();
+                            break;
+
+                        default:
+                            toSetEnglish();
+                            break;
+                    }
+                } else {
+                    toSetEnglish();
+                }
+
+                switch (audioSetting.getVoiceSelection()) {
+                    case "Male":
+                        rbMale.setChecked(true);
+                        rbFemale.setChecked(false);
+                        break;
+
+                    case "Female":
+                        rbFemale.setChecked(true);
+                        rbMale.setChecked(false);
+                }
             }
-        } else {
-            rbAccent1.setChecked(true);
-            rbAccent2.setChecked(false);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toSetEnglish() {
+        try {
+            toSetLanguageSelection(rbEnglish, rbHindi, rbTamil, rbMarathi, true);
+            if (audioSetting.getAccentSelection() != null) {
+                switch (audioSetting.getAccentSelection()) {
+                    case "eng_US":
+                        rbAccent1.setChecked(true);
+                        rbAccent2.setChecked(false);
+                        break;
+                    case "eng_GBR":
+                        rbAccent1.setChecked(false);
+                        rbAccent2.setChecked(true);
+                        break;
+                    default:
+                        rbAccent1.setChecked(true);
+                        rbAccent2.setChecked(false);
+                        break;
+                }
+            } else {
+                rbAccent1.setChecked(true);
+                rbAccent2.setChecked(false);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -238,10 +300,18 @@ public class AudioSettingActivity extends AppCompatActivity {
         }
     }
 
-    public void prefData() {
-        PrefManager prefManager = new PrefManager(AudioSettingActivity.this);
-        prefManager.setAudioSetting();
-        prefManager.getAudioSetting();
+    public void setPrefData() {
+        try {
+            Log.d("TAG ", "to setAudioSetting : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(AudioSettingActivity.this))).toString());
+            prefManager.setAudioSetting();
+            prefManager.getAudioSetting();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

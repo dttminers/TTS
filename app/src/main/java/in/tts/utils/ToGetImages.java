@@ -12,8 +12,8 @@ import in.tts.model.PrefManager;
 
 public class ToGetImages {
 
-    static ArrayList<String> imageFile = new ArrayList<>();
-    static boolean status;
+    private static ArrayList<String> imageFile = new ArrayList<>();
+    private static boolean status;
 
     public static void getAllShownImagesPath(final Activity activity, final Context context) {
         AsyncTask.execute(new Runnable() {
@@ -34,7 +34,7 @@ public class ToGetImages {
                                     .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
                                             null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
                     if (cursor != null) {
-                        while (cursor.moveToNext() && imageFile.size() < 11) {
+                        while (cursor.moveToNext() && imageFile.size() < 10) {
                             String imageLocation = cursor.getString(1);
                             imageFile.add(imageLocation);
                         }

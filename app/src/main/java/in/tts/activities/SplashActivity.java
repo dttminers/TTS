@@ -30,6 +30,7 @@ public class SplashActivity extends AppCompatActivity {
 
 //    private FirebaseAuth auth;
 
+    private PrefManager prefManager;
     @Override
     @AddTrace(name = "onCreateSplashActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +40,15 @@ public class SplashActivity extends AppCompatActivity {
             setContentView(R.layout.activity_splash);
             startService(new Intent(this, ClipboardMonitorService.class));
 
+            prefManager = new PrefManager(SplashActivity.this);
             //Get Firebase auth instance
 //        auth = FirebaseAuth.getInstance();
             CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
-            PrefManager prefManager = new PrefManager(SplashActivity.this);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    PrefManager prefManager = new PrefManager(SplashActivity.this);
                     prefManager.getUserInfo();
-
 //                if (auth.getCurrentUser() != null) {
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
 //                } else

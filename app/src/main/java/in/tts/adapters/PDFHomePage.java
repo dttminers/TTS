@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
@@ -20,14 +19,11 @@ import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
-import com.pspdfkit.configuration.activity.PdfActivityConfiguration;
-import com.pspdfkit.ui.PdfActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.activities.MediaFile;
 import in.tts.activities.PdfReadersActivity;
 import in.tts.utils.CommonMethod;
 
