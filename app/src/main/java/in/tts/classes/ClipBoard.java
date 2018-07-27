@@ -38,6 +38,7 @@ public class ClipBoard {
     private static ImageView ivCopy, ivPaste, ivShare, ivSpeak;
     private static ClipboardManager myClipboard;
     private static ClipData myClip;
+    private TextToSpeech t1;
     // class member variable to save the X,Y coordinates
     private static float[] lastTouchDownXY = new float[2];
 //    private static String text;
@@ -169,8 +170,8 @@ public class ClipBoard {
                             int cursorPosition = editText.getSelectionStart();
                             CharSequence enteredText = editText.getText().toString();
                             CharSequence cursorToEnd = enteredText.subSequence(cursorPosition, enteredText.length());
-
-                            Log.d("TAG paste", " paste " + editText.getText().toString() + ":" + ptext + ":" + cursorPosition + ":" + cursorToEnd + ":" + ptext.substring(cursorPosition, ptext.length()));
+                            editText.setText(ptext);
+//                            Log.d("TAG paste", " paste " + editText.getText().toString() + ":" + ptext + ":" + cursorPosition + ":" + cursorToEnd + ":" + ptext.substring(cursorPosition, ptext.length()));
                         }
                     }
                 }
@@ -195,7 +196,8 @@ public class ClipBoard {
                 public void onClick(View v) {
                     try {
                         Log.d("TAG", " Speak " + editText.getText().toString());
-                        new TTS(context).SpeakLoud(editText.getText().toString());
+                        TTS tts = new TTS(context);
+                        tts.SpeakLoud(editText.getText().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -217,6 +219,22 @@ public class ClipBoard {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+        }
+    }
+
+//    t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+//        @Override
+//        public void onInit(int status) {
+//            if(status != TextToSpeech.ERROR) {
+//                t1.setLanguage(Locale.UK);
+//            }
+//        }
+//    });
+
+    public void onPause() {
+        if (t1 != null) {
+            t1.stop();
+            t1.shutdown();
         }
     }
 }
