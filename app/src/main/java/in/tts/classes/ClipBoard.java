@@ -169,7 +169,8 @@ public class ClipBoard {
                             int cursorPosition = editText.getSelectionStart();
                             CharSequence enteredText = editText.getText().toString();
                             CharSequence cursorToEnd = enteredText.subSequence(cursorPosition, enteredText.length());
-                            Log.d("TAG", " paste " + editText.getText().toString() + ":" + ptext + ":" + cursorPosition + ":" + cursorToEnd + ":" + ptext.substring(cursorPosition, ptext.length()));
+
+                            Log.d("TAG paste", " paste " + editText.getText().toString() + ":" + ptext + ":" + cursorPosition + ":" + cursorToEnd + ":" + ptext.substring(cursorPosition, ptext.length()));
                         }
                     }
                 }
