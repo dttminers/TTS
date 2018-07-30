@@ -26,7 +26,7 @@ import in.tts.utils.CommonMethod;
 public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
-//    private Context mContext;
+    //    private Context mContext;
     private AudioSetting audioSetting;
 
     public TTS(Context mContext) {
@@ -44,10 +44,10 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
 //                        int lang = tts.setLanguage(new Locale("hi_IN"));
 //                      int lang =  tts.setLanguage(Locale.UK);
-                      int lang =  tts.setLanguage(new Locale("hin"));
+                        int lang = tts.setLanguage(new Locale("mar"));
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            //tts.getVoices() +
-                            Log.d("TAG", " DATA LAng " +  ":" + audioSetting.getLangSelection() +":"+ lang+":"+ tts.getLanguage() +":"+tts.getAvailableLanguages());
+                        //tts.getVoices() +
+                        Log.d("TAG", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
 //                        }
 //                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
 
@@ -81,9 +81,9 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     public void SpeakLoud(String text) throws Exception, Error {
         if (!isSpeaking()) {
-            tts.speak(text +": हिन्दी", TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         } else {
-            tts.speak(text+":: हिन्दी ", TextToSpeech.QUEUE_ADD, null);
+            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
         }
     }
 
@@ -95,16 +95,16 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             mMainFolder.mkdirs();
         }
 //        } else {
-            File audio = new File(mMainFolder + "/" +System.currentTimeMillis()+".mp3");//;+ mAudioFilename);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                tts.synthesizeToFile(text, null, audio, "READ_IT");
-            } else {
-                HashMap<String, String> hm = new HashMap<>();
-                hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
-                tts.synthesizeToFile(text, hm, audio.getPath());
-            }
-            Log.d("TAG", " sound_path" + audio.getAbsolutePath() +":"+ CommonMethod.getFileSize(audio));
-            return audio.getAbsolutePath();
+        File audio = new File(mMainFolder + "/" + System.currentTimeMillis() + ".mp3");//;+ mAudioFilename);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tts.synthesizeToFile(text, null, audio, "READ_IT");
+        } else {
+            HashMap<String, String> hm = new HashMap<>();
+            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
+            tts.synthesizeToFile(text, hm, audio.getPath());
+        }
+        Log.d("TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
+        return audio.getAbsolutePath();
 //        }
 //        } else {
 //            if (mContext != null) {
