@@ -371,7 +371,9 @@ public class MakeYourOwnReadFragment extends Fragment {
             t1.stop();
             t1.shutdown();
         }
-
+        if (editText != null) {
+            editText.setText("");
+        }
         CommonMethod.toReleaseMemory();
         super.onPause();
     }

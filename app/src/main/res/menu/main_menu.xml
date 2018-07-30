@@ -45,6 +45,14 @@
                 android:id="@+id/help"
                 android:title="@string/str_help"
                 app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/share_apps"
+                android:title="@string/str_share_app"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/give_feedback"
+                android:title="@string/str_give_feedback"
+                app:showAsAction="ifRoom" />
         </menu>
     </item>
 </menu>

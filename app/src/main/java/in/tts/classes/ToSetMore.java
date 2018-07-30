@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.MenuItem;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 
 import in.tts.R;
 import in.tts.activities.AudioSettingActivity;
 import in.tts.activities.CameraOcrActivity;
+import in.tts.activities.Contact_us;
 import in.tts.activities.HelpActivity;
 import in.tts.activities.OurOtherAppActivity;
 import in.tts.activities.RecentVoiceActivity;
@@ -43,6 +46,18 @@ public class ToSetMore {
                     context.startActivity(new Intent(context, HelpActivity.class));
                     break;
 
+                case R.id.give_feedback:
+                    context.startActivity(new Intent(context, Contact_us.class));
+                    break;
+
+                case R.id.share_apps:
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, "I suggest this app for you : https://play.google.com/store/apps/details?id=com.android.chrome");
+                    intent.setType("text/plain");
+                    context.startActivity(intent);
+                    break;
+
                 case android.R.id.home:
                     ((Activity) context).onBackPressed();
                     break;
@@ -51,8 +66,10 @@ public class ToSetMore {
                     break;
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 }

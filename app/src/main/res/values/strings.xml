@@ -96,6 +96,13 @@
     <string name="auth_failed">Please try again, Login failed</string>
     <string name="minimum_password" />
     <string name="lbl_no_check_internet">No Internet Connection</string>
+    <string name="str_share_app">Share App</string>
+    <string name="str_give_feedback">Give Feedback</string>
+    <string name="lbl_username">Name</string>
+    <string name="lbl_email_id">Email-Id</string>
+    <string name="lbl_mobile_no">Mobile No.</string>
+    <string name="lbl_message">Feedback</string>
+    <string name="lbl_submit">Submit</string>
 
 </resources>
 

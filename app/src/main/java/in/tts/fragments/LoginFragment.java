@@ -489,13 +489,12 @@ public class LoginFragment extends Fragment {
                 user.setLoginFrom(1);
                 toExit();
             }
-        } catch (ApiException e
-                ) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//            CommonMethod.toCloseLoader();
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

@@ -270,25 +270,26 @@ public class PdfReadersActivity extends AppCompatActivity {
 
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
 //                mediaPlayer.setDataSource("http://www.virginmegastore.me/Library/Music/CD_001214/Tracks/Track1.mp3");
                 File file = new File(FileName);
                 FileInputStream fis = new FileInputStream(file);
-                mediaPlayer.setDataSource(fis.getFD());
+                Log.d("TAG", " " + fis.getFD() + ":" + fis);
+//                mediaPlayer.setDataSource(fis.getFD());
                 if (file.exists()) {
                     Log.d("TAGPDF", " PATH" + file.getTotalSpace());
                     Uri uri = Uri.parse("file://" + FileName);
-                    Log.d("TAGPDF", " PATH " +uri.isAbsolute());
-//                            mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
+                    Log.d("TAGPDF", " PATH " + uri.isAbsolute());
+                            mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
 //                    mediaPlayer.setDataSource("file://"+ FileName);
-                    mediaPlayer.prepareAsync();
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mediaPlayer.start();
-                        }
-                    });
+//                    mediaPlayer.prepareAsync();
+//                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+//                            mediaPlayer.start();
+//                        }
+//                    });
                 }
             } catch (IOException e) {
                 e.printStackTrace();

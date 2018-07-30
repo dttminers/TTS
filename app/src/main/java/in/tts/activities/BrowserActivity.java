@@ -18,6 +18,7 @@ import android.webkit.DownloadListener;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebHistoryItem;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
@@ -106,6 +107,25 @@ public class BrowserActivity extends AppCompatActivity {
                     super.onPageFinished(view, url);
 
                     startOfHistory();
+                }
+
+//                @Override
+//                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                    // open in Webview
+//                    if (url.contains("android_asset") ){
+//                        // Can be clever about it like so where myshost is defined in your strings file
+//                        // if (Uri.parse(url).getHost().equals(getString(R.string.myhost)))
+//                        return false;
+//                    }
+//                    // open rest of URLS in default browser
+//                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                    startActivity(intent);
+//                    return true;
+//                }
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    return super.shouldOverrideUrlLoading(view, request);
                 }
             });
             superWebView.setWebChromeClient(new WebChromeClient() {
