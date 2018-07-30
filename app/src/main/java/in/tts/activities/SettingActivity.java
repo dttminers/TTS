@@ -1,14 +1,18 @@
 package in.tts.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,18 +23,25 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import in.tts.R;
+import in.tts.fragments.LoginFragment;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
+
+import static java.security.AccessController.getContext;
 
 public class SettingActivity extends AppCompatActivity {
 
     private RelativeLayout rlLogout;
     private ProgressBar pbData, pbStorage;
     private TextView tvUsed, tvFree;
+    private Button mBtnLogin;
+    CircleImageView mCivUpeProfile;
 
     @Override
     @AddTrace(name = "onCreateSettingActivity", enabled = true)
@@ -52,8 +63,18 @@ public class SettingActivity extends AppCompatActivity {
             pbStorage = findViewById(R.id.pbSetting2);
             tvFree = findViewById(R.id.tvFree);
             tvUsed = findViewById(R.id.tvUsed);
+            mBtnLogin = findViewById(R.id.btnLogin);
+            mCivUpeProfile = findViewById(R.id.civProfile);
+
 
             tvUsed.setVisibility(View.VISIBLE);
+
+            mBtnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(SettingActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                }
+            });
 
             final float totalSpace = DeviceMemory.getInternalStorageSpace();
             final float occupiedSpace = DeviceMemory.getInternalUsedSpace();

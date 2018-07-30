@@ -65,8 +65,8 @@ public class AudioSettingActivity extends AppCompatActivity {
             rbTamil = findViewById(R.id.rbTamilLs);
 
             rgAccentSel = findViewById(R.id.rgAccentSel);
-            rbAccent1 = findViewById(R.id.rbAccent1);
-            rbAccent2 = findViewById(R.id.rbAccent2);
+            rbAccent1 = findViewById(R.id.rbAccentUS);
+            rbAccent2 = findViewById(R.id.rbAccentUK);
 
             seekBarIndicated = findViewById(R.id.seek1);
 
@@ -152,18 +152,21 @@ public class AudioSettingActivity extends AppCompatActivity {
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
                     try {
                         switch (i) {
-                            case R.id.rbAccent1:
+                            case R.id.rbAccentUS:
                                 audioSetting.setAccentSelection(String.valueOf(Locale.UK));
+                                Log.d("TAG", " Lang Uk " + String.valueOf(Locale.UK));
                                 setPrefData();
                                 break;
 
-                            case R.id.rbAccent2:
+                            case R.id.rbAccentUK:
                                 audioSetting.setAccentSelection(String.valueOf(Locale.US));
+                                Log.d("TAG", " Lang Us " + String.valueOf(Locale.US));
                                 setPrefData();
                                 break;
 
                             default:
-                                audioSetting.setAccentSelection(String.valueOf(R.id.rbAccent1));
+                                audioSetting.setAccentSelection(String.valueOf(Locale.US));
+                                Log.d("TAG", " Lang def " + String.valueOf(Locale.US));
                                 setPrefData();
                                 break;
                         }
@@ -260,7 +263,7 @@ public class AudioSettingActivity extends AppCompatActivity {
                         rbAccent1.setChecked(true);
                         rbAccent2.setChecked(false);
                         break;
-                    case "eng_GBR":
+                    case "eng_GB":
                         rbAccent1.setChecked(false);
                         rbAccent2.setChecked(true);
                         break;

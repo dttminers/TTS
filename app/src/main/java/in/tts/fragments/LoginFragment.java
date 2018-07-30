@@ -3,6 +3,7 @@ package in.tts.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,8 +24,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -51,13 +57,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import in.tts.R;
 import in.tts.activities.HomeActivity;
 import in.tts.activities.LoginActivity;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
+import in.tts.network.VolleySingleton;
 import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
@@ -193,15 +204,53 @@ public class LoginFragment extends Fragment {
             mBtnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CommonMethod.toCallLoader(getContext(), "Login...");
-                    if (validateEmail() && validatePassword()) {
-                        user = User.getUser(getContext());
-                        user.setLoginFrom(3);
-                        user.setId(String.valueOf(System.currentTimeMillis()));
-                        user.setEmail(mEdtEmail.getText().toString());
-                        toExit();
+                    try {
+                        if (validateEmail() && validatePassword()) {
+                            checkInternetConnection();
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
+                                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
 
-                        //authenticate user
+                                                @Override
+                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("TAG", " Login Successful");
+                                                    } else {
+                                                        Log.d("TAG", " Login Failed ");
+                                                    }
+                                                }
+                                            })
+                                            .addOnCanceledListener(getActivity(), new OnCanceledListener() {
+                                                @Override
+                                                public void onCanceled() {
+                                                    Log.d("TAG", " Login Cancel ");
+                                                }
+                                            });
+                                }
+                            };
+
+                        }
+
+                    } catch (Exception | Error e) {
+                        CommonMethod.toCloseLoader();
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                        CommonMethod.toDisplayToast(getContext(), " Click again  to login");
+                    }
+
+//                    if (validateEmail() && validatePassword()) {
+//                        user = User.getUser(getContext());
+//                        user.setLoginFrom(3);
+//                        user.setId(String.valueOf(System.currentTimeMillis()));
+//                        user.setEmail(mEdtEmail.getText().toString());
+//                        toExit();
+//
+                    //authenticate user
 //                        mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
 //                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
 //                                    @Override
@@ -223,9 +272,9 @@ public class LoginFragment extends Fragment {
 //                                        }
 //                                    }
 //                                });
-                    } else {
-                        CommonMethod.toDisplayToast(getContext(), "Please try again, Login failed");
-                    }
+//                    } else {
+//                        CommonMethod.toDisplayToast(getContext(), "Please try again, Login failed");
+//                    }
                 }
             });
 
@@ -420,6 +469,22 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    private void checkInternetConnection() {
+        try {
+            if (getContext() != null) {
+                if (CommonMethod.isOnline(getContext())) {
+                    new toLogin().execute();
+                } else {
+                    CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
+                }
+            } else {
+                CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean validateEmail() {
         if (mEdtEmail.getText().toString().trim().length() == 0) {
             mEdtEmail.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
@@ -594,5 +659,85 @@ public class LoginFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class toLogin extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                VolleySingleton.getInstance(getContext())
+                        .addToRequestQueue(
+                                new StringRequest(Request.Method.POST,
+                                        "http://vnoi.in/ttsApi/register_login.php",
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    Log.d("TAG", "login Response " + response);
+                                                    if (response != null) {
+                                                        JSONObject obj = new JSONObject(response.trim());
+                                                        if (obj != null) {
+                                                            if (!obj.isNull("status")) {
+                                                                if (obj.getString("status").trim().equals("1")) {
+                                                                    Log.d("TAG", " login success  ");
+                                                                    user = User.getUser(getContext());
+                                                                    user.setLoginFrom(3);
+                                                                    if (!obj.isNull("id")) {
+                                                                        user.setId(obj.getString("id"));
+                                                                    }
+//                                                                    user.setId(String.valueOf(System.currentTimeMillis()));
+                                                                    user.setEmail(mEdtEmail.getText().toString());
+                                                                    toExit();
+                                                                } else {
+                                                                    Log.d("TAG", " login failed ");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception | Error e) {
+                                                    e.printStackTrace();
+                                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                                    Crashlytics.logException(e);
+                                                    FirebaseCrash.report(e);
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("TAG", " login error " + error.getMessage());
+                                            }
+                                        }
+                                ) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap<String, String>();
+                                        params.put("action", "login");
+                                        params.put("email", mEdtEmail.getText().toString());
+                                        params.put("password", mEdtPassword.getText().toString());
+                                        return params;
+                                    }
+                                }
+                                , "LOGIN");
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            CommonMethod.toCloseLoader();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
+        }
     }
 }

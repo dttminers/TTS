@@ -1,14 +1,13 @@
 package in.tts.network;
 
-        import android.content.Context;
-        import android.util.Log;
+import android.content.Context;
+import android.util.Log;
 
-        import com.android.volley.Request;
-        import com.android.volley.RequestQueue;
-        import com.android.volley.toolbox.ImageLoader;
-        import com.android.volley.toolbox.Volley;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 
-        import java.util.Arrays;
+import java.util.Arrays;
 
 public class VolleySingleton {
     private static VolleySingleton mInstance;
@@ -41,7 +40,7 @@ public class VolleySingleton {
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         try {
-            Log.d("HM_URL", " tag : " + tag + " : " + req.getUrl() + " : " + new String(req.getBody(), "UTF-8"));
+            Log.d("Req_URL", " tag : " + tag + " : " + req.getUrl() + " : " + new String(req.getBody(), "UTF-8"));
             getRequestQueue().add(req).setTag(tag);
         } catch (Exception | Error e) {
             e.printStackTrace();

@@ -103,6 +103,8 @@
     <string name="lbl_mobile_no">Mobile No.</string>
     <string name="lbl_message">Feedback</string>
     <string name="lbl_submit">Submit</string>
+    <string name="str_action_">login</string>
+    <string name="str_rate_us">Rate Us</string>
 
 </resources>
 

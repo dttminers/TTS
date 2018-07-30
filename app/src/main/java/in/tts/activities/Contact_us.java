@@ -38,8 +38,8 @@ public class Contact_us extends AppCompatActivity {
     private TextView mTxtNameError;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
         try {
             if (getSupportActionBar() != null) {
@@ -79,7 +79,6 @@ public class Contact_us extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         toReset();
-
     }
 
     private void toReset() {

@@ -2,7 +2,11 @@ package in.tts.classes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
@@ -50,6 +54,10 @@ public class ToSetMore {
                     context.startActivity(new Intent(context, Contact_us.class));
                     break;
 
+                case R.id.rate_us:
+                    showRateDialog(context);
+                    break;
+
                 case R.id.share_apps:
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
@@ -71,5 +79,33 @@ public class ToSetMore {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
+
+    private static void showRateDialog(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle("Rate application")
+                .setMessage("Please, rate the app at PlayMarket")
+                .setPositiveButton("RATE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (context != null) {
+                            String link = "market://details?id=";
+                            try {
+                                // play market available
+                                context.getPackageManager()
+                                        .getPackageInfo("com.android.vending", 0);
+                                // not available
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                                // should use browser
+                                link = "https://play.google.com/store/apps/details?id=";
+                            }
+                            // starts external action
+                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link + context.getPackageName())));
+                        }
+                    }
+                })
+                .setNegativeButton("CANCEL", null);
+        builder.show();
     }
 }

@@ -43,11 +43,14 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                         tts.setSpeechRate(audioSetting.getVoiceSpeed());
 
 //                        int lang = tts.setLanguage(new Locale("hi_IN"));
-//                      int lang =  tts.setLanguage(Locale.UK);
-                        int lang = tts.setLanguage(new Locale("hin"));
+                      int lang =  tts.setLanguage(Locale.UK);
+//                       int lang = tts.setLanguage(new Locale("hin"));
+//                        int lang = tts.setLanguage(new Locale("mar"));
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         //tts.getVoices() +
-                        Log.d("TAG", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Log.d("TAG", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
+                        }
 //                        }
 //                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
 
@@ -62,16 +65,16 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             Log.e("TTS", "Initialization Failed!");
                         }
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            for (Voice tmpVoice : tts.getVoices()) {
-                                Log.d("TAG", "getVoices : " + tmpVoice + ":" + tmpVoice.getName() + ":" + tmpVoice.isNetworkConnectionRequired());
-                                //                            if (tmpVoice.getName().equals(_voiceName)) {
-                                //                                return tmpVoice;
-                                //                                break;
-                                //                            }
-
-                            }
-                        }
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                            for (Voice tmpVoice : tts.getVoices()) {
+//                                Log.d("TAG", "getVoices : " + tmpVoice + ":" + tmpVoice.getName() + ":" + tmpVoice.isNetworkConnectionRequired());
+//                                //                            if (tmpVoice.getName().equals(_voiceName)) {
+//                                //                                return tmpVoice;
+//                                //                                break;
+//                                //                            }
+//
+//                            }
+//                        }
 
                     } catch (Exception | Error e) {
                         e.printStackTrace();
