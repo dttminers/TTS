@@ -487,7 +487,7 @@ public class LoginFragment extends Fragment {
 
     public boolean validateEmail() {
         if (mEdtEmail.getText().toString().trim().length() == 0) {
-            mEdtEmail.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            mEdtEmail.setError(getContext().getString(R.string.str_field_cant_be_empty));
             return false;
         } else if (CommonMethod.isValidEmail(mEdtEmail.getText().toString().trim())) {
             mEdtEmail.setError(null);

@@ -45,6 +45,10 @@ public class CommonMethod {
         return Pattern.compile("^[_A-Za-z0-9-\\s+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$").matcher(email).matches();
     }
 
+    public static boolean isValidMobileNo(String phone) {
+        return android.util.Patterns.PHONE.matcher(phone).matches();
+    }
+
     public static boolean isValidPassword(String str) {
         //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
         return Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}").matcher(str).matches();

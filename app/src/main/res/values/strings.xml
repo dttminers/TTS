@@ -98,13 +98,14 @@
     <string name="lbl_no_check_internet">No Internet Connection</string>
     <string name="str_share_app">Share App</string>
     <string name="str_give_feedback">Your Feedback</string>
-    <string name="lbl_username">We want to know what you thought of your experience at \n our App Read It so we'd love to hear your feedback.</string>
+    <string name="lbl_username">We want to know what you thought of your experience at \n our App Read It so we\'d love to hear your feedback.</string>
     <string name="lbl_email_id">Email-Id</string>
     <string name="lbl_mobile_no">Mobile No.</string>
     <string name="lbl_message">Feedback</string>
     <string name="lbl_submit">Send Feedback</string>
     <string name="str_action_">login</string>
     <string name="str_rate_us">Rate Us</string>
+    <string name="str_error_valid_mobile">Invalid Mobile No</string>
 
 </resources>
 
