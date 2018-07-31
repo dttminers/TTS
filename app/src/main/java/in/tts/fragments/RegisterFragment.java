@@ -3,6 +3,7 @@ package in.tts.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,13 +54,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import in.tts.R;
 import in.tts.activities.HomeActivity;
 import in.tts.activities.LoginActivity;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
+import in.tts.network.VolleySingleton;
 import in.tts.utils.CommonMethod;
 
 public class RegisterFragment extends Fragment {
@@ -201,6 +211,7 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (validateEmail() && validatePassword() && validateCnfPassword()) {
+                        checkInternetConnection();
                         if (mEdtPassword.getText().toString().trim().equals(mEdtCnfPwd.getText().toString().trim())) {
                             startActivity(new Intent(getContext(), LoginActivity.class));
                             CommonMethod.toDisplayToast(getContext(), " Register Successfully ");
@@ -447,6 +458,23 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    private void checkInternetConnection() {
+        try {
+            if (getContext() != null) {
+                if (CommonMethod.isOnline(getContext())) {
+                    new toRegister().execute();
+                    new toGoogleLogin().execute();
+                } else {
+                    CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
+                }
+            } else {
+                CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean validateEmail() {
         if (mEdtEmail.getText().toString().trim().length() == 0) {
             mEdtEmail.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
@@ -619,5 +647,167 @@ public class RegisterFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class toRegister extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                VolleySingleton.getInstance(getContext())
+                        .addToRequestQueue(
+                                new StringRequest(Request.Method.POST,
+                                        "http://vnoi.in/ttsApi/register_login.php",
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    Log.d("TAG", "Register Response " + response);
+                                                    if (response != null) {
+                                                        JSONObject obj = new JSONObject(response.trim());
+                                                        if (obj != null) {
+                                                            if (!obj.isNull("status")) {
+                                                                if (obj.getString("status").trim().equals("1")) {
+                                                                    Log.d("TAG", " Register success  ");
+                                                                    user = User.getUser(getContext());
+                                                                    user.setLoginFrom(3);
+                                                                    if (!obj.isNull("id")) {
+                                                                        user.setId(obj.getString("id"));
+                                                                    }
+//                                                                    user.setId(String.valueOf(System.currentTimeMillis()));
+                                                                    user.setEmail(mEdtEmail.getText().toString());
+                                                                    toExit();
+                                                                } else {
+                                                                    Log.d("TAG", " Register failed ");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception | Error e) {
+                                                    e.printStackTrace();
+                                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                                    Crashlytics.logException(e);
+                                                    FirebaseCrash.report(e);
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("TAG", " Register error " + error.getMessage());
+                                            }
+                                        }
+                                ) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap<String, String>();
+                                        params.put("action", "register");
+                                        params.put("email", mEdtEmail.getText().toString());
+                                        params.put("password", mEdtPassword.getText().toString());
+                                        return params;
+                                    }
+                                }
+                                , "REGISTER");
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            CommonMethod.toCloseLoader();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
+        }
+    }
+
+    private class toGoogleLogin extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                VolleySingleton.getInstance(getContext())
+                        .addToRequestQueue(
+                                new StringRequest(Request.Method.POST,
+                                        "http://vnoi.in/ttsApi/register_login.php",
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    Log.d("TAG", "login Response " + response);
+                                                    if (response != null) {
+                                                        JSONObject obj = new JSONObject(response.trim());
+                                                        if (obj != null) {
+                                                            if (!obj.isNull("status")) {
+                                                                if (obj.getString("status").trim().equals("1")) {
+                                                                    Log.d("TAG", " login success  ");
+                                                                    user = User.getUser(getContext());
+                                                                    user.setLoginFrom(3);
+                                                                    if (!obj.isNull("id")) {
+                                                                        user.setId(obj.getString("id"));
+                                                                    }
+//                                                                    user.setId(String.valueOf(System.currentTimeMillis()));
+                                                                    user.setEmail(mEdtEmail.getText().toString());
+                                                                    toExit();
+                                                                } else {
+                                                                    Log.d("TAG", " login failed ");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception | Error e) {
+                                                    e.printStackTrace();
+                                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                                    Crashlytics.logException(e);
+                                                    FirebaseCrash.report(e);
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("TAG", " login error " + error.getMessage());
+                                            }
+                                        }
+                                ) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap<String, String>();
+                                        params.put("action", "google_details");
+                                        params.put("email", user.getEmail());
+                                        params.put("username", user.getName());
+                                        params.put("name", user.getName1());
+                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        return params;
+                                    }
+                                }
+                                , "google_details");
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            CommonMethod.toCloseLoader();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
+        }
     }
 }
