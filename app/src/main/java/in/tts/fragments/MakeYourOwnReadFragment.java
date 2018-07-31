@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -44,6 +45,8 @@ import in.tts.utils.KeyBoard;
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static in.tts.utils.KeyBoard.hideKeyboard;
+import static in.tts.utils.KeyBoard.openKeyboard;
 
 public class MakeYourOwnReadFragment extends Fragment {
 
@@ -89,6 +92,18 @@ public class MakeYourOwnReadFragment extends Fragment {
             editText = getActivity().findViewById(R.id.edMakeRead);
 
 
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        hideKeyboard(getActivity());
+                    } else {
+                        openKeyboard(getActivity());
+                    }
+                }
+            });
+
+
             // the purpose of the touch listener is just to store the touch X,Y coordinates
             editText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -108,7 +123,7 @@ public class MakeYourOwnReadFragment extends Fragment {
             editText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    KeyBoard.openKeyboard(getActivity());
+                    openKeyboard(getActivity());
                 }
             });
             editText.setOnLongClickListener(new View.OnLongClickListener() {

@@ -13,12 +13,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvPDFReader"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
         <LinearLayout
             android:id="@+id/llPDFReader"
             android:layout_width="match_parent"
@@ -69,6 +63,12 @@
                 android:background="@drawable/close" />
 
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPDFReader"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

@@ -60,10 +60,10 @@
                 android:id="@+id/rate_us"
                 android:title="@string/str_rate_us"
                 app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/give_feedback"
-                android:title="@string/str_give_feedback"
-                app:showAsAction="ifRoom" />
+            <!--<item-->
+                <!--android:id="@+id/give_feedback"-->
+                <!--android:title="@string/str_give_feedback"-->
+                <!--app:showAsAction="ifRoom" />-->
         </menu>
     </item>
 </menu>

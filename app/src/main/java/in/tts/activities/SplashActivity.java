@@ -52,18 +52,18 @@ public class SplashActivity extends AppCompatActivity {
 //                if (auth.getCurrentUser() != null) {
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
 //                } else
-                    if (User.getUser(SplashActivity.this).getId() != null) {
-//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    if (User.getUser(SplashActivity.this).getId() != null) {
+////                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                    } else {
-                        if (prefManager.isFirstTimeLaunch()) {
-                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
-                        } else {
-                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-                        }
-//                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+//                    } else {
+//                        if (prefManager.isFirstTimeLaunch()) {
+//                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+//                        } else {
+//                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+//                        }
+////                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                         finish();
-                    }
+//                    }
                 }
             }, 3000);
             prefManager.getAudioSetting();

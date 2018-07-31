@@ -33,14 +33,17 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
         try {
 //            mContext = context;
             audioSetting = AudioSetting.getAudioSetting(mContext);
+            tts.setEngineByPackageName("com.google.android.tts");
+
             tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
 
                 @Override
                 public void onInit(int i) {
                     try {
 
-//                        tts.setPitch((float) 0.6);
+                        tts.setPitch((float) 0.8);
                         tts.setSpeechRate(audioSetting.getVoiceSpeed());
+//                        tts.setVoice(audioSetting.getVoiceSelection());
 
 //                        int lang = tts.setLanguage(new Locale("hi_IN"));
                       int lang =  tts.setLanguage(Locale.UK);
