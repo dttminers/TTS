@@ -32,7 +32,7 @@ public class PdfFragment extends Fragment {
     private MyBooksListFragment tab1;
     private EbookFragment tab2;
 
-    private String[] tabHomeText = new String[]{"My Books", "Free eBooks"};
+    private String[] tabHomeText = new String[]{"My Books", "Library"};
 
     public PdfFragment() {
     }

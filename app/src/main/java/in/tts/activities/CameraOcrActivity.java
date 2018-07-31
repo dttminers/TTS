@@ -2,6 +2,7 @@ package in.tts.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -310,6 +311,15 @@ public class CameraOcrActivity extends AppCompatActivity {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
+
+    public Bitmap getBitmap() {
+        mCameraView.setDrawingCacheEnabled(true);
+        mCameraView.buildDrawingCache(true);
+        final Bitmap bitmap = Bitmap.createBitmap( mCameraView.getDrawingCache() );
+        mCameraView.setDrawingCacheEnabled(false);
+        mCameraView.destroyDrawingCache();
+        return bitmap;
     }
 
     @Override
