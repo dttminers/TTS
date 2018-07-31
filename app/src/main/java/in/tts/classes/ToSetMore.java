@@ -50,9 +50,9 @@ public class ToSetMore {
                     context.startActivity(new Intent(context, HelpActivity.class));
                     break;
 
-                case R.id.give_feedback:
-                    context.startActivity(new Intent(context, Contact_us.class));
-                    break;
+//                case R.id.give_feedback:
+//                    context.startActivity(new Intent(context, Contact_us.class));
+//                    break;
 
                 case R.id.rate_us:
                     showRateDialog(context);
