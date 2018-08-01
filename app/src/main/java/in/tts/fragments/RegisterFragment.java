@@ -76,6 +76,7 @@ public class RegisterFragment extends Fragment {
     // Google
     private GoogleSignInClient mGoogleSignInClient;
     private RelativeLayout relativeLayoutGoogle;
+    private GoogleSignInAccount account;
 
     //Facebook
     private RelativeLayout relativeLayoutFb;
@@ -211,7 +212,7 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (validateEmail() && validatePassword() && validateCnfPassword()) {
-                        checkInternetConnection();
+                        checkInternetConnection(1);
                         if (mEdtPassword.getText().toString().trim().equals(mEdtCnfPwd.getText().toString().trim())) {
                             startActivity(new Intent(getContext(), LoginActivity.class));
                             CommonMethod.toDisplayToast(getContext(), " Register Successfully ");
@@ -412,7 +413,7 @@ public class RegisterFragment extends Fragment {
                                                 user.setLoginFrom(2);
                                                 user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
                                                 CommonMethod.toCloseLoader();
-                                                toExit();
+                                                checkInternetConnection(3);
                                             }
                                         }
                                     };
@@ -458,12 +459,24 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    private void checkInternetConnection() {
+    private void checkInternetConnection(int i) {
         try {
             if (getContext() != null) {
                 if (CommonMethod.isOnline(getContext())) {
-                    new toRegister().execute();
-                    new toGoogleLogin().execute();
+                    switch (i) {
+                        case 1:
+                            new toRegister().execute();
+                            break;
+                        case 2:
+                            new toGoogleLogin().execute();
+                            break;
+                        case 3:
+                            new toFacebookLogin().execute();
+                            break;
+                        default:
+                            CommonMethod.toDisplayToast(getContext(), " Unable to Register");
+                            break;
+                    }
                 } else {
                     CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
                 }
@@ -472,6 +485,10 @@ public class RegisterFragment extends Fragment {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -541,21 +558,21 @@ public class RegisterFragment extends Fragment {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             CommonMethod.toCallLoader(getContext(), "Login successful from Google");
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
+            account = completedTask.getResult(ApiException.class);
             if (account != null) {
                 firebaseAuthWithGoogle(account);
                 user = User.getUser(getContext());
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());
                 user.setFcmToken(account.getIdToken());
-//                user.setName(account.getDisplayName());
-////                user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
-////                user.setName1(account.getGivenName());
-////                user.setName2(account.getFamilyName());
+                user.setUsername(account.getDisplayName());
+                user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
+                user.setFullName(account.getGivenName() + " " + account.getFamilyName());
                 user.setLoginFrom(1);
-                toExit();
+                CommonMethod.toCloseLoader();
+                checkInternetConnection(2);
             }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -781,11 +798,12 @@ public class RegisterFragment extends Fragment {
                                     @Override
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
-//                                        params.put("action", "google_details");
-//                                        params.put("email", user.getEmail());
-//                                        params.put("username", user.getName());
-//                                        params.put("name", user.getName1());
-//                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        params.put("action", "google_details");
+                                        params.put("email", account.getEmail());
+                                        params.put("username", account.getDisplayName());
+                                        params.put("name", account.getGivenName());
+                                        params.put("pic_url", String.valueOf(account.getPhotoUrl()));
+                                        Log.d("TAG", " glogin Params" + params);
                                         return params;
                                     }
                                 }
@@ -862,13 +880,21 @@ public class RegisterFragment extends Fragment {
                                             }
                                         }
                                 ) {
-                                    @Override
+
+                                        @Override
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
-//                                        params.put("action", "fb_details");
-//                                        params.put("email", user.getEmail());
-//                                        params.put("username", user.getName());
-//                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        params.put("action", "fb_details");
+                                        if (user.getEmail() != null) {
+                                            params.put("email", user.getEmail());
+                                        }
+                                        if (user.getUsername() != null) {
+                                            params.put("username", user.getUsername());
+                                        }
+                                        if (user.getPicPath() != null) {
+                                            params.put("pic_url", user.getPicPath());
+                                        }
+                                        Log.d("TAG", " Fb params " + params);
                                         return params;
                                     }
                                 }

@@ -22,7 +22,7 @@
         <LinearLayout
             android:id="@+id/llPDFReader"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:background="@color/ttsRed"
             android:gravity="center"
             android:orientation="horizontal"
@@ -31,42 +31,62 @@
             <Button
                 android:id="@+id/reload"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:background="@drawable/reload" />
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/refresh" />
 
             <Button
                 android:id="@+id/backward"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:background="@drawable/backward" />
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/step_backward" />
 
             <Button
                 android:id="@+id/playPause"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="50dp"
-                android:layout_height="45dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:background="@drawable/pause" />
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/play_button" />
 
             <Button
                 android:id="@+id/forward"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:background="@drawable/forward" />
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/step_forward" />
 
             <Button
                 android:id="@+id/close"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:background="@drawable/close" />
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/cancel_button" />
 
         </LinearLayout>
 
