@@ -34,6 +34,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
@@ -43,6 +45,7 @@ import in.tts.R;
 import in.tts.adapters.PdfPagesAdapter;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class PdfReadersActivity extends AppCompatActivity {
@@ -52,8 +55,6 @@ public class PdfReadersActivity extends AppCompatActivity {
     private PdfPagesAdapter pdfPagesAdapter;
 
     private ProgressBar progressBarSpeak;
-
-//    private MediaPlayer mMediaPlayer;
 
     private MediaPlayer mediaPlayer;
 
@@ -115,6 +116,23 @@ public class PdfReadersActivity extends AppCompatActivity {
                         close = findViewById(R.id.close);
 
                         progressBarSpeak = findViewById(R.id.progressBarSpeak);
+
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                super.run();
+                                PrefManager prefManager = new PrefManager(PdfReadersActivity.this);
+                                ArrayList list = prefManager.toGetPDFListRecent();
+                                if (list != null){
+                                    if (!list.contains(getIntent().getStringExtra("file").trim())) {
+                                        list.add(getIntent().getStringExtra("file").trim());
+                                    }
+                                } else {
+                                    list = new ArrayList<String>();
+                                    list.add(getIntent().getStringExtra("file").trim());
+                                }
+                            }
+                        };
 
 //                        mMediaPlayer = new MediaPlayer();
                         mTts = new TTS(PdfReadersActivity.this);

@@ -31,6 +31,12 @@ public class PrefManager {
     private static final String PDF_LIST = "PDF_LIST";
     private static final String PDF_LIST_INFO = "PDF_LIST_INFO";
 
+    private static final String IMAGE_LIST_RECENT = "IMAGE_LIST_RECENT";
+    private static final String IMAGE_LIST_INFO_RECENT = "IMAGE_LIST_INFO_RECENT";
+
+    private static final String PDF_LIST_RECENT = "PDF_LIST_RECENT";
+    private static final String PDF_LIST_INFO_RECENT = "PDF_LIST_INFO_RECENT";
+
     private static final String USER_INFO = "USER_INFO";
     private static final String USER_INFO_PREFERS = "USER_INFO_PREFERS";
 
@@ -111,6 +117,21 @@ public class PrefManager {
             editor.apply();
             editor.commit();
             Log.d("TAG", " setUserInfo : " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    public void toClearUserInfo() {
+        try {
+            SharedPreferences.Editor editor = _context.getSharedPreferences(USER_INFO_PREFERS, 0).edit();
+            editor.clear();
+            editor.apply();
+            editor.commit();
+            Log.d("TAG", " toClearUserInfo : " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -245,6 +266,71 @@ public class PrefManager {
         }
     }
 
+    public ArrayList<String> toGetPDFListRecent() {
+        try {
+            String us = _context.getSharedPreferences(PDF_LIST_RECENT, 0).getString(PDF_LIST_INFO_RECENT, null);
+            if (us != null) {
+                return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").split(",")));
+            } else {
+                return null;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
+    }
+
+    public void toSetPDFFileListRecent(ArrayList<String> list, boolean status) {
+        try {
+            SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST_RECENT, 0).edit();
+            if (status) {
+                editor.clear();
+            }
+            editor.putString(PDF_LIST_INFO_RECENT, list.toString());
+            editor.apply();
+            editor.commit();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    public ArrayList<String> toGetImageListRecent() {
+        try {
+            String us = _context.getSharedPreferences(IMAGE_LIST_RECENT, 0).getString(IMAGE_LIST_INFO_RECENT, null);
+            if (us != null) {
+                return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
+            } else {
+                return null;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
+    }
+
+    public void toSetImageFileListRecent(ArrayList<String> list) {
+        try {
+            SharedPreferences.Editor editor = _context.getSharedPreferences(IMAGE_LIST_RECENT, 0).edit();
+            editor.putString(IMAGE_LIST_INFO_RECENT, list.toString());
+            editor.apply();
+            editor.commit();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
     public ArrayList<String> populateSelectedSearch() {
         try {
             String s = _context.getSharedPreferences(WEB_PREFERENCES, 0).getString(WEB_LINKS, null);
@@ -275,4 +361,6 @@ public class PrefManager {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
+
+
 }

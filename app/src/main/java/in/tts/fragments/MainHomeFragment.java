@@ -194,6 +194,9 @@ public class MainHomeFragment extends Fragment {
                     public void run() {
                         // change UI elements here
 
+                        if (prefManager.toGetPDFListRecent() != null){
+                            pdfFile = prefManager.toGetPDFListRecent();
+                        } else
 //            CommonMethod.toCloseLoader();
 //            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
                         if (prefManager.toGetPDFList() == null) {
@@ -206,6 +209,9 @@ public class MainHomeFragment extends Fragment {
                         pdfHomePage = new PDFHomePage(getContext(), pdfFile);
                         toBindRecentPdf();
 
+                        if (prefManager.toGetImageListRecent() != null){
+                            imageFile = prefManager.toGetImageListRecent();
+                        } else
                         if (prefManager.toGetImageList() == null) {
 //                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
                             imageFile = new ArrayList<>();

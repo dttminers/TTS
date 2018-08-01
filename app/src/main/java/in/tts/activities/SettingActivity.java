@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
@@ -30,6 +33,7 @@ import java.text.DecimalFormat;
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.tts.R;
 import in.tts.fragments.LoginFragment;
+import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 
@@ -75,16 +79,18 @@ public class SettingActivity extends AppCompatActivity {
 
             mCivUpeProfile = findViewById(R.id.civProfile);
             tvName = findViewById(R.id.txtUpeChangePic);
+
             user = User.getUser(SettingActivity.this);
-            Log.d("TAG","user data: "+user);
-            tvName.setText(user.getUsername());
+
+            Log.d("TAG", "user data: " + user);
+            tvName.setText(user.getUsername() != null ? user.getUsername() : user.getEmail() != null ? user.getEmail() : "UserName");
 
             Picasso.get()
                     .load(user.getPicPath())
                     .placeholder(R.mipmap.ic_launcher)
                     .error(R.mipmap.ic_launcher)
                     .centerCrop()
-                    .resize(50,50)
+                    .resize(50, 50)
                     .into(mCivUpeProfile);
 
             tvUsed.setVisibility(View.VISIBLE);
@@ -125,17 +131,6 @@ public class SettingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try {
-                        FirebaseAuth.getInstance().signOut();
-                        //                        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-//                                new ResultCallback<Status>() {
-//                                    @Override
-//                                    public void onResult(Status status) {
-//                                        signInButton.setVisibility(View.VISIBLE);
-//                                        signOutButton.setVisibility(View.GONE);
-//                                        emailTextView.setText(" ".toString());
-//                                        nameTextView.setText(" ".toString());
-//                                    }
-//                                });
                         doExit();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -171,13 +166,26 @@ public class SettingActivity extends AppCompatActivity {
             alertDialog.setPositiveButton(getResources().getString(R.string.str_lbl_yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    finish();
+                    toLogout();
                 }
             });
             alertDialog.setNegativeButton(getResources().getString(R.string.str_lbl_no), null);
             alertDialog.setMessage(getResources().getString(R.string.str_lbl_logout_from_app));
             alertDialog.setTitle(getResources().getString(R.string.app_name));
             alertDialog.show();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toLogout() {
+        try {
+            FirebaseAuth.getInstance().signOut();
+            new PrefManager(SettingActivity.this).toClearUserInfo();
+            finish();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

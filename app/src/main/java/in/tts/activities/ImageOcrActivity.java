@@ -28,11 +28,13 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import in.tts.*;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class ImageOcrActivity extends AppCompatActivity {
@@ -64,6 +66,7 @@ public class ImageOcrActivity extends AppCompatActivity {
 
             mRl = findViewById(R.id.rlImageOcrActivity);
 
+
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             bitmap = BitmapFactory.decodeFile(photoPath.trim(), options);
@@ -72,6 +75,23 @@ public class ImageOcrActivity extends AppCompatActivity {
             mIvOcr.setImageBitmap(bitmap);
             new toGetImage().execute();
             fn_permission();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    PrefManager prefManager = new PrefManager(ImageOcrActivity.this);
+                    ArrayList list = prefManager.toGetImageListRecent();
+                    if (list != null) {
+                        if (!list.contains(photoPath)) {
+                            list.add(photoPath);
+                        }
+                    } else {
+                        list = new ArrayList<String>();
+                        list.add(photoPath);
+                    }
+                }
+            };
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
