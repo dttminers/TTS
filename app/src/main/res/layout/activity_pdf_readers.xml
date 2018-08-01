@@ -22,7 +22,7 @@
         <LinearLayout
             android:id="@+id/llPDFReader"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:background="@color/ttsRed"
             android:gravity="center"
             android:orientation="horizontal"
