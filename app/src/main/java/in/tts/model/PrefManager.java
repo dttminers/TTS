@@ -68,7 +68,7 @@ public class PrefManager {
             if (us != null) {
                 User user = User.getUser(_context);
                 JSONObject userJSON = new JSONObject(us);
-
+                Log.d("TAG", " getUserInfo : " + userJSON);
                 if (!userJSON.isNull("email")) {
                     user.setEmail(userJSON.getString("email"));
                 }
@@ -76,9 +76,6 @@ public class PrefManager {
                     user.setMobile(userJSON.getString("mobile"));
                 }
 
-                if (!userJSON.isNull("pic")) {
-                    user.setPicPath(userJSON.getString("pic"));
-                }
                 if (!userJSON.isNull("token")) {
                     user.setToken(userJSON.getString("token"));
                 }
@@ -87,17 +84,14 @@ public class PrefManager {
                     user.setId(userJSON.getString("id"));
                 }
 
-                if (!userJSON.isNull("name")) {
-                    user.setName(userJSON.getString("name"));
+                if (!userJSON.isNull("userName")) {
+                    user.setUsername(userJSON.getString("userName"));
                 }
 
-                if (!userJSON.isNull("name1")) {
-                    user.setName(userJSON.getString("name1"));
+                if (!userJSON.isNull("fullName")) {
+                    user.setFullName(userJSON.getString("fullName"));
                 }
 
-                if (!userJSON.isNull("name2")) {
-                    user.setName(userJSON.getString("name2"));
-                }
                 if (!userJSON.isNull("picPath")) {
                     user.setPicPath(userJSON.getString("picPath"));
                 }
@@ -116,6 +110,7 @@ public class PrefManager {
             editor.putString(USER_INFO, new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
             editor.apply();
             editor.commit();
+            Log.d("TAG", " setUserInfo : " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);

@@ -77,10 +77,10 @@ public class SettingActivity extends AppCompatActivity {
             tvName = findViewById(R.id.txtUpeChangePic);
             user = User.getUser(SettingActivity.this);
             Log.d("TAG","user data: "+user);
-            tvName.setText(user.getName());
+            tvName.setText(user.getUsername());
 
             Picasso.get()
-                    .load(user.getPic())
+                    .load(user.getPicPath())
                     .placeholder(R.mipmap.ic_launcher)
                     .error(R.mipmap.ic_launcher)
                     .centerCrop()

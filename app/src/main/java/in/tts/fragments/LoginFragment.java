@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -70,6 +69,7 @@ import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.network.VolleySingleton;
 import in.tts.utils.CommonMethod;
+//import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
 
@@ -149,7 +149,8 @@ public class LoginFragment extends Fragment {
                         Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
                         user.setEmail(account.getEmail());
                         user.setId(account.getUid());
-                        user.setName(account.getDisplayName());
+                        user.setUsername(account.getDisplayName());
+                        user.setFullName(account.getDisplayName());
                         user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                         user.setLoginFrom(1);
                         toExit();
@@ -232,7 +233,6 @@ public class LoginFragment extends Fragment {
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         Crashlytics.logException(e);
                         FirebaseCrash.report(e);
-                        CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                     }
                 }
             });
@@ -278,6 +278,7 @@ public class LoginFragment extends Fragment {
                         CommonMethod.toCallLoader(getContext(), "Loading....");
                         getContext().startActivity(new Intent(getContext(), LoginActivity.class).putExtra("LOGIN", "register"));
                         getActivity().finish();
+                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -295,6 +296,7 @@ public class LoginFragment extends Fragment {
 //                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
                         getContext().startActivity(new Intent(getContext(), HomeActivity.class));
                         getActivity().finish();
+                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -351,65 +353,61 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
-                    if (accessTokenTracker.isTracking()) {
-                        mFbLoginManager.logOut();
-                        accessTokenTracker.stopTracking();
-                        profileTracker.stopTracking();
-                        CommonMethod.toCloseLoader();
-                        CommonMethod.toDisplayToast(getContext(), " Click again  to login");
-                    } else {
-                        accessTokenTracker.startTracking();
-                        mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
-                        mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                            @Override
-                            public void onSuccess(LoginResult loginResult) {
-                                try {
-                                    AccessToken accessToken = loginResult.getAccessToken();
-                                    Log.d("TAG", "facebook:onSuccess:" + loginResult + ":" + accessToken);
-                                    handleFacebookAccessToken(loginResult.getAccessToken());
-                                    ProfileTracker profileTracker = new ProfileTracker() {
-                                        @Override
-                                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                                            if (currentProfile != null) {
-                                                this.stopTracking();
-                                                Profile.setCurrentProfile(currentProfile);
-                                                user = User.getUser(getContext());
-                                                user.setId(currentProfile.getId());
-                                                user.setName1(currentProfile.getFirstName());
-                                                user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
-                                                user.setName(currentProfile.getName());
-                                                user.setLoginFrom(2);
-                                                user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                                CommonMethod.toCloseLoader();
-                                                checkInternetConnection(3);
-//                                                toExit();
-                                            }
+//                    if (accessTokenTracker.isTracking()) {
+                    mFbLoginManager.logOut();
+                    accessTokenTracker.stopTracking();
+                    profileTracker.stopTracking();
+//                        CommonMethod.toCloseLoader();
+//                        CommonMethod.toDisplayToast(getContext(), " Click again  to login");
+//                    } else {
+                    accessTokenTracker.startTracking();
+                    mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
+                    mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            try {
+                                AccessToken accessToken = loginResult.getAccessToken();
+                                Log.d("TAG", "facebook:onSuccess:" + loginResult + ":" + accessToken);
+                                handleFacebookAccessToken(loginResult.getAccessToken());
+                                ProfileTracker profileTracker = new ProfileTracker() {
+                                    @Override
+                                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                                        if (currentProfile != null) {
+                                            this.stopTracking();
+                                            Profile.setCurrentProfile(currentProfile);
+                                            user = User.getUser(getContext());
+                                            user.setId(currentProfile.getId());
+                                            user.setFullName(currentProfile.getFirstName() + " " + currentProfile.getMiddleName() + " " + currentProfile.getLastName());
+                                            user.setUsername(currentProfile.getName());
+                                            user.setLoginFrom(2);
+                                            Log.d("TAG", " Pic Path : " + currentProfile.getProfilePictureUri(100, 100));
+                                            user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
+                                            CommonMethod.toCloseLoader();
+                                            checkInternetConnection(3);
                                         }
-                                    };
-                                    profileTracker.startTracking();
-                                } catch (Exception | Error e) {
-                                    CommonMethod.toCloseLoader();
-                                    e.printStackTrace();
-                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e);
-                                    FirebaseCrash.report(e);
-                                    CommonMethod.toDisplayToast(getContext(), " Click again  to login");
-                                }
-                            }
-
-                            @Override
-                            public void onCancel() {
+                                    }
+                                };
+                                profileTracker.startTracking();
+                            } catch (Exception | Error e) {
                                 CommonMethod.toCloseLoader();
-                                CommonMethod.toDisplayToast(getContext(), " Click again  to login");
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
+//                                CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                             }
+                        }
 
-                            @Override
-                            public void onError(FacebookException e) {
-                                CommonMethod.toCloseLoader();
-                                CommonMethod.toDisplayToast(getContext(), " Click again  to login");
-                            }
-                        });
-                    }
+                        @Override
+                        public void onCancel() {
+                            CommonMethod.toCloseLoader();
+                        }
+
+                        @Override
+                        public void onError(FacebookException e) {
+                            CommonMethod.toCloseLoader();
+                        }
+                    });
                 }
             });
 
@@ -423,7 +421,6 @@ public class LoginFragment extends Fragment {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
-            CommonMethod.toDisplayToast(getContext(), " Click again  to login");
         }
     }
 
@@ -522,13 +519,13 @@ public class LoginFragment extends Fragment {
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());
                 user.setFcmToken(account.getIdToken());
-                user.setName(account.getDisplayName());
+                user.setUsername(account.getDisplayName());
                 user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
-                user.setName1(account.getGivenName());
-                user.setName2(account.getFamilyName());
+                user.setFullName(account.getGivenName() + " " + account.getFamilyName());
                 user.setLoginFrom(1);
                 checkInternetConnection(2);
             }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -542,11 +539,13 @@ public class LoginFragment extends Fragment {
     private void toExit() {
         try {
             CommonMethod.toCloseLoader();
-            CommonMethod.toDisplayToast(getContext(), "Login Successful1");
+            CommonMethod.toDisplayToast(getContext(), "Login Successful");
             CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
             startActivity(new Intent(getContext(), HomeActivity.class));
-            getActivity().finish();
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -921,9 +920,15 @@ public class LoginFragment extends Fragment {
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
                                         params.put("action", "fb_details");
-                                        params.put("email", user.getEmail());
-                                        params.put("username", user.getName());
-                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        if (user.getEmail() != null) {
+                                            params.put("email", user.getEmail());
+                                        }
+                                        if (user.getUsername() != null) {
+                                            params.put("username", user.getUsername());
+                                        }
+                                        if (user.getPicPath() != null) {
+                                            params.put("pic_url", user.getPicPath());
+                                        }
                                         Log.d("TAG", " Fb params " + params);
                                         return params;
                                     }

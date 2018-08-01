@@ -144,7 +144,7 @@ public class RegisterFragment extends Fragment {
                         Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
                         user.setEmail(account.getEmail());
                         user.setId(account.getUid());
-                        user.setName(account.getDisplayName());
+                        user.setUsername(account.getDisplayName());
                         user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                         user.setLoginFrom(1);
                         toExit();
@@ -406,9 +406,9 @@ public class RegisterFragment extends Fragment {
                                                 Profile.setCurrentProfile(currentProfile);
                                                 user = User.getUser(getContext());
                                                 user.setId(currentProfile.getId());
-                                                user.setName1(currentProfile.getFirstName());
-                                                user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
-                                                user.setName(currentProfile.getName());
+//                                                user.setName1(currentProfile.getFirstName());
+//                                                user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
+//                                                user.setName(currentProfile.getName());
                                                 user.setLoginFrom(2);
                                                 user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
                                                 CommonMethod.toCloseLoader();
@@ -549,10 +549,10 @@ public class RegisterFragment extends Fragment {
                 user.setEmail(account.getEmail());
                 user.setId(account.getId());
                 user.setFcmToken(account.getIdToken());
-                user.setName(account.getDisplayName());
-                user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
-                user.setName1(account.getGivenName());
-                user.setName2(account.getFamilyName());
+//                user.setName(account.getDisplayName());
+////                user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
+////                user.setName1(account.getGivenName());
+////                user.setName2(account.getFamilyName());
                 user.setLoginFrom(1);
                 toExit();
             }
@@ -781,11 +781,11 @@ public class RegisterFragment extends Fragment {
                                     @Override
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
-                                        params.put("action", "google_details");
-                                        params.put("email", user.getEmail());
-                                        params.put("username", user.getName());
-                                        params.put("name", user.getName1());
-                                        params.put("pic_url", String.valueOf(user.getPic()));
+//                                        params.put("action", "google_details");
+//                                        params.put("email", user.getEmail());
+//                                        params.put("username", user.getName());
+//                                        params.put("name", user.getName1());
+//                                        params.put("pic_url", String.valueOf(user.getPic()));
                                         return params;
                                     }
                                 }
@@ -865,10 +865,10 @@ public class RegisterFragment extends Fragment {
                                     @Override
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
-                                        params.put("action", "fb_details");
-                                        params.put("email", user.getEmail());
-                                        params.put("username", user.getName());
-                                        params.put("pic_url", String.valueOf(user.getPic()));
+//                                        params.put("action", "fb_details");
+//                                        params.put("email", user.getEmail());
+//                                        params.put("username", user.getName());
+//                                        params.put("pic_url", String.valueOf(user.getPic()));
                                         return params;
                                     }
                                 }

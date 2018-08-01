@@ -12,9 +12,8 @@ public class User {
     private String fcmToken;
     private String id;
     private String mobile;
-    private String name;
-    private String name1;
-    private String name2;
+    private String userName;
+    private String fullName;
     private int loginFrom;// 1. Google, 2. Fb, 3. Email
     private String picPath;
     private String token;
@@ -33,6 +32,7 @@ public class User {
     public void setUser(User user) {
         user = user;
     }
+
 
     public String getEmail() {
         return email;
@@ -66,39 +66,16 @@ public class User {
         this.mobile = mobile;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName1() {
-        return name1;
-    }
-
-    public void setName1(String name1) {
-        this.name1 = name1;
-    }
-
-    public String getName2() {
-        return name2;
-    }
-
-    public void setName2(String name2) {
-        this.name2 = name2;
-    }
-
-    public int getPic() {
+    public int getLoginFrom() {
         return loginFrom;
     }
 
-    public void setLoginFrom(int pic) {
-        this.loginFrom = pic;
+    public void setLoginFrom(int loginFrom) {
+        this.loginFrom = loginFrom;
     }
 
-    public String getLoginFrom() {
+    public String getPicPath() {
         return picPath;
     }
 
@@ -114,5 +91,20 @@ public class User {
         this.token = token;
     }
 
+    public String getUsername() {
+        return userName;
+    }
+
+    public void setUsername(String username) {
+        this.userName = username;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
 }
