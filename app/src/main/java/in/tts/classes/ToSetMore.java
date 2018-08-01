@@ -19,6 +19,7 @@ import in.tts.activities.AudioSettingActivity;
 import in.tts.activities.CameraOcrActivity;
 import in.tts.activities.Contact_us;
 import in.tts.activities.HelpActivity;
+import in.tts.activities.MyCameraActivity;
 import in.tts.activities.OurOtherAppActivity;
 import in.tts.activities.RecentVoiceActivity;
 import in.tts.activities.SettingActivity;
@@ -28,7 +29,8 @@ public class ToSetMore {
         try {
             switch (item.getItemId()) {
                 case R.id.actionCamera:
-                    context.startActivity(new Intent(context, CameraOcrActivity.class));
+//                    context.startActivity(new Intent(context, CameraOcrActivity.class));
+                    context.startActivity(new Intent(context, MyCameraActivity.class));
                     break;
 
                 case R.id.settings:

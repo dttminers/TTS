@@ -471,4 +471,10 @@ public class MainHomeFragment extends Fragment {
         super.onDestroy();
         CommonMethod.toReleaseMemory();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toSetSomeData();
+    }
 }

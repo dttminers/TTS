@@ -270,6 +270,7 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(PDF_LIST_RECENT, 0).getString(PDF_LIST_INFO_RECENT, null);
             if (us != null) {
+                Log.d("TAG", " toGetPDFFileListRecent " + us);
                 return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
@@ -283,15 +284,13 @@ public class PrefManager {
         }
     }
 
-    public void toSetPDFFileListRecent(ArrayList<String> list, boolean status) {
+    public void toSetPDFFileListRecent(ArrayList<String> list) {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST_RECENT, 0).edit();
-            if (status) {
-                editor.clear();
-            }
             editor.putString(PDF_LIST_INFO_RECENT, list.toString());
             editor.apply();
             editor.commit();
+            Log.d("TAG", " toSetPDFFileListRecent " + list);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -304,6 +303,7 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(IMAGE_LIST_RECENT, 0).getString(IMAGE_LIST_INFO_RECENT, null);
             if (us != null) {
+                Log.d("TAG", " toGetImageListRecent " + us);
                 return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
             } else {
                 return null;
@@ -323,6 +323,7 @@ public class PrefManager {
             editor.putString(IMAGE_LIST_INFO_RECENT, list.toString());
             editor.apply();
             editor.commit();
+            Log.d("TAG", " toSetImageListRecent " + list);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

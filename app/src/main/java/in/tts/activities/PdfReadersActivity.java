@@ -117,22 +117,6 @@ public class PdfReadersActivity extends AppCompatActivity {
 
                         progressBarSpeak = findViewById(R.id.progressBarSpeak);
 
-                        new Thread(){
-                            @Override
-                            public void run() {
-                                super.run();
-                                PrefManager prefManager = new PrefManager(PdfReadersActivity.this);
-                                ArrayList list = prefManager.toGetPDFListRecent();
-                                if (list != null){
-                                    if (!list.contains(getIntent().getStringExtra("file").trim())) {
-                                        list.add(getIntent().getStringExtra("file").trim());
-                                    }
-                                } else {
-                                    list = new ArrayList<String>();
-                                    list.add(getIntent().getStringExtra("file").trim());
-                                }
-                            }
-                        };
 
 //                        mMediaPlayer = new MediaPlayer();
                         mTts = new TTS(PdfReadersActivity.this);
@@ -207,6 +191,18 @@ public class PdfReadersActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
+                        PrefManager prefManager = new PrefManager(PdfReadersActivity.this);
+                        ArrayList<String> list = prefManager.toGetPDFListRecent();
+                        if (list != null) {
+                            if (!list.contains(getIntent().getStringExtra("file").trim())) {
+                                list.add(getIntent().getStringExtra("file").trim());
+                            }
+                        } else {
+                            list = new ArrayList<>();
+                            list.add(getIntent().getStringExtra("file").trim());
+                        }
+                        prefManager.toSetPDFFileListRecent(list);
 
                         CommonMethod.toCloseLoader();
                     } else {
@@ -299,7 +295,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                     Log.d("TAGPDF", " PATH" + file.getTotalSpace());
                     Uri uri = Uri.parse("file://" + FileName);
                     Log.d("TAGPDF", " PATH " + uri.isAbsolute());
-                            mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
+                    mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
 //                    mediaPlayer.setDataSource("file://"+ FileName);
 //                    mediaPlayer.prepareAsync();
 //                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

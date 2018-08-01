@@ -76,22 +76,18 @@ public class ImageOcrActivity extends AppCompatActivity {
             new toGetImage().execute();
             fn_permission();
 
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    PrefManager prefManager = new PrefManager(ImageOcrActivity.this);
-                    ArrayList list = prefManager.toGetImageListRecent();
-                    if (list != null) {
-                        if (!list.contains(photoPath)) {
-                            list.add(photoPath);
-                        }
-                    } else {
-                        list = new ArrayList<String>();
-                        list.add(photoPath);
-                    }
+            PrefManager prefManager = new PrefManager(ImageOcrActivity.this);
+            ArrayList<String> list = prefManager.toGetImageListRecent();
+            if (list != null) {
+                if (!list.contains(photoPath)) {
+                    list.add(photoPath);
                 }
-            };
+            } else {
+                list = new ArrayList<>();
+                list.add(photoPath);
+            }
+            prefManager.toSetImageFileListRecent(list);
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
