@@ -569,7 +569,7 @@ public class RegisterFragment extends Fragment {
     private void toExit() {
         try {
             CommonMethod.toCloseLoader();
-            CommonMethod.toDisplayToast(getContext(), "Login Successful");
+            CommonMethod.toDisplayToast(getContext(), "Login Successful3");
             CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
 //            startActivity(new Intent(getContext(), MainActivity.class));
@@ -728,6 +728,7 @@ public class RegisterFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
         }
     }
+//  Google details API fetching..............
 
     private class toGoogleLogin extends AsyncTask<Void, Void, Void> {
         @Override
@@ -810,4 +811,88 @@ public class RegisterFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
         }
     }
+
+    //  facebook login details API fetching...................
+
+    private class toFacebookLogin extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                VolleySingleton.getInstance(getContext())
+                        .addToRequestQueue(
+                                new StringRequest(Request.Method.POST,
+                                        "http://vnoi.in/ttsApi/register_login.php",
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    Log.d("TAG", "fb login Response " + response);
+                                                    if (response != null) {
+                                                        JSONObject obj = new JSONObject(response.trim());
+                                                        if (obj != null) {
+                                                            if (!obj.isNull("status")) {
+                                                                if (obj.getString("status").trim().equals("1")) {
+                                                                    Log.d("TAG", "fb login success  ");
+                                                                    user = User.getUser(getContext());
+                                                                    user.setLoginFrom(3);
+                                                                    if (!obj.isNull("id")) {
+                                                                        user.setId(obj.getString("id"));
+                                                                    }
+//                                                                    user.setId(String.valueOf(System.currentTimeMillis()));
+                                                                    user.setEmail(mEdtEmail.getText().toString());
+                                                                    toExit();
+                                                                } else {
+                                                                    Log.d("TAG", "fb login failed ");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception | Error e) {
+                                                    e.printStackTrace();
+                                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                                    Crashlytics.logException(e);
+                                                    FirebaseCrash.report(e);
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("TAG", "fb login error " + error.getMessage());
+                                            }
+                                        }
+                                ) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap<String, String>();
+                                        params.put("action", "fb_details");
+                                        params.put("email", user.getEmail());
+                                        params.put("username", user.getName());
+                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        return params;
+                                    }
+                                }
+                                , "fb_details");
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            CommonMethod.toCloseLoader();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
+        }
+    }
+
 }

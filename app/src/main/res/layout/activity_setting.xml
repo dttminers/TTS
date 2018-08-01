@@ -23,10 +23,10 @@
         android:id="@+id/txtUpeChangePic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:text="Read It"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:textColor="@color/black"/>
 
 
@@ -163,7 +163,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnLoginSetting"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_gravity="center"

@@ -55,7 +55,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.metrics.AddTrace;
-import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -80,6 +79,7 @@ public class LoginFragment extends Fragment {
     // Google
     private GoogleSignInClient mGoogleSignInClient;
     private RelativeLayout relativeLayoutGoogle;
+    private GoogleSignInAccount account;
 
     //Facebook
     private RelativeLayout relativeLayoutFb;
@@ -206,7 +206,7 @@ public class LoginFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (validateEmail() && validatePassword()) {
-                            checkInternetConnection();
+                            checkInternetConnection(1);
                             new Thread() {
                                 @Override
                                 public void run() {
@@ -217,7 +217,7 @@ public class LoginFragment extends Fragment {
                                                 @Override
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                                     if (task.isSuccessful()) {
-                                                        Log.d("TAG", " Login Successful");
+                                                        Log.d("TAG", " Login Successful2");
                                                     } else {
                                                         Log.d("TAG", " Login Failed ");
                                                     }
@@ -350,6 +350,7 @@ public class LoginFragment extends Fragment {
             // Google
             relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleLogin);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
                     .build();
 
@@ -424,7 +425,8 @@ public class LoginFragment extends Fragment {
                                                 user.setLoginFrom(2);
                                                 user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
                                                 CommonMethod.toCloseLoader();
-                                                toExit();
+                                                checkInternetConnection(3);
+//                                                toExit();
                                             }
                                         }
                                     };
@@ -469,12 +471,24 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void checkInternetConnection() {
+    private void checkInternetConnection(int i) {
         try {
             if (getContext() != null) {
                 if (CommonMethod.isOnline(getContext())) {
-                    new toLogin().execute();
-                    new toGoogleLogin().execute();
+                    switch (i) {
+                        case 1:
+                            new toLogin().execute();
+                            break;
+                        case 2:
+                            new toGoogleLogin().execute();
+                            break;
+                        case 3:
+                            new toFacebookLogin().execute();
+                            break;
+                        default:
+                            CommonMethod.toDisplayToast(getContext(), " Unable to Login");
+                            break;
+                    }
                 } else {
                     CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
                 }
@@ -541,7 +555,7 @@ public class LoginFragment extends Fragment {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             CommonMethod.toCallLoader(getContext(), "Login successful from Google");
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            account = completedTask.getResult(ApiException.class);
             if (account != null) {
                 firebaseAuthWithGoogle(account);
                 user = User.getUser(getContext());
@@ -553,7 +567,8 @@ public class LoginFragment extends Fragment {
                 user.setName1(account.getGivenName());
                 user.setName2(account.getFamilyName());
                 user.setLoginFrom(1);
-                toExit();
+//                toExit();
+                checkInternetConnection(2);
             }
 //        } catch (ApiException e) {
 //            e.printStackTrace();
@@ -574,7 +589,7 @@ public class LoginFragment extends Fragment {
     private void toExit() {
         try {
             CommonMethod.toCloseLoader();
-            CommonMethod.toDisplayToast(getContext(), "Login Successful");
+            CommonMethod.toDisplayToast(getContext(), "Login Successful1");
             CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
 //            startActivity(new Intent(getContext(), MainActivity.class));
@@ -741,6 +756,7 @@ public class LoginFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
         }
     }
+//  Google Login details Api fetching..........................
 
     private class toGoogleLogin extends AsyncTask<Void, Void, Void> {
         @Override
@@ -754,13 +770,13 @@ public class LoginFragment extends Fragment {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
-                                                    Log.d("TAG", "login Response " + response);
+                                                    Log.d("TAG", "g-login Response " + response);
                                                     if (response != null) {
                                                         JSONObject obj = new JSONObject(response.trim());
                                                         if (obj != null) {
                                                             if (!obj.isNull("status")) {
                                                                 if (obj.getString("status").trim().equals("1")) {
-                                                                    Log.d("TAG", " login success  ");
+                                                                    Log.d("TAG", "g-login success  ");
                                                                     user = User.getUser(getContext());
                                                                     user.setLoginFrom(3);
                                                                     if (!obj.isNull("id")) {
@@ -770,7 +786,7 @@ public class LoginFragment extends Fragment {
                                                                     user.setEmail(mEdtEmail.getText().toString());
                                                                     toExit();
                                                                 } else {
-                                                                    Log.d("TAG", " login failed ");
+                                                                    Log.d("TAG", "g-login failed ");
                                                                 }
                                                             }
                                                         }
@@ -786,7 +802,7 @@ public class LoginFragment extends Fragment {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Log.d("TAG", " login error " + error.getMessage());
+                                                Log.d("TAG", "g-login error " + error.getMessage());
                                             }
                                         }
                                 ) {
@@ -794,14 +810,99 @@ public class LoginFragment extends Fragment {
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
                                         params.put("action", "google_details");
-                                        params.put("email", user.getEmail());
-                                        params.put("username", user.getName());
-                                        params.put("name", user.getName1());
-                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        params.put("email", account.getEmail());
+                                        params.put("username", account.getDisplayName());
+                                        params.put("name", account.getGivenName());
+                                        params.put("pic_url", String.valueOf(account.getPhotoUrl()));
+                                        Log.d("TAG", " glogin Params" + params);
                                         return params;
                                     }
                                 }
                                 , "google_details");
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            CommonMethod.toCloseLoader();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
+        }
+    }
+
+//  facebook login details API fetching...................
+
+    private class toFacebookLogin extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                VolleySingleton.getInstance(getContext())
+                        .addToRequestQueue(
+                                new StringRequest(Request.Method.POST,
+                                        "http://vnoi.in/ttsApi/register_login.php",
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    Log.d("TAG", "fb login Response " + response);
+                                                    if (response != null) {
+                                                        JSONObject obj = new JSONObject(response.trim());
+                                                        if (obj != null) {
+                                                            if (!obj.isNull("status")) {
+                                                                if (obj.getString("status").trim().equals("1")) {
+                                                                    Log.d("TAG", "fb login success  ");
+                                                                    user = User.getUser(getContext());
+                                                                    user.setLoginFrom(3);
+                                                                    if (!obj.isNull("id")) {
+                                                                        user.setId(obj.getString("id"));
+                                                                    }
+//                                                                    user.setId(String.valueOf(System.currentTimeMillis()));
+                                                                    user.setEmail(mEdtEmail.getText().toString());
+                                                                    toExit();
+                                                                } else {
+                                                                    Log.d("TAG", "fb login failed ");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception | Error e) {
+                                                    e.printStackTrace();
+                                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                                    Crashlytics.logException(e);
+                                                    FirebaseCrash.report(e);
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.d("TAG", "fb login error " + error.getMessage());
+                                            }
+                                        }
+                                ) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap<String, String>();
+                                        params.put("action", "fb_details");
+                                        params.put("email", user.getEmail());
+                                        params.put("username", user.getName());
+                                        params.put("pic_url", String.valueOf(user.getPic()));
+                                        Log.d("TAG", " Fb params " + params);
+                                        return params;
+                                    }
+                                }
+                                , "fb_details");
             } catch (Exception | Error e) {
                 e.printStackTrace();
                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
