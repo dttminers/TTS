@@ -39,18 +39,21 @@ public class SettingActivity extends AppCompatActivity {
 
     private RelativeLayout rlLogout;
     private ProgressBar pbData, pbStorage;
-    private TextView tvUsed, tvFree;
+    private TextView tvUsed, tvFree, tvName;
     private Button mBtnLogin;
-    CircleImageView mCivUpeProfile;
+    private CircleImageView mCivUpeProfile;
+    private float totalSpace, occupiedSpace, freeSpace;
+    private DecimalFormat outputFormat;
+    private StatFs statFs;
+    private User user;
 
     @Override
     @AddTrace(name = "onCreateSettingActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             setContentView(R.layout.activity_setting);
-            CommonMethod.setAnalyticsData(SettingActivity.this, "MainTab", "Setting", null);
+            CommonMethod.setAnalyticsData(SettingActivity.this, "MainTab", "Setting User", null);
 
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), SettingActivity.this, getString(R.string.str_title_settings));
@@ -58,14 +61,31 @@ public class SettingActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(R.string.app_name);
             }
 
+            statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+
             rlLogout = findViewById(R.id.rlLogout);
+
             pbData = findViewById(R.id.pbSetting1);
             pbStorage = findViewById(R.id.pbSetting2);
+
             tvFree = findViewById(R.id.tvFree);
             tvUsed = findViewById(R.id.tvUsed);
-            mBtnLogin = findViewById(R.id.btnLogin);
-            mCivUpeProfile = findViewById(R.id.civProfile);
 
+            mBtnLogin = findViewById(R.id.btnLoginSetting);
+
+            mCivUpeProfile = findViewById(R.id.civProfile);
+            tvName = findViewById(R.id.txtUpeChangePic);
+            user = User.getUser(SettingActivity.this);
+            Log.d("TAG","user data: "+user);
+            tvName.setText(user.getName());
+
+            Picasso.get()
+                    .load(user.getPic())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .centerCrop()
+                    .resize(50,50)
+                    .into(mCivUpeProfile);
 
             tvUsed.setVisibility(View.VISIBLE);
 
@@ -76,13 +96,10 @@ public class SettingActivity extends AppCompatActivity {
                 }
             });
 
-            final float totalSpace = DeviceMemory.getInternalStorageSpace();
-            final float occupiedSpace = DeviceMemory.getInternalUsedSpace();
-            final float freeSpace = DeviceMemory.getInternalFreeSpace();
-            final DecimalFormat outputFormat = new DecimalFormat("#.##");
-
-            Log.d("TAG", "Storage occu" + occupiedSpace);
-            Log.d("TAG", "Storage total" + totalSpace);
+            totalSpace = getInternalStorageSpace();
+            occupiedSpace = getInternalUsedSpace();
+            freeSpace = getInternalFreeSpace();
+            outputFormat = new DecimalFormat("#.##");
 
             if (null != pbStorage) {
                 pbStorage.setMax((int) totalSpace);
@@ -98,8 +115,10 @@ public class SettingActivity extends AppCompatActivity {
 
             if (User.getUser(SettingActivity.this).getId() != null) {
                 rlLogout.setVisibility(View.VISIBLE);
+                mBtnLogin.setVisibility(View.GONE);
             } else {
                 rlLogout.setVisibility(View.GONE);
+                mBtnLogin.setVisibility(View.VISIBLE);
             }
 
             rlLogout.setOnClickListener(new View.OnClickListener() {
@@ -134,30 +153,16 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    public static class DeviceMemory {
+    public float getInternalStorageSpace() {
+        return ((float) statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
+    }
 
-        public static float getInternalStorageSpace() {
-            StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
-            //StatFs statFs = new StatFs("/data");
-            float total = ((float) statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
-            return total;
-        }
+    public float getInternalFreeSpace() {
+        return ((float) statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
+    }
 
-        public static float getInternalFreeSpace() {
-            StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
-            //StatFs statFs = new StatFs("/data");
-            float free = ((float) statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
-            return free;
-        }
-
-        public static float getInternalUsedSpace() {
-            StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
-            //StatFs statFs = new StatFs("/data");
-            float total = ((float) statFs.getBlockCount() * statFs.getBlockSize()) / 1048576;
-            float free = ((float) statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576;
-            float busy = total - free;
-            return busy;
-        }
+    public float getInternalUsedSpace() {
+        return ((((float) statFs.getBlockCount() * statFs.getBlockSize()) / 1048576) - (((float) statFs.getAvailableBlocks() * statFs.getBlockSize()) / 1048576));
     }
 
     private void doExit() {

@@ -28,9 +28,10 @@ import in.tts.utils.ToGetPdfFiles;
 
 public class SplashActivity extends AppCompatActivity {
 
-//    private FirebaseAuth auth;
+    private FirebaseAuth auth;
 
     private PrefManager prefManager;
+
     @Override
     @AddTrace(name = "onCreateSplashActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,28 +43,29 @@ public class SplashActivity extends AppCompatActivity {
 
             prefManager = new PrefManager(SplashActivity.this);
             //Get Firebase auth instance
-//        auth = FirebaseAuth.getInstance();
+            auth = FirebaseAuth.getInstance();
             CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     prefManager.getUserInfo();
-//                if (auth.getCurrentUser() != null) {
-//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//                } else
-//                    if (User.getUser(SplashActivity.this).getId() != null) {
-////                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    if (auth.getCurrentUser() != null) {
+                        CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful10");
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-//                    } else {
-//                        if (prefManager.isFirstTimeLaunch()) {
-//                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
-//                        } else {
-//                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-//                        }
-////                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                        finish();
-//                    }
+                    } else if (User.getUser(SplashActivity.this).getId() != null) {
+                        CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful11");
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    } else {
+                        if (prefManager.isFirstTimeLaunch()) {
+                            CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful12");
+                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+                        } else {
+                            CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful13");
+                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                        }
+                    }
+                    finish();
                 }
             }, 3000);
             prefManager.getAudioSetting();
