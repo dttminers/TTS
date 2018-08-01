@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -72,6 +73,7 @@ import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
 
+    // Normal Login
     private TextView mTvLogin;
     private EditText mEdtEmail, mEdtPassword;
     private Button mBtnLogin;
@@ -81,7 +83,7 @@ public class LoginFragment extends Fragment {
     private RelativeLayout relativeLayoutGoogle;
     private GoogleSignInAccount account;
 
-    //Facebook
+    // Facebook
     private RelativeLayout relativeLayoutFb;
     private CallbackManager callbackManager;
 
@@ -89,9 +91,11 @@ public class LoginFragment extends Fragment {
     private ProfileTracker profileTracker;
     private LoginManager mFbLoginManager;
 
+    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    // User
     private User user;
 
     // Parameters
@@ -105,20 +109,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_login, container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 
     @Override
@@ -411,6 +401,8 @@ public class LoginFragment extends Fragment {
                             public void onSuccess(LoginResult loginResult) {
                                 try {
                                     AccessToken accessToken = loginResult.getAccessToken();
+                                    Log.d("TAG", "facebook:onSuccess:" + loginResult + ":" + accessToken);
+                                    handleFacebookAccessToken(loginResult.getAccessToken());
                                     ProfileTracker profileTracker = new ProfileTracker() {
                                         @Override
                                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -497,6 +489,10 @@ public class LoginFragment extends Fragment {
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -606,25 +602,70 @@ public class LoginFragment extends Fragment {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
+        try {
+            Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
+            if (getActivity() != null) {
+                AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    Log.w("TAG", "signInWithCredential", task.getException());
+                                    Toast.makeText(getContext(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w("TAG", "signInWithCredential", task.getException());
-                            Toast.makeText(getContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    private void handleFacebookAccessToken(AccessToken token) {
+        try {
+            Log.d("TAG", "handleFacebookAccessToken:" + token);
+            if (getActivity() != null) {
+                AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("TAG", "signInWithCredential:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Log.d("TAG", " FB user " + user.getUid());
+//                            updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("TAG", "signInWithCredential:failure", task.getException());
+                                    Toast.makeText(getContext(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+                                }
+
+                                // ...
+                            }
+                        });
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     @Override
@@ -671,6 +712,36 @@ public class LoginFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStart() {
+        try {
+            super.onStart();
+            mAuth.addAuthStateListener(mAuthListener);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        try {
+            super.onStop();
+            if (mAuthListener != null) {
+                mAuth.removeAuthStateListener(mAuthListener);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     public interface OnFragmentInteractionListener {
@@ -756,8 +827,8 @@ public class LoginFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
         }
     }
-//  Google Login details Api fetching..........................
 
+    //  Google Login details Api fetching..........................
     private class toGoogleLogin extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -841,8 +912,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-//  facebook login details API fetching...................
-
+    //  facebook login details API fetching...................
     private class toFacebookLogin extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
