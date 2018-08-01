@@ -10,6 +10,13 @@
         android:title="@string/str_camera"
         app:showAsAction="always" />
     <item
+        android:id="@+id/actionSpeak"
+        android:icon="@drawable/white_speak"
+        android:orderInCategory="50"
+        android:title="@string/str_camera"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/actionSearch"
         android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="200"

@@ -97,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements
             });
 
             fn_permission();
-            setCurrentViewPagerItem(3);
+            setCurrentViewPagerItem(2);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

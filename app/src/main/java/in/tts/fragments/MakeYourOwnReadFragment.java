@@ -438,9 +438,47 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
-            MenuItem item = menu.findItem(R.id.actionSearch);
-            if (item != null) {
-                item.setVisible(false);
+            if (menu != null) {
+                MenuItem search = menu.findItem(R.id.actionSearch);
+                if (search != null) {
+                    search.setVisible(false);
+                }
+
+                MenuItem speak = menu.findItem(R.id.actionSpeak);
+                if (speak != null) {
+                    speak.setVisible(true);
+                    speak.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            if (editText.getText().toString().trim().length() > 0) {
+                                if (t1 != null) {
+                                    if (!t1.isSpeaking()) {
+                                        t1.speak(editText.getText().toString().trim(), TextToSpeech.QUEUE_FLUSH, null);
+                                    } else {
+                                        t1.speak(editText.getText().toString().trim(), TextToSpeech.QUEUE_ADD, null);
+                                    }
+                                } else {
+                                    t1 = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+                                        @Override
+                                        public void onInit(int status) {
+                                            if (status != TextToSpeech.ERROR) {
+                                                t1.setLanguage(AudioSetting.getAudioSetting(getContext()).getLangSelection() != null ? AudioSetting.getAudioSetting(getContext()).getLangSelection() : Locale.US);
+                                            }
+                                        }
+                                    });
+                                    if (!t1.isSpeaking()) {
+                                        t1.speak(editText.getText().toString().trim(), TextToSpeech.QUEUE_FLUSH, null);
+                                    } else {
+                                        t1.speak(editText.getText().toString().trim(), TextToSpeech.QUEUE_ADD, null);
+                                    }
+                                }
+                            } else {
+                                CommonMethod.toDisplayToast(getContext(), " No data to read");
+                            }
+                            return false;
+                        }
+                    });
+                }
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
