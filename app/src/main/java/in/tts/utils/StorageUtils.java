@@ -1,6 +1,5 @@
 package in.tts.utils;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 

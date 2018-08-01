@@ -30,7 +30,8 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.RecentVoiceActivity;
-import in.tts.model.Audio;
+//import in.tts.model.Audio;
+import in.tts.model.AudioModel;
 import in.tts.utils.PlaybackStatus;
 import in.tts.utils.StorageUtils;
 
@@ -70,9 +71,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private TelephonyManager telephonyManager;
 
     //List of available Audio files
-    private ArrayList<Audio> audioList;
+//    private ArrayList<Audio> audioList;
+    private ArrayList<AudioModel> list;
     private int audioIndex = -1;
-    private Audio activeAudio; //an object of the currently playing audio
+    private String audio;
+//    private Audio activeAudio; //an object of the currently playing audio
 
 
     // Binder given to clients
@@ -185,7 +188,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
             // Set the data source to the mediaFile location
 //            mediaPlayer.setDataSource(mediaFile);
-            mediaPlayer.setDataSource(activeAudio.getData());
+//            mediaPlayer.setDataSource(activeAudio.getData());
+            Log.d("TAG", " audio path :  " + audio);
+            mediaPlayer.setDataSource("file://"+ audio);
 
             mediaPlayer.prepareAsync();
         } catch (Error | Exception e) {
@@ -409,9 +414,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             try {
                 //Get the new media index form SharedPreferences
                 audioIndex = new StorageUtils(getApplicationContext()).loadAudioIndex();
-                if (audioIndex != -1 && audioIndex < audioList.size()) {
+                if (audioIndex != -1 && audioIndex < list.size()) {
                     //index is in a valid range
-                    activeAudio = audioList.get(audioIndex);
+                    audio = list.get(audioIndex).getText();
                 } else {
                     stopSelf();
                 }
@@ -553,13 +558,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     private void skipToNext() {
         try {
-            if (audioIndex == audioList.size() - 1) {
+            if (audioIndex == list.size() - 1) {
                 //if last in playlist
                 audioIndex = 0;
-                activeAudio = audioList.get(audioIndex);
+                audio = list.get(audioIndex).getText();
             } else {
                 //get next in playlist
-                activeAudio = audioList.get(++audioIndex);
+                audio = list.get(++audioIndex).getText();
             }
 
             //Update stored index
@@ -579,11 +584,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             if (audioIndex == 0) {
                 //if first in playlist
                 //set index to the last of audioList
-                audioIndex = audioList.size() - 1;
-                activeAudio = audioList.get(audioIndex);
+                audioIndex = list.size() - 1;
+                audio = list.get(audioIndex).getText();
             } else {
                 //get previous in playlist
-                activeAudio = audioList.get(--audioIndex);
+                audio = list.get(--audioIndex).getText();
             }
 
             //Update stored index
@@ -632,9 +637,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     .setLargeIcon(largeIcon)
                     .setSmallIcon(android.R.drawable.stat_sys_headset)
                     // Set Notification content information
-                    .setContentText(activeAudio.getArtist())
-                    .setContentTitle(activeAudio.getAlbum())
-                    .setContentInfo(activeAudio.getTitle())
+//                    .setContentText(activeAudio.getArtist())
+//                    .setContentTitle(activeAudio.getAlbum())
+//                    .setContentInfo(activeAudio.getTitle())
+                    .setContentTitle("Read_IT")
+                    .setContentText("Playing audio")
+                    .setContentInfo("TTS")
                     // Add playback actions
                     .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                     .addAction(notificationAction, "pause", play_pauseAction)
@@ -712,12 +720,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             try {
                 //Load data from SharedPreferences
                 StorageUtils storage = new StorageUtils(getApplicationContext());
-                audioList = storage.loadAudio();
+//                list = storage.loadAudio();
+                list = RecentVoiceActivity.user_list;
+                Log.d("TAG", "Audio data :" + list.size() + list);
                 audioIndex = storage.loadAudioIndex();
 
-                if (audioIndex != -1 && audioIndex < audioList.size()) {
+                if (audioIndex != -1 && audioIndex < list.size()) {
                     //index is in a valid range
-                    activeAudio = audioList.get(audioIndex);
+                    audio = list.get(audioIndex).getText();
                 } else {
                     stopSelf();
                 }

@@ -188,30 +188,39 @@ public class MainHomeFragment extends Fragment {
 
     public void toSetSomeData() {
         try {
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // change UI elements here
+
 //            CommonMethod.toCloseLoader();
 //            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
-            if (prefManager.toGetPDFList() == null) {
+                        if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                pdfFile = new ArrayList<>();
-                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            } else {
-                pdfFile = prefManager.toGetPDFList();
-            }
-            pdfHomePage = new PDFHomePage(getContext(), pdfFile);
-            toBindRecentPdf();
+                            pdfFile = new ArrayList<>();
+                            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                        } else {
+                            pdfFile = prefManager.toGetPDFList();
+                        }
+                        pdfHomePage = new PDFHomePage(getContext(), pdfFile);
+                        toBindRecentPdf();
 
-            if (prefManager.toGetImageList() == null) {
+                        if (prefManager.toGetImageList() == null) {
 //                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
-                imageFile = new ArrayList<>();
-                getAllShownImagesPath();
-            } else {
-                imageFile = prefManager.toGetImageList();
+                            imageFile = new ArrayList<>();
+                            getAllShownImagesPath();
+                        } else {
+                            imageFile = prefManager.toGetImageList();
+                        }
+                        pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
+                        toBindRecentImages();
+                        CommonMethod.toCloseLoader();
+                        nsv.setVisibility(View.VISIBLE);
+                        mLoading.setVisibility(View.GONE);
+                    }
+                });
             }
-            pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
-            toBindRecentImages();
-            CommonMethod.toCloseLoader();
-            nsv.setVisibility(View.VISIBLE);
-            mLoading.setVisibility(View.GONE);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -339,7 +348,7 @@ public class MainHomeFragment extends Fragment {
                 if (cursor != null) {
                     while (cursor.moveToNext() && imageFile.size() < 11) {
                         String imageLocation = cursor.getString(1);
-                        imageFile.add(imageLocation);
+                        imageFile.add(imageLocation.replaceAll("\\s", "%20"));
                         Log.d("TAG", "File Name " + imageLocation);
                     }
                     Log.d("TAG", "Count Image Files " + imageFile.size());

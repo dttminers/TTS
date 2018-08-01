@@ -106,6 +106,7 @@
     <string name="str_action_">login</string>
     <string name="str_rate_us">Rate Us</string>
     <string name="str_error_valid_mobile">Invalid Mobile No</string>
+    <string name="str_play">play</string>
 
 </resources>
 

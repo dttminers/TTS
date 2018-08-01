@@ -50,12 +50,11 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="752c9b164b8b11cb297caceb967a4009f7433ab0" />
-
         <meta-data
             android:name="pspdfkit_license_key"
             android:value="YydfqYlnS6eoAcc4_UCuL55yUO-jl9CdAVHunX2E02O0F1G2mFUGh_n2K7iTmq4fp3GSqkKfpJsKD7nBEYSAMTIylBfFw0lwFDjzfvtAJMyL6ZLhXCKqtbWUVsW00-_p5bE7arUaZfVkc7-CraqEeAI29SZdrlxYnwHEoxZwJxdNRJ1EuBmxN9YR5m8NuQAkbGJdCfhP9aS8bkuEEp_mHT9rGnJDjiuV7WfhG5m2ZhfnFtPF2YvqHJJ0wDNq64KXsmhQWtmYC2pr7m1M61DxNcc7kV0FcNoj8MaefT0SD-MSL6QgZOulGusreWEWsmNXMB0vY7Er9Nr8nE1hXBZ74OFKCJyvb9T6EPselHVn7-6QgvUC6LbuLzaRfJXD4XqJ6V68tM9imjdDvwTJ0lqyTNR_56GM-vywobmbaXb4QHxtPYq1uJgBppTjDVupK3VN" />
 
-        <!--Splash screen -->
+        <!-- Splash screen -->
         <activity
             android:name=".activities.SplashActivity"
             android:label="@string/app_name"
@@ -79,7 +78,9 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
@@ -159,12 +160,13 @@
             android:windowSoftInputMode="adjustResize|adjustPan" />
 
         <service android:name=".services.MediaPlayerService" />
-        <!--Services-->
+        <!-- Services -->
         <service
             android:name=".services.ClipboardMonitorService"
             android:exported="false"
             android:label="Clipboard Monitor" />
-        <!--<service android:name=".services.MusicService" />-->
+        <!-- <service android:name=".services.MusicService" /> -->
+        <activity android:name=".activities.AudioPlayerActivity"></activity>
     </application>
 
 </manifest>

@@ -100,19 +100,25 @@ public class MyBooksListFragment extends Fragment {
     public void toGetData() {
         try {
             if (getActivity() != null) {
-                recyclerView.setHasFixedSize(true);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(layoutManager);
-                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
-                recyclerView.addItemDecoration(dividerItemDecoration);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // change UI elements here
+                        recyclerView.setHasFixedSize(true);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(layoutManager);
+                        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+                        recyclerView.addItemDecoration(dividerItemDecoration);
 
-                pdfListAdapter = new PdfListAdapter(getActivity(), file);
+                        pdfListAdapter = new PdfListAdapter(getActivity(), file);
 //                recyclerView.setAdapter(pdfListAdapter);
-                pdfListAdapter.notifyDataSetChanged();
+                        pdfListAdapter.notifyDataSetChanged();
 
-                new toGet().execute();
+                        new toGet().execute();
 
-                llCustom_loader.setVisibility(View.GONE);
+                        llCustom_loader.setVisibility(View.GONE);
+                    }
+                });
 
             }
         } catch (Exception | Error e) {

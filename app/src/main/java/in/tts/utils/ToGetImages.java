@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,8 @@ public class ToGetImages {
                     if (cursor != null) {
                         while (cursor.moveToNext() && imageFile.size() < 10) {
                             String imageLocation = cursor.getString(1);
-                            imageFile.add(imageLocation);
+                            imageFile.add(imageLocation.trim().replaceAll("\\s", "%20"));
+                            Log.d("TAG", "File_Name " + imageLocation);
                         }
                     }
                     if (cursor != null) {
@@ -51,6 +53,7 @@ public class ToGetImages {
     }
 
     public static boolean isRunning(){
+        Log.d("TAG", "Image IsRunning" + status);
         return status;
     }
 }

@@ -52,7 +52,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
     private ArrayList<Audio> audioList;
 
     private RecentVoiceAdapter mAdapter;
-    private ArrayList<AudioModel> user_list = new ArrayList<>();
+    public static ArrayList<AudioModel> user_list = new ArrayList<>();
     private ArrayList<AudioModel> multiselect_list = new ArrayList<>();
 
     private AlertDialogHelper alertDialogHelper;
@@ -114,7 +114,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
             }
         }));
 
-        loadAudio();
+//        loadAudio();
 //        if (audioList != null && audioList.size() > 0) {
         //play the first audio in the ArrayList
 //            playAudio(audioList.get(0).getData());
@@ -134,9 +134,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
             else
                 mActionMode.setTitle("");
 
-
             refreshAdapter();
-
         }
     }
 
@@ -170,34 +168,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                     alertDialogHelper.showAlertDialog("", "Delete Contact", "DELETE", "CANCEL", 1, false);
                     return true;
                 case R.id.action_share:
-//                    String sharePath = Environment.getExternalStorageDirectory().getPath()
-//                            + "/Soundboard/Ringtones/custom_ringtone.ogg";
-//                    Uri uri = Uri.parse(sharePath);
-//                    Intent share = new Intent(Intent.ACTION_SEND);
-//                    share.setType("audio/*");
-//                    for (int i = 0; i < user_list.size(); i++) {
-//                        if () {
-//                            share.putExtra(Intent.EXTRA_STREAM, uri);
-//                        }
-//                    }
-//                    startActivity(Intent.createChooser(share, "Share Sound File"));
                     if (multiselect_list.size() > 0) {
-//                        Intent share = new Intent(Intent.ACTION_SEND);
-//                        share.setType("audio/*");
-//                        for (int i = 0; i < multiselect_list.size(); i++) {
-//                            File fdelete = new File(multiselect_list.get(i).getText());
-//                            if (fdelete.exists()) {
-////                                if (fdelete.delete()) {
-//                                Log.d("TAG", "file Deleted :" + fdelete.getPath());
-////                                user_list.remove(multiselect_list.get(i));
-////                                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fdelete));
-//                                share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + multiselect_list.get(i).getText()));
-//                            } else {
-////                                    Log.d("TAG", "file not Deleted :" + fdelete.getPath());
-//                                CommonMethod.toDisplayToast(RecentVoiceActivity.this, " Sorry, unable to share file");
-////                                }
-//                            }
-//                        }
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_SEND_MULTIPLE);
                         intent.putExtra(Intent.EXTRA_SUBJECT, "Here are some files.");
@@ -252,32 +223,17 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                         }
                     }
                 }
-//            for (int i = 0; i < user_list.size(); i++) {
-//                if (user_list.get(i).isSelected()) {
-//                    File fdelete = new File(user_list.get(i).getText());
-//                    if (fdelete.exists()) {
-//                        Log.d("TAG", "file Deleted :" + fdelete.getPath());
-//                        user_list.remove(i);
-//                    } else {
-//                        Log.d("TAG", "file not Deleted :" + i + fdelete.getPath());
-//                    }
-//                }
-//            }
 
                 mAdapter.notifyDataSetChanged();
 
                 if (mActionMode != null) {
                     mActionMode.finish();
                 }
-//                Toast.makeText(getApplicationContext(), "Delete Click", Toast.LENGTH_SHORT).show();
             }
         } else if (from == 2) {
             if (mActionMode != null) {
                 mActionMode.finish();
             }
-
-//            AudioModel mSample = new AudioModel("Name" + user_list.size(), "Designation" + user_list.size());
-//            user_list.add(mSample);
             mAdapter.notifyDataSetChanged();
 
         }
@@ -429,8 +385,12 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                 audioList.add(new Audio(data, title, album, artist));
             }
             playAudio(audioList.get(0).getData());
+        } else {
+            Log.d("TAG", " AUDIO DATA : null");
         }
         cursor.close();
+
+//        Log.d("TAG", " loadAudio : " + audioList.size() + ": " + audioList);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

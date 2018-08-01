@@ -87,16 +87,22 @@ public class GalleryFragment extends Fragment {
     public void toGetData() {
         try {
             if (getActivity() != null) {
-                imageFile = new ArrayList<>();
-                imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // change UI elements here
+                        imageFile = new ArrayList<>();
+                        imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
 
-                getAllShownImagesPath(getActivity());
-                RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                recyclerView.setAdapter(imageAdapterGallery);
-                imageAdapterGallery.notifyDataSetChanged();
-                mLoading.setVisibility(View.GONE);
+                        getAllShownImagesPath(getActivity());
+                        RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                        recyclerView.setAdapter(imageAdapterGallery);
+                        imageAdapterGallery.notifyDataSetChanged();
+                        mLoading.setVisibility(View.GONE);
+                    }
+                });
             }
         } catch (Exception | Error e) {
             e.printStackTrace();

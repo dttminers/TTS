@@ -14,6 +14,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
 import in.tts.R;
+import in.tts.activities.AudioPlayerActivity;
 import in.tts.activities.AudioSettingActivity;
 import in.tts.activities.CameraOcrActivity;
 import in.tts.activities.Contact_us;
@@ -36,6 +37,7 @@ public class ToSetMore {
 
                 case R.id.audio_settings:
                     context.startActivity(new Intent(context, AudioSettingActivity.class));
+//                    context.startActivity(new Intent(context, AudioPlayerActivity.class));
                     break;
 
                 case R.id.recent_audios:
