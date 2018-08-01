@@ -98,4 +98,6 @@
             android:layout_margin="20dp" />
     </LinearLayout>
 
+    <include layout="@layout/play_pause_pdf"/>
+
 </RelativeLayout>
