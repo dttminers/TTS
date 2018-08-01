@@ -194,10 +194,10 @@ public class CommonMethod {
         final double length = file.length();
 
         if (length > MiB) {
-            return format.format(length / MiB) + " MiB";
+            return format.format(length / MiB) + "Mb";//" MiB";
         }
         if (length > KiB) {
-            return format.format(length / KiB) + " KiB";
+            return format.format(length / KiB) + "Kb";//" KiB";
         }
         return format.format(length) + " B";
     }

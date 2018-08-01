@@ -25,12 +25,11 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.RecentVoiceActivity;
-//import in.tts.model.Audio;
 import in.tts.model.AudioModel;
 import in.tts.utils.PlaybackStatus;
 import in.tts.utils.StorageUtils;
@@ -77,6 +76,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private String audio;
 //    private Audio activeAudio; //an object of the currently playing audio
 
+    File file;
 
     // Binder given to clients
     private final IBinder iBinder = new LocalBinder();
@@ -112,38 +112,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         //a media resource being streamed over the network.
     }
 
-//    @Override
-//    public void onCompletion(MediaPlayer mp) {
-//        //Invoked when playback of a media source has completed.
-//    }
-//
-//    //Handle errors
-//    @Override
-//    public boolean onError(MediaPlayer mp, int what, int extra) {
-//        //Invoked when there has been an error during an asynchronous operation.
-//        return false;
-//    }
-
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
         //Invoked to communicate some info.
         return false;
     }
 
-//    @Override
-//    public void onPrepared(MediaPlayer mp) {
-//        //Invoked when the media source is ready for playback.
-//    }
-
     @Override
     public void onSeekComplete(MediaPlayer mp) {
         //Invoked indicating the completion of a seek operation.
     }
-
-//    @Override
-//    public void onAudioFocusChange(int focusChange) {
-//        //Invoked when the audio focus of the system is updated.
-//    }
 
     //Becoming noisy
     private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
@@ -189,9 +167,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             // Set the data source to the mediaFile location
 //            mediaPlayer.setDataSource(mediaFile);
 //            mediaPlayer.setDataSource(activeAudio.getData());
-            Log.d("TAG", " audio path :  " + audio);
-            mediaPlayer.setDataSource("file://"+ audio);
 
+            Log.d("TAG", " audio path :  " + audio);
+            mediaPlayer.setDataSource("file://" + audio);
             mediaPlayer.prepareAsync();
         } catch (Error | Exception e) {
             e.printStackTrace();
@@ -241,10 +219,17 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public void onCompletion(MediaPlayer mp) {
         try {
-            //Invoked when playback of a media source has completed.
-            stopMedia();
-            //stop the service
-            stopSelf();
+            Log.d("TAG", " onCompletion " + audioIndex + ":"+ list.size() + (audioIndex != list.size()));
+            if (audioIndex != list.size()) {
+                skipToPrevious();
+                updateMetaData();
+                buildNotification(PlaybackStatus.PLAYING);
+            } else {
+                //Invoked when playback of a media source has completed.
+                stopMedia();
+                //stop the service
+                stopSelf();
+            }
         } catch (Error | Exception e) {
             e.printStackTrace();
         }
@@ -335,38 +320,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
                 audioManager.abandonAudioFocus(this);
     }
-
-//    //The system calls this method when an activity, requests the service be started
-//    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        try {
-//            //An audio file is passed to the service through putExtra();
-//            mediaFile = intent.getExtras().getString("media");
-//        } catch (NullPointerException e) {
-//            stopSelf();
-//        }
-//
-//        //Request audio focus
-//        if (requestAudioFocus() == false) {
-//            //Could not gain focus
-//            stopSelf();
-//        }
-//
-//        if (mediaFile != null && mediaFile != "")
-//            initMediaPlayer();
-//
-//        return super.onStartCommand(intent, flags, startId);
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        if (mediaPlayer != null) {
-//            stopMedia();
-//            mediaPlayer.release();
-//        }
-//        removeAudioFocus();
-//    }
 
     //Handle incoming phone calls
     private void callStateListener() {
@@ -562,9 +515,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 //if last in playlist
                 audioIndex = 0;
                 audio = list.get(audioIndex).getText();
+                Log.d("TAG", " ms 1skipToNext : " + audioIndex + ":" + audio);
             } else {
                 //get next in playlist
                 audio = list.get(++audioIndex).getText();
+                Log.d("TAG", " ms skipToNext 2: " + audioIndex + ":" + audio);
             }
 
             //Update stored index
@@ -586,9 +541,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 //set index to the last of audioList
                 audioIndex = list.size() - 1;
                 audio = list.get(audioIndex).getText();
+                Log.d("TAG", " ms 1skipTopre : " + audioIndex + ":" + audio);
             } else {
                 //get previous in playlist
                 audio = list.get(--audioIndex).getText();
+                Log.d("TAG", " ms 2skipToNexpre: " + audioIndex + ":" + audio);
             }
 
             //Update stored index
@@ -622,6 +579,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
                     R.mipmap.ic_launcher); //replace with your own image
 
+            file = new File(audio);
             // Create a new Notification
             NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                     .setShowWhen(false)
@@ -640,9 +598,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //                    .setContentText(activeAudio.getArtist())
 //                    .setContentTitle(activeAudio.getAlbum())
 //                    .setContentInfo(activeAudio.getTitle())
-                    .setContentTitle("Read_IT")
-                    .setContentText("Playing audio")
-                    .setContentInfo("TTS")
+                    .setContentTitle(file.getName())
+//                    .setContentText("Playing audio")
+                    .setContentInfo("Recent Audios")
+                    .setContentText("Playing Recent Audios")
                     // Add playback actions
                     .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                     .addAction(notificationAction, "pause", play_pauseAction)
@@ -720,8 +679,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             try {
                 //Load data from SharedPreferences
                 StorageUtils storage = new StorageUtils(getApplicationContext());
-//                list = storage.loadAudio();
-                list = RecentVoiceActivity.user_list;
+                list = storage.loadAudio();
+//                list = RecentVoiceActivity.user_list;
                 Log.d("TAG", "Audio data :" + list.size() + list);
                 audioIndex = storage.loadAudioIndex();
 

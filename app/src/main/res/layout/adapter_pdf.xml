@@ -3,10 +3,9 @@
     android:id="@+id/mRlPdfListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
     android:background="@color/white"
-    android:orientation="horizontal"
-    android:padding="0dp">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/tv_duration"
@@ -87,5 +86,15 @@
         android:text="@string/str_100_remaining"
         android:textColor="@color/dark_pink_two"
         android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@color/grey" />
 
 </RelativeLayout>

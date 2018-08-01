@@ -1,15 +1,12 @@
 package in.tts.activities;
 
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ActionMode;
@@ -20,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -37,7 +33,6 @@ import in.tts.model.AudioModel;
 import in.tts.services.MediaPlayerService;
 import in.tts.utils.AlertDialogHelper;
 import in.tts.utils.CommonMethod;
-//import in.tts.utils.RecyclerItemClickListener;
 import in.tts.utils.RecyclerItemClickListener;
 import in.tts.utils.StorageUtils;
 
@@ -52,7 +47,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
     private ArrayList<Audio> audioList;
 
     private RecentVoiceAdapter mAdapter;
-    public static ArrayList<AudioModel> user_list = new ArrayList<>();
+    private ArrayList<AudioModel> user_list = new ArrayList<>();
     private ArrayList<AudioModel> multiselect_list = new ArrayList<>();
 
     private AlertDialogHelper alertDialogHelper;
@@ -91,15 +86,13 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                 if (isMultiSelect) {
                     multi_select(position);
                 } else {
-                    playAudio(user_list.get(position).getText());
-//                    Toast.makeText(getApplicationContext(), "Details Page", Toast.LENGTH_SHORT).show();
+                    playAudio(position);
                 }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 if (!isMultiSelect) {
-//                    multiselect_list = new ArrayList<AudioModel>();
                     isMultiSelect = true;
 
                     if (mActionMode == null) {
@@ -113,13 +106,6 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
 
             }
         }));
-
-//        loadAudio();
-//        if (audioList != null && audioList.size() > 0) {
-        //play the first audio in the ArrayList
-//            playAudio(audioList.get(0).getData());
-//        }
-        // playAudio(file.get(0));
     }
 
     public void multi_select(int position) {
@@ -141,7 +127,6 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
     public void refreshAdapter() {
         mAdapter.selected_usersList = multiselect_list;
         mAdapter.audioList = user_list;
-        mAdapter.setData();
         mAdapter.notifyDataSetChanged();
     }
 
@@ -269,9 +254,11 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                             if (booleanpdf) {
                                 booleanpdf = false;
                             } else {
-                                Log.d("TAG", " Audio File :" + listFile[i].getAbsolutePath());
+                                Log.d("TAG", " Audio File :" + listFile[i].getAbsolutePath() + ":" + CommonMethod.getFileSize(listFile[i]));
+                                if (!CommonMethod.getFileSize(listFile[i]).equals("0 B")) {
 //                                file.add(listFile[i].getPath());
-                                user_list.add(new AudioModel(listFile[i].getPath()));
+                                    user_list.add(new AudioModel(listFile[i].getPath()));
+                                }
                             }
                         }
                     }
@@ -296,7 +283,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
             player = binder.getService();
             serviceBound = true;
 
-            Toast.makeText(RecentVoiceActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(RecentVoiceActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -324,7 +311,8 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
         if (!serviceBound) {
             //Store Serializable audioList to SharedPreferences
             StorageUtils storage = new StorageUtils(getApplicationContext());
-            storage.storeAudio(audioList);
+//            storage.storeAudio(audioList);
+            storage.storeAudio(user_list);
             storage.storeAudioIndex(audioIndex);
 
             Intent playerIntent = new Intent(this, MediaPlayerService.class);
@@ -362,35 +350,6 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
             //service is active
             player.stopSelf();
         }
-    }
-
-    private void loadAudio() {
-        ContentResolver contentResolver = getContentResolver();
-
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
-        Cursor cursor = contentResolver.query(uri, null, selection, null, sortOrder);
-
-        if (cursor != null && cursor.getCount() > 0) {
-            audioList = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-
-                Log.d("TAG", " AUDIO DATA : " + data + " : " + title + " : " + album + " : " + artist);
-                // Save to audioList
-                audioList.add(new Audio(data, title, album, artist));
-            }
-            playAudio(audioList.get(0).getData());
-        } else {
-            Log.d("TAG", " AUDIO DATA : null");
-        }
-        cursor.close();
-
-//        Log.d("TAG", " loadAudio : " + audioList.size() + ": " + audioList);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
