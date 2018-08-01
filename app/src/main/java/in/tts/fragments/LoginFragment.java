@@ -119,7 +119,9 @@ public class LoginFragment extends Fragment {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Login", null);
 
             user = User.getUser(getContext());
+
             FacebookSdk.sdkInitialize(getContext());
+
             mTvLogin = getActivity().findViewById(R.id.txtLogin);
 
             SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
@@ -130,6 +132,11 @@ public class LoginFragment extends Fragment {
             mEdtPassword = getActivity().findViewById(R.id.edtPasswordLogin);
             mBtnLogin = getActivity().findViewById(R.id.btnLogin);
 
+            // Google
+            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleLogin);
+            // Facebook
+            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookLogin);
+
 
             //Get Firebase auth instance
             mAuth = FirebaseAuth.getInstance();
@@ -137,8 +144,6 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     FirebaseUser account = firebaseAuth.getCurrentUser();
-//                    signInButton.setVisibility(View.GONE);
-//                    signOutButton.setVisibility(View.VISIBLE);
                     if (account != null) {
                         // User is signed in
                         Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
@@ -155,7 +160,6 @@ public class LoginFragment extends Fragment {
                     // ...
                 }
             };
-
 
             mEdtEmail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                 @Override
@@ -221,9 +225,7 @@ public class LoginFragment extends Fragment {
                                             });
                                 }
                             };
-
                         }
-
                     } catch (Exception | Error e) {
                         CommonMethod.toCloseLoader();
                         e.printStackTrace();
@@ -232,46 +234,12 @@ public class LoginFragment extends Fragment {
                         FirebaseCrash.report(e);
                         CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                     }
-
-//                    if (validateEmail() && validatePassword()) {
-//                        user = User.getUser(getContext());
-//                        user.setLoginFrom(3);
-//                        user.setId(String.valueOf(System.currentTimeMillis()));
-//                        user.setEmail(mEdtEmail.getText().toString());
-//                        toExit();
-//
-                    //authenticate user
-//                        mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
-//                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                                        if (!task.isSuccessful()) {
-//                                            // there was an error
-//                                            if (mEdtPassword.getText().toString().length() < 8) {
-//                                                mEdtPassword.setError(getString(R.string.str_error_minimum_8));
-//                                            } else {
-//                                                Toast.makeText(getContext(), getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-//                                            }
-//                                        } else {
-////
-//                                            user = User.getUser(getContext());
-//                                            user.setLoginFrom(3);
-//                                            user.setEmail(mEdtEmail.getText().toString());
-//                                            CommonMethod.toCloseLoader();
-//                                            toExit();
-//                                        }
-//                                    }
-//                                });
-//                    } else {
-//                        CommonMethod.toDisplayToast(getContext(), "Please try again, Login failed");
-//                    }
                 }
             });
 
             mEdtEmail.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                 }
 
                 @Override
@@ -337,14 +305,11 @@ public class LoginFragment extends Fragment {
                 }
             });
 
-            // Google
-            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleLogin);
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            mGoogleSignInClient = GoogleSignIn.getClient(getContext(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
-                    .build();
+                    .build());
 
-            mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
             relativeLayoutGoogle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -382,7 +347,6 @@ public class LoginFragment extends Fragment {
                 }
             };
 
-            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookLogin);
             relativeLayoutFb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -511,7 +475,7 @@ public class LoginFragment extends Fragment {
 
     public boolean validatePassword() {
         if (mEdtPassword.getText().toString().trim().length() == 0) {
-            mEdtPassword.setError(getContext().getResources().getString(R.string.str_field_cant_be_empty));
+            mEdtPassword.setError(getContext().getString(R.string.str_field_cant_be_empty));
             return false;
         } else if (mEdtPassword.getText().toString().trim().length() < 8) {
             mEdtPassword.setError(getString(R.string.str_error_minimum_8));
@@ -563,15 +527,8 @@ public class LoginFragment extends Fragment {
                 user.setName1(account.getGivenName());
                 user.setName2(account.getFamilyName());
                 user.setLoginFrom(1);
-//                toExit();
                 checkInternetConnection(2);
             }
-//        } catch (ApiException e) {
-//            e.printStackTrace();
-//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-//            CommonMethod.toCloseLoader();
-//            Crashlytics.logException(e);
-//            FirebaseCrash.report(e);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -588,7 +545,6 @@ public class LoginFragment extends Fragment {
             CommonMethod.toDisplayToast(getContext(), "Login Successful1");
             CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
-//            startActivity(new Intent(getContext(), MainActivity.class));
             startActivity(new Intent(getContext(), HomeActivity.class));
             getActivity().finish();
             CommonMethod.toCloseLoader();
@@ -617,8 +573,8 @@ public class LoginFragment extends Fragment {
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
                                     Log.w("TAG", "signInWithCredential", task.getException());
-                                    Toast.makeText(getContext(), "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getContext(), "Authentication failed.",
+//                                            Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -650,8 +606,8 @@ public class LoginFragment extends Fragment {
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("TAG", "signInWithCredential:failure", task.getException());
-                                    Toast.makeText(getContext(), "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getContext(), "Authentication failed.",
+//                                            Toast.LENGTH_SHORT).show();
 //                            updateUI(null);
                                 }
 
