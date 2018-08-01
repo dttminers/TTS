@@ -153,7 +153,7 @@ public class LoginFragment extends Fragment {
                         user.setFullName(account.getDisplayName());
                         user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                         user.setLoginFrom(1);
-                        toExit();
+//                        toExit();
                     } else {
                         // User is signed out
                         Log.d("TAG", "onAuthStateChanged:signed_out");
@@ -523,6 +523,7 @@ public class LoginFragment extends Fragment {
                 user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                 user.setFullName(account.getGivenName() + " " + account.getFamilyName());
                 user.setLoginFrom(1);
+                CommonMethod.toCloseLoader();
                 checkInternetConnection(2);
             }
             CommonMethod.toCloseLoader();

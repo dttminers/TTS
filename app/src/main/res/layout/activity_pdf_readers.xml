@@ -13,6 +13,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPDFReader"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <LinearLayout
             android:id="@+id/llPDFReader"
             android:layout_width="match_parent"
@@ -20,7 +26,7 @@
             android:background="@color/ttsRed"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/reload"
@@ -64,12 +70,6 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvPDFReader"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
     </LinearLayout>
 
     <ProgressBar
@@ -82,7 +82,7 @@
         android:layout_margin="10dp"
         android:visibility="gone" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/llCustom_loader12"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -97,7 +97,5 @@
             android:layout_gravity="center"
             android:layout_margin="20dp" />
     </LinearLayout>
-
-    <include layout="@layout/play_pause_pdf"/>
 
 </RelativeLayout>

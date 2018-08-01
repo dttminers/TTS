@@ -51,17 +51,13 @@ public class SplashActivity extends AppCompatActivity {
                 public void run() {
                     prefManager.getUserInfo();
                     if (auth.getCurrentUser() != null) {
-                        CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful10");
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     } else if (User.getUser(SplashActivity.this).getId() != null) {
-                        CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful11");
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     } else {
                         if (prefManager.isFirstTimeLaunch()) {
-                            CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful12");
                             startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
                         } else {
-                            CommonMethod.toDisplayToast(SplashActivity.this, "Login Successful13");
                             startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
                         }
                     }
