@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+
 import java.util.ArrayList;
 
 import in.tts.model.PrefManager;
@@ -17,6 +20,7 @@ public class ToGetImages {
     private static boolean status;
 
     public static void getAllShownImagesPath(final Activity activity, final Context context) {
+       try{
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -50,6 +54,12 @@ public class ToGetImages {
             }
         });
         status = false;
+    } catch (Exception | Error e) {
+        e.printStackTrace();
+        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        CommonMethod.toCloseLoader();
+        Crashlytics.logException(e);
+    }
     }
 
     public static boolean isRunning(){

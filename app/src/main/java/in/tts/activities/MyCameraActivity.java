@@ -69,8 +69,8 @@ public class MyCameraActivity extends AppCompatActivity {
     private TTS tts;
     Bitmap photo;
     File file;
-    String photopath="-";
-    Button photoButton,readout;
+    String photopath = "-";
+    Button photoButton, readout;
 
 
     @Override
@@ -82,7 +82,7 @@ public class MyCameraActivity extends AppCompatActivity {
         readout = (Button) this.findViewById(R.id.readout);
 
         tts = new TTS(MyCameraActivity.this);
-    //    tts = new TextToSpeech(this, this);
+        //    tts = new TextToSpeech(this, this);
         mRl = findViewById(R.id.rlImageOcrActivity);
 
         photoButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +90,8 @@ public class MyCameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                photopath = "-";
+                imageView.setBackgroundResource(0);
                 fn_permission();
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
@@ -101,8 +103,7 @@ public class MyCameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!photopath.equals("-"))
-                {
+                if (!photopath.equals("-")) {
                     try {
 
 
@@ -117,18 +118,14 @@ public class MyCameraActivity extends AppCompatActivity {
                         imageView.setImageBitmap(bitmap);
                         new toGetImage().execute();
                         fn_permission();
-                    }
-                    catch (Exception | Error e)
-                    {
+                    } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         Crashlytics.logException(e);
                         FirebaseCrash.report(e);
                     }
-                }
-                else
-                {
-                    Toast.makeText(MyCameraActivity.this,"Please capture image first",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MyCameraActivity.this, "Please capture image first", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -175,10 +172,9 @@ public class MyCameraActivity extends AppCompatActivity {
                     Uri tempUri = getImageUri(getApplicationContext(), photo);
 
                     // CALL THIS METHOD TO GET THE ACTUAL PATH
-                     file= new File(getRealPathFromURI(tempUri));
-                     //photopath=file.getAbsolutePath();
-                     photopath=file.getCanonicalPath();
-
+                    file = new File(getRealPathFromURI(tempUri));
+                    //photopath=file.getAbsolutePath();
+                    photopath = file.getCanonicalPath();
 
 
                 }
@@ -235,7 +231,7 @@ public class MyCameraActivity extends AppCompatActivity {
                     stringBuilder.append(item.getValue());
                     stringBuilder.append("\n");
                 }
-               // copystring=stringBuilder;
+                // copystring=stringBuilder;
                 Log.d("TAG", " Final DATA11 " + stringBuilder);
             } catch (Exception | Error e) {
                 e.printStackTrace();
@@ -262,15 +258,15 @@ public class MyCameraActivity extends AppCompatActivity {
                     ImageView ivReload = view.findViewById(R.id.ivReload);
 
                     tvImgOcr.setText(stringBuilder);
-                    Log.d("OnPostExecute", "value "+stringBuilder);
-                   // tts=new TTS(MyCameraActivity.this);
+                    Log.d("OnPostExecute", "value " + stringBuilder);
+                    // tts=new TTS(MyCameraActivity.this);
 
                     ivReload.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             try {
                                 tvImgOcr.setText("");
-                               // TTS tts = new TTS(MyCameraActivity.this);
+                                // TTS tts = new TTS(MyCameraActivity.this);
                                 tts.toStop();
                                 new MyCameraActivity.toGetImage().execute();
                             } catch (Exception | Error e) {
@@ -286,21 +282,21 @@ public class MyCameraActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                                try {
+                            try {
 
-                                    Log.d("OnPostExecuteEXP", "values  "+stringBuilder.toString());
+                                Log.d("OnPostExecuteEXP", "values  " + stringBuilder.toString());
 
-                                 //   TTS tts = new TTS(MyCameraActivity.this);
-                                    //tts.SpeakLoud("Hi MANASI");
-                                    tts.SpeakLoud(stringBuilder.toString());
-                                    tts.toSaveAudioFile(stringBuilder.toString(), DateFormat.getDateTimeInstance().format(new Date()) + ".wav");
-                                } catch (Exception | Error e) {
-                                    Log.d("OnPostExecuteEXP", "exception  "+e);
-                                    e.printStackTrace();
-                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e);
-                                    FirebaseCrash.report(e);
-                                }
+                                //   TTS tts = new TTS(MyCameraActivity.this);
+                                //tts.SpeakLoud("Hi MANASI");
+                                tts.SpeakLoud(stringBuilder.toString());
+                                tts.toSaveAudioFile(stringBuilder.toString());
+                            } catch (Exception | Error e) {
+                                Log.d("OnPostExecuteEXP", "exception  " + e);
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
+                            }
 
 
                         }

@@ -244,6 +244,10 @@ public class AudioSettingActivity extends AppCompatActivity {
                     case "Female":
                         rbFemale.setChecked(true);
                         rbMale.setChecked(false);
+                    default:
+                        rbAccent1.setChecked(true);
+                        rbAccent2.setChecked(false);
+                        break;
                 }
             }
         } catch (Exception | Error e) {

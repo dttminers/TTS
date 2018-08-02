@@ -119,6 +119,12 @@
             android:label="@string/str_pdf"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.AfterFileSelected"
+            android:label="@string/str_pdf"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.CameraOcrActivity"
             android:label="@string/str_camera"

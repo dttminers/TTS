@@ -79,6 +79,7 @@ public class PdfReadersActivity extends AppCompatActivity {
     private TTS mTts;
 
     private String FileName = null;
+    private boolean playerStatus = false;// not playing
 
     public static int oneTimeOnly = 0;
 
@@ -148,7 +149,22 @@ public class PdfReadersActivity extends AppCompatActivity {
                         playPause.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Toast.makeText(getApplicationContext(), "Pausing sound", Toast.LENGTH_SHORT).show();
+                                if (playerStatus) {
+                                    mediaPlayer.pause();
+                                    playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
+                                    playerStatus = !playerStatus;
+                                } else {
+//                                    if (!mediaPlayer.isPlaying()) {
+                                        mediaPlayer.start();
+                                        playPause.setBackground(getResources().getDrawable(R.drawable.pause_button));
+                                        playerStatus = !playerStatus;
+//                                    } else {
+//                                        mediaPlayer.pause();
+//                                        playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
+//                                        playerStatus = !playerStatus;
+//                                    }
+                                }
+//                                Toast.makeText(getApplicationContext(), "Pausing sound", Toast.LENGTH_SHORT).show();
 //                                mMediaPlayer.pause();
 //                                playMediaPlayer(1);
                             }
@@ -263,6 +279,7 @@ public class PdfReadersActivity extends AppCompatActivity {
             String text = PdfTextExtractor.getTextFromPage(pr, pos);
             Log.d("TAGPDF", " Final_DATA 2 " + text);
             if (text.trim().length() != 0) {
+//                mTts = new TTS(PdfReadersActivity.this);
                 toSpeak(text);
             } else {
                 CommonMethod.toDisplayToast(PdfReadersActivity.this, " Unable to get data");
@@ -276,15 +293,17 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void toSpeak(String string) {
         try {
-            FileName = mTts.toSaveAudioFile(string, DateFormat.getDateTimeInstance().format(new Date()) + ".wav");
+//            mTts = new TTS(PdfReadersActivity.this);
+            FileName = mTts.toSaveAudioFile(string);
 
+//            FileName = new TTS(PdfReadersActivity.this).toSaveAudioFile(string);
             speakLayout.setVisibility(View.VISIBLE);
             progressBarSpeak.setVisibility(View.GONE);
 
 
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer = new MediaPlayer();
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
 //                mediaPlayer.setDataSource("http://www.virginmegastore.me/Library/Music/CD_001214/Tracks/Track1.mp3");
                 File file = new File(FileName);
@@ -292,22 +311,37 @@ public class PdfReadersActivity extends AppCompatActivity {
                 Log.d("TAG", " " + fis.getFD() + ":" + fis);
 //                mediaPlayer.setDataSource(fis.getFD());
                 if (file.exists()) {
-                    Log.d("TAGPDF", " PATH" + file.getTotalSpace());
-                    Uri uri = Uri.parse("file://" + FileName);
-                    Log.d("TAGPDF", " PATH " + uri.isAbsolute());
-                    mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
-//                    mediaPlayer.setDataSource("file://"+ FileName);
-//                    mediaPlayer.prepareAsync();
-//                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                        @Override
-//                        public void onPrepared(MediaPlayer mp) {
-//                            mediaPlayer.start();
-//                        }
-//                    });
+//                    Log.d("TAGPDF", " PATH" + file.getTotalSpace());
+//                    Uri uri = Uri.parse("file://" + FileName);
+//                    Log.d("TAGPDF", " PATH " + uri.isAbsolute());
+                    if (!CommonMethod.getFileSize(file).equals("0 B")) {
+//                    mediaPlayer.setDataSource(PdfReadersActivity.this, uri);
+                        mediaPlayer.setDataSource("file://" + FileName);
+                        mediaPlayer.prepareAsync();
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                mediaPlayer.start();
+                                playPause.setBackground(getResources().getDrawable(R.drawable.pause_button));
+                                playerStatus = true;
+
+                            }
+                        });
+//                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                            @Override
+//                            public void onCompletion(MediaPlayer mediaPlayer) {
+//                                mediaPlayer.stop();
+//                                playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
+//                                playerStatus = false;
+//                            }
+//                        });
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                playerStatus = true;
             }
+
 
 //            mediaPlayer = MediaPlayer.create(PdfReadersActivity.this, Uri.parse("file://" + FileName) );
 //            mediaPlayer = MediaPlayer.create(PdfReadersActivity.this, Uri.fromFile(new File(FileName)));

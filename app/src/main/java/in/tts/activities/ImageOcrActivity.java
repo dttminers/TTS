@@ -200,7 +200,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             try {
                                 tts.SpeakLoud(stringBuilder.toString());
-                                tts.toSaveAudioFile(stringBuilder.toString(), DateFormat.getDateTimeInstance().format(new Date()) + ".wav");
+                                tts.toSaveAudioFile(stringBuilder.toString());
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
