@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -70,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements
             tabLayout = findViewById(R.id.tabsHome);
             viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
             viewPager.setOffscreenPageLimit(5);
+
             SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);
@@ -113,19 +116,27 @@ public class HomeActivity extends AppCompatActivity implements
         }
 
         public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return tab1;
-                case 1:
-                    return tab2;
-                case 2:
-                    return tab3;
-                case 3:
-                    return tab4;
-                case 4:
-                    return tab5;
-                default:
-                    return tab3;
+            try {
+                switch (position) {
+                    case 0:
+                        return tab1;
+                    case 1:
+                        return tab2;
+                    case 2:
+                        return tab3;
+                    case 3:
+                        return tab4;
+                    case 4:
+                        return tab5;
+                    default:
+                        return tab3;
+                }
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+                return tab3;
             }
         }
 
@@ -170,19 +181,47 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("TAG", "Main onRequestPermissionsResult : " + requestCode + ":" + Arrays.toString(permissions) + ":" + Arrays.toString(grantResults));
+        try {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            Log.d("TAG", "Main onRequestPermissionsResult : " + requestCode + ":" + Arrays.toString(permissions) + ":" + Arrays.toString(grantResults));
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        try {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+            View menuCamera = menu.findItem(R.id.actionCamera).getActionView();
+            menuCamera.findViewById(R.id.ivCameraMenu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(HomeActivity.this, MyCameraActivity.class));
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        ToSetMore.MenuOptions(HomeActivity.this, item);
+        try {
+            ToSetMore.MenuOptions(HomeActivity.this, item);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -203,6 +242,7 @@ public class HomeActivity extends AppCompatActivity implements
                     getSupportActionBar().setTitle(CommonMethod.firstLetterCaps(getResources().getString(R.string.app_name)));
                 }
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -218,6 +258,7 @@ public class HomeActivity extends AppCompatActivity implements
             } else {
                 doExit();
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -255,6 +296,7 @@ public class HomeActivity extends AppCompatActivity implements
                     tabLayout.getTabAt(2).select();
                     break;
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -276,6 +318,7 @@ public class HomeActivity extends AppCompatActivity implements
             alertDialog.setMessage(getResources().getString(R.string.str_lbl_exit_from_app));
             alertDialog.setTitle(getResources().getString(R.string.app_name));
             alertDialog.show();
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

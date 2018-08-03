@@ -86,6 +86,12 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         CommonMethod.toReleaseMemory();

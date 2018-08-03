@@ -35,16 +35,16 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private AudioSetting audioSetting;
     private PrefManager prefManager;
-    ArrayList<String> male_voice_array = new ArrayList<String>();
-    ArrayList<String> female_voice_array = new ArrayList<String>();
+    ArrayList<String> male_voice_array=new ArrayList<String>();
+    ArrayList<String> female_voice_array=new ArrayList<String>();
     String selectedLang;
     String langCountry;
     String selectedVoice;
-    String v_male = "en-us-x-sfg#male_3-local";
-    String v_female = "en-us-x-sfg#female_2-local";
-    Voice v = null;
-    String voice = "";
-
+    String v_male= "en-us-x-sfg#male_3-local";
+    String v_female="en-us-x-sfg#female_2-local";
+    Voice v=null;
+    String voice="";
+    int lang;
     public TTS(final Context mContext) {
         try {
 
@@ -59,53 +59,85 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                 public void onInit(int i) {
                     try {
                         audioSetting = AudioSetting.getAudioSetting(mContext);
-                        selectedLang = audioSetting.getLangSelection().getLanguage();
-                        langCountry = audioSetting.getLangSelection().getCountry();
-                        selectedVoice = audioSetting.getVoiceSelection();
-                        Log.d("TAG", " onInit : " + selectedVoice + ":" + selectedLang + ":" + langCountry);
+                        selectedLang= audioSetting.getLangSelection().getLanguage();
+                        langCountry= audioSetting.getLangSelection().getCountry();
+                        selectedVoice= audioSetting.getVoiceSelection();
 
                         tts.setEngineByPackageName("com.google.android.tts");
                         tts.setPitch((float) 0.8);
                         tts.setSpeechRate(audioSetting.getVoiceSpeed());
-                        int lang = tts.setLanguage(Locale.US);
-                        Log.d("TTS_TAG", "VOICE BY APP " + audioSetting.getVoiceSelection() + " " + audioSetting.getLangSelection());
 
-                        Set<String> a = new HashSet<>();
+                        // int lang =tts.setLanguage(new Locale("hin","IND"));
+                        // int lang =tts.setLanguage(new Locale(selectedLang,langCountry));
+                        //int lang =  tts.setLanguage(Locale.US);
+
+                        if(audioSetting.getLangSelection().equals("hin_IND"))
+                        {
+                            lang=tts.setLanguage(new Locale("hin","IND"));
+                        }
+                        else if(audioSetting.getLangSelection().equals("mar_IND"))
+                        {
+                            lang=tts.setLanguage(new Locale("mar","IND"));
+                        }
+                        else if(audioSetting.getLangSelection().equals("ta_IND"))
+                        {
+                            lang=tts.setLanguage(new Locale("ta","IND"));
+                        }
+                        else
+                        {
+                            lang=tts.setLanguage(Locale.US);
+                        }
+                        Log.d("TTS_TAG", "VOICE BY APP "+audioSetting.getVoiceSelection()+" "+audioSetting.getLangSelection());
+
+                        Set<String> a=new HashSet<>();
                         a.add("female");
                         a.add("male");
 
                         //Get all available voices
                         for (Voice tmpVoice : tts.getVoices()) {
-                            if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
+                            if(tmpVoice.getLocale().equals(audioSetting.getLangSelection()))
+                            {
                                 voiceValidator(tmpVoice.getName());
                             }
 
                         }
 
-                        if (selectedVoice.equalsIgnoreCase("male")) {
-                            if (male_voice_array.size() > 0) {
-                                voice = male_voice_array.get(0);
-                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+                        if(selectedVoice.equalsIgnoreCase("male"))
+                        {
+                            if(male_voice_array.size()>0)
+                            {
+                                voice=male_voice_array.get(0);
+                                v=new Voice(voice,new Locale(selectedLang,langCountry),400,200,true,a);
                                 tts.setVoice(v);
-                            } else {
+                            }
+                            else
+                            {
                                 // voice=v_male;
                                 // If nothing is similar then select default voice
+                                CommonMethod.toDisplayToast(mContext,"Selected language not found. Reading data using default language");
                                 v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
                             }
 
-                        } else {
-                            if (female_voice_array.size() > 0) {
-                                voice = female_voice_array.get(0);
-                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+                        }
+                        else
+                        {
+                            if(female_voice_array.size()>0)
+                            {
+                                voice=female_voice_array.get(0);
+                                v=new Voice(voice,new Locale(selectedLang,langCountry),400,200,true,a);
                                 tts.setVoice(v);
-                            } else {
+                            }
+                            else
+                            {
                                 // voice=v_female;
                                 // If nothing is similar then select default voice
+                               CommonMethod.toDisplayToast(mContext,"Selected language not found. Reading data using default language");
                                 v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
                             }
                         }
+
 
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import in.tts.R;
 
 import in.tts.adapters.ImageAdapterGallery;
+import in.tts.utils.CommonMethod;
 
 public class GalleryFragment extends Fragment {
 
@@ -60,6 +61,7 @@ public class GalleryFragment extends Fragment {
             mLoading = getActivity().findViewById(R.id.progressBarPic);
             recyclerView = getActivity().findViewById(R.id.rvGallery);
         }
+         CommonMethod.toReleaseMemory();
     } catch (Exception | Error e) {
         e.printStackTrace();
         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -225,4 +227,23 @@ public class GalleryFragment extends Fragment {
             imageAdapterGallery.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommonMethod.toReleaseMemory();
+    }
+
 }

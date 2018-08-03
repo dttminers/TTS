@@ -410,6 +410,7 @@ public class MakeYourOwnReadFragment extends Fragment {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
     }
 
@@ -438,6 +439,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
+            CommonMethod.toReleaseMemory();
             if (menu != null) {
                 MenuItem search = menu.findItem(R.id.actionSearch);
                 if (search != null) {
@@ -507,6 +509,7 @@ public class MakeYourOwnReadFragment extends Fragment {
             if (context instanceof OnFragmentInteractionListener) {
                 mListener = (OnFragmentInteractionListener) context;
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -519,9 +522,33 @@ public class MakeYourOwnReadFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        CommonMethod.toReleaseMemory();
     }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+
     }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (t1 != null) {
+            t1.stop();
+            t1.shutdown();
+        }
+        if (editText != null) {
+            editText.setText("");
+        }
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommonMethod.toReleaseMemory();
+    }
+
+
 }

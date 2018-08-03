@@ -93,10 +93,12 @@ public class MainHomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
+            CommonMethod.toReleaseMemory();
             CommonMethod.toCloseLoader();
             toBindViews();
             fn_permission();
             toBindTopBanners();
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -113,6 +115,7 @@ public class MainHomeFragment extends Fragment {
             } else {
                 toSetSomeData();
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -177,6 +180,7 @@ public class MainHomeFragment extends Fragment {
                     Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
                 }
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -189,43 +193,43 @@ public class MainHomeFragment extends Fragment {
     public void toSetSomeData() {
         try {
             if (getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // change UI elements here
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+                // change UI elements here
 
-                        if (prefManager.toGetPDFListRecent() != null){
-                            pdfFile = prefManager.toGetPDFListRecent();
-                        } else
+                if (prefManager.toGetPDFListRecent() != null) {
+                    pdfFile = prefManager.toGetPDFListRecent();
+                } else
 //            CommonMethod.toCloseLoader();
 //            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
-                        if (prefManager.toGetPDFList() == null) {
+                    if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                            pdfFile = new ArrayList<>();
-                            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                        } else {
-                            pdfFile = prefManager.toGetPDFList();
-                        }
-                        pdfHomePage = new PDFHomePage(getContext(), pdfFile);
-                        toBindRecentPdf();
-
-                        if (prefManager.toGetImageListRecent() != null){
-                            imageFile = prefManager.toGetImageListRecent();
-                        } else
-                        if (prefManager.toGetImageList() == null) {
-//                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
-                            imageFile = new ArrayList<>();
-                            getAllShownImagesPath();
-                        } else {
-                            imageFile = prefManager.toGetImageList();
-                        }
-                        pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
-                        toBindRecentImages();
-                        CommonMethod.toCloseLoader();
-                        nsv.setVisibility(View.VISIBLE);
-                        mLoading.setVisibility(View.GONE);
+                        pdfFile = new ArrayList<>();
+                        getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                    } else {
+                        pdfFile = prefManager.toGetPDFList();
                     }
-                });
+                pdfHomePage = new PDFHomePage(getContext(), pdfFile);
+                toBindRecentPdf();
+
+                if (prefManager.toGetImageListRecent() != null) {
+                    imageFile = prefManager.toGetImageListRecent();
+                } else if (prefManager.toGetImageList() == null) {
+//                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
+                    imageFile = new ArrayList<>();
+                    getAllShownImagesPath();
+                } else {
+                    imageFile = prefManager.toGetImageList();
+                }
+                pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
+                toBindRecentImages();
+                CommonMethod.toCloseLoader();
+                nsv.setVisibility(View.VISIBLE);
+                mLoading.setVisibility(View.GONE);
+//                    }
+//                });
+                CommonMethod.toReleaseMemory();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -239,6 +243,7 @@ public class MainHomeFragment extends Fragment {
     private void toBindTopBanners() throws Exception, Error {
         mViewPager.setAdapter(new CustomPagerAdapter(mResources, getContext()));
         tabLayout.setupWithViewPager(mViewPager);
+        CommonMethod.toReleaseMemory();
     }
 
     // To Bind views
@@ -327,12 +332,14 @@ public class MainHomeFragment extends Fragment {
                     }
                 }
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
+            CommonMethod.toReleaseMemory();
         }
     }
 
@@ -418,12 +425,14 @@ public class MainHomeFragment extends Fragment {
                 }
             }
             CommonMethod.toCloseLoader();
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
+            CommonMethod.toReleaseMemory();
         }
     }
 
@@ -440,6 +449,7 @@ public class MainHomeFragment extends Fragment {
             if (context instanceof OnFragmentInteractionListener) {
                 mListener = (OnFragmentInteractionListener) context;
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -451,6 +461,7 @@ public class MainHomeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        CommonMethod.toReleaseMemory();
         mListener = null;
     }
 
@@ -475,6 +486,7 @@ public class MainHomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        toSetSomeData();
+        CommonMethod.toReleaseMemory();
+//        toSetSomeData();
     }
 }

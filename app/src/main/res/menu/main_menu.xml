@@ -5,9 +5,9 @@
     tools:ignore="AlwaysShowAction">
     <item
         android:id="@+id/actionCamera"
-        android:icon="@drawable/ic_white_camera"
         android:orderInCategory="100"
         android:title="@string/str_camera"
+        app:actionLayout="@layout/action_camera"
         app:showAsAction="always" />
     <item
         android:id="@+id/actionSpeak"

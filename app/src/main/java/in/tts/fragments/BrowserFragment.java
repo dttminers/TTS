@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
@@ -25,11 +28,10 @@ import in.tts.utils.TouchImageView;
 public class BrowserFragment extends Fragment {
     private EditText editText;
     private Button button;
-    private ImageView ivBookmark1, ivBookmark2, ivBookmark3, ivRecent1,ivRecent2, ivRecent3, ivRecent4, ivRecent5, ivRecent6;
+    private ImageView ivBookmark1, ivBookmark2, ivBookmark3, ivRecent1, ivRecent2, ivRecent3, ivRecent4, ivRecent5, ivRecent6;
 
     public BrowserFragment() {
     }
-
 
     @Override
     @AddTrace(name = "onCreateBrowserFragment", enabled = true)
@@ -40,143 +42,146 @@ public class BrowserFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        CommonMethod.toCloseLoader();
-        CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
-        editText = getActivity().findViewById(R.id.edtBrowser);
-        button = getActivity().findViewById(R.id.btnSearch);
-            // Bookmarks.........
-        ivBookmark1 = getActivity().findViewById(R.id.wikipedia);
-        ivBookmark2 = getActivity().findViewById(R.id.ivAmazone);
-        ivBookmark3 = getActivity().findViewById(R.id.ivXerox);
-        // Recent Tabs....
-
-        ivRecent1 = getActivity().findViewById(R.id.ivRecent1);
-        ivRecent2 = getActivity().findViewById(R.id.ivRecent2);
-        ivRecent3 = getActivity().findViewById(R.id.ivRecent3);
-        ivRecent4 = getActivity().findViewById(R.id.ivRecent4);
-        ivRecent5 = getActivity().findViewById(R.id.ivRecent5);
-        ivRecent6 = getActivity().findViewById(R.id.ivRecent6);
-
-        // Bookmark page...................
-        ivBookmark1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommonMethod.toCallLoader(getContext(), "Please wait");
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.wikipedia.org/"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        ivBookmark2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommonMethod.toCallLoader(getContext(), "Please wait");
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.amazon.in"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        ivBookmark3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommonMethod.toCallLoader(getContext(), "Please wait");
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-//                                .putExtra("url", "https://www.xerox.com/"));
-                                .putExtra("url", "http://drive.google.com/viewerng/viewer?embedded=true&url=https://saidnazulfiqar.files.wordpress.com/2008/04/cambridge-english-grammar-understanding-the-basics.pdf"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        // Recent page ......
-
-        ivRecent1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommonMethod.toCallLoader(getContext(), "Please wait");
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.facebook.com/"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        ivRecent2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.wikipedia.org/"));
-            }
-        });
-
-        ivRecent3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.blogger.com"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        ivRecent4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://www.swiggy.com/"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        ivRecent5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "http://dttminer.com/"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-        ivRecent6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(
-                        new Intent(getContext(), BrowserActivity.class)
-                                .putExtra("url", "https://twitter.com/login?lang=en"));
-                CommonMethod.toCloseLoader();
-            }
-        });
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommonMethod.toCallLoader(getContext(), "Please wait");
-                if (editText != null && editText.getText().toString().trim().length() != 0) {
-                    startActivity(
-                            new Intent(getContext(), BrowserActivity.class)
-                                    .putExtra("Data", editText.getText().toString().trim()));
-                    CommonMethod.toDisplayToast(getContext(), "To " + editText.getText().toString().trim());
-                } else {
-                    CommonMethod.toDisplayToast(getContext(), "To Data Found");
-                }
-                CommonMethod.toCloseLoader();
-            }
-        });
-
         try {
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
+            super.onActivityCreated(savedInstanceState);
+            CommonMethod.toCloseLoader();
+            CommonMethod.toReleaseMemory();
+            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
+            editText = getActivity().findViewById(R.id.edtBrowser);
+            button = getActivity().findViewById(R.id.btnSearch);
+            // Bookmarks.........
+            ivBookmark1 = getActivity().findViewById(R.id.wikipedia);
+            ivBookmark2 = getActivity().findViewById(R.id.ivAmazone);
+            ivBookmark3 = getActivity().findViewById(R.id.ivXerox);
+            // Recent Tabs....
+
+            ivRecent1 = getActivity().findViewById(R.id.ivRecent1);
+            ivRecent2 = getActivity().findViewById(R.id.ivRecent2);
+            ivRecent3 = getActivity().findViewById(R.id.ivRecent3);
+            ivRecent4 = getActivity().findViewById(R.id.ivRecent4);
+            ivRecent5 = getActivity().findViewById(R.id.ivRecent5);
+            ivRecent6 = getActivity().findViewById(R.id.ivRecent6);
+
+            // Bookmark page...................
+            ivBookmark1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://www.wikipedia.org/"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            ivBookmark2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://www.amazon.in"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            ivBookmark3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+//                                .putExtra("url", "https://www.xerox.com/"));
+                                    .putExtra("url", "http://drive.google.com/viewerng/viewer?embedded=true&url=https://saidnazulfiqar.files.wordpress.com/2008/04/cambridge-english-grammar-understanding-the-basics.pdf"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            // Recent page ......
+
+            ivRecent1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://www.facebook.com/"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            ivRecent2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://www.wikipedia.org/"));
+                }
+            });
+
+            ivRecent3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://www.blogger.com"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            ivRecent4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://www.swiggy.com/"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            ivRecent5.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "http://dttminer.com/"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+            ivRecent6.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(
+                            new Intent(getContext(), BrowserActivity.class)
+                                    .putExtra("url", "https://twitter.com/login?lang=en"));
+                    CommonMethod.toCloseLoader();
+                }
+            });
+
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
+                    if (editText != null && editText.getText().toString().trim().length() != 0) {
+                        startActivity(
+                                new Intent(getContext(), BrowserActivity.class)
+                                        .putExtra("Data", editText.getText().toString().trim()));
+                        CommonMethod.toDisplayToast(getContext(), "To " + editText.getText().toString().trim());
+                    } else {
+                        CommonMethod.toDisplayToast(getContext(), "To Data Found");
+                    }
+                    CommonMethod.toCloseLoader();
+                }
+            });
         } catch (Exception | Error e) {
             e.printStackTrace();
-            CommonMethod.toCloseLoader();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
     }
 
@@ -222,4 +227,17 @@ public class BrowserFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommonMethod.toReleaseMemory();
+    }
+
 }

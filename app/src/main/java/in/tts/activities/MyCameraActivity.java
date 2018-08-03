@@ -24,9 +24,12 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,14 +51,16 @@ import java.util.Locale;
 import in.tts.R;
 import in.tts.classes.TTS;
 import in.tts.classes.TTTS;
+import in.tts.classes.ToSetMore;
 import in.tts.model.AudioSetting;
 import in.tts.utils.CommonMethod;
 
 public class MyCameraActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
-    private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    String bitmapString;
+
+    private ImageView imageView;
+    private String bitmapString;
     private Bitmap bitmap;
 
     private TextRecognizer textRecognizer;
@@ -65,88 +70,140 @@ public class MyCameraActivity extends AppCompatActivity {
     private StringBuilder stringBuilder;
     private View view;
 
-    private RelativeLayout mRl;
+    private RelativeLayout mrl;
     private TTS tts;
-    Bitmap photo;
-    File file;
-    String photopath = "-";
-    Button photoButton, readout;
+    private Bitmap photo;
+    private File file;
+    private String photopath = "-";
+    private Button photoButton, readout;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            if (tts != null) {
+                tts.toShutDown();
+            }
+            if (mrl != null) {
+                if (mrl.getChildCount() > 1) {
+                    if (view != null) {
+                        mrl.removeView(view);
+                    }
+                }
+            }
+            fn_permission();
+            tts = new TTS(MyCameraActivity.this);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        try {
+            if (tts != null) {
+                tts.toShutDown();
+            }
+            if (mrl != null) {
+                if (mrl.getChildCount() > 1) {
+                    if (view != null) {
+                        mrl.removeView(view);
+                    }
+                }
+            }
+            fn_permission();
+            tts = new TTS(MyCameraActivity.this);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.my_camera_activity);
-        imageView = (ImageView) this.findViewById(R.id.imageView);
-        photoButton = (Button) this.findViewById(R.id.capture);
-        readout = (Button) this.findViewById(R.id.readout);
+        try {
+            setContentView(R.layout.my_camera_activity);
+            imageView = (ImageView) this.findViewById(R.id.imageView);
+            photoButton = (Button) this.findViewById(R.id.capture);
+            readout = (Button) this.findViewById(R.id.readout);
 
-        tts = new TTS(MyCameraActivity.this);
-        //    tts = new TextToSpeech(this, this);
-        mRl = findViewById(R.id.rlImageOcrActivity);
+//            tts = new TTS(MyCameraActivity.this);
+            //    tts = new TextToSpeech(this, this);
+            mrl = findViewById(R.id.rlReadLayout);
 
-        photoButton.setOnClickListener(new View.OnClickListener() {
+            photoButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                photopath = "-";
-                imageView.setBackgroundResource(0);
-                fn_permission();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-        });
-
-        readout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if (!photopath.equals("-")) {
-                    try {
-
-
-                        // tts = new TTS(MyCameraActivity.this);
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                        bitmap = BitmapFactory.decodeFile(photopath.trim(), options);
-
-                        Log.d("MYPATH", " PHOTOPATH " + photopath);
-
-                        // mIvOcr = findViewById(R.id.imageView);
-                        imageView.setImageBitmap(bitmap);
-                        new toGetImage().execute();
-                        fn_permission();
-                    } catch (Exception | Error e) {
-                        e.printStackTrace();
-                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e);
-                        FirebaseCrash.report(e);
-                    }
-                } else {
-                    Toast.makeText(MyCameraActivity.this, "Please capture image first", Toast.LENGTH_LONG).show();
+                    photopath = "-";
+                    imageView.setBackgroundResource(0);
+                    fn_permission();
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
                 }
+            });
 
-            }
-        });
+            readout.setOnClickListener(new View.OnClickListener() {
 
+                @Override
+                public void onClick(View v) {
+                    if (!photopath.equals("-")) {
+                        try {
+                            // tts = new TTS(MyCameraActivity.this);
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                            bitmap = BitmapFactory.decodeFile(photopath.trim(), options);
 
+                            Log.d("MYPATH", " PHOTOPATH " + photopath);
+                            // mIvOcr = findViewById(R.id.imageView);
+                            imageView.setImageBitmap(bitmap);
+                            new toGetImage().execute();
+                            fn_permission();
+                        } catch (Exception | Error e) {
+                            e.printStackTrace();
+                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                            Crashlytics.logException(e);
+                            FirebaseCrash.report(e);
+                        }
+                    } else {
+                        Toast.makeText(MyCameraActivity.this, "Please capture image first", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new
-                        Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+        try {
+            if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                } else {
+                    Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                }
             }
-
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -159,42 +216,44 @@ public class MyCameraActivity extends AppCompatActivity {
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data1) {
-
         try {
             if (requestCode == CAMERA_REQUEST) {
-
                 if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
                     photo = (Bitmap) data1.getExtras().get("data");
                     imageView.setImageBitmap(photo);
                     bitmapString = getStringImage1(photo);
-
                     // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                     Uri tempUri = getImageUri(getApplicationContext(), photo);
-
-                    // CALL THIS METHOD TO GET THE ACTUAL PATH
-                    file = new File(getRealPathFromURI(tempUri));
-                    //photopath=file.getAbsolutePath();
-                    photopath = file.getCanonicalPath();
-
-
+                    if (tempUri != null) {
+                        // CALL THIS METHOD TO GET THE ACTUAL PATH
+                        file = new File(getRealPathFromURI(tempUri));
+                        //photopath=file.getAbsolutePath();
+                        photopath = file.getCanonicalPath();
+                    }
                 }
-
             }
-
-        } catch (Exception e) {
-
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
-
     }
 
     public String getStringImage1(Bitmap bmp) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
+            byte[] imageBytes = baos.toByteArray();
+            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
     }
 
     private void fn_permission() {
@@ -242,7 +301,6 @@ public class MyCameraActivity extends AppCompatActivity {
             return null;
         }
 
-
         @SuppressLint("InflateParams")
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -267,7 +325,9 @@ public class MyCameraActivity extends AppCompatActivity {
                             try {
                                 tvImgOcr.setText("");
                                 // TTS tts = new TTS(MyCameraActivity.this);
-                                tts.toStop();
+                                if (tts != null) {
+                                    tts.toStop();
+                                }
                                 new MyCameraActivity.toGetImage().execute();
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
@@ -281,15 +341,14 @@ public class MyCameraActivity extends AppCompatActivity {
                     ivSpeak.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             try {
-
                                 Log.d("OnPostExecuteEXP", "values  " + stringBuilder.toString());
-
                                 //   TTS tts = new TTS(MyCameraActivity.this);
                                 //tts.SpeakLoud("Hi MANASI");
-                                tts.SpeakLoud(stringBuilder.toString());
-                                tts.toSaveAudioFile(stringBuilder.toString());
+                                if (tts != null) {
+                                    tts.SpeakLoud(stringBuilder.toString());
+                                    tts.toSaveAudioFile(stringBuilder.toString());
+                                }
                             } catch (Exception | Error e) {
                                 Log.d("OnPostExecuteEXP", "exception  " + e);
                                 e.printStackTrace();
@@ -297,8 +356,6 @@ public class MyCameraActivity extends AppCompatActivity {
                                 Crashlytics.logException(e);
                                 FirebaseCrash.report(e);
                             }
-
-
                         }
                     });
 
@@ -308,12 +365,10 @@ public class MyCameraActivity extends AppCompatActivity {
                             CommonMethod.dpToPx(10, MyCameraActivity.this),
                             CommonMethod.dpToPx(10, MyCameraActivity.this),
                             CommonMethod.dpToPx(10, MyCameraActivity.this),
-                            CommonMethod.dpToPx(10, MyCameraActivity.this)
+                            CommonMethod.dpToPx(50, MyCameraActivity.this)
                     );
-
-                    mRl.addView(view, layoutParams);
+                    mrl.addView(view, layoutParams);
                 }
-
             } catch (Exception | Error e) {
                 Crashlytics.logException(e);
                 FirebaseCrash.report(e);
@@ -324,29 +379,52 @@ public class MyCameraActivity extends AppCompatActivity {
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+            return Uri.parse(path);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
     }
 
     public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
+        try {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                String path = cursor.getString(idx);
+                cursor.close();
+                return path;
+            } else {
+                return null;
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
     }
-
 
     @Override
     protected void onPause() {
         super.onPause();
         try {
-            tts.toStop();
-            if (mRl != null) {
-                if (mRl.getChildCount() > 1) {
+            if (tts != null) {
+                tts.toStop();
+            }
+            if (mrl != null) {
+                if (mrl.getChildCount() > 1) {
                     if (view != null) {
-                        mRl.removeView(view);
+                        mrl.removeView(view);
                     }
                 }
             }
@@ -362,11 +440,13 @@ public class MyCameraActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         try {
-            tts.toShutDown();
-            if (mRl != null) {
-                if (mRl.getChildCount() > 1) {
+            if (tts != null) {
+                tts.toShutDown();
+            }
+            if (mrl != null) {
+                if (mrl.getChildCount() > 1) {
                     if (view != null) {
-                        mRl.removeView(view);
+                        mrl.removeView(view);
                     }
                 }
             }
@@ -379,8 +459,45 @@ public class MyCameraActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        fn_permission();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            if (menu != null) {
+                getMenuInflater().inflate(R.menu.image_menu, menu);
+            }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            if (item != null) {
+                ToSetMore.MenuOptions(MyCameraActivity.this, item);
+            }
+
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed() {
+        try {
+            super.onBackPressed();
+            finish();
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
     }
 }

@@ -111,13 +111,17 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        CommonMethod.toReleaseMemory();
+        if (mAuth != null && mAuthListener != null) {
+            mAuth.addAuthStateListener(mAuthListener);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
+        CommonMethod.toReleaseMemory();
+        if (mAuth != null && mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
@@ -126,6 +130,7 @@ public class RegisterFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
+            CommonMethod.toReleaseMemory();
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
             FacebookSdk.sdkInitialize(getContext());
 
@@ -492,6 +497,7 @@ public class RegisterFragment extends Fragment {
             } else {
                 CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
             }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -929,5 +935,4 @@ public class RegisterFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
         }
     }
-
 }

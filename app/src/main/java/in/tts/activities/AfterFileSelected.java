@@ -26,6 +26,7 @@ import com.github.barteksc.pdfviewer.listener.OnDrawListener;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+import com.google.firebase.crash.FirebaseCrash;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.shockwave.pdfium.PdfDocument;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,6 +45,8 @@ import java.util.Set;
 
 import in.tts.R;
 import in.tts.classes.ToSetMore;
+import in.tts.model.AudioSetting;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class AfterFileSelected extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener {
@@ -55,8 +59,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
     int noOfUtterance = 0;
     int prevVal = 0;
 
-
-    TextToSpeech t1;
+    TextToSpeech tts;
     LinkedHashMap<String, String> inCaseOfPause = new LinkedHashMap<>();
     List<String> inCaseOfForward = new LinkedList<>();
 
@@ -69,6 +72,19 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
     Button pause, stop, forward, backward;//,backword,forward;
     boolean isPause = false;
     boolean isFrdOrBackwrd = false;
+
+    private AudioSetting audioSetting;
+    private PrefManager prefManager;
+    ArrayList<String> male_voice_array = new ArrayList<String>();
+    ArrayList<String> female_voice_array = new ArrayList<String>();
+    String selectedLang;
+    String langCountry;
+    String selectedVoice;
+    String v_male = "en-us-x-sfg#male_3-local";
+    String v_female = "en-us-x-sfg#female_2-local";
+    Voice v = null;
+    String voice = "";
+    int lang;
 
     private void fn_permission() {
         try {
@@ -127,7 +143,10 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                t1.stop();
+                if (tts != null) {
+                    tts.stop();
+                }
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
                 isFrdOrBackwrd = false;
                 isPause = false;
 
@@ -148,7 +167,10 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
                 isFrdOrBackwrd = true;
                 isPause = true;
-                t1.stop();
+                if (tts != null) {
+                    tts.stop();
+                }
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
                 Toast.makeText(getApplicationContext(), "prevL = " + prevVal + " &&  currL = " + noOfUtterance, Toast.LENGTH_SHORT).show();
 
                 if (isPause) {
@@ -195,7 +217,9 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
                 isFrdOrBackwrd = true;
                 isPause = true;
-                t1.stop();
+                if (tts != null) {
+                    tts.stop();
+                }
                 Toast.makeText(getApplicationContext(), "prevL = " + prevVal + " &&  currL = " + noOfUtterance, Toast.LENGTH_SHORT).show();
 
                 if (isPause) {
@@ -253,7 +277,10 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
                     //afterPauseUse.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,""+val);
                     Log.d("checkWhat", "key = " + key + ",,,val = " + val);
                 }
-                t1.stop();
+                if (tts != null) {
+                    tts.stop();
+                }
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
                 isPause = true;
 
                 isFrdOrBackwrd = false;
@@ -264,7 +291,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //            @Override
 //            public void onClick(View view) {
 //                isFrdOrBackwrd = false;
-//                if(t1.isSpeaking())
+//                if(tts.isSpeaking())
 //                {
 //                    Toast.makeText(getApplicationContext(),"Already playing!",Toast.LENGTH_LONG).show();
 //                }
@@ -272,13 +299,13 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //                {
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //
-//                        Set<Voice> voiceList = t1.getVoices();
+//                        Set<Voice> voiceList = tts.getVoices();
 //                        for (Voice voice : voiceList) {
 //                            Log.d("rarrarar", "Voice: " + voice.getName());
 //                            if (voice.getName().toLowerCase().contains("en-us") && voice.getName().toLowerCase().contains("female"))
 //                            {
 //                                Log.d("rarrarar", "Voice available: " + voice.getName());
-//                                t1.setVoice(voice);
+//                                tts.setVoice(voice);
 //                                break;
 //                            }
 //                        }
@@ -287,11 +314,11 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //
 //                    if(isPause)
 //                    {
-//                    /*t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+//                    /*tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
 //                        @Override
 //                        public void onInit(int status) {
 //                            if(status != TextToSpeech.ERROR) {
-//                                t1.setLanguage(Locale.UK);
+//                                tts.setLanguage(Locale.UK);
 //                            }
 //                        }
 //                    });*/
@@ -330,7 +357,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //                            int n = reader.getNumberOfPages();
 //                            try
 //                            {
-//                                t1.stop();
+//                                tts.stop();
 //                            }
 //                            catch (Exception e)
 //                            {
@@ -356,11 +383,11 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //
 //                                HashMap<String, String> myHashRender = new HashMap();
 //                                myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, otherTxt);
-//                                t1.synthesizeToFile(otherTxt, myHashRender, filep);
+//                                tts.synthesizeToFile(otherTxt, myHashRender, filep);
 //
 //                                /*File destinationFile = new File(filep, "file" + ".wav");
 //                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                                    t1.synthesizeToFile(otherTxt, null, destinationFile, "file");
+//                                    tts.synthesizeToFile(otherTxt, null, destinationFile, "file");
 //                                }*/
 //
 //                            } catch (Exception e) {
@@ -381,7 +408,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //            @Override
 //            public void onClick(View view) {
 //                isFrdOrBackwrd = false;
-//                if(t1.isSpeaking())
+//                if(tts.isSpeaking())
 //                {
 //                    Toast.makeText(getApplicationContext(),"Already playing!",Toast.LENGTH_LONG).show();
 //                }
@@ -389,13 +416,13 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //                {
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //
-//                        Set<Voice> voiceList = t1.getVoices();
+//                        Set<Voice> voiceList = tts.getVoices();
 //                        for (Voice voice : voiceList) {
 //                            Log.d("rarrarar", "Voice: " + voice.getName());
 //                            if (voice.getName().toLowerCase().contains("en-us") && voice.getName().toLowerCase().contains("#male"))
 //                            {
 //                                Log.d("rarrarar", "Voice available: " + voice.getName());
-//                                t1.setVoice(voice);
+//                                tts.setVoice(voice);
 //                                break;
 //                            }
 //                        }
@@ -404,11 +431,11 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //
 //                    if(isPause)
 //                    {
-//                    /*t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+//                    /*tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
 //                        @Override
 //                        public void onInit(int status) {
 //                            if(status != TextToSpeech.ERROR) {
-//                                t1.setLanguage(Locale.UK);
+//                                tts.setLanguage(Locale.UK);
 //                            }
 //                        }
 //                    });*/
@@ -447,7 +474,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //                            int n = reader.getNumberOfPages();
 //                            try
 //                            {
-//                                t1.stop();
+//                                tts.stop();
 //                            }
 //                            catch (Exception e)
 //                            {
@@ -473,7 +500,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 //
 //                                HashMap<String, String> myHashRender = new HashMap();
 //                                myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, otherTxt);
-//                                t1.synthesizeToFile(otherTxt, myHashRender, filep);
+//                                tts.synthesizeToFile(otherTxt, myHashRender, filep);
 //
 //                            } catch (Exception e) {
 //                                e.printStackTrace();
@@ -494,17 +521,17 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //Log.d("rarrarar",""+t1.getVoices().toString());
+                    //Log.d("rarrarar",""+tts.getVoices().toString());
 
                     //tts.speak("வரவேற்பு rubin", TextToSpeech.QUEUE_ADD, null);
 
-                    Set<Voice> voiceList = t1.getVoices();
+                    Set<Voice> voiceList = tts.getVoices();
                     for (Voice voice : voiceList) {
                         Log.d("rarrarar", "Voice: " + voice.getName());
                         if (voice.getName().contains("en-us") && voice.getName().contains("#male"))
                         {
                             Log.d("rarrarar", "Voice available: " + voice.getName());
-                            t1.setVoice(voice);
+                            tts.setVoice(voice);
                         }
                     }
                 }
@@ -534,16 +561,104 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
             e.printStackTrace();
         }
 
-        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.UK);
+            public void onInit(int i) {
+                try {
+                    audioSetting = AudioSetting.getAudioSetting(AfterFileSelected.this);
+                    selectedLang = audioSetting.getLangSelection().getLanguage();
+                    langCountry = audioSetting.getLangSelection().getCountry();
+                    selectedVoice = audioSetting.getVoiceSelection();
+
+                    tts.setEngineByPackageName("com.google.android.tts");
+                    tts.setPitch((float) 0.8);
+                    tts.setSpeechRate(audioSetting.getVoiceSpeed());
+
+                    // int lang =tts.setLanguage(new Locale("hin","IND"));
+                    // int lang =tts.setLanguage(new Locale(selectedLang,langCountry));
+                    //int lang =  tts.setLanguage(Locale.US);
+
+                    if (audioSetting.getLangSelection().equals("hin_IND")) {
+                        lang = tts.setLanguage(new Locale("hin", "IND"));
+                    } else if (audioSetting.getLangSelection().equals("mar_IND")) {
+                        lang = tts.setLanguage(new Locale("mar", "IND"));
+                    } else if (audioSetting.getLangSelection().equals("ta_IND")) {
+                        lang = tts.setLanguage(new Locale("ta", "IND"));
+                    } else {
+                        lang = tts.setLanguage(Locale.US);
+                    }
+                    Log.d("TTS_TAG", "VOICE BY APP " + audioSetting.getVoiceSelection() + " " + audioSetting.getLangSelection());
+
+                    Set<String> a = new HashSet<>();
+                    a.add("female");
+                    a.add("male");
+
+                    //Get all available voices
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        for (Voice tmpVoice : tts.getVoices()) {
+                            if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
+                                voiceValidator(tmpVoice.getName());
+                            }
+                        }
+
+
+                        if (selectedVoice.equalsIgnoreCase("male")) {
+                            if (male_voice_array.size() > 0) {
+                                voice = male_voice_array.get(0);
+                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+                                tts.setVoice(v);
+                            } else {
+                                // voice=v_male;
+                                // If nothing is similar then select default voice
+                                CommonMethod.toDisplayToast(AfterFileSelected.this, "Selected language not found. Reading data using default language");
+                                v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
+                                tts.setVoice(v);
+                            }
+
+                        } else {
+                            if (female_voice_array.size() > 0) {
+                                voice = female_voice_array.get(0);
+                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+                                tts.setVoice(v);
+                            } else {
+                                // voice=v_female;
+                                // If nothing is similar then select default voice
+                                CommonMethod.toDisplayToast(AfterFileSelected.this, "Selected language not found. Reading data using default language");
+                                v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
+                                tts.setVoice(v);
+                            }
+                        }
+                    }
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Log.d("TTS_TAG", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
+                    }
+//                        }
+//                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
+
+                    if (i == TextToSpeech.SUCCESS) {
+                        if (lang == TextToSpeech.LANG_MISSING_DATA
+                                || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                            Log.e("TTS_TAG", "This Language is not supported");
+                        } else {
+                            Log.d("TTS_TAG", " Else ");
+                        }
+                    } else {
+                        Log.e("TTS_TAG", "Initialization Failed!");
+                    }
+
+
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    Crashlytics.logException(e);
+                    FirebaseCrash.report(e);
                 }
             }
-        });
+        }, "com.google.android.tts");
 
-        t1.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+        tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
             @Override
             public void onUtteranceCompleted(String s) {
                 Log.d("checkWhat", "---->" + " wait wt = " + noOfUtterance + " isPause = " + isPause + " == arrSize = " + inCaseOfPause.size());
@@ -572,7 +687,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
             @Override
             public void onClick(View v) {
                 //speakOut();
-                //t1.speak("SwaRaj Kriya is a Meditation technique. SwaRaj Kriya app gives simpler way to perform meditation\\n\" +\n", TextToSpeech.QUEUE_FLUSH, null);
+                //tts.speak("SwaRaj Kriya is a Meditation technique. SwaRaj Kriya app gives simpler way to perform meditation\\n\" +\n", TextToSpeech.QUEUE_FLUSH, null);
 
 
                 try {
@@ -599,7 +714,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
                 for(int i=0;i<textCollection.size();i++)
                 {
                     Log.d("pppapapap","###################################################################################################"+i+"\n"+textCollection.get(i));
-                    while(t1.isSpeaking())
+                    while(tts.isSpeaking())
                     {
 
                     }
@@ -608,7 +723,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
                     //new SpeakTheText().execute(textCollection.get(i));
 
-                    t1.speak(textCollection.get(i), TextToSpeech.QUEUE_ADD, null);
+                    tts.speak(textCollection.get(i), TextToSpeech.QUEUE_ADD, null);
 
                 }
 
@@ -651,9 +766,11 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
     @Override
     public void onPageChanged(int page, int pageCount) {
-
         try {
-            t1.stop();
+            if (tts != null) {
+                tts.stop();
+            }
+            pause.setBackground(getResources().getDrawable(R.drawable.play_button));
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -675,7 +792,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
             Log.d("pggnoooo","LINE---> "+lineByLine);
 
-            t1.speak(""+lineByLine, TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(""+lineByLine, TextToSpeech.QUEUE_FLUSH, null);
             //parsedText   = parsedText+lineByLine ;
             //}
             //Log.d("pppapapap","====\n\n"+parsedText);
@@ -703,19 +820,6 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
             if (b.hasChildren()) {
                 printBookmarksTree(b.getChildren(), sep + "-");
             }
-        }
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        try {
-            t1.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-
         }
     }
 
@@ -747,17 +851,27 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
             if (i == 0) { // Use for the first splited text to flush on audio stream
 
-                t1.speak(val.toString().trim(), TextToSpeech.QUEUE_FLUSH, myHashAfterP);
+                tts.speak(val.toString().trim(), TextToSpeech.QUEUE_FLUSH, myHashAfterP);
 
             } else { // add the new test on previous then play the TTS
 
-                t1.speak(val.toString().trim(), TextToSpeech.QUEUE_ADD, myHashAfterP);
+                tts.speak(val.toString().trim(), TextToSpeech.QUEUE_ADD, myHashAfterP);
             }
 
-            t1.playSilence(10, TextToSpeech.QUEUE_ADD, null);
+            tts.playSilence(10, TextToSpeech.QUEUE_ADD, null);
 
             i++;
 
+
+        }
+        if (tts.isSpeaking()) {
+            if (pause != null) {
+                pause.setBackground(getResources().getDrawable(R.drawable.pause_button));
+            }
+        } else {
+            if (pause != null) {
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
+            }
         }
 
         Log.d("checkWhat", "inCaseOfPause SIZE AFTER PAUSE = " + inCaseOfPause.size());
@@ -782,18 +896,28 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
             if (i == 0) { // Use for the first splited text to flush on audio stream
 
-                t1.speak(splitspeech[i].toString().trim(), TextToSpeech.QUEUE_FLUSH, myHash);
+                tts.speak(splitspeech[i].toString().trim(), TextToSpeech.QUEUE_FLUSH, myHash);
 
             } else { // add the new test on previous then play the TTS
 
-                t1.speak(splitspeech[i].toString().trim(), TextToSpeech.QUEUE_ADD, myHash);
+                tts.speak(splitspeech[i].toString().trim(), TextToSpeech.QUEUE_ADD, myHash);
             }
 
-            t1.playSilence(10, TextToSpeech.QUEUE_ADD, null);
+            tts.playSilence(10, TextToSpeech.QUEUE_ADD, null);
+        }
+
+        if (tts.isSpeaking()) {
+            if (pause != null) {
+                pause.setBackground(getResources().getDrawable(R.drawable.pause_button));
+            }
+        } else {
+            if (pause != null) {
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            Log.d("checkWhat", "speech length = " + t1.getMaxSpeechInputLength() + "---");
+            Log.d("checkWhat", "speech length = " + tts.getMaxSpeechInputLength() + "---");
         }
 
         Log.d("checkWhat", "inCaseOfPause SIZE = " + inCaseOfPause.size());
@@ -844,17 +968,17 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
     private void toSpeak() {
 
         isFrdOrBackwrd = false;
-        if (t1.isSpeaking()) {
+        if (tts.isSpeaking()) {
             Toast.makeText(getApplicationContext(), "Already playing!", Toast.LENGTH_LONG).show();
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                Set<Voice> voiceList = t1.getVoices();
+                Set<Voice> voiceList = tts.getVoices();
                 for (Voice voice : voiceList) {
                     Log.d("rarrarar", "Voice: " + voice.getName());
                     if (voice.getName().toLowerCase().contains("en-us") && voice.getName().toLowerCase().contains("#male")) {
                         Log.d("rarrarar", "Voice available: " + voice.getName());
-                        t1.setVoice(voice);
+                        tts.setVoice(voice);
                         break;
                     }
                 }
@@ -862,11 +986,11 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
 
             if (isPause) {
-                    /*t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                    /*tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                         @Override
                         public void onInit(int status) {
                             if(status != TextToSpeech.ERROR) {
-                                t1.setLanguage(Locale.UK);
+                                tts.setLanguage(Locale.UK);
                             }
                         }
                     });*/
@@ -900,7 +1024,10 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
                     Log.d("TAG", " TG2" + reader.getFileLength());
                     int n = reader.getNumberOfPages();
                     try {
-                        t1.stop();
+                        if (tts != null) {
+                            tts.stop();
+                        }
+                        pause.setBackground(getResources().getDrawable(R.drawable.play_button));
                     } catch (Exception e) {
                         e.printStackTrace();
 
@@ -924,7 +1051,7 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
 
                         HashMap<String, String> myHashRender = new HashMap();
                         myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, otherTxt);
-                        t1.synthesizeToFile(otherTxt, myHashRender, filep);
+                        tts.synthesizeToFile(otherTxt, myHashRender, filep);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -932,15 +1059,56 @@ public class AfterFileSelected extends AppCompatActivity implements OnPageChange
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
+    }
 
+    public void voiceValidator(String voice) {
+
+        if (voice.contains("#female")) {
+            female_voice_array.add(voice);
+        }
+        if (voice.contains("#male")) {
+            male_voice_array.add(voice);
+        }
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            if (tts != null) {
+                tts.stop();
+            }
+            if (pause != null) {
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
+            }
+            CommonMethod.toReleaseMemory();
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            if (tts != null) {
+                tts.shutdown();
+            }
+            if (pause != null) {
+                pause.setBackground(getResources().getDrawable(R.drawable.play_button));
+            }
+            CommonMethod.toReleaseMemory();
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+    }
 }
-
-
-

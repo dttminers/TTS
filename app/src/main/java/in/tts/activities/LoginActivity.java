@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import java.io.File;
@@ -50,14 +52,19 @@ public class LoginActivity extends AppCompatActivity {
                 replaceMainTabsFragment(new LoginFragment());
             }
             fn_permission();
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
     }
 
     private void fn_permission() {
         try {
+            CommonMethod.toReleaseMemory();
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             } else {
@@ -70,8 +77,11 @@ public class LoginActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
     }
 
@@ -88,15 +98,18 @@ public class LoginActivity extends AppCompatActivity {
             }
 //            );
 //            prefManager.toSetImageFileList(
-            if (prefManager.toGetImageList() == null ) {
+            if (prefManager.toGetImageList() == null) {
                 if (!ToGetImages.isRunning()) {
                     ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
                 }
             }
 //            );
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
     }
 
@@ -105,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         ft.replace(R.id.fragmentrepalce, fragment);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commitAllowingStateLoss();
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
@@ -114,9 +128,12 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("TAG", " LoginActivity onActivityResult : " + resultCode + ":" + requestCode + " :");
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
             fragment.onActivityResult(requestCode, resultCode, data);
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 

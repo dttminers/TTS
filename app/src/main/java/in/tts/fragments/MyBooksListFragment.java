@@ -200,4 +200,23 @@ public class MyBooksListFragment extends Fragment {
             pdfListAdapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommonMethod.toReleaseMemory();
+    }
+
 }
