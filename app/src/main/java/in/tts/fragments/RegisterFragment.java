@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -72,6 +73,7 @@ public class RegisterFragment extends Fragment {
 
     private EditText mEdtEmail, mEdtPassword, mEdtCnfPwd;
     private Button mBtnSignUp;
+    private TextView mTvAlreadyLogin, mTvSkip;
 
     // Google
     private GoogleSignInClient mGoogleSignInClient;
@@ -130,7 +132,13 @@ public class RegisterFragment extends Fragment {
             mEdtEmail = getActivity().findViewById(R.id.edtEmailIdReg);
             mEdtPassword = getActivity().findViewById(R.id.edtPasswordReg);
             mEdtCnfPwd = getActivity().findViewById(R.id.edtConfirmPasswordReg);
+
             mBtnSignUp = getActivity().findViewById(R.id.btnSignUpReg);
+
+            mTvAlreadyLogin = getActivity().findViewById(R.id.txtAlreadyAccountReg);
+            mTvSkip = getActivity().findViewById(R.id.txtSkipRegisterReg);
+
+            mTvAlreadyLogin.setText(Html.fromHtml("<font color=#ccffffff>Already have an account? </font> <font color=#ffffff>Login!</font>"));
 
             //Get Firebase auth instance
             mAuth = FirebaseAuth.getInstance();
@@ -301,7 +309,7 @@ public class RegisterFragment extends Fragment {
             });
 
             //View
-            getActivity().findViewById(R.id.txtAlreadyAccountReg).setOnClickListener(new View.OnClickListener() {
+            mTvAlreadyLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     try {
@@ -317,7 +325,8 @@ public class RegisterFragment extends Fragment {
                     }
                 }
             });
-            getActivity().findViewById(R.id.txtSkipRegisterReg).setOnClickListener(new View.OnClickListener() {
+
+            mTvSkip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     try {
@@ -881,7 +890,7 @@ public class RegisterFragment extends Fragment {
                                         }
                                 ) {
 
-                                        @Override
+                                    @Override
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<String, String>();
                                         params.put("action", "fb_details");

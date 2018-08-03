@@ -1,20 +1,12 @@
 package in.tts.activities;
 
-
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.support.v4.app.ActivityCompat;
@@ -24,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -39,13 +30,10 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.shockwave.pdfium.PdfDocument;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,8 +44,6 @@ import java.util.Set;
 import in.tts.R;
 import in.tts.classes.ToSetMore;
 import in.tts.utils.CommonMethod;
-
-import static android.view.View.GONE;
 
 public class AfterFileSelected extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener {
     private static final String TAG = "OOOOOOO";

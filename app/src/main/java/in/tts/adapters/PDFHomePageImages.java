@@ -15,12 +15,10 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.ImageOcrActivity;
-import in.tts.activities.MediaFile;
 import in.tts.utils.CommonMethod;
 
 public class PDFHomePageImages extends PagerAdapter {

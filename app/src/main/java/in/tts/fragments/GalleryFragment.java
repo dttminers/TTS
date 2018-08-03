@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -15,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,7 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
+
 
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class GalleryFragment extends Fragment {
     private ArrayList<String> imageFile;
     private ImageAdapterGallery imageAdapterGallery;
     private ProgressBar mLoading;
+    private RecyclerView recyclerView;
 
     public GalleryFragment() {
     }
@@ -53,7 +55,17 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mLoading = getActivity().findViewById(R.id.progressBarPic);
+     try{
+        if (getActivity() != null) {
+            mLoading = getActivity().findViewById(R.id.progressBarPic);
+            recyclerView = getActivity().findViewById(R.id.rvGallery);
+        }
+    } catch (Exception | Error e) {
+        e.printStackTrace();
+        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        Crashlytics.logException(e);
+        FirebaseCrash.report(e);
+    }
     }
 
     @Override
@@ -91,16 +103,15 @@ public class GalleryFragment extends Fragment {
                     @Override
                     public void run() {
                         // change UI elements here
-                        imageFile = new ArrayList<>();
-                        imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
-
-                        getAllShownImagesPath(getActivity());
-                        RecyclerView recyclerView = getActivity().findViewById(R.id.rvGallery);
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                        recyclerView.setAdapter(imageAdapterGallery);
+
+                        imageFile = new ArrayList<>();
+                        imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
                         imageAdapterGallery.notifyDataSetChanged();
-                        mLoading.setVisibility(View.GONE);
+
+                        new toGet().execute();
+                         mLoading.setVisibility(View.GONE);
                     }
                 });
             }
@@ -197,5 +208,21 @@ public class GalleryFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class toGet extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+           getAllShownImagesPath(getActivity());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            recyclerView.setAdapter(imageAdapterGallery);
+            imageAdapterGallery.notifyDataSetChanged();
+        }
     }
 }

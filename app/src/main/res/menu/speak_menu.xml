@@ -19,7 +19,7 @@
     <item
         android:id="@+id/menuSpeakMore"
         android:icon="@drawable/ic_more_vert_white_24dp"
-        android:orderInCategory="500"
+        android:orderInCategory="200"
         android:title="@string/str_more_options"
         app:showAsAction="always">
 

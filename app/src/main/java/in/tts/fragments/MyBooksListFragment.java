@@ -107,12 +107,8 @@ public class MyBooksListFragment extends Fragment {
                         recyclerView.setHasFixedSize(true);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                         recyclerView.setLayoutManager(layoutManager);
-//                        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
-//                        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.sk_line_divider));
-//                        recyclerView.addItemDecoration(dividerItemDecoration);
 
                         pdfListAdapter = new PdfListAdapter(getActivity(), file);
-//                recyclerView.setAdapter(pdfListAdapter);
                         pdfListAdapter.notifyDataSetChanged();
 
                         new toGet().execute();

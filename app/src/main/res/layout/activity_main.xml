@@ -21,29 +21,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab1"
-            />
+            android:icon="@drawable/tab1" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab2"
-            />
+            android:icon="@drawable/tab2" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab3"
-            />
+            android:icon="@drawable/tab3" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:icon="@drawable/tab4"
-            />
+            android:icon="@drawable/tab4" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
@@ -57,8 +53,7 @@
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/tabs"/>
-
+        android:layout_above="@id/tabs" />
 
     <View
         android:layout_width="match_parent"

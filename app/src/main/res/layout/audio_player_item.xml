@@ -38,5 +38,7 @@
             android:gravity="end"
             android:singleLine="true"
             android:textSize="18sp" />
+
     </LinearLayout>
+
 </LinearLayout>

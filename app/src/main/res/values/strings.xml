@@ -107,25 +107,7 @@
     <string name="str_rate_us">Rate Us</string>
     <string name="str_error_valid_mobile">Invalid Mobile No</string>
     <string name="str_play">play</string>
+    <string name="str_capture">Capture</string>
+    <string name="str_read_out">Read Out</string>
 
 </resources>
-
-    <!--%USERPROFILE%\AppData\Local\Temp
-    https://github.com/watson-developer-cloud/speech-android-sdk
-
-
-    speakTextTxt = speakText.getText().toString();
-    HashMap<String, String> myHashRender = new HashMap<String, String>();
-    myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_SAVE_ID);
-
-    String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    File appTmpPath = new File(exStoragePath + "/sounds/");
-    appTmpPath.mkdirs();
-    String tempFilename = "tmpaudio.wav";
-    tempDestFile = appTmpPath.getAbsolutePath() + "/" + tempFilename;
-
-    mTts.synthesizeToFile(speakTextTxt, myHashRender, tempDestFile);
-
-    mTts.addSpeech(wakeUpText, destFileName);
-
-    -->

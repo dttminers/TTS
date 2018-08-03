@@ -16,24 +16,6 @@
         app:tabMode="fixed"
         app:tabSelectedTextColor="#000"
         app:tabTextColor="#000" />
-
-        <!--<android.support.design.widget.TabItem-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@color/white"-->
-            <!--android:text="My Bookse" />-->
-
-
-        <!--<android.support.design.widget.TabItem-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@color/white"-->
-            <!--android:text="Free eBookse" />-->
-
-    <!--</android.support.design.widget.TabLayout>-->
-
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"

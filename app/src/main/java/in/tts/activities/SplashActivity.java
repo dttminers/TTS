@@ -50,18 +50,18 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     prefManager.getUserInfo();
-//                    if (auth.getCurrentUser() != null) {
+                    if (auth.getCurrentUser() != null) {
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-//                    } else if (User.getUser(SplashActivity.this).getId() != null) {
-//                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-//                    } else {
-//                        if (prefManager.isFirstTimeLaunch()) {
-//                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
-//                        } else {
-//                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
-//                        }
-//                    }
-//                    finish();
+                    } else if (User.getUser(SplashActivity.this).getId() != null) {
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    } else {
+                        if (prefManager.isFirstTimeLaunch()) {
+                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+                        } else {
+                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                        }
+                    }
+                    finish();
                 }
             }, 3000);
             prefManager.getAudioSetting();

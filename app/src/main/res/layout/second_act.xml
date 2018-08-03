@@ -1,62 +1,17 @@
-<RelativeLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    android:orientation="vertical">
 
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:id="@+id/buttonLayout"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:weightSum="6"-->
-        <!--android:layout_height="60dp">-->
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <!--<Button-->
-            <!--android:text="playM"-->
-            <!--android:id="@+id/playMale"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent" />-->
-        <!--<Button-->
-            <!--android:text="playF"-->
-            <!--android:id="@+id/playFemale"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent" />-->
-
-        <!--<Button-->
-            <!--android:text="PAUSE"-->
-            <!--android:id="@+id/pause"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent" />-->
-
-        <!--<Button-->
-            <!--android:text="STOP"-->
-            <!--android:id="@+id/stop"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent" />-->
-        <!--<Button-->
-            <!--android:text="Bwd"-->
-            <!--android:id="@+id/backward"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent" />-->
-        <!--<Button-->
-            <!--android:text="Frd"-->
-            <!--android:id="@+id/forward"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent" />-->
-
-
-
-
-    <!--</LinearLayout>-->
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -71,10 +26,10 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/refresh" />
 
         <Button
@@ -83,10 +38,10 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/step_backward" />
 
         <Button
@@ -95,10 +50,10 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/play_button" />
 
         <Button
@@ -107,10 +62,10 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/step_forward" />
 
         <Button
@@ -119,19 +74,12 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/cancel_button" />
 
     </LinearLayout>
 
-    <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdfView"
-        android:layout_width="match_parent"
-        android:layout_above="@id/buttonLayout"
-        android:layout_height="match_parent"/>
-
-
-</RelativeLayout>
+</LinearLayout>
