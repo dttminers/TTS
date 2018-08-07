@@ -35,16 +35,17 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private AudioSetting audioSetting;
     private PrefManager prefManager;
-    ArrayList<String> male_voice_array=new ArrayList<String>();
-    ArrayList<String> female_voice_array=new ArrayList<String>();
+    ArrayList<String> male_voice_array = new ArrayList<String>();
+    ArrayList<String> female_voice_array = new ArrayList<String>();
     String selectedLang;
     String langCountry;
     String selectedVoice;
-    String v_male= "en-us-x-sfg#male_3-local";
-    String v_female="en-us-x-sfg#female_2-local";
-    Voice v=null;
-    String voice="";
+    String v_male = "en-us-x-sfg#male_3-local";
+    String v_female = "en-us-x-sfg#female_2-local";
+    Voice v = null;
+    String voice = "";
     int lang;
+
     public TTS(final Context mContext) {
         try {
 
@@ -59,9 +60,9 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                 public void onInit(int i) {
                     try {
                         audioSetting = AudioSetting.getAudioSetting(mContext);
-                        selectedLang= audioSetting.getLangSelection().getLanguage();
-                        langCountry= audioSetting.getLangSelection().getCountry();
-                        selectedVoice= audioSetting.getVoiceSelection();
+                        selectedLang = audioSetting.getLangSelection().getLanguage();
+                        langCountry = audioSetting.getLangSelection().getCountry();
+                        selectedVoice = audioSetting.getVoiceSelection();
 
                         tts.setEngineByPackageName("com.google.android.tts");
                         tts.setPitch((float) 0.8);
@@ -71,73 +72,55 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                         // int lang =tts.setLanguage(new Locale(selectedLang,langCountry));
                         //int lang =  tts.setLanguage(Locale.US);
 
-                        if(audioSetting.getLangSelection().equals("hin_IND"))
-                        {
-                            lang=tts.setLanguage(new Locale("hin","IND"));
+                        if (audioSetting.getLangSelection().equals("hin_IND")) {
+                            lang = tts.setLanguage(new Locale("hin", "IND"));
+                        } else if (audioSetting.getLangSelection().equals("mar_IND")) {
+                            lang = tts.setLanguage(new Locale("mar", "IND"));
+                        } else if (audioSetting.getLangSelection().equals("ta_IND")) {
+                            lang = tts.setLanguage(new Locale("ta", "IND"));
+                        } else {
+                            lang = tts.setLanguage(Locale.US);
                         }
-                        else if(audioSetting.getLangSelection().equals("mar_IND"))
-                        {
-                            lang=tts.setLanguage(new Locale("mar","IND"));
-                        }
-                        else if(audioSetting.getLangSelection().equals("ta_IND"))
-                        {
-                            lang=tts.setLanguage(new Locale("ta","IND"));
-                        }
-                        else
-                        {
-                            lang=tts.setLanguage(Locale.US);
-                        }
-                        Log.d("TTS_TAG", "VOICE BY APP "+audioSetting.getVoiceSelection()+" "+audioSetting.getLangSelection());
+                        Log.d("TTS_TAG", "VOICE BY APP " + audioSetting.getVoiceSelection() + " " + audioSetting.getLangSelection());
 
-                        Set<String> a=new HashSet<>();
+                        Set<String> a = new HashSet<>();
                         a.add("female");
                         a.add("male");
 
                         //Get all available voices
                         for (Voice tmpVoice : tts.getVoices()) {
-                            if(tmpVoice.getLocale().equals(audioSetting.getLangSelection()))
-                            {
+                            if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
                                 voiceValidator(tmpVoice.getName());
                             }
 
                         }
 
-                        if(selectedVoice.equalsIgnoreCase("male"))
-                        {
-                            if(male_voice_array.size()>0)
-                            {
-                                voice=male_voice_array.get(0);
-                                v=new Voice(voice,new Locale(selectedLang,langCountry),400,200,true,a);
+                        if (selectedVoice.equalsIgnoreCase("male")) {
+                            if (male_voice_array.size() > 0) {
+                                voice = male_voice_array.get(0);
+                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
                                 tts.setVoice(v);
-                            }
-                            else
-                            {
+                            } else {
                                 // voice=v_male;
                                 // If nothing is similar then select default voice
-                                CommonMethod.toDisplayToast(mContext,"Selected language not found. Reading data using default language");
+                                CommonMethod.toDisplayToast(mContext, "Selected language not found. Reading data using default language");
                                 v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
                             }
 
-                        }
-                        else
-                        {
-                            if(female_voice_array.size()>0)
-                            {
-                                voice=female_voice_array.get(0);
-                                v=new Voice(voice,new Locale(selectedLang,langCountry),400,200,true,a);
+                        } else {
+                            if (female_voice_array.size() > 0) {
+                                voice = female_voice_array.get(0);
+                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
                                 tts.setVoice(v);
-                            }
-                            else
-                            {
+                            } else {
                                 // voice=v_female;
                                 // If nothing is similar then select default voice
-                               CommonMethod.toDisplayToast(mContext,"Selected language not found. Reading data using default language");
+                                CommonMethod.toDisplayToast(mContext, "Selected language not found. Reading data using default language");
                                 v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
                             }
                         }
-
 
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -157,6 +140,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             Log.e("TTS_TAG", "Initialization Failed!");
                         }
 
+                        Log.v("log", "initi");
 
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -203,12 +187,12 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 //            tts.synthesizeToFile(text, null, audio, "READ_IT");
 //            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
 //        } else {
-            HashMap<String, String> hm = new HashMap<>();
+        HashMap<String, String> hm = new HashMap<>();
 //            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
 //            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
-            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
-            tts.synthesizeToFile(text, hm, audio.getPath());
-            Log.d("TAG", " TTS  :  audio size 2: " + CommonMethod.getFileSize(audio));
+        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+        tts.synthesizeToFile(text, hm, audio.getPath());
+        Log.d("TAG", " TTS  :  audio size 2: " + CommonMethod.getFileSize(audio));
 //        }
         //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
         return audio.getAbsolutePath();

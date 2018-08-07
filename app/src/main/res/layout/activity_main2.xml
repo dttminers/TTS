@@ -1,0 +1,76 @@
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="View PDF"
+        android:textColor="#ffffff"
+        android:id="@+id/tv_header"
+        android:textSize="18dp"
+        android:gravity="center"></TextView>
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/lklklkl"
+        android:layout_below="@+id/tv_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AAAAA"
+        />
+
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/editT"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <Button
+        android:layout_toRightOf="@+id/lklklkl"
+        android:id="@+id/lklklkl222"
+        android:layout_below="@+id/editT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CREATE"
+        />
+
+    <TextView
+        android:textSize="20sp"
+        android:textColor="#00f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="NOTE:\nType any text in edit box and click on SAVE.\nCheck whether your file is present in\nINternalStorage->sounds->some_digits.wav.\n Play that file."
+        />
+
+    <Button
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Back"
+        android:id="@+id/backword"
+        />
+
+    <Button
+        android:visibility="gone"
+        android:layout_marginTop="100dp"
+        android:layout_toRightOf="@+id/backword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="for"
+        android:id="@+id/forward"
+        />
+
+
+
+</RelativeLayout>

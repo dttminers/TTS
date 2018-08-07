@@ -73,7 +73,10 @@ public class SettingActivity extends AppCompatActivity {
             pbStorage = findViewById(R.id.pbSetting2);
 
             tvFree = findViewById(R.id.tvFree);
+            tvFree.setVisibility(View.GONE);
+
             tvUsed = findViewById(R.id.tvUsed);
+            tvUsed.setVisibility(View.GONE);
 
             mBtnLogin = findViewById(R.id.btnLoginSetting);
 

@@ -29,9 +29,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -80,7 +82,7 @@ public class RegisterFragment extends Fragment {
     private RelativeLayout relativeLayoutGoogle;
     private GoogleSignInAccount account;
 
-    //Facebook
+    // Facebook
     private RelativeLayout relativeLayoutFb;
     private CallbackManager callbackManager;
 
@@ -88,14 +90,15 @@ public class RegisterFragment extends Fragment {
     private ProfileTracker profileTracker;
     private LoginManager mFbLoginManager;
 
-    // Parameters
-    private int RC_SIGN_IN = 123;
-    private static final String EMAIL = "email";
-
+    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    // User
     private User user;
+
+    // Parameters
+    private int RC_SIGN_IN = 123;
 
     public RegisterFragment() {
     }
@@ -111,18 +114,37 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        CommonMethod.toReleaseMemory();
-        if (mAuth != null && mAuthListener != null) {
-            mAuth.addAuthStateListener(mAuthListener);
+        try {
+            CommonMethod.toReleaseMemory();
+            if (mAuth != null && mAuthListener != null) {
+                mAuth.addAuthStateListener(mAuthListener);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        CommonMethod.toReleaseMemory();
-        if (mAuth != null && mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+        try {
+            CommonMethod.toReleaseMemory();
+            if (mAuth != null && mAuthListener != null) {
+                mAuth.removeAuthStateListener(mAuthListener);
+            }
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            CommonMethod.toReleaseMemory();
+            FirebaseCrash.report(e);
         }
     }
 
@@ -130,8 +152,11 @@ public class RegisterFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            CommonMethod.toReleaseMemory();
             CommonMethod.setAnalyticsData(getContext(), "MainTab", "Register", null);
+            CommonMethod.toReleaseMemory();
+
+            user = User.getUser(getContext());
+
             FacebookSdk.sdkInitialize(getContext());
 
             mEdtEmail = getActivity().findViewById(R.id.edtEmailIdReg);
@@ -145,23 +170,28 @@ public class RegisterFragment extends Fragment {
 
             mTvAlreadyLogin.setText(Html.fromHtml("<font color=#ccffffff>Already have an account? </font> <font color=#ffffff>Login!</font>"));
 
+            // Google
+            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleReg);
+
+            //Facebook
+            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookReg);
+
             //Get Firebase auth instance
             mAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     FirebaseUser account = firebaseAuth.getCurrentUser();
-//                    signInButton.setVisibility(View.GONE);
-//                    signOutButton.setVisibility(View.VISIBLE);
                     if (account != null) {
                         // User is signed in
                         Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
                         user.setEmail(account.getEmail());
                         user.setId(account.getUid());
                         user.setUsername(account.getDisplayName());
+                        user.setFullName(account.getDisplayName());
                         user.setPicPath(account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
                         user.setLoginFrom(1);
-                        toExit();
+//                        toExit();
                     } else {
                         // User is signed out
                         Log.d("TAG", "onAuthStateChanged:signed_out");
@@ -224,42 +254,42 @@ public class RegisterFragment extends Fragment {
             mBtnSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (validateEmail() && validatePassword() && validateCnfPassword()) {
-                        checkInternetConnection(1);
-                        if (mEdtPassword.getText().toString().trim().equals(mEdtCnfPwd.getText().toString().trim())) {
-                            startActivity(new Intent(getContext(), LoginActivity.class));
-                            CommonMethod.toDisplayToast(getContext(), " Register Successfully ");
-                        } else {
-                            CommonMethod.toDisplayToast(getContext(), "Password not match, please try again");
+                    try {
+                        if (validateEmail() && validatePassword()) {
+                            checkInternetConnection(1);
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
+                                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+
+                                                @Override
+                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("TAG", " Login Successful2");
+                                                    } else {
+                                                        Log.d("TAG", " Login Failed ");
+                                                    }
+                                                }
+                                            })
+                                            .addOnCanceledListener(getActivity(), new OnCanceledListener() {
+                                                @Override
+                                                public void onCanceled() {
+                                                    Log.d("TAG", " Login Cancel ");
+                                                }
+                                            });
+                                }
+                            };
                         }
-                    } else {
-                        CommonMethod.toDisplayToast(getContext(), "Please try again, Register failed");
+                    } catch (Exception | Error e) {
+                        CommonMethod.toCloseLoader();
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
-                    //authenticate user
-//                    mAuth.signInWithEmailAndPassword(mEdtEmail.getText().toString(), mEdtPassword.getText().toString())
-//                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<AuthResult> task) {
-//                                    if (!task.isSuccessful()) {
-//                                        // there was an error
-//                                        if (mEdtPassword.getText().toString().length() < 8) {
-//                                            mEdtPassword.setError(getString(R.string.str_error_minimum_8));
-//                                        } else {
-//                                            Toast.makeText(getContext(), getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-//                                        }
-//                                    } else {
-////
-//                                        user = User.getUser(getContext());
-//                                        user.setLoginFrom(3);
-//                                        user.setEmail(mEdtEmail.getText().toString());
-//                                        CommonMethod.toCloseLoader();
-//                                        toExit();
-//                                    }
-//                                }
-//                            });
-
                 }
-
             });
 
             mEdtEmail.addTextChangedListener(new TextWatcher() {
@@ -349,13 +379,12 @@ public class RegisterFragment extends Fragment {
                 }
             });
 
-            // Google
-            relativeLayoutGoogle = getActivity().findViewById(R.id.rlGoogleLogin);
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+
             relativeLayoutGoogle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -394,68 +423,65 @@ public class RegisterFragment extends Fragment {
                 }
             };
 
-            relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookLogin);
             relativeLayoutFb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Login with Facebook ");
-                    if (accessTokenTracker.isTracking()) {
-                        mFbLoginManager.logOut();
-                        accessTokenTracker.stopTracking();
-                        profileTracker.stopTracking();
-                        CommonMethod.toCloseLoader();
-                        CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
-                    } else {
-                        accessTokenTracker.startTracking();
-                        mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
-                        mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                            @Override
-                            public void onSuccess(LoginResult loginResult) {
-                                try {
-                                    AccessToken accessToken = loginResult.getAccessToken();
-                                    ProfileTracker profileTracker = new ProfileTracker() {
-                                        @Override
-                                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                                            if (currentProfile != null) {
-                                                this.stopTracking();
-                                                Profile.setCurrentProfile(currentProfile);
-                                                user = User.getUser(getContext());
-                                                user.setId(currentProfile.getId());
-//                                                user.setName1(currentProfile.getFirstName());
-//                                                user.setName2(currentProfile.getLastName() + currentProfile.getMiddleName());
-//                                                user.setName(currentProfile.getName());
-                                                user.setLoginFrom(2);
-                                                user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
-                                                CommonMethod.toCloseLoader();
-                                                checkInternetConnection(3);
-                                            }
+//                    if (accessTokenTracker.isTracking()) {
+                    mFbLoginManager.logOut();
+                    accessTokenTracker.stopTracking();
+                    profileTracker.stopTracking();
+//                        CommonMethod.toCloseLoader();
+//                        CommonMethod.toDisplayToast(getContext(), " Click again  to login");
+//                    } else {
+                    accessTokenTracker.startTracking();
+                    mFbLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile"));//, "user_birthday"));
+                    mFbLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            try {
+                                AccessToken accessToken = loginResult.getAccessToken();
+                                Log.d("TAG", "facebook:onSuccess:" + loginResult + ":" + accessToken);
+                                handleFacebookAccessToken(loginResult.getAccessToken());
+                                ProfileTracker profileTracker = new ProfileTracker() {
+                                    @Override
+                                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                                        if (currentProfile != null) {
+                                            this.stopTracking();
+                                            Profile.setCurrentProfile(currentProfile);
+                                            user = User.getUser(getContext());
+                                            user.setId(currentProfile.getId());
+                                            user.setFullName(currentProfile.getFirstName() + " " + currentProfile.getMiddleName() + " " + currentProfile.getLastName());
+                                            user.setUsername(currentProfile.getName());
+                                            user.setLoginFrom(2);
+                                            Log.d("TAG", " Pic Path : " + currentProfile.getProfilePictureUri(100, 100));
+                                            user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
+                                            CommonMethod.toCloseLoader();
+                                            checkInternetConnection(3);
                                         }
-                                    };
-                                    profileTracker.startTracking();
-                                } catch (Exception | Error e) {
-                                    CommonMethod.toCloseLoader();
-                                    e.printStackTrace();
-                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e);
-                                    FirebaseCrash.report(e);
-                                    CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
-                                }
-                            }
-
-                            @Override
-                            public void onCancel() {
+                                    }
+                                };
+                                profileTracker.startTracking();
+                            } catch (Exception | Error e) {
                                 CommonMethod.toCloseLoader();
-                                CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
+//                                CommonMethod.toDisplayToast(getContext(), " Click again  to login");
                             }
+                        }
 
-                            @Override
-                            public void onError(FacebookException e) {
-                                // here write code when get error
-                                CommonMethod.toCloseLoader();
-                                CommonMethod.toDisplayToast(getContext(), " Click again  to Register");
-                            }
-                        });
-                    }
+                        @Override
+                        public void onCancel() {
+                            CommonMethod.toCloseLoader();
+                        }
+
+                        @Override
+                        public void onError(FacebookException e) {
+                            CommonMethod.toCloseLoader();
+                        }
+                    });
                 }
             });
 
@@ -488,7 +514,7 @@ public class RegisterFragment extends Fragment {
                             new toFacebookLogin().execute();
                             break;
                         default:
-                            CommonMethod.toDisplayToast(getContext(), " Unable to Register");
+                            CommonMethod.toDisplayToast(getContext(), " Unable to Login");
                             break;
                     }
                 } else {
@@ -497,7 +523,6 @@ public class RegisterFragment extends Fragment {
             } else {
                 CommonMethod.toDisplayToast(getContext(), getResources().getString(R.string.lbl_no_check_internet));
             }
-            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -561,12 +586,20 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Google
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+        try {
+            // Google
+            if (requestCode == RC_SIGN_IN) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+            }
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     //Google
@@ -601,12 +634,13 @@ public class RegisterFragment extends Fragment {
     private void toExit() {
         try {
             CommonMethod.toCloseLoader();
-            CommonMethod.toDisplayToast(getContext(), "Login Successful3");
+            CommonMethod.toDisplayToast(getContext(), "Login Successful");
             CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
-//            startActivity(new Intent(getContext(), MainActivity.class));
             startActivity(new Intent(getContext(), HomeActivity.class));
-            getActivity().finish();
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -618,36 +652,75 @@ public class RegisterFragment extends Fragment {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
+        try {
+            Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
+            if (getActivity() != null) {
+                AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    Log.w("TAG", "signInWithCredential", task.getException());
+//                                    Toast.makeText(getContext(), "Authentication failed.",
+//                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w("TAG", "signInWithCredential", task.getException());
-                            Toast.makeText(getContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    private void handleFacebookAccessToken(AccessToken token) {
+        try {
+            Log.d("TAG", "handleFacebookAccessToken:" + token);
+            if (getActivity() != null) {
+                AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("TAG", "signInWithCredential:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Log.d("TAG", " FB user " + user.getUid());
+//                            updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("TAG", "signInWithCredential:failure", task.getException());
+//                                    Toast.makeText(getContext(), "Authentication failed.",
+//                                            Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+                                }
+
+                                // ...
+                            }
+                        });
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CommonMethod.toReleaseMemory();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         CommonMethod.toReleaseMemory();
     }
 
@@ -760,8 +833,8 @@ public class RegisterFragment extends Fragment {
             CommonMethod.toCallLoader(getContext(), "Authenticating user.....");
         }
     }
-//  Google details API fetching..............
 
+    //  Google details API fetching..............
     private class toGoogleLogin extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -846,7 +919,6 @@ public class RegisterFragment extends Fragment {
     }
 
     //  facebook login details API fetching...................
-
     private class toFacebookLogin extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {

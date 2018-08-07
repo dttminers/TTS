@@ -48,6 +48,8 @@ public class PrefManager {
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
+//    public static String data;
+
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private Context _context;
@@ -304,7 +306,7 @@ public class PrefManager {
             String us = _context.getSharedPreferences(IMAGE_LIST_RECENT, 0).getString(IMAGE_LIST_INFO_RECENT, null);
             if (us != null) {
                 Log.d("TAG", " toGetImageListRecent " + us);
-                return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
             }

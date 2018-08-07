@@ -69,8 +69,8 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
                     public void onClick(View view) {
                         try {
                             CommonMethod.toCallLoader(context, "Loading...");
-//                            Intent intent = new Intent(context, PdfReadersActivity.class);
-                            Intent intent = new Intent(context, AfterFileSelected.class);
+                            Intent intent = new Intent(context, PdfReadersActivity.class);
+//                            Intent intent = new Intent(context, AfterFileSelected.class);
                             intent.putExtra("file", list.get(getAdapterPosition()));
                             context.startActivity(intent);
                         CommonMethod.toCloseLoader();

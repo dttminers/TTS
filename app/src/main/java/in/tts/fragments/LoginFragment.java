@@ -69,7 +69,6 @@ import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.network.VolleySingleton;
 import in.tts.utils.CommonMethod;
-//import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
 
@@ -100,10 +99,8 @@ public class LoginFragment extends Fragment {
 
     // Parameters
     private int RC_SIGN_IN = 123;
-    private static final String EMAIL = "email";
 
     public LoginFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -672,30 +669,37 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onStart() {
+        super.onStart();
         try {
-            super.onStart();
-            mAuth.addAuthStateListener(mAuthListener);
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            CommonMethod.toCloseLoader();
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-    }
-
-    @Override
-    public void onStop() {
-        try {
-            super.onStop();
-            if (mAuthListener != null) {
-                mAuth.removeAuthStateListener(mAuthListener);
+            CommonMethod.toReleaseMemory();
+            if (mAuth != null && mAuthListener != null) {
+                mAuth.addAuthStateListener(mAuthListener);
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            CommonMethod.toReleaseMemory();
+            if (mAuth != null && mAuthListener != null) {
+                mAuth.removeAuthStateListener(mAuthListener);
+            }
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            CommonMethod.toCloseLoader();
+            Crashlytics.logException(e);
+            CommonMethod.toReleaseMemory();
             FirebaseCrash.report(e);
         }
     }
@@ -957,5 +961,3 @@ public class LoginFragment extends Fragment {
         }
     }
 }
-
-
