@@ -245,30 +245,26 @@ public class PdfReadersActivity extends AppCompatActivity {
                         playPause.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                try{
+                                try {
                                     if (playerStatus) {
                                         mediaPlayer.pause();
-                                    playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
-                                    playerStatus = !playerStatus;
+                                        playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
+                                        playerStatus = !playerStatus;
                                         resumePosition = mediaPlayer.getCurrentPosition();
-//                                        mediaPlayer.stop();
-//                                        playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
-//                                        playerStatus = false;
-//                                        mediaPlayer.release();
-                                        CommonMethod.toDisplayToast(PdfReadersActivity.this, " pause..");
-//                                        toPlayAudio();
+                                        CommonMethod.toDisplayToast(PdfReadersActivity.this, " pause");
                                     } else if (tempDestFile.length() > 0) {
-//                                        CommonMethod.toDisplayToast(PdfReadersActivity.this, " playing audio");
-//                                        toPlayAudio();
-                                            if (!mediaPlayer.isPlaying()) {
-                                                mediaPlayer.seekTo(resumePosition);
-                                                mediaPlayer.start();
-                                            }
+                                        CommonMethod.toDisplayToast(PdfReadersActivity.this, " play");
+                                        if (!mediaPlayer.isPlaying()) {
+                                            mediaPlayer.seekTo(resumePosition);
+                                            mediaPlayer.start();
+                                            playPause.setBackground(getResources().getDrawable(R.drawable.pause_button));
+                                            playerStatus = !playerStatus;
+                                        }
                                     } else {
                                         CommonMethod.toDisplayToast(PdfReadersActivity.this, " playing audio...");
                                         toGetData((firstVisibleItem + 1));
                                     }
-                                }catch (Exception | Error e) {
+                                } catch (Exception | Error e) {
                                     e.printStackTrace();
                                     FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                     CommonMethod.toCloseLoader();
