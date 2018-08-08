@@ -76,7 +76,44 @@ public class PdfFragment extends Fragment {
         try {
             Log.d("Tag", "tab2 setLoadData " + status);
 //            if (!status) {
-                viewPager.setCurrentItem(0, true);
+            status = false;
+
+
+            tabLayout = getActivity().findViewById(R.id.tabsub);
+            viewPager = getActivity().findViewById(R.id.viewpagersub);
+
+            viewPager.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
+            tabLayout.setupWithViewPager(viewPager);
+
+            tabLayout.getTabAt(0).setText(tabHomeText[0]);
+            tabLayout.getTabAt(1).setText(tabHomeText[1]);
+
+            LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
+            linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColor(Color.GRAY);
+            drawable.setSize(1, 1);
+
+            linearLayout.setDividerPadding(10);
+            linearLayout.setDividerDrawable(drawable);
+
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                }
+
+            });
+            viewPager.setCurrentItem(0, true);
 //            }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -105,40 +142,6 @@ public class PdfFragment extends Fragment {
         try {
             CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc Pdf", null);
 
-            tabLayout = getActivity().findViewById(R.id.tabsub);
-            viewPager = getActivity().findViewById(R.id.viewpagersub);
-
-            viewPager.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
-            tabLayout.setupWithViewPager(viewPager);
-
-            tabLayout.getTabAt(0).setText(tabHomeText[0]).select();
-            tabLayout.getTabAt(1).setText(tabHomeText[1]);
-
-            LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
-            linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setColor(Color.GRAY);
-            drawable.setSize(1, 1);
-
-            linearLayout.setDividerPadding(10);
-            linearLayout.setDividerDrawable(drawable);
-
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    viewPager.setCurrentItem(tab.getPosition());
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                }
-
-            });
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
