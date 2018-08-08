@@ -9,6 +9,7 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionModeBackground">@drawable/bg_main</item>
         <item name="actionModeBackground">@drawable/bg_main</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <!-- Splash Screen theme. -->
@@ -31,6 +32,10 @@
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@drawable/bg_main</item>
+    </style>
+
+    <style name="AppTheme.WhiteAccent">
+        <item name="colorAccent">@color/white</item> <!-- Whatever color you want-->
     </style>
 
 </resources>

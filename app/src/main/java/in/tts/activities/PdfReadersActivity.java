@@ -78,12 +78,10 @@ public class PdfReadersActivity extends AppCompatActivity {
     private int forwardTime = 5000;
     private int backwardTime = 5000;
 
-    //    private String FileName = null;
-    private boolean playerStatus = false;// not playing
+    private boolean playerStatus = false;
 
     public static int oneTimeOnly = 0;
 
-    //    private TTS mTts;
     private TextToSpeech tts;
     int firstVisibleItem;
 
@@ -99,9 +97,8 @@ public class PdfReadersActivity extends AppCompatActivity {
     Voice v = null;
     String voice = "";
     int lang;
-    String tempFilename = "", tempDestFile;
+    String tempFilename = "", tempDestFile= "";
 
-    //Used to pause/resume MediaPlayer
     private int resumePosition;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -109,7 +106,6 @@ public class PdfReadersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             CommonMethod.toCallLoader(PdfReadersActivity.this, "Loading...");
             setContentView(R.layout.activity_pdf_readers);
             if (getIntent().getExtras() != null) {
@@ -209,28 +205,6 @@ public class PdfReadersActivity extends AppCompatActivity {
                                         CommonMethod.toDisplayToast(PdfReadersActivity.this, " Replaying audio again...");
                                         toGetData((firstVisibleItem + 1));
                                     }
-//                                if (playerStatus) {
-//                                    if (mediaPlayer != null) {
-//                                        if (mediaPlayer.isPlaying()) {
-//                                            mediaPlayer.pause();
-//                                            mediaPlayer.reset();
-//                                            mediaPlayer.start();
-//                                            CommonMethod.toDisplayToast(PdfReadersActivity.this, " Replaying again");
-//                                        } else if (!CommonMethod.getFileSize(new File(tempDestFile)).equals("0 B")) {
-//                                            CommonMethod.toDisplayToast(PdfReadersActivity.this, " Replaying audio again");
-//                                            toPlayAudio();
-//                                        }
-//                                    } else if (!CommonMethod.getFileSize(new File(tempDestFile)).equals("0 B")) {
-//                                        CommonMethod.toDisplayToast(PdfReadersActivity.this, " Replaying audio again.");
-//                                        toPlayAudio();
-//                                    } else {
-//                                        CommonMethod.toDisplayToast(PdfReadersActivity.this, " Replaying audio again...");
-//                                        toGetData((firstVisibleItem + 1));
-//                                    }
-//                                } else {
-//                                    CommonMethod.toDisplayToast(PdfReadersActivity.this, " Replaying audio again....");
-//                                    toGetData((firstVisibleItem + 1));
-//                                }
                                 } catch (Exception | Error e) {
                                     e.printStackTrace();
                                     FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -270,27 +244,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                                     CommonMethod.toCloseLoader();
                                     Crashlytics.logException(e);
                                     FirebaseCrash.report(e);
-                                    CommonMethod.toDisplayToast(PdfReadersActivity.this, " Audio player is already stopped");
                                 }
-//                                if (playerStatus) {
-//                                    mediaPlayer.pause();
-//                                    playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
-//                                    playerStatus = !playerStatus;
-//                                } else {
-////                                    if (!mediaPlayer.isPlaying()) {
-//                                    mediaPlayer.start();
-//                                    playPause.setBackground(getResources().getDrawable(R.drawable.pause_button));
-//                                    playerStatus = !playerStatus;
-////                                    } else {
-////                                        mediaPlayer.pause();
-////                                        playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
-////                                        playerStatus = !playerStatus;
-////                                    }
-//                                }
-////                                Toast.makeText(getApplicationContext(), "Pausing sound", Toast.LENGTH_SHORT).show();
-////                                mMediaPlayer.pause();
-////                                playMediaPlayer(1);
-
                             }
                         });
 
@@ -302,7 +256,6 @@ public class PdfReadersActivity extends AppCompatActivity {
                                     int temp = (int) startTime;
                                     if ((temp + forwardTime) <= finalTime) {
                                         startTime = startTime + forwardTime;
-//                                    mMediaPlayer.seekTo((int) startTime);
                                         mediaPlayer.seekTo((int) startTime);
                                         Toast.makeText(getApplicationContext(), "You have Jumped forward 5 seconds", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -324,10 +277,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                                 try {
                                     Log.d("Tag", " backward playing : " + startTime + ":" + ((int) startTime) + ":" + mediaPlayer.getCurrentPosition());
                                     int temp = (int) startTime;
-
                                     if ((temp - backwardTime) > 0) {
                                         startTime = startTime - backwardTime;
-//                                    mMediaPlayer.seekTo((int) startTime);
                                         mediaPlayer.seekTo((int) startTime);
                                         Toast.makeText(getApplicationContext(), "You have Jumped backward 5 seconds", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -396,7 +347,6 @@ public class PdfReadersActivity extends AppCompatActivity {
             if (pdfRenderer.getPageCount() <= index) {
                 return;
             }
-            // Make sure to close the current page before opening another one.
             if (null != currentPage) {
                 currentPage.close();
             }
@@ -404,15 +354,9 @@ public class PdfReadersActivity extends AppCompatActivity {
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             int height = displayMetrics.heightPixels;
             int width = displayMetrics.widthPixels;
-            //open a specific page in PDF file
             currentPage = pdfRenderer.openPage(index);
-            // Important: the destination bitmap must be ARGB (not RGB).
-            Log.d("TAG", "Suize : " + currentPage.getHeight() + ":" + currentPage.getWidth() + ":" + (width * 2) + ":" + (height * 2));
             Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
-//            Bitmap bitmap = Bitmap.createBitmap((width * 2), (height * 2), Bitmap.Config.ARGB_8888);
-            // Here, we render the page onto the Bitmap.
             currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-            // showing bitmap to an imageview
             list.add(bitmap);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -425,14 +369,12 @@ public class PdfReadersActivity extends AppCompatActivity {
     private void toGetData(int pos) {
         try {
             PdfReader pr = new PdfReader(file.getPath());
-//            Log.d("TAGPDF", " Final_DATA 23 " + file.getPath() + ":" + pos + ":" + pr.getNumberOfPages());
-            //text is the required String (initialized as "" )
-//            String text = PdfTextExtractor.getTextFromPage(pr, pos).toString();
             String text = PdfTextExtractor.getTextFromPage(pr, pos);
-            Log.d("TAGPDF", " Final_DATA 2 " + text);
             if (text.trim().length() != 0) {
-//                mTts = new TTS(PdfReadersActivity.this);
-                if (text.length() > 150) {
+                if (text.length()>200) {
+                    Log.d("Tag ", " text length : "+ text.length());
+                toSpeak(text);
+                }else if (text.length() > 150) {
                     toSpeak(text.substring(0, 150));
                 } else if (text.length() > 100) {
                     toSpeak(text.substring(0, 100));
@@ -454,10 +396,6 @@ public class PdfReadersActivity extends AppCompatActivity {
 
     private void toSpeak(final String string) {
         try {
-//            mTts = new TTS(PdfReadersActivity.this, string);
-//            FileName = new TTS(PdfReadersActivity.this, string);
-//            FileName = PrefManager.data;
-            Log.d("Tag ", " Audio data " + string);
             tts = new TextToSpeech(PdfReadersActivity.this, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int i) {
@@ -480,7 +418,6 @@ public class PdfReadersActivity extends AppCompatActivity {
                         } else {
                             lang = tts.setLanguage(Locale.US);
                         }
-                        Log.d("TTS_TAG", "VOICE BY APP " + audioSetting.getVoiceSelection() + " " + audioSetting.getLangSelection());
 
                         Set<String> a = new HashSet<>();
                         a.add("female");
@@ -491,7 +428,6 @@ public class PdfReadersActivity extends AppCompatActivity {
                             if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
                                 voiceValidator(tmpVoice.getName());
                             }
-
                         }
 
                         if (selectedVoice.equalsIgnoreCase("male")) {
@@ -500,8 +436,6 @@ public class PdfReadersActivity extends AppCompatActivity {
                                 v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
                                 tts.setVoice(v);
                             } else {
-                                // voice=v_male;
-                                // If nothing is similar then select default voice
                                 CommonMethod.toDisplayToast(PdfReadersActivity.this, "Selected language not found. Reading data using default language");
                                 v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
@@ -513,8 +447,6 @@ public class PdfReadersActivity extends AppCompatActivity {
                                 v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
                                 tts.setVoice(v);
                             } else {
-                                // voice=v_female;
-                                // If nothing is similar then select default voice
                                 CommonMethod.toDisplayToast(PdfReadersActivity.this, "Selected language not found. Reading data using default language");
                                 v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
@@ -525,21 +457,18 @@ public class PdfReadersActivity extends AppCompatActivity {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             Log.d("TTS_TAG", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
                         }
-//                        }
-//                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
-
                         if (i == TextToSpeech.SUCCESS) {
                             if (lang == TextToSpeech.LANG_MISSING_DATA
                                     || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                                Log.e("TTS_TAG", "This Language is not supported");
+                                Log.d("TTS_TAG", "This Language is not supported");
                             } else {
                                 Log.d("TTS_TAG", " Else ");
                             }
                         } else {
-                            Log.e("TTS_TAG", "Initialization Failed!");
+                            Log.d("TTS_TAG", "Initialization Failed!");
                         }
 
-                        Log.v("log", "initi");
+                        Log.d("log", "initi");
 
 
                         String exStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -552,8 +481,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                         tempFilename = pp + ".wav";
                         tempDestFile = appTmpPath.getAbsolutePath() + File.separator + tempFilename;
                         Log.d("MainActivity", "tempDestFile : " + tempDestFile);
-                        HashMap<String, String> myHashRender = new HashMap<String, String>();
-                        //speakTextTxt = "HEYY HEY Toast.makeText(FirstPageActivity.this,i, Toast.LENGTH_LONG).show()";
+                        HashMap<String, String> myHashRender = new HashMap<>();
                         myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, string);
                         int i3 = tts.synthesizeToFile(string, myHashRender, tempDestFile);
                         Log.d("TAG ", " errrr " + i3);
@@ -705,9 +633,6 @@ public class PdfReadersActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-//            if (mTts != null) {
-//                mTts.toStop();
-//            }
             if (tts != null) {
                 tts.stop();
             }
@@ -722,10 +647,7 @@ public class PdfReadersActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-//            if (mTts != null) {
-//                mTts.toShutDown();
-//            }
+    try{
             if (tts != null) {
                 tts.shutdown();
             }

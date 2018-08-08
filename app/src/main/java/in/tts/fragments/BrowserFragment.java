@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,6 +223,10 @@ public class BrowserFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void setLoadData() {
+        Log.d("Tag", "tab1 setLoadData ");
     }
 
     public interface OnFragmentInteractionListener {

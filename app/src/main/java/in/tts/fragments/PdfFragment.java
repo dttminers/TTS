@@ -13,12 +13,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
@@ -33,6 +36,8 @@ public class PdfFragment extends Fragment {
     private EbookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Library"};
+
+    public static boolean status = false;
 
     public PdfFragment() {
     }
@@ -67,6 +72,22 @@ public class PdfFragment extends Fragment {
         mListener = null;
     }
 
+    public void setLoadData() {
+        try {
+            Log.d("Tag", "tab2 setLoadData " + status);
+//            if (!status) {
+                viewPager.setCurrentItem(0, true);
+//            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toCloseLoader();
+        }
+    }
+
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
@@ -93,8 +114,6 @@ public class PdfFragment extends Fragment {
             tabLayout.getTabAt(0).setText(tabHomeText[0]).select();
             tabLayout.getTabAt(1).setText(tabHomeText[1]);
 
-
-            viewPager.setCurrentItem(1, true);
             LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
             linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
 
@@ -120,10 +139,11 @@ public class PdfFragment extends Fragment {
                 }
 
             });
-
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -152,13 +172,13 @@ public class PdfFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        viewPager.setCurrentItem(1, true);
+//        viewPager.setCurrentItem(1, true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        viewPager.setCurrentItem(0, true);
+//        viewPager.setCurrentItem(0, true);
         CommonMethod.toReleaseMemory();
     }
 

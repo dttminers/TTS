@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -180,15 +181,47 @@ public class MainActivity extends AppCompatActivity implements
 
     public void replacePage(Fragment fragment) {
         try {
-            CommonMethod.toCloseLoader();
-            CommonMethod.toCallLoader(this, "Please wait000");
+//            String backStateName = fragment.getClass().getName();
+//            Log.d("Tag ", " Pdf Activity 00 " + getSupportFragmentManager().getBackStackEntryCount());
+//            FragmentManager manager = getSupportFragmentManager();
+//            boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+//
+//            if (!fragmentPopped){ //fragment not in back stack, create it.
+//                Log.d("Tag ", " Pdf Activity 0 " + getSupportFragmentManager().getBackStackEntryCount());
+//                FragmentTransaction ft = manager.beginTransaction();
+//                ft.replace(R.id.frame_layout, fragment);
+//                ft.addToBackStack(backStateName);
+//                ft.commit();
+//            } else {
+//                Log.d("Tag ", " Pdf Activity 1 " + getSupportFragmentManager().getBackStackEntryCount());
+//            }
 
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commitAllowingStateLoss();
-            CommonMethod.toCloseLoader();
+
+            String backStateName =  fragment.getClass().getName();
+            String fragmentTag = backStateName;
+
+            FragmentManager manager = getSupportFragmentManager();
+            boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+            Log.d("Tag ", " Pdf Activity 0 " + getSupportFragmentManager().getBackStackEntryCount());
+            if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null){ //fragment not in back stack, create it.
+                Log.d("Tag ", " Pdf Activity 1 " + getSupportFragmentManager().getBackStackEntryCount());
+                FragmentTransaction ft = manager.beginTransaction();
+                ft.add(R.id.frame_layout, fragment, fragmentTag);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(backStateName);
+                ft.commit();
+            } else{
+                Log.d("Tag ", " Pdf Activity 2 " + getSupportFragmentManager().getBackStackEntryCount());
+            }
+//            CommonMethod.toCloseLoader();
+//            CommonMethod.toCallLoader(this, "Please wait000");
+//
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.frame_layout, fragment)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                    .commitAllowingStateLoss();
+//            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

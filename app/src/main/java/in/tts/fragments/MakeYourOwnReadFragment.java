@@ -525,6 +525,10 @@ public class MakeYourOwnReadFragment extends Fragment {
         CommonMethod.toReleaseMemory();
     }
 
+    public void setLoadData() {
+        Log.d("Tag", "tab4 setLoadData ");
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
 

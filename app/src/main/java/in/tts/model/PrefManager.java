@@ -273,7 +273,7 @@ public class PrefManager {
             String us = _context.getSharedPreferences(PDF_LIST_RECENT, 0).getString(PDF_LIST_INFO_RECENT, null);
             if (us != null) {
                 Log.d("TAG", " toGetPDFFileListRecent " + us);
-                return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
             }

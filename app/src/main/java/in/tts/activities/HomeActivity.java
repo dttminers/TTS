@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -35,6 +36,7 @@ import in.tts.fragments.GalleryFragment;
 import in.tts.fragments.MainHomeFragment;
 import in.tts.fragments.MakeYourOwnReadFragment;
 import in.tts.fragments.PdfFragment;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.NonSwipeableViewPager;
 
@@ -62,7 +64,16 @@ public class HomeActivity extends AppCompatActivity implements
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_home);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
 
+    private void toBindData() {
+        try {
             tab1 = BrowserFragment.newInstance();
             tab2 = PdfFragment.newInstance();
             tab3 = MainHomeFragment.newInstance();
@@ -71,7 +82,6 @@ public class HomeActivity extends AppCompatActivity implements
 
             tabLayout = findViewById(R.id.tabsHome);
             viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
-            viewPager.setOffscreenPageLimit(5);
 
             SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
             viewPager.setAdapter(adapter);
@@ -82,6 +92,8 @@ public class HomeActivity extends AppCompatActivity implements
             tabLayout.getTabAt(2).setText(tabHomeText[2]).setIcon(tabHomeIcon[2]);
             tabLayout.getTabAt(3).setText(tabHomeText[3]).setIcon(tabHomeIcon[3]);
             tabLayout.getTabAt(4).setText(tabHomeText[4]).setIcon(tabHomeIcon[4]);
+
+            viewPager.setOffscreenPageLimit(5);
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -98,9 +110,6 @@ public class HomeActivity extends AppCompatActivity implements
                 public void onTabReselected(TabLayout.Tab tab) {
                 }
             });
-
-            fn_permission();
-            setCurrentViewPagerItem(2);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -278,22 +287,28 @@ public class HomeActivity extends AppCompatActivity implements
             switch (i) {
                 case 0:
                     toSetTitle(getString(R.string.str_title_browse_it));
+                    tab1.setLoadData();
                     break;
                 case 1:
                     toSetTitle(getString(R.string.str_title_docs));
+                    tab2.setLoadData();
                     break;
                 case 2:
                     toSetTitle(getString(R.string.app_name));
+                    tab3.setLoadData();
                     break;
                 case 3:
                     toSetTitle(getString(R.string.str_title_make_your_own_read));
+                    tab4.setLoadData();
                     break;
                 case 4:
                     toSetTitle(getString(R.string.str_title_images));
+                    tab5.setLoadData();
                     break;
                 default:
                     toSetTitle(getString(R.string.app_name));
                     tabLayout.getTabAt(2).select();
+                    tab3.setLoadData();
                     break;
             }
             CommonMethod.toReleaseMemory();
@@ -337,6 +352,9 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         CommonMethod.toReleaseMemory();
+        toBindData();
+        fn_permission();
+        setCurrentViewPagerItem(2);
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class GalleryFragment extends Fragment {
     private ImageAdapterGallery imageAdapterGallery;
     private ProgressBar mLoading;
     private RecyclerView recyclerView;
+    boolean status = false;
 
     public GalleryFragment() {
     }
@@ -56,31 +58,23 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-     try{
-        if (getActivity() != null) {
-            mLoading = getActivity().findViewById(R.id.progressBarPic);
-            recyclerView = getActivity().findViewById(R.id.rvGallery);
-        }
-         CommonMethod.toReleaseMemory();
-    } catch (Exception | Error e) {
-        e.printStackTrace();
-        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-        Crashlytics.logException(e);
-        FirebaseCrash.report(e);
-    }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         try {
-            fn_permission();
+            if (getActivity() != null) {
+                mLoading = getActivity().findViewById(R.id.progressBarPic);
+                recyclerView = getActivity().findViewById(R.id.rvGallery);
+            }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     private void fn_permission() {
@@ -101,21 +95,23 @@ public class GalleryFragment extends Fragment {
     public void toGetData() {
         try {
             if (getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // change UI elements here
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+                // change UI elements here
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-                        imageFile = new ArrayList<>();
-                        imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
-                        imageAdapterGallery.notifyDataSetChanged();
-
-                        new toGet().execute();
-                         mLoading.setVisibility(View.GONE);
-                    }
-                });
+                imageFile = new ArrayList<>();
+                imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
+                imageAdapterGallery.notifyDataSetChanged();
+                Log.d("Tag ", " Load status" + status);
+                if (!status) {
+                    new toGet().execute();
+                }
+                mLoading.setVisibility(View.GONE);
+//                    }
+//                });
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -208,6 +204,18 @@ public class GalleryFragment extends Fragment {
         mListener = null;
     }
 
+    public void setLoadData() {
+        Log.d("Tag", "tab5 setLoadData ");
+        try {
+            fn_permission();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
@@ -216,7 +224,7 @@ public class GalleryFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-           getAllShownImagesPath(getActivity());
+            getAllShownImagesPath(getActivity());
             return null;
         }
 
@@ -225,6 +233,8 @@ public class GalleryFragment extends Fragment {
             super.onPostExecute(aVoid);
             recyclerView.setAdapter(imageAdapterGallery);
             imageAdapterGallery.notifyDataSetChanged();
+            status = true;
+            Log.d("TAG", " PDF getOffscreenPageLimit : " + imageFile.size());
         }
     }
 
@@ -245,5 +255,4 @@ public class GalleryFragment extends Fragment {
         super.onResume();
         CommonMethod.toReleaseMemory();
     }
-
 }

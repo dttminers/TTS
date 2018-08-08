@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import in.tts.R;
 import in.tts.activities.AfterFileSelected;
 import in.tts.activities.PdfReadersActivity;
+import in.tts.activities.PdfShowingActivity;
 import in.tts.utils.CommonMethod;
 
 public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHolder> {
@@ -69,7 +70,8 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
                     public void onClick(View view) {
                         try {
                             CommonMethod.toCallLoader(context, "Loading...");
-                            Intent intent = new Intent(context, PdfReadersActivity.class);
+                            Intent intent = new Intent(context, PdfShowingActivity.class);
+//                            Intent intent = new Intent(context, PdfReadersActivity.class);
 //                            Intent intent = new Intent(context, AfterFileSelected.class);
                             intent.putExtra("file", list.get(getAdapterPosition()));
                             context.startActivity(intent);

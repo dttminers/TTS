@@ -21,7 +21,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import java.io.File;
@@ -74,8 +76,10 @@ public class TutorialPageActivity extends AppCompatActivity {
 
             fn_permission();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -93,8 +97,10 @@ public class TutorialPageActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -117,8 +123,10 @@ public class TutorialPageActivity extends AppCompatActivity {
                 }
 //            );
             } catch (Exception | Error e) {
-                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e); FirebaseCrash.report(e);
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
             }
         }
     }
@@ -135,13 +143,16 @@ public class TutorialPageActivity extends AppCompatActivity {
             if (User.getUser(TutorialPageActivity.this).getId() != null) {
 //                startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
                 startActivity(new Intent(TutorialPageActivity.this, HomeActivity.class));
+                finish();
             } else {
                 startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
             }
             finish();
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -156,8 +167,10 @@ public class TutorialPageActivity extends AppCompatActivity {
                     skip.setVisibility(View.VISIBLE);
                 }
             } catch (Exception | Error e) {
-                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e); FirebaseCrash.report(e);
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
             }
         }
 
@@ -189,8 +202,10 @@ public class TutorialPageActivity extends AppCompatActivity {
                 launchHomeScreen();
             }
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -212,8 +227,10 @@ public class TutorialPageActivity extends AppCompatActivity {
                     container.addView(view);
                 }
             } catch (Exception | Error e) {
-                e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e); FirebaseCrash.report(e);
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
             }
             return view;
         }

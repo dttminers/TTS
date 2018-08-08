@@ -193,42 +193,42 @@ public class MainHomeFragment extends Fragment {
     public void toSetSomeData() {
         try {
             if (getActivity() != null) {
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-                // change UI elements here
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // change UI elements here
 
-                if (prefManager.toGetPDFListRecent() != null) {
-                    pdfFile = prefManager.toGetPDFListRecent();
-                } else
+                        if (prefManager.toGetPDFListRecent() != null) {
+                            pdfFile = prefManager.toGetPDFListRecent();
+                        } else
 //            CommonMethod.toCloseLoader();
 //            Log.d("TAG ", " Data :  " + prefManager.toGetPDFList().size() + ":" + prefManager.toGetImageList().size());
-                    if (prefManager.toGetPDFList() == null) {
+                            if (prefManager.toGetPDFList() == null) {
 //                pdfFile = ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                        pdfFile = new ArrayList<>();
-                        getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-                    } else {
-                        pdfFile = prefManager.toGetPDFList();
-                    }
-                pdfHomePage = new PDFHomePage(getContext(), pdfFile);
-                toBindRecentPdf();
+                                pdfFile = new ArrayList<>();
+                                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                            } else {
+                                pdfFile = prefManager.toGetPDFList();
+                            }
+                        pdfHomePage = new PDFHomePage(getContext(), pdfFile);
+                        toBindRecentPdf();
 
-                if (prefManager.toGetImageListRecent() != null) {
-                    imageFile = prefManager.toGetImageListRecent();
-                } else if (prefManager.toGetImageList() == null) {
+                        if (prefManager.toGetImageListRecent() != null) {
+                            imageFile = prefManager.toGetImageListRecent();
+                        } else if (prefManager.toGetImageList() == null) {
 //                imageFile = ToGetImages.getAllShownImagesPath(getActivity());
-                    imageFile = new ArrayList<>();
-                    getAllShownImagesPath();
-                } else {
-                    imageFile = prefManager.toGetImageList();
-                }
-                pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
-                toBindRecentImages();
-                CommonMethod.toCloseLoader();
-                nsv.setVisibility(View.VISIBLE);
-                mLoading.setVisibility(View.GONE);
-//                    }
-//                });
+                            imageFile = new ArrayList<>();
+                            getAllShownImagesPath();
+                        } else {
+                            imageFile = prefManager.toGetImageList();
+                        }
+                        pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
+                        toBindRecentImages();
+                        CommonMethod.toCloseLoader();
+                        nsv.setVisibility(View.VISIBLE);
+                        mLoading.setVisibility(View.GONE);
+                    }
+                });
                 CommonMethod.toReleaseMemory();
             }
         } catch (Exception | Error e) {
@@ -465,6 +465,11 @@ public class MainHomeFragment extends Fragment {
         mListener = null;
     }
 
+    public void setLoadData() {
+        Log.d("Tag", "tab3 setLoadData ");
+    }
+
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
 
@@ -487,6 +492,5 @@ public class MainHomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         CommonMethod.toReleaseMemory();
-//        toSetSomeData();
     }
 }

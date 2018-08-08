@@ -119,7 +119,6 @@
             android:label="@string/str_pdf"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.AfterFileSelected"
             android:label="@string/str_pdf"
@@ -173,7 +172,8 @@
             android:exported="false"
             android:label="Clipboard Monitor" />
         <!-- <service android:name=".services.MusicService" /> -->
-        <activity android:name=".activities.AudioPlayerActivity"></activity>
+        <activity android:name=".activities.AudioPlayerActivity" />
+        <activity android:name=".activities.PdfShowingActivity"></activity>
     </application>
 
 </manifest>
