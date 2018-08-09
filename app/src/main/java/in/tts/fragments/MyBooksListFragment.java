@@ -38,11 +38,10 @@ public class MyBooksListFragment extends Fragment {
     private PdfListAdapter pdfListAdapter;
     private RecyclerView recyclerView;
     private LinearLayout llCustom_loader;
-
+    public boolean status = false;
     private OnFragmentInteractionListener mListener;
 
     public MyBooksListFragment() {
-        // Required empty public constructor
     }
 
     public static MyBooksListFragment newInstance() {
@@ -56,35 +55,29 @@ public class MyBooksListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.d("Tag ", " Pdf onCreateView");
         return inflater.inflate(R.layout.fragment_my_books_list, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d("Tag ", " Pdf onActivityCreated");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("Tag ", " Pdf onStart");
-        CommonMethod.toReleaseMemory();
         try {
             file = new ArrayList<>();
-
             recyclerView = getActivity().findViewById(R.id.rvList);
             llCustom_loader = getActivity().findViewById(R.id.llCustom_loader);
-
-            fn_permission();
+//            fn_permission();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
     }
 
     private void fn_permission() {
@@ -107,26 +100,15 @@ public class MyBooksListFragment extends Fragment {
         try {
             Log.d("Tag ", " Pdf toGetData");
             if (getActivity() != null) {
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-                if (!PdfFragment.status) {
-                    // change UI elements here
-                    recyclerView.setHasFixedSize(true);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                    recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setHasFixedSize(true);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(layoutManager);
 
-                    pdfListAdapter = new PdfListAdapter(getActivity(), file);
-                    pdfListAdapter.notifyDataSetChanged();
-
+                pdfListAdapter = new PdfListAdapter(getActivity(), file);
+                pdfListAdapter.notifyDataSetChanged();
+                if (!status) {
                     new toGet().execute();
-                } else {
-                    llCustom_loader.setVisibility(View.VISIBLE);
-                }
-//                    }
-//                });
-
-            }
+                }            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -137,7 +119,6 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-            Log.d("Tag ", " Pdf getFile");
             File listFile[] = dir.listFiles();
             if (listFile != null && listFile.length > 0) {
                 for (int i = 0; i < listFile.length; i++) {
@@ -159,8 +140,6 @@ public class MyBooksListFragment extends Fragment {
                             }
                         }
                     }
-
-
                 }
             }
         } catch (Exception | Error e) {
@@ -172,7 +151,6 @@ public class MyBooksListFragment extends Fragment {
     }
 
     public void onButtonPressed(Uri uri) {
-        Log.d("Tag ", " Pdf onButtonPressed");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -180,7 +158,6 @@ public class MyBooksListFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.d("Tag ", " Pdf onAttach");
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -189,9 +166,13 @@ public class MyBooksListFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.d("Tag ", " Pdf onDetach");
         super.onDetach();
         mListener = null;
+    }
+
+    public void setLoadData() {
+        Log.d("Tag", "tab21 setLoadData " + status );
+        fn_permission();
     }
 
     public interface OnFragmentInteractionListener {
@@ -202,6 +183,7 @@ public class MyBooksListFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            Log.d("TAG", " PDF load ");
             getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
             return null;
         }
@@ -211,7 +193,7 @@ public class MyBooksListFragment extends Fragment {
             super.onPostExecute(aVoid);
             recyclerView.setAdapter(pdfListAdapter);
             pdfListAdapter.notifyDataSetChanged();
-            PdfFragment.status = true;
+            status = true;
             llCustom_loader.setVisibility(View.GONE);
             Log.d("TAG", " PDF onPostExecute Finished : " + file.size());
         }
@@ -220,39 +202,24 @@ public class MyBooksListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("Tag ", " Pdf onPause");
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("Tag ", " Pdf onDestroy");
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Tag ", " Pdf onResume");
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("Tag ", " Pdf onStop");
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("Tag ", " Pdf onRequestPermissionsResult");
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("Tag ", " Pdf onActivityResult");
+        CommonMethod.toReleaseMemory();
     }
 }

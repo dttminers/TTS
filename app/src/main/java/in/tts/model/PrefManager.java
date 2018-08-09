@@ -53,6 +53,8 @@ public class PrefManager {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private Context _context;
+    public static boolean AddedRecentImage = false;
+    public static boolean AddedRecentPDF = false;
 
     public PrefManager(Context context) {
         _context = context;
@@ -273,7 +275,7 @@ public class PrefManager {
             String us = _context.getSharedPreferences(PDF_LIST_RECENT, 0).getString(PDF_LIST_INFO_RECENT, null);
             if (us != null) {
                 Log.d("TAG", " toGetPDFFileListRecent " + us);
-                return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").trim().split(",")));
+                return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
             }
@@ -305,7 +307,7 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(IMAGE_LIST_RECENT, 0).getString(IMAGE_LIST_INFO_RECENT, null);
             if (us != null) {
-                Log.d("TAG", " toGetImageListRecent " + us);
+                Log.d("TAG", " toGetImageListRecent1 " + us);
                 return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
@@ -364,6 +366,4 @@ public class PrefManager {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
-
-
 }

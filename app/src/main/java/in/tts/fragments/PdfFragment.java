@@ -24,6 +24,8 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.util.Objects;
+
 import in.tts.R;
 import in.tts.utils.CommonMethod;
 
@@ -33,15 +35,12 @@ public class PdfFragment extends Fragment {
     private ViewPager viewPager;
 
     private MyBooksListFragment tab1;
-    private EbookFragment tab2;
+    private EBookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Library"};
 
-    public static boolean status = false;
-
     public PdfFragment() {
     }
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,9 +59,6 @@ public class PdfFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -74,9 +70,37 @@ public class PdfFragment extends Fragment {
 
     public void setLoadData() {
         try {
-            Log.d("Tag", "tab2 setLoadData " + status);
-//            if (!status) {
-            status = false;
+            Log.d("Tag", "tab2 setLoadData " + viewPager.getCurrentItem());
+            if (viewPager != null) {
+                setCurrentViewPagerItem(viewPager.getCurrentItem());
+            } else {
+                setCurrentViewPagerItem(0);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toCloseLoader();
+        }
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    @AddTrace(name = "onCreatePdfFragment", enabled = true)
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_pdf, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc Pdf", null);
 
 
             tabLayout = getActivity().findViewById(R.id.tabsub);
@@ -101,7 +125,8 @@ public class PdfFragment extends Fragment {
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    viewPager.setCurrentItem(tab.getPosition());
+//                    viewPager.setCurrentItem(tab.getPosition());
+                    setCurrentViewPagerItem(tab.getPosition());
                 }
 
                 @Override
@@ -113,8 +138,8 @@ public class PdfFragment extends Fragment {
                 }
 
             });
-            viewPager.setCurrentItem(0, true);
-//            }
+//            viewPager.setCurrentItem(0, true);
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -124,30 +149,40 @@ public class PdfFragment extends Fragment {
         }
     }
 
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
-    @AddTrace(name = "onCreatePdfFragment", enabled = true)
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pdf, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void setCurrentViewPagerItem(int i) {
         try {
-            CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc Pdf", null);
-
+            if (tabLayout != null) {
+                Objects.requireNonNull(tabLayout.getTabAt(i)).select();
+            }
+            if (viewPager != null) {
+                viewPager.setCurrentItem(i);
+            }
+            switch (i) {
+                case 0:
+                    if (tab1 != null) {
+                        tab1.setLoadData();
+                    }
+                    break;
+                case 1:
+                    if (tab2 != null) {
+                        tab2.setLoadData();
+                    }
+                    break;
+                default:
+                    if (tabLayout != null) {
+                        Objects.requireNonNull(tabLayout.getTabAt(0)).select();
+                    }
+                    if (tab1 != null) {
+                        tab1.setLoadData();
+                    }
+                    break;
+            }
+            CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
-            CommonMethod.toCloseLoader();
         }
     }
 
@@ -161,7 +196,7 @@ public class PdfFragment extends Fragment {
                 case 0:
                     return tab1 = MyBooksListFragment.newInstance();
                 case 1:
-                    return tab2 = EbookFragment.newInstance();
+                    return tab2 = EBookFragment.newInstance();
                 default:
                     return tab1 = MyBooksListFragment.newInstance();
             }
@@ -175,13 +210,12 @@ public class PdfFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//        viewPager.setCurrentItem(1, true);
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        viewPager.setCurrentItem(0, true);
         CommonMethod.toReleaseMemory();
     }
 

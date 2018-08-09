@@ -205,7 +205,7 @@ public class GalleryFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab5 setLoadData ");
+        Log.d("Tag", "tab5 setLoadData " + status);
         try {
             fn_permission();
         } catch (Exception | Error e) {

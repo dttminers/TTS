@@ -466,7 +466,10 @@ public class MainHomeFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab3 setLoadData ");
+        Log.d("Tag", "tab3 setLoadData " + PrefManager.AddedRecentPDF + ":" + PrefManager.AddedRecentImage + ":" + (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF));
+        if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
+            toSetSomeData();
+        }
     }
 
 

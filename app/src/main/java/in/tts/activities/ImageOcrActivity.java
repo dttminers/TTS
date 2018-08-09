@@ -66,10 +66,9 @@ public class ImageOcrActivity extends AppCompatActivity {
 
             mRl = findViewById(R.id.rlImageOcrActivity);
 
-
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeFile(photoPath.trim(), options);
+            bitmap = BitmapFactory.decodeFile(photoPath.trim().replaceAll( "%20", " "), options);
 
             ImageView mIvOcr = findViewById(R.id.imgOcr);
             mIvOcr.setImageBitmap(bitmap);
@@ -80,12 +79,13 @@ public class ImageOcrActivity extends AppCompatActivity {
             ArrayList<String> list = prefManager.toGetImageListRecent();
             if (list != null) {
                 if (!list.contains(photoPath)) {
-                    list.add(photoPath);
+                    list.add(photoPath.replaceAll("\\s", "%20"));
                 }
             } else {
                 list = new ArrayList<>();
                 list.add(photoPath);
             }
+            PrefManager.AddedRecentImage = true;
             prefManager.toSetImageFileListRecent(list);
 
         } catch (Exception | Error e) {
@@ -100,7 +100,6 @@ public class ImageOcrActivity extends AppCompatActivity {
     protected void onResume() {
         try {
             super.onResume();
-
             new toGetImage().execute();
         } catch (Exception | Error e) {
             e.printStackTrace();

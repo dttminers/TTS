@@ -64,6 +64,9 @@ public class HomeActivity extends AppCompatActivity implements
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_home);
+            toBindData();
+            fn_permission();
+            setCurrentViewPagerItem(2);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -352,9 +355,6 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         CommonMethod.toReleaseMemory();
-        toBindData();
-        fn_permission();
-        setCurrentViewPagerItem(2);
     }
 
     @Override

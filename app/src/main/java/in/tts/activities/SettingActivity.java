@@ -85,18 +85,17 @@ public class SettingActivity extends AppCompatActivity {
 
             user = User.getUser(SettingActivity.this);
 
-            Log.d("TAG", "user data: " + user);
+            Log.d("TAG", "user data: " + (user.getUsername() != null ? user.getUsername() : user.getEmail() != null ? user.getEmail() : "UserName") + user.getPicPath());
             tvName.setText(user.getUsername() != null ? user.getUsername() : user.getEmail() != null ? user.getEmail() : "UserName");
-
-            Picasso.get()
-                    .load(user.getPicPath())
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher)
-                    .centerCrop()
-                    .resize(50, 50)
-                    .into(mCivUpeProfile);
-
-            tvUsed.setVisibility(View.VISIBLE);
+            if (user.getPicPath() != null) {
+                Picasso.get()
+                        .load(user.getPicPath())
+                        .placeholder(R.drawable.ic_tab_guide)
+                        .error(R.drawable.ic_tab_guide)
+                        .centerCrop()
+                        .resize(50, 50)
+                        .into(mCivUpeProfile);
+            }
 
             mBtnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -220,7 +220,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onCompletion(MediaPlayer mp) {
         try {
             Log.d("TAG", " onCompletion " + audioIndex + ":"+ list.size() + (audioIndex != list.size()));
-            if (audioIndex != list.size()) {
+            if (audioIndex != (list.size()-1)) {
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
@@ -367,6 +367,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             try {
                 //Get the new media index form SharedPreferences
                 audioIndex = new StorageUtils(getApplicationContext()).loadAudioIndex();
+                Log.d("TAG", " Song 1 " + audioIndex +":"+list.size());
                 if (audioIndex != -1 && audioIndex < list.size()) {
                     //index is in a valid range
                     audio = list.get(audioIndex).getText();
@@ -562,16 +563,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     private void buildNotification(PlaybackStatus playbackStatus) {
         try {
-            int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
+            int notificationAction = R.drawable.ic_ntf_pause;//needs to be initialized
             PendingIntent play_pauseAction = null;
 
             //Build a new notification according to the current state of the MediaPlayer
             if (playbackStatus == PlaybackStatus.PLAYING) {
-                notificationAction = android.R.drawable.ic_media_pause;
+                notificationAction = R.drawable.ic_ntf_pause;
                 //create the pause action
                 play_pauseAction = playbackAction(1);
             } else if (playbackStatus == PlaybackStatus.PAUSED) {
-                notificationAction = android.R.drawable.ic_media_play;
+                notificationAction = R.drawable.ic_ntf_play;
                 //create the play action
                 play_pauseAction = playbackAction(0);
             }
@@ -593,7 +594,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     .setColor(getResources().getColor(R.color.colorPrimary))
                     // Set the large and small icons
                     .setLargeIcon(largeIcon)
-                    .setSmallIcon(android.R.drawable.stat_sys_headset)
+                    .setSmallIcon(R.drawable.ic_ntf_headset)
                     // Set Notification content information
 //                    .setContentText(activeAudio.getArtist())
 //                    .setContentTitle(activeAudio.getAlbum())
@@ -603,9 +604,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     .setContentInfo("Recent Audios")
                     .setContentText("Playing Recent Audios")
                     // Add playback actions
-                    .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                    .addAction(R.drawable.ic_ntf_previous, "previous", playbackAction(3))
                     .addAction(notificationAction, "pause", play_pauseAction)
-                    .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+                    .addAction(R.drawable.ic_ntf_next, "next", playbackAction(2));
 
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notificationBuilder.build());
         } catch (Error | Exception e) {
@@ -681,9 +682,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 StorageUtils storage = new StorageUtils(getApplicationContext());
                 list = storage.loadAudio();
 //                list = RecentVoiceActivity.user_list;
-                Log.d("TAG", "Audio data :" + list.size() + list);
-                audioIndex = storage.loadAudioIndex();
 
+                audioIndex = storage.loadAudioIndex();
+                Log.d("TAG", "Audio data :" + list.size() + audioIndex + ":" + (audioIndex != -1 && audioIndex < list.size()) );
                 if (audioIndex != -1 && audioIndex < list.size()) {
                     //index is in a valid range
                     audio = list.get(audioIndex).getText();
