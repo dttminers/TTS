@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +73,8 @@ import in.tts.network.VolleySingleton;
 import in.tts.utils.CommonMethod;
 
 public class RegisterFragment extends Fragment {
+
+    private LinearLayout llLoader;
 
     private EditText mEdtEmail, mEdtPassword, mEdtCnfPwd;
     private Button mBtnSignUp;
@@ -176,6 +179,7 @@ public class RegisterFragment extends Fragment {
             //Facebook
             relativeLayoutFb = getActivity().findViewById(R.id.rlFacebookReg);
 
+            llLoader = getActivity().findViewById(R.id.llCustom_loader500);
             //Get Firebase auth instance
             mAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -365,9 +369,11 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        CommonMethod.toCallLoader(getContext(), "Loading....");
-                        getContext().startActivity(new Intent(getContext(), HomeActivity.class));
+                        llLoader.setVisibility(View.VISIBLE);
+//                        CommonMethod.toCallLoader(getContext(), "Loading....");
+                        getContext().startActivity(new Intent(getContext(), HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         getActivity().finish();
+                        getActivity().overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -635,13 +641,15 @@ public class RegisterFragment extends Fragment {
         try {
             CommonMethod.toCloseLoader();
             CommonMethod.toDisplayToast(getContext(), "Login Successful");
-            CommonMethod.toCallLoader(getContext(), "Logging....");
+            llLoader.setVisibility(View.VISIBLE);
+//            CommonMethod.toCallLoader(getContext(), "Logging....");
             new PrefManager(getContext()).setUserInfo();
-            startActivity(new Intent(getContext(), HomeActivity.class));
+            startActivity(new Intent(getContext(), HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
             if (getActivity() != null) {
                 getActivity().finish();
+                getActivity().overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
-            CommonMethod.toCloseLoader();
+//            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

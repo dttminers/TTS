@@ -37,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.activity_splash);
             startService(new Intent(this, ClipboardMonitorService.class));
 
@@ -51,33 +51,34 @@ public class SplashActivity extends AppCompatActivity {
                 public void run() {
                     prefManager.getUserInfo();
                     if (auth.getCurrentUser() != null) {
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     } else if (User.getUser(SplashActivity.this).getId() != null) {
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     } else {
                         if (prefManager.isFirstTimeLaunch()) {
-                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class));
+                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         } else {
-                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));
+                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         }
                     }
 //                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
+                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
 
                 }
             }, 3000);
             prefManager.getAudioSetting();
-            if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                try {
-                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
-                    ToGetImages.getAllShownImagesPath(SplashActivity.this, SplashActivity.this);
-                } catch (Exception | Error e) {
-                    e.printStackTrace();
-                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                    Crashlytics.logException(e);
-                    FirebaseCrash.report(e);
-                }
-            }
+//            if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+//                try {
+//                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
+//                    ToGetImages.getAllShownImagesPath(SplashActivity.this, SplashActivity.this);
+//                } catch (Exception | Error e) {
+//                    e.printStackTrace();
+//                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//                    Crashlytics.logException(e);
+//                    FirebaseCrash.report(e);
+//                }
+//            }
             CommonMethod.isSignedIn(SplashActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();

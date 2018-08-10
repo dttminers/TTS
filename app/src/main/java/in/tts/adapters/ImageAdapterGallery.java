@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics; import com.flurry.android.FlurryAgent; import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,16 +39,18 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         try {
-            Log.d("TAG", " IMAGES-G " + i + ":" + images.get(i).trim().replaceAll("\\s", "%20") +":"+images.get(i));
+            Log.d("TAG", " IMAGES-G " + i + ":" + images.get(i).trim().replaceAll("\\s", "%20") + ":" + images.get(i));
             Picasso.get()
                     .load("file://" + images.get(i).trim().replaceAll("\\s", "%20"))
-                    .resize(250,250)
+                    .resize(220, 220)
                     .onlyScaleDown()
                     .centerCrop()
                     .into(viewHolder.picturesView);
         } catch (Exception | Error e) {
-            e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e); FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
 
@@ -68,9 +72,11 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
                     try {
                         context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", images.get(getAdapterPosition())));
                         CommonMethod.toReleaseMemory();
-                    } catch (Exception| Error e){
-                        e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e); FirebaseCrash.report(e);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });

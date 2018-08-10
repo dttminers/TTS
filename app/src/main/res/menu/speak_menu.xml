@@ -5,7 +5,7 @@
     tools:ignore="AlwaysShowAction">
     <item
         android:id="@+id/menuSpeak"
-        android:icon="@drawable/speaker"
+        android:icon="@drawable/white_speak"
         android:orderInCategory="100"
         android:title="@string/str_speak"
         app:showAsAction="always" />

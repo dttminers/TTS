@@ -73,10 +73,12 @@ public class HomeActivity extends AppCompatActivity implements
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
     }
 
     private void toBindData() {
         try {
+            CommonMethod.toReleaseMemory();
             tab1 = BrowserFragment.newInstance();
             tab2 = PdfFragment.newInstance();
             tab3 = MainHomeFragment.newInstance();
@@ -102,15 +104,18 @@ public class HomeActivity extends AppCompatActivity implements
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setCurrentViewPagerItem(tab.getPosition());
+                    CommonMethod.toReleaseMemory();
                     CommonMethod.setAnalyticsData(HomeActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
                 }
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
+                    CommonMethod.toReleaseMemory();
                 }
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
+                    CommonMethod.toReleaseMemory();
                 }
             });
         } catch (Exception | Error e) {
@@ -128,6 +133,7 @@ public class HomeActivity extends AppCompatActivity implements
         }
 
         public Fragment getItem(int position) {
+            CommonMethod.toReleaseMemory();
             try {
                 switch (position) {
                     case 0:
@@ -174,6 +180,7 @@ public class HomeActivity extends AppCompatActivity implements
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
@@ -189,6 +196,7 @@ public class HomeActivity extends AppCompatActivity implements
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
@@ -202,6 +210,7 @@ public class HomeActivity extends AppCompatActivity implements
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
@@ -221,6 +230,7 @@ public class HomeActivity extends AppCompatActivity implements
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
         return true;
     }
 
@@ -234,6 +244,7 @@ public class HomeActivity extends AppCompatActivity implements
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
         return super.onOptionsItemSelected(item);
     }
 
@@ -260,7 +271,9 @@ public class HomeActivity extends AppCompatActivity implements
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
+        CommonMethod.toReleaseMemory();
     }
 
     public void onBackPressed() {
@@ -276,7 +289,9 @@ public class HomeActivity extends AppCompatActivity implements
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
+        CommonMethod.toReleaseMemory();
     }
 
     public void setCurrentViewPagerItem(int i) {
@@ -320,7 +335,9 @@ public class HomeActivity extends AppCompatActivity implements
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
+        CommonMethod.toReleaseMemory();
     }
 
     private void doExit() {
@@ -342,7 +359,9 @@ public class HomeActivity extends AppCompatActivity implements
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
         }
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
@@ -366,6 +385,12 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onRestart() {
         super.onRestart();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         CommonMethod.toReleaseMemory();
     }
 

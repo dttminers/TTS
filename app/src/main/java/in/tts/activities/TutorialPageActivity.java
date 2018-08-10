@@ -87,8 +87,8 @@ public class TutorialPageActivity extends AppCompatActivity {
         try {
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                toLoadData();
+//            } else {
+//                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -104,32 +104,32 @@ public class TutorialPageActivity extends AppCompatActivity {
         }
     }
 
-    private void toLoadData() {
-        if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            try {
-                PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
-//            prefManager.toSetPDFFileList(
-                if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
-                    if (!ToGetPdfFiles.isRunning()) {
-                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
-                    }
-                }
-//            );
-//            prefManager.toSetImageFileList(
-                if (prefManager.toGetImageList() == null && prefManager.toGetImageList().size() == 0) {
-                    if (!ToGetImages.isRunning()) {
-                        ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
-                    }
-                }
-//            );
-            } catch (Exception | Error e) {
-                e.printStackTrace();
-                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e);
-                FirebaseCrash.report(e);
-            }
-        }
-    }
+//    private void toLoadData() {
+//        if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+//            try {
+//                PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
+////            prefManager.toSetPDFFileList(
+//                if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
+//                    if (!ToGetPdfFiles.isRunning()) {
+//                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
+//                    }
+//                }
+////            );
+////            prefManager.toSetImageFileList(
+//                if (prefManager.toGetImageList() == null && prefManager.toGetImageList().size() == 0) {
+//                    if (!ToGetImages.isRunning()) {
+//                        ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
+//                    }
+//                }
+////            );
+//            } catch (Exception | Error e) {
+//                e.printStackTrace();
+//                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//                Crashlytics.logException(e);
+//                FirebaseCrash.report(e);
+//            }
+//        }
+//    }
 
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
@@ -142,7 +142,7 @@ public class TutorialPageActivity extends AppCompatActivity {
             prefManager.getUserInfo();
             if (User.getUser(TutorialPageActivity.this).getId() != null) {
 //                startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
-                startActivity(new Intent(TutorialPageActivity.this, HomeActivity.class));
+                startActivity(new Intent(TutorialPageActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 finish();
             } else {
                 startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));

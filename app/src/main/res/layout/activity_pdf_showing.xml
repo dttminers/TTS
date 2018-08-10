@@ -5,10 +5,11 @@
     android:id="@+id/rlPdfReader"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".activities.PdfReadersActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,13 +17,15 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/vpPdf"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:paddingBottom="45dp" />
 
         <LinearLayout
             android:id="@+id/llPDFReader"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
             android:background="@color/ttsRed"
             android:gravity="center"
             android:orientation="horizontal"
@@ -38,7 +41,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/refresh" />
+                android:background="@drawable/refresh"
+                android:foreground="?attr/selectableItemBackground" />
 
             <Button
                 android:id="@+id/backward"
@@ -50,19 +54,22 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/step_backward" />
+                android:background="@drawable/step_backward"
+                android:foreground="?attr/selectableItemBackground" />
 
             <Button
                 android:id="@+id/playPause"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:padding="5dp"
                 android:layout_gravity="center"
                 android:layout_marginEnd="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/play_button" />
+                android:background="@drawable/play_button"
+                android:foreground="?attr/selectableItemBackground" />
 
             <Button
                 android:id="@+id/forward"
@@ -74,7 +81,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/step_forward" />
+                android:background="@drawable/step_forward"
+                android:foreground="?attr/selectableItemBackground" />
 
             <Button
                 android:id="@+id/close"
@@ -86,11 +94,22 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/cancel_button" />
+                android:background="@drawable/cancel_button"
+                android:foreground="?attr/selectableItemBackground" />
 
         </LinearLayout>
 
-    </LinearLayout>
+        <SeekBar
+            android:id="@+id/sbPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/llPDFReader"
+            android:layout_marginBottom="-10dp"
+            android:background="@color/transparent"
+            android:theme="@style/AppTheme.GreyAccent"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progressBarSpeak120"
@@ -114,8 +133,8 @@
 
         <ProgressBar
             android:id="@+id/progressBar120"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_margin="20dp" />
     </LinearLayout>

@@ -9,9 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -22,12 +22,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -35,9 +33,9 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import in.tts.R;
-import in.tts.classes.TTS;
 import in.tts.model.AudioSetting;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.KeyBoard;
@@ -45,8 +43,6 @@ import in.tts.utils.KeyBoard;
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static in.tts.utils.KeyBoard.hideKeyboard;
-import static in.tts.utils.KeyBoard.openKeyboard;
 
 public class MakeYourOwnReadFragment extends Fragment {
 
@@ -55,12 +51,9 @@ public class MakeYourOwnReadFragment extends Fragment {
     private TextView tvCopy, tvPaste, tvShare, tvSpeak;
     private ImageView ivCopy, ivPaste, ivShare, ivSpeak;
     private ClipboardManager myClipboard;
-    private ClipData myClip;
-    int sdk = android.os.Build.VERSION.SDK_INT;
 
     // class member variable to save the X,Y coordinates
     private float[] lastTouchDownXY = new float[2];
-
 
     public MakeYourOwnReadFragment() {
         // Required empty public constructor
@@ -69,8 +62,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
 
     @AddTrace(name = "onCreateMakeYourOurReadFragment", enabled = true)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_make_your_own_read, container, false);
     }
 
@@ -79,26 +71,16 @@ public class MakeYourOwnReadFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-
-            // EditText.getSelectionStart()
-            // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
-
-//            int start = Math.max(myEditText.getSelectionStart(), 0);
-//            int end = Math.max(myEditText.getSelectionEnd(), 0);
-//            myEditText.getText().replace(Math.min(start, end), Math.max(start, end),
-//                    textToInsert, 0, textToInsert.length());
-            setHasOptionsMenu(true);
-            CommonMethod.setAnalyticsData(getContext(), "MainTab", "MakeYourRead", null);
-            editText = getActivity().findViewById(R.id.edMakeRead);
-
+            CommonMethod.setAnalyticsData(Objects.requireNonNull(getContext()), "MainTab", "MakeYourRead", null);
+            editText = Objects.requireNonNull(getActivity()).findViewById(R.id.edMakeRead);
 
             editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (!hasFocus) {
-                        hideKeyboard(getActivity());
+                        KeyBoard.hideKeyboard(getActivity());
                     } else {
-                        openKeyboard(getActivity());
+                        KeyBoard. openKeyboard(getActivity());
                     }
                 }
             });
@@ -123,7 +105,7 @@ public class MakeYourOwnReadFragment extends Fragment {
             editText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openKeyboard(getActivity());
+                    KeyBoard.openKeyboard(getActivity());
                 }
             });
             editText.setOnLongClickListener(new View.OnLongClickListener() {
@@ -134,16 +116,15 @@ public class MakeYourOwnReadFragment extends Fragment {
                 }
             });
 
-            if (android.os.Build.VERSION.SDK_INT < 11) {
+//            if (android.os.Build.VERSION.SDK_INT < 11) {
                 editText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
 
                     @Override
-                    public void onCreateContextMenu(ContextMenu menu, View v,
-                                                    ContextMenu.ContextMenuInfo menuInfo) {
+                    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                         menu.clear();
                     }
                 });
-            } else {
+//            } else {
                 editText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
 
                     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -161,7 +142,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                         return false;
                     }
                 });
-            }
+//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -173,8 +154,9 @@ public class MakeYourOwnReadFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void popup() {
         try {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View customView = inflater.inflate(R.layout.customise_clipboard, null);
+            LayoutInflater inflater = (LayoutInflater) Objects.requireNonNull(getContext()).getSystemService(LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
+            @SuppressLint("InflateParams") View customView = inflater.inflate(R.layout.customise_clipboard, null);
 
             final PopupWindow popupWindow = new PopupWindow(
                     customView,
@@ -198,7 +180,9 @@ public class MakeYourOwnReadFragment extends Fragment {
             tvShare = customView.findViewById(R.id.tv_share);
             tvSpeak = customView.findViewById(R.id.tv_speak);
 
-            myClipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+            if (getActivity() != null) {
+                myClipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+            }
 
             ivCopy.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -248,22 +232,16 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (editText != null) {
-
-//                    CharSequence text = editText.getText();//.subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-//                    myClip = ClipData.newPlainText("text", text);
-//                    myClipboard.setPrimaryClip(myClip);
-//                    Toast.makeText(getContext(), "Text Copied : " + text, Toast.LENGTH_SHORT).show();
                         String text = editText.getText().toString().trim();
-                        Log.d("TAG", " copy " + text + ":" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()));
                         if (text.length() != 0) {
                             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                             ClipData clip = ClipData.newPlainText("Clip", text);
-                            Toast.makeText(getApplicationContext(), "Text Copied to Clipboard", Toast.LENGTH_SHORT).show();
+                            CommonMethod.toDisplayToast(getApplicationContext(), "Text Copied");
                             if (clipboard != null) {
                                 clipboard.setPrimaryClip(clip);
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), "Nothing to Copy", Toast.LENGTH_SHORT).show();
+                            CommonMethod.toDisplayToast(getApplicationContext(), "Nothing to Copy");
                         }
                     }
                 }
@@ -277,56 +255,18 @@ public class MakeYourOwnReadFragment extends Fragment {
                         ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
                         String ptext = item.getText().toString();
                         if (editText != null) {
-//                        editText.setText(ptext);
                             int cursorPosition = editText.getSelectionStart();
                             CharSequence enteredText = editText.getText().toString();
                             CharSequence cursorToEnd = enteredText.subSequence(cursorPosition, enteredText.length());
                             editText.setText(ptext);
-//                            Log.d("TAG paste", " paste " + editText.getText().toString() + ":" + ptext + ":" + cursorPosition + ":" + cursorToEnd + ":" + ptext.substring(cursorPosition, ptext.length()));
                         }
                     }
-
-//                    if (myClipboard.hasPrimaryClip()) {
-//                        ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
-//                        String ptext = item.getText().toString();
-//                        editText.setText(ptext);
-//                        Toast.makeText(getContext(), "Text Pasted : " + ptext, Toast.LENGTH_SHORT).show();
-//                    }
                 }
-
-//                    String pasteText;
-//
-//                    // TODO Auto-generated method stub
-//                    if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB){
-//                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-//                        pasteText = clipboard.getText().toString();
-//                        editText.setText(pasteText);
-//
-//                    }else{
-//
-//                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-//                        if(clipboard.hasPrimaryClip()== true){
-//                            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(1);
-//                            pasteText = item.getText().toString();
-//                            editText.setText(pasteText);
-//                        }else{
-//                            Toast.makeText(getApplicationContext(), "Nothing to Paste", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-
             });
 
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    tvShare.setVisibility(View.VISIBLE);
-//                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-//                    sharingIntent.setType("text/plain");
-//                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
-//                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
-//                    getContext().startActivity(Intent.createChooser(sharingIntent, "Share"));
-
-                    Log.d("TAG", " Speak " + editText.getText().toString());
                     tvShare.setVisibility(View.VISIBLE);
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
@@ -349,13 +289,8 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-//                        t1.setLanguage(new Locale("hi_ID"));
-                        Log.d("TAG", " Speak " + editText.getText().toString());
-//                        TTS tts = new TTS(getContext());
-//                        tts.SpeakLoud(editText.getText().toString());
-
                         String toSpeak = editText.getText().toString();
-                        Toast.makeText(getContext(), toSpeak, Toast.LENGTH_SHORT).show();
+                        CommonMethod.toDisplayToast(getContext(), toSpeak);
                         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -380,61 +315,6 @@ public class MakeYourOwnReadFragment extends Fragment {
             FirebaseCrash.report(e);
         }
     }
-
-    public void onPause() {
-        if (t1 != null) {
-            t1.stop();
-            t1.shutdown();
-        }
-        if (editText != null) {
-            editText.setText("");
-        }
-        CommonMethod.toReleaseMemory();
-        super.onPause();
-    }
-
-    private void copyText() {
-        try {
-            if (getActivity() != null) {
-                ClipboardManager clipboardManager = (ClipboardManager)
-                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-
-                CharSequence selectedTxt = editText.getText().subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-                ClipData clipData = ClipData.newPlainText("zoftino text view", selectedTxt);
-                if (clipboardManager != null) {
-                    clipboardManager.setPrimaryClip(clipData);
-                }
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-            CommonMethod.toReleaseMemory();
-        }
-    }
-
-    private void pasteText() {
-        try {
-            if (getActivity() != null) {
-                ClipboardManager clipboardManager = (ClipboardManager)
-                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-
-                if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
-                    ClipData.Item item = clipboardManager.getPrimaryClip().getItemAt(0);
-
-                    CharSequence ptext = item.getText();
-                    editText.setText(ptext);
-                }
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-    }
-
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -526,7 +406,6 @@ public class MakeYourOwnReadFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab4 setLoadData ");
     }
 
     public interface OnFragmentInteractionListener {
@@ -534,6 +413,29 @@ public class MakeYourOwnReadFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CommonMethod.toReleaseMemory();
+    }
+
+    public void onPause() {
+        if (t1 != null) {
+            t1.stop();
+            t1.shutdown();
+        }
+        if (editText != null) {
+            editText.setText("");
+        }
+        CommonMethod.toReleaseMemory();
+        super.onPause();
+    }
 
     @Override
     public void onDestroy() {
@@ -547,12 +449,4 @@ public class MakeYourOwnReadFragment extends Fragment {
         }
         CommonMethod.toReleaseMemory();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        CommonMethod.toReleaseMemory();
-    }
-
-
 }

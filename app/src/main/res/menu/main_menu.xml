@@ -19,7 +19,7 @@
     <item
         android:id="@+id/actionSearch"
         android:icon="@drawable/ic_search_white_24dp"
-        android:orderInCategory="200"
+        android:orderInCategory="150"
         android:title="@string/str_send"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
@@ -27,7 +27,7 @@
     <item
         android:id="@+id/action_notification1"
         android:icon="@drawable/ic_more_vert_white_24dp"
-        android:orderInCategory="500"
+        android:orderInCategory="200"
         android:title="@string/str_more_options"
         app:showAsAction="always">
 

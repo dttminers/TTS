@@ -100,17 +100,16 @@ public class PdfFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            CommonMethod.setAnalyticsData(getContext(), "DocTab", "Doc Pdf", null);
+            CommonMethod.setAnalyticsData(Objects.requireNonNull(getContext()), "DocTab", "Doc Pdf", null);
 
-
-            tabLayout = getActivity().findViewById(R.id.tabsub);
-            viewPager = getActivity().findViewById(R.id.viewpagersub);
+            tabLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.tabsub);
+            viewPager = Objects.requireNonNull(getActivity()).findViewById(R.id.viewpagersub);
 
             viewPager.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
             tabLayout.setupWithViewPager(viewPager);
 
-            tabLayout.getTabAt(0).setText(tabHomeText[0]);
-            tabLayout.getTabAt(1).setText(tabHomeText[1]);
+            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(tabHomeText[0]);
+            Objects.requireNonNull(tabLayout.getTabAt(1)).setText(tabHomeText[1]);
 
             LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
             linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
@@ -125,7 +124,6 @@ public class PdfFragment extends Fragment {
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-//                    viewPager.setCurrentItem(tab.getPosition());
                     setCurrentViewPagerItem(tab.getPosition());
                 }
 
@@ -138,8 +136,6 @@ public class PdfFragment extends Fragment {
                 }
 
             });
-//            viewPager.setCurrentItem(0, true);
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -187,7 +183,7 @@ public class PdfFragment extends Fragment {
     }
 
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

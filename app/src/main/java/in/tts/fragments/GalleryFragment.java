@@ -1,6 +1,7 @@
 package in.tts.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -16,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,6 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
-
 
 import java.util.ArrayList;
 
@@ -58,6 +57,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CommonMethod.toReleaseMemory();
         try {
             if (getActivity() != null) {
                 mLoading = getActivity().findViewById(R.id.progressBarPic);
@@ -70,6 +70,7 @@ public class GalleryFragment extends Fragment {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
     }
 
     @Override
@@ -93,11 +94,9 @@ public class GalleryFragment extends Fragment {
     }
 
     public void toGetData() {
+        CommonMethod.toReleaseMemory();
         try {
             if (getActivity() != null) {
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
                 // change UI elements here
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -105,13 +104,10 @@ public class GalleryFragment extends Fragment {
                 imageFile = new ArrayList<>();
                 imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
                 imageAdapterGallery.notifyDataSetChanged();
-                Log.d("Tag ", " Load status" + status);
                 if (!status) {
                     new toGet().execute();
                 }
                 mLoading.setVisibility(View.GONE);
-//                    }
-//                });
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -123,6 +119,7 @@ public class GalleryFragment extends Fragment {
 
     public void getAllShownImagesPath(Activity activity) {
         try {
+            CommonMethod.toReleaseMemory();
             String[] projection = new String[]{
                     MediaStore.Images.ImageColumns._ID,
                     MediaStore.Images.ImageColumns.DATA,
@@ -131,7 +128,6 @@ public class GalleryFragment extends Fragment {
                     MediaStore.Images.ImageColumns.MIME_TYPE
             };
             if (activity != null) {
-//                Log.d("TAG", " PATH N " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 Cursor cursor =
                         activity.getContentResolver()
                                 .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
@@ -142,10 +138,10 @@ public class GalleryFragment extends Fragment {
                         imageFile.add(imageLocation);
                         imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
                     }
-//                    Log.d("TAG", "Count Image Files " + imageFile.size());
                 }
                 if (cursor != null) {
                     cursor.close();
+                    CommonMethod.toReleaseMemory();
                 }
             }
         } catch (Exception | Error e) {
@@ -154,6 +150,7 @@ public class GalleryFragment extends Fragment {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+        CommonMethod.toReleaseMemory();
     }
 
 
@@ -169,6 +166,7 @@ public class GalleryFragment extends Fragment {
         } else {
             toGetData();
         }
+        CommonMethod.toReleaseMemory();
     }
 
     private OnFragmentInteractionListener mListener;
@@ -178,6 +176,7 @@ public class GalleryFragment extends Fragment {
     }
 
     public void onButtonPressed(Uri uri) {
+        CommonMethod.toReleaseMemory();
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -187,6 +186,8 @@ public class GalleryFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
+            CommonMethod.toReleaseMemory();
+
             if (context instanceof OnFragmentInteractionListener) {
                 mListener = (OnFragmentInteractionListener) context;
             }
@@ -205,7 +206,7 @@ public class GalleryFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab5 setLoadData " + status);
+        CommonMethod.toReleaseMemory();
         try {
             fn_permission();
         } catch (Exception | Error e) {
@@ -220,10 +221,12 @@ public class GalleryFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class toGet extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            CommonMethod.toReleaseMemory();
             getAllShownImagesPath(getActivity());
             return null;
         }
@@ -234,7 +237,6 @@ public class GalleryFragment extends Fragment {
             recyclerView.setAdapter(imageAdapterGallery);
             imageAdapterGallery.notifyDataSetChanged();
             status = true;
-            Log.d("TAG", " PDF getOffscreenPageLimit : " + imageFile.size());
         }
     }
 

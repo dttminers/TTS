@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +21,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
 import in.tts.activities.BrowserActivity;
-import in.tts.model.Browser;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.TouchImageView;
 
 public class BrowserFragment extends Fragment {
     private EditText editText;
@@ -44,19 +41,19 @@ public class BrowserFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
-            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
             super.onActivityCreated(savedInstanceState);
+            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
             CommonMethod.toCloseLoader();
             CommonMethod.toReleaseMemory();
-            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
+
             editText = getActivity().findViewById(R.id.edtBrowser);
             button = getActivity().findViewById(R.id.btnSearch);
             // Bookmarks.........
             ivBookmark1 = getActivity().findViewById(R.id.wikipedia);
             ivBookmark2 = getActivity().findViewById(R.id.ivAmazone);
             ivBookmark3 = getActivity().findViewById(R.id.ivXerox);
-            // Recent Tabs....
 
+            // Recent Tabs....
             ivRecent1 = getActivity().findViewById(R.id.ivRecent1);
             ivRecent2 = getActivity().findViewById(R.id.ivRecent2);
             ivRecent3 = getActivity().findViewById(R.id.ivRecent3);
@@ -186,14 +183,6 @@ public class BrowserFragment extends Fragment {
         }
     }
 
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        CommonMethod.toReleaseMemory();
-        CommonMethod.toCloseLoader();
-    }
-
     private OnFragmentInteractionListener mListener;
 
     public static BrowserFragment newInstance() {
@@ -226,7 +215,6 @@ public class BrowserFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab1 setLoadData ");
     }
 
     public interface OnFragmentInteractionListener {
@@ -245,4 +233,16 @@ public class BrowserFragment extends Fragment {
         CommonMethod.toReleaseMemory();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommonMethod.toReleaseMemory();
+        CommonMethod.toCloseLoader();
+    }
 }

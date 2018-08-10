@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -72,6 +73,7 @@ import in.tts.utils.CommonMethod;
 
 public class LoginFragment extends Fragment {
 
+    private LinearLayout llLoader;
     // Normal Login
     private TextView mTvLogin;
     private EditText mEdtEmail, mEdtPassword;
@@ -120,6 +122,8 @@ public class LoginFragment extends Fragment {
             FacebookSdk.sdkInitialize(getContext());
 
             mTvLogin = getActivity().findViewById(R.id.txtLogin);
+
+            llLoader = getActivity().findViewById(R.id.llCustom_loader550);
 
             SpannableString ss1 = new SpannableString(getString(R.string.str_login_data));
             ss1.setSpan(new RelativeSizeSpan(1.5f), 38, 47, 0); // set size
@@ -289,11 +293,13 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        CommonMethod.toCallLoader(getContext(), "Loading....");
+                        llLoader.setVisibility(View.VISIBLE);
+//                        CommonMethod.toCallLoader(getContext(), "Loading....");
 //                        getContext().startActivity(new Intent(getContext(), MainActivity.class));
-                        getContext().startActivity(new Intent(getContext(), HomeActivity.class));
+                        getContext().startActivity(new Intent(getContext(), HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         getActivity().finish();
-                        CommonMethod.toCloseLoader();
+                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//                        CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -538,11 +544,13 @@ public class LoginFragment extends Fragment {
         try {
             CommonMethod.toCloseLoader();
             CommonMethod.toDisplayToast(getContext(), "Login Successful");
-            CommonMethod.toCallLoader(getContext(), "Logging....");
+//            CommonMethod.toCallLoader(getContext(), "Logging....");
+            llLoader.setVisibility(View.VISIBLE);
             new PrefManager(getContext()).setUserInfo();
-            startActivity(new Intent(getContext(), HomeActivity.class));
+            startActivity(new Intent(getContext(), HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             if (getActivity() != null) {
                 getActivity().finish();
+                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
             CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
@@ -624,6 +632,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         CommonMethod.toReleaseMemory();
     }
 

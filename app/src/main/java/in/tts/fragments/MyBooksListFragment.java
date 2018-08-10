@@ -2,7 +2,6 @@ package in.tts.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,7 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +25,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import in.tts.R;
 import in.tts.adapters.PdfListAdapter;
@@ -54,7 +53,7 @@ public class MyBooksListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my_books_list, container, false);
     }
 
@@ -62,16 +61,17 @@ public class MyBooksListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
+            CommonMethod.toReleaseMemory();
             file = new ArrayList<>();
-            recyclerView = getActivity().findViewById(R.id.rvList);
-            llCustom_loader = getActivity().findViewById(R.id.llCustom_loader);
-//            fn_permission();
+            recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.rvList);
+            llCustom_loader = Objects.requireNonNull(getActivity()).findViewById(R.id.llCustom_loader);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
-        }
+        } CommonMethod.toReleaseMemory();
+
     }
 
     @Override
@@ -82,9 +82,8 @@ public class MyBooksListFragment extends Fragment {
 
     private void fn_permission() {
         try {
-            Log.d("Tag ", " Pdf fn_permission");
-            if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            if ((ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             } else {
                 toGetData();
             }
@@ -98,7 +97,6 @@ public class MyBooksListFragment extends Fragment {
 
     public void toGetData() {
         try {
-            Log.d("Tag ", " Pdf toGetData");
             if (getActivity() != null) {
                 recyclerView.setHasFixedSize(true);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -171,7 +169,6 @@ public class MyBooksListFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab21 setLoadData " + status );
         fn_permission();
     }
 
@@ -183,7 +180,6 @@ public class MyBooksListFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.d("TAG", " PDF load ");
             getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
             return null;
         }
@@ -195,7 +191,6 @@ public class MyBooksListFragment extends Fragment {
             pdfListAdapter.notifyDataSetChanged();
             status = true;
             llCustom_loader.setVisibility(View.GONE);
-            Log.d("TAG", " PDF onPostExecute Finished : " + file.size());
         }
     }
 

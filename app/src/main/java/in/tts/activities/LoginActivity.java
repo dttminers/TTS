@@ -67,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
             CommonMethod.toReleaseMemory();
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                toLoadData();
+//            } else {
+//                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -85,33 +85,33 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void toLoadData() {
-        try {
-            PrefManager prefManager = new PrefManager(LoginActivity.this);
-//            prefManager.toSetPDFFileList(
-            ToGetImages.isRunning();
-            ToGetPdfFiles.isRunning();
-            if (prefManager.toGetPDFList() == null) {
-                if (!ToGetPdfFiles.isRunning()) {
-                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
-                }
-            }
-//            );
-//            prefManager.toSetImageFileList(
-            if (prefManager.toGetImageList() == null) {
-                if (!ToGetImages.isRunning()) {
-                    ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
-                }
-            }
-//            );
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-            CommonMethod.toReleaseMemory();
-        }
-    }
+//    private void toLoadData() {
+//        try {
+//            PrefManager prefManager = new PrefManager(LoginActivity.this);
+////            prefManager.toSetPDFFileList(
+//            ToGetImages.isRunning();
+//            ToGetPdfFiles.isRunning();
+//            if (prefManager.toGetPDFList() == null) {
+//                if (!ToGetPdfFiles.isRunning()) {
+//                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
+//                }
+//            }
+////            );
+////            prefManager.toSetImageFileList(
+//            if (prefManager.toGetImageList() == null) {
+//                if (!ToGetImages.isRunning()) {
+//                    ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
+//                }
+//            }
+////            );
+//        } catch (Exception | Error e) {
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
+//            CommonMethod.toReleaseMemory();
+//        }
+//    }
 
     private void replaceMainTabsFragment(Fragment fragment) throws Exception, Error {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -146,12 +146,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        CommonMethod.toCloseLoader();
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        CommonMethod.toCloseLoader();
         CommonMethod.toReleaseMemory();
     }
 }
