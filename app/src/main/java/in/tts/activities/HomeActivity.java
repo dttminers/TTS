@@ -204,6 +204,15 @@ public class HomeActivity extends AppCompatActivity implements
         try {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             Log.d("TAG", "Main onRequestPermissionsResult : " + requestCode + ":" + Arrays.toString(permissions) + ":" + Arrays.toString(grantResults));
+            if (requestCode == 1) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fn_permission();
+                } else {
+                    CommonMethod.toDisplayToast(HomeActivity.this,  "Please allow the permission");
+                }
+            } else {
+                fn_permission();
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -221,7 +230,8 @@ public class HomeActivity extends AppCompatActivity implements
             menuCamera.findViewById(R.id.ivCameraMenu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(HomeActivity.this, MyCameraActivity.class));
+//                    startActivity(new Intent(HomeActivity.this, MyCameraActivity.class));
+                    startActivity(new Intent(HomeActivity.this, CameraActivity.class));
                 }
             });
         } catch (Exception | Error e) {

@@ -145,7 +145,7 @@ public class TTS2 implements TextToSpeech.OnUtteranceCompletedListener {
 
     public int toSeLanguage() throws Exception, Error {
         Log.d("TTS_TAG ", " toSetLanguage " + audioSetting.getAccentSelection());
-        return tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
+        return tts.setLanguage(CommonMethod.LocaleFromString(audioSetting.getLangSelection() )!= null ? CommonMethod.LocaleFromString(audioSetting.getLangSelection() ): Locale.US);
     }
 
 

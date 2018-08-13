@@ -12,6 +12,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -71,6 +72,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
+            setHasOptionsMenu(true);
             CommonMethod.setAnalyticsData(Objects.requireNonNull(getContext()), "MainTab", "MakeYourRead", null);
             editText = Objects.requireNonNull(getActivity()).findViewById(R.id.edMakeRead);
 
@@ -80,7 +82,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                     if (!hasFocus) {
                         KeyBoard.hideKeyboard(getActivity());
                     } else {
-                        KeyBoard. openKeyboard(getActivity());
+                        KeyBoard.openKeyboard(getActivity());
                     }
                 }
             });
@@ -117,31 +119,31 @@ public class MakeYourOwnReadFragment extends Fragment {
             });
 
 //            if (android.os.Build.VERSION.SDK_INT < 11) {
-                editText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            editText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
 
-                    @Override
-                    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                        menu.clear();
-                    }
-                });
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    menu.clear();
+                }
+            });
 //            } else {
-                editText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+            editText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
 
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
 
-                    public void onDestroyActionMode(ActionMode mode) {
-                    }
+                public void onDestroyActionMode(ActionMode mode) {
+                }
 
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
 
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        return false;
-                    }
-                });
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    return false;
+                }
+            });
 //            }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -250,7 +252,6 @@ public class MakeYourOwnReadFragment extends Fragment {
             ivPaste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (myClipboard.hasPrimaryClip()) {
                         ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
                         String ptext = item.getText().toString();
@@ -268,11 +269,16 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     tvShare.setVisibility(View.VISIBLE);
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    sharingIntent.setType("text/plain");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
-                    getContext().startActivity(Intent.createChooser(sharingIntent, "Share"));
+                    if (editText.getText().toString().trim().length() > 0) {
+                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        sharingIntent.setType("text/plain");
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getString(R.string.app_name));
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, editText.getText().toString().trim());
+//                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                        getContext().startActivity(Intent.createChooser(sharingIntent, "Share"));
+                    } else {
+                        CommonMethod.toDisplayToast(getContext(), "Write text to share ");
+                    }
                 }
             });
 
@@ -280,7 +286,8 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public void onInit(int status) {
                     if (status != TextToSpeech.ERROR) {
-                        t1.setLanguage(AudioSetting.getAudioSetting(getContext()).getLangSelection() != null ? AudioSetting.getAudioSetting(getContext()).getLangSelection() : Locale.US);
+                        t1.setLanguage(CommonMethod.LocaleFromString(AudioSetting.getAudioSetting(getContext()).getLangSelection()) != null ?
+                                CommonMethod.LocaleFromString(AudioSetting.getAudioSetting(getContext()).getLangSelection()) : Locale.US);
                     }
                 }
             });
@@ -319,9 +326,11 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
+            Log.d("TAG", " SPEACKKKKK "+ menu.size()) ;
             CommonMethod.toReleaseMemory();
             if (menu != null) {
                 MenuItem search = menu.findItem(R.id.actionSearch);
+                Log.d("TAG", " SPEACKKKKK "+ search.getIcon());
                 if (search != null) {
                     search.setVisible(false);
                 }
@@ -344,7 +353,8 @@ public class MakeYourOwnReadFragment extends Fragment {
                                         @Override
                                         public void onInit(int status) {
                                             if (status != TextToSpeech.ERROR) {
-                                                t1.setLanguage(AudioSetting.getAudioSetting(getContext()).getLangSelection() != null ? AudioSetting.getAudioSetting(getContext()).getLangSelection() : Locale.US);
+                                                t1.setLanguage(CommonMethod.LocaleFromString(AudioSetting.getAudioSetting(getContext()).getLangSelection()) != null ?
+                                                        CommonMethod.LocaleFromString(AudioSetting.getAudioSetting(getContext()).getLangSelection()) : Locale.US);
                                             }
                                         }
                                     });

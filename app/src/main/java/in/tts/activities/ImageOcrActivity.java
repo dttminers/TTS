@@ -58,7 +58,6 @@ public class ImageOcrActivity extends AppCompatActivity {
             setContentView(R.layout.activity_image_ocr);
 
             photoPath = getIntent().getStringExtra("PATH");
-            tts = new TTS(ImageOcrActivity.this);
 
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this, photoPath.substring(photoPath.lastIndexOf("/") + 1));
@@ -68,7 +67,7 @@ public class ImageOcrActivity extends AppCompatActivity {
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeFile(photoPath.trim().replaceAll( "%20", " "), options);
+            bitmap = BitmapFactory.decodeFile(photoPath.trim().replaceAll("%20", " "), options);
 
             ImageView mIvOcr = findViewById(R.id.imgOcr);
             mIvOcr.setImageBitmap(bitmap);
@@ -80,13 +79,15 @@ public class ImageOcrActivity extends AppCompatActivity {
             if (list != null) {
                 if (!list.contains(photoPath)) {
                     list.add(photoPath.replaceAll("\\s", "%20"));
+                    PrefManager.AddedRecentImage = true;
+                    prefManager.toSetImageFileListRecent(list);
                 }
             } else {
                 list = new ArrayList<>();
                 list.add(photoPath);
+                PrefManager.AddedRecentImage = true;
+                prefManager.toSetImageFileListRecent(list);
             }
-            PrefManager.AddedRecentImage = true;
-            prefManager.toSetImageFileListRecent(list);
 
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -97,10 +98,25 @@ public class ImageOcrActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            tts = new TTS(ImageOcrActivity.this);
+            new toGetImage().execute();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+
+    }
+
+    @Override
     protected void onResume() {
         try {
             super.onResume();
-            new toGetImage().execute();
+//            new toGetImage().execute();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

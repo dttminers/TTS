@@ -4,13 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +37,7 @@ public class MyBooksListFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayout llCustom_loader;
     public boolean status = false;
+    long start;
     private OnFragmentInteractionListener mListener;
 
     public MyBooksListFragment() {
@@ -70,7 +70,8 @@ public class MyBooksListFragment extends Fragment {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
-        } CommonMethod.toReleaseMemory();
+        }
+        CommonMethod.toReleaseMemory();
 
     }
 
@@ -103,10 +104,19 @@ public class MyBooksListFragment extends Fragment {
                 recyclerView.setLayoutManager(layoutManager);
 
                 pdfListAdapter = new PdfListAdapter(getActivity(), file);
+                recyclerView.setAdapter(pdfListAdapter);
                 pdfListAdapter.notifyDataSetChanged();
+
                 if (!status) {
-                    new toGet().execute();
-                }            }
+//                    start = System.currentTimeMillis();
+                    getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//                    new toGet().execute();
+//                    Log.d("TAGCount", "END : " + System.currentTimeMillis());
+//                    long elapsed = System.currentTimeMillis() - start;
+//                    Log.d("TAGCount", "TOTAL :  " + elapsed);
+//                    System.out.println("total time (ms) : " + elapsed);
+                }
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -117,29 +127,43 @@ public class MyBooksListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-            File listFile[] = dir.listFiles();
-            if (listFile != null && listFile.length > 0) {
-                for (int i = 0; i < listFile.length; i++) {
-                    if (listFile[i].isDirectory()) {
-                        getFile(listFile[i]);
-                    } else {
-                        boolean booleanpdf = false;
-                        if (listFile[i].getName().endsWith(".pdf")) {
-                            for (int j = 0; j < file.size(); j++) {
-                                if (file.get(j).equals(listFile[i].getPath())) {
-                                    booleanpdf = true;
-                                } else {
-                                }
-                            }
-                            if (booleanpdf) {
-                                booleanpdf = false;
+//            Log.d("TAGCount", "START : " + start);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    File listFile[] = dir.listFiles();
+                    if (listFile != null && listFile.length > 0) {
+                        for (int i = 0; i < listFile.length; i++) {
+                            if (listFile[i].isDirectory()) {
+                                getFile(listFile[i]);
                             } else {
-                                file.add(listFile[i].getPath());
+                                boolean booleanpdf = false;
+                                if (listFile[i].getName().endsWith(".pdf")) {
+                                    for (int j = 0; j < file.size(); j++) {
+                                        if (file.get(j).equals(listFile[i].getPath())) {
+                                            booleanpdf = true;
+                                        } else {
+                                        }
+                                    }
+                                    if (booleanpdf) {
+                                        booleanpdf = false;
+                                    } else {
+//                                        Log.d("TAGCount ", " file_list " + file.size());
+                                        file.add(listFile[i].getPath());
+                                        pdfListAdapter.notifyItemRangeInserted(file.size(), file.size());
+//                                        pdfListAdapter.notifyItemChanged(file.size(), file);
+                                        pdfListAdapter.notifyDataSetChanged();
+                                        if (file.size() > 0) {
+                                            llCustom_loader.setVisibility(View.GONE);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
+            status = true;
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -176,23 +200,25 @@ public class MyBooksListFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private class toGet extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            recyclerView.setAdapter(pdfListAdapter);
-            pdfListAdapter.notifyDataSetChanged();
-            status = true;
-            llCustom_loader.setVisibility(View.GONE);
-        }
-    }
+//    private class toGet extends AsyncTask<Void, Void, Void> {
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//            long elapsed = System.currentTimeMillis() - start;
+//            System.out.println("total time (ms) : " + elapsed);
+//            recyclerView.setAdapter(pdfListAdapter);
+//            pdfListAdapter.notifyDataSetChanged();
+//            status = true;
+//            llCustom_loader.setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public void onPause() {

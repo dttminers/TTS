@@ -16,6 +16,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import in.tts.R;
 import in.tts.activities.AudioPlayerActivity;
 import in.tts.activities.AudioSettingActivity;
+import in.tts.activities.CameraActivity;
 import in.tts.activities.CameraOcrActivity;
 import in.tts.activities.Contact_us;
 import in.tts.activities.HelpActivity;
@@ -30,7 +31,8 @@ public class ToSetMore {
             switch (item.getItemId()) {
                 case R.id.actionCamera:
 //                    context.startActivity(new Intent(context, CameraOcrActivity.class));
-                    context.startActivity(new Intent(context, MyCameraActivity.class));
+//                    context.startActivity(new Intent(context, MyCameraActivity.class));
+                    context.startActivity(new Intent(context, CameraActivity.class));
                     break;
 
                 case R.id.settings:

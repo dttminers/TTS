@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -65,8 +66,12 @@ public class PDFHomePage extends PagerAdapter {
 
             CardView cv = vg.findViewById(R.id.cvBi);
             ImageView iv = vg.findViewById(R.id.ivBi);
+
+            TextView tv1 = vg.findViewById(R.id.tvBiReadTime);
+            TextView tv2 = vg.findViewById(R.id.tvBiReadStatus);
+
             Log.d("TAG", " PDF " + position + ":" + list.get(position));
-            file = new File(list.get(position).trim());
+            file = new File(list.get(position).trim().replaceAll("%20", " "));
             if (file.exists()) {
                 fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
                 pdfRenderer = new PdfRenderer(fileDescriptor);
@@ -77,6 +82,8 @@ public class PDFHomePage extends PagerAdapter {
                 Bitmap bitmap = Bitmap.createBitmap(250, 300, Bitmap.Config.ARGB_8888);
                 currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
                 iv.setImageBitmap(bitmap);
+                tv1.setText(CommonMethod.getFileSize(file));
+                tv2.setText(String.valueOf(pdfRenderer.getPageCount()));
 
                 cv.setOnClickListener(new View.OnClickListener() {
                     @Override

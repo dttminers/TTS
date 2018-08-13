@@ -311,7 +311,7 @@ public class PdfReadersActivity extends AppCompatActivity {
                             }
                         } else {
                             list = new ArrayList<>();
-                            list.add(getIntent().getStringExtra("file").trim());
+                            list.add(getIntent().getStringExtra("file").trim().replaceAll("\\s", "%20"));
                         }
                         prefManager.toSetPDFFileListRecent(list);
 
@@ -401,8 +401,8 @@ public class PdfReadersActivity extends AppCompatActivity {
                 public void onInit(int i) {
                     try {
                         audioSetting = AudioSetting.getAudioSetting(PdfReadersActivity.this);
-                        selectedLang = audioSetting.getLangSelection().getLanguage();
-                        langCountry = audioSetting.getLangSelection().getCountry();
+                        selectedLang = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getLanguage();
+                        langCountry = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getCountry();
                         selectedVoice = audioSetting.getVoiceSelection();
 
                         tts.setEngineByPackageName("com.google.android.tts");

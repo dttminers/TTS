@@ -114,27 +114,27 @@ public class AudioSettingActivity extends AppCompatActivity {
                         }
                         switch (i) {
                             case R.id.rbEnglishLs:
-                                audioSetting.setLangSelection(Locale.ENGLISH);
+                                audioSetting.setLangSelection(String.valueOf(Locale.ENGLISH));
                                 setPrefData();
                                 break;
 
                             case R.id.rbHindiLs:
-                                audioSetting.setLangSelection(new Locale("hin", "IND"));
+                                audioSetting.setLangSelection(String.valueOf(new Locale("hin", "IND")));
                                 setPrefData();
                                 break;
 
                             case R.id.rbMarathiLs:
-                                audioSetting.setLangSelection(new Locale("mar", "IND"));
+                                audioSetting.setLangSelection(String.valueOf(new Locale("mar", "IND")));
                                 setPrefData();
                                 break;
 
                             case R.id.rbTamilLs:
-                                audioSetting.setLangSelection(new Locale("ta", "IND"));
+                                audioSetting.setLangSelection(String.valueOf(new Locale("ta", "IND")));
                                 setPrefData();
                                 break;
 
                             default:
-                                audioSetting.setLangSelection(Locale.ENGLISH);
+                                audioSetting.setLangSelection(String.valueOf(Locale.ENGLISH));
                                 setPrefData();
                                 break;
                         }
@@ -209,8 +209,8 @@ public class AudioSettingActivity extends AppCompatActivity {
         try {
             if (audioSetting != null) {
                 seekBarIndicated.setValue((int) audioSetting.getVoiceSpeed());
-                if (audioSetting.getLangSelection().toString() != null) {
-                    switch (audioSetting.getLangSelection().toString()) {
+                if (audioSetting.getLangSelection() != null) {
+                    switch (audioSetting.getLangSelection()) {
                         case "hin_IND":
                             toSetLanguageSelection(rbHindi, rbEnglish, rbMarathi, rbTamil, false);
                             break;

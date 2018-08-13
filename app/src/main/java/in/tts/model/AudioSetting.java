@@ -10,7 +10,7 @@ public class AudioSetting {
     private static transient AudioSetting audioSetting;
     private transient Context context;
     private String VoiceSelection ;
-    private Locale LangSelection ;//= String.valueOf(new Locale("en"));
+    private String LangSelection ;//= String.valueOf(new Locale("en"));
     private String AccentSelection ;//= String.valueOf(Locale.US);
     private int VoiceSpeed =0;//= 1;
 
@@ -44,11 +44,11 @@ public class AudioSetting {
        VoiceSelection = voiceSelection;
     }
 
-    public Locale getLangSelection() {
+    public String getLangSelection() {
         return LangSelection;
     }
 
-    public void setLangSelection(Locale langSelection) {
+    public void setLangSelection(String langSelection) {
         LangSelection = langSelection;
     }
 

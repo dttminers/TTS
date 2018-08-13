@@ -60,8 +60,8 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                 public void onInit(int i) {
                     try {
                         audioSetting = AudioSetting.getAudioSetting(mContext);
-                        selectedLang = audioSetting.getLangSelection().getLanguage();
-                        langCountry = audioSetting.getLangSelection().getCountry();
+                        selectedLang = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getLanguage();
+                        langCountry = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getCountry();
                         selectedVoice = audioSetting.getVoiceSelection();
 
                         tts.setEngineByPackageName("com.google.android.tts");
@@ -213,7 +213,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     public int toSeLanguage() throws Exception, Error {
         Log.d("TTS_TAG ", " toSetLanguage " + audioSetting.getAccentSelection());
-        return tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
+        return tts.setLanguage(CommonMethod.LocaleFromString(audioSetting.getLangSelection()) != null ? CommonMethod.LocaleFromString(audioSetting.getLangSelection()) : Locale.US);
     }
 
 

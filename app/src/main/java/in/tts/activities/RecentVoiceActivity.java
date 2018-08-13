@@ -150,7 +150,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    alertDialogHelper.showAlertDialog("", "Delete Contact", "DELETE", "CANCEL", 1, false);
+                    alertDialogHelper.showAlertDialog("", "Delete Audio", "DELETE", "CANCEL", 1, false);
                     return true;
                 case R.id.action_share:
                     if (multiselect_list.size() > 0) {

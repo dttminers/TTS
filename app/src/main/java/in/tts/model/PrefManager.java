@@ -158,9 +158,9 @@ public class PrefManager {
                 }
 
                 if (!audioJSON.isNull("LangSelection")) {
-                    audioSetting.setLangSelection(CommonMethod.LocaleFromString(audioJSON.getString("LangSelection")));
+                    audioSetting.setLangSelection(audioJSON.getString("LangSelection"));
                 } else {
-                    audioSetting.setLangSelection(Locale.US);
+                    audioSetting.setLangSelection(String.valueOf(Locale.US));
                 }
 
                 if (!audioJSON.isNull("AccentSelection")) {
@@ -178,7 +178,7 @@ public class PrefManager {
             } else {
                 Log.d("TAG ", "getAudioSetting : null");
                 audioSetting.setVoiceSelection("Male");
-                audioSetting.setLangSelection(Locale.US);
+                audioSetting.setLangSelection(String.valueOf(Locale.US));
                 audioSetting.setVoiceSpeed(0);
                 audioSetting.setAccentSelection("Locale.US");
             }

@@ -3,6 +3,6 @@
     android:layout_width="50dp"
     android:id="@+id/ivCameraMenu"
     android:layout_height="50dp"
-    android:padding="13dp"
+    android:padding="14.5dp"
     android:contentDescription="@string/str_camera"
     android:src="@drawable/ic_white_camera" />

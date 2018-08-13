@@ -14,19 +14,19 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
+import com.itextpdf.text.pdf.PdfReader;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.activities.AfterFileSelected;
-import in.tts.activities.PdfReadersActivity;
 import in.tts.activities.PdfShowingActivity;
 import in.tts.utils.CommonMethod;
 
 public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHolder> {
     private Context context;
     private ArrayList<String> list;
+    private File file;
 
     public PdfListAdapter(Context _context, ArrayList<String> _list) {
         context = _context;
@@ -42,7 +42,11 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull PdfListAdapter.ViewHolder viewHolder, int i) {
         try {
-            viewHolder.mtv.setText(new File(list.get(i)).getName());
+            Log.d("TAG", " onBindViewHolder " + i);
+            file = new File(list.get(i));
+            viewHolder.mtv.setText(file.getName());
+            viewHolder.mtv1.setText(CommonMethod.getFileSize(file));
+            viewHolder.mtv2.setText(String.valueOf(new PdfReader(file.getAbsolutePath()).getNumberOfPages())+ " Pages");
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -53,18 +57,23 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
 
     @Override
     public int getItemCount() {
+
         return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView mtv;
+        private TextView mtv, mtv1, mtv2;
         private RelativeLayout mRl;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             try {
                 mtv = itemView.findViewById(R.id.tv_name);
+                mtv1 = itemView.findViewById(R.id.tv_duration);
+                mtv2 = itemView.findViewById(R.id.tv_remaining);
+
                 mRl = itemView.findViewById(R.id.mRlPdfListItem);
+
                 mRl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -75,7 +84,7 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
 //                            Intent intent = new Intent(context, AfterFileSelected.class);
                             intent.putExtra("file", list.get(getAdapterPosition()));
                             context.startActivity(intent);
-                        CommonMethod.toCloseLoader();
+                            CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
