@@ -21,19 +21,19 @@ import in.tts.R;
 import in.tts.activities.ImageOcrActivity;
 import in.tts.utils.CommonMethod;
 
-public class PDFHomePageImages extends PagerAdapter {
-    private ArrayList<String> l;
+public class HomePageRecentImages extends PagerAdapter {
+    private ArrayList<String> list;
     private Context context;
 
-    public PDFHomePageImages(Context ctx, ArrayList<String> list) {
-        context = ctx;
-        l = list;
+    public HomePageRecentImages(Context _context, ArrayList<String> _list) {
+        context = _context;
+        list = _list;
     }
 
     @Override
     public int getCount() {
-        if (l != null) {
-            return l.size() < 10 ? l.size() : 10;
+        if (list != null) {
+            return list.size() < 10 ? list.size() : 10;
         } else {
             return 0;
         }
@@ -49,20 +49,9 @@ public class PDFHomePageImages extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            Log.d("TAG", " IMAGES " + position + ":" + l.get(position).replaceAll("\\s", "%20")+":"+l.get(position));
-//            Picasso.get()
-//                    .load("file://" + l.get(position).trim().replaceAll("\\s", "%20"))
-////                    .load(new File(l.get(position)))
-////                    .load("file://" + l.get(position).trim().replaceAll("\\s+", "%20"))
-//                    .placeholder(R.color.light3)
-//                    .error(R.color.grey)
-//                    .resize(250, 250)
-//                    .onlyScaleDown()
-//                    .centerCrop()
-//                    .into(iv);
-
+            Log.d("TAG", " IMAGES " + position + ":" + list.get(position).replaceAll("\\s", "%20")+":"+ list.get(position));
             Picasso.get()
-                    .load("file://" + l.get(position).replaceAll("\\s", "%20"))
+                    .load("file://" + list.get(position).replaceAll("\\s", "%20"))
                     .resize(250,250)
                     .onlyScaleDown()
                     .centerCrop()
@@ -74,9 +63,9 @@ public class PDFHomePageImages extends PagerAdapter {
                 @Override
                 public void onClick(View view) {
                     try {
-                        Log.d("TAG", " Image " + l.get(position));
+                        Log.d("TAG", " Image " + list.get(position));
                         CommonMethod.toCallLoader(context, "Loading...");
-                        context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", l.get(position)));
+                        context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", list.get(position)));
                         CommonMethod.toCloseLoader();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -107,5 +96,9 @@ public class PDFHomePageImages extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
+    }
+
+    public void setData(ArrayList<String> newList) {
+        list = newList;
     }
 }

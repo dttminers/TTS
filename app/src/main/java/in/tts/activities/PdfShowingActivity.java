@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
@@ -39,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import in.tts.R;
 import in.tts.adapters.PDfPagesShowingAdapter;
@@ -55,7 +55,6 @@ public class PdfShowingActivity extends AppCompatActivity {
     private LinearLayout speakLayout, llCustom_loader;
     private Button reload, forward, backward, close;
     private Button playPause;
-//    private SeekBar sbPlayer;
 
     private PDfPagesShowingAdapter pdfAdapter;
 
@@ -78,11 +77,12 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     public static int oneTimeOnly = 0;
 
-    public int currentPageRead = 0, totalPages = 0;
+    //Pdf Create Pages
+    public int currentPageCreate = 0, totalPagesCreate = 0;
+    int currentSelectedPage = 0;
     private TextToSpeech tts;
 
     private AudioSetting audioSetting;
-    private PrefManager prefManager;
 
     private ArrayList<String> male_voice_array = new ArrayList<String>();
     private ArrayList<String> female_voice_array = new ArrayList<String>();
@@ -106,17 +106,14 @@ public class PdfShowingActivity extends AppCompatActivity {
     List<String> texts;
     int dividerLimit = 1000;//3900;
     private File appTmpPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/READ_IT/Audio/");
-//    private Handler mSeekbarUpdateHandler = new Handler();
 
 
     @Override
     @AddTrace(name = "onCreatePdfShowingActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Log.d("TAG_PDFM", " onCreate ");
         CommonMethod.toReleaseMemory();
         setContentView(R.layout.activity_pdf_showing);
-//        new ToGetPdfImages().execute();
         toBindViews();
         toDisplayPdf();
         toSetRecent();
@@ -151,7 +148,6 @@ public class PdfShowingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try {
-                        // Log.d("TAG_PDFM", " reload");
                         if (playerStatus) {
                             toStopAudioPlayer();
                             toPlayAudio(true);
@@ -174,7 +170,7 @@ public class PdfShowingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     try {
                         // Log.d("TAG_PDFM", " playPause");
-//                        if (currentPageRead == vp.getCurrentItem() + 1) {
+//                        if (currentPageCreate == vp.getCurrentItem() + 1) {
                         if (playerStatus) {
                             mediaPlayer.pause();
                             playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
@@ -227,7 +223,6 @@ public class PdfShowingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try {
-                        // Log.d("TAG_PDFM", " forward playing : " + startTime + ":" + ((int) startTime) + ":" + mediaPlayer.getCurrentPosition());
                         int temp = (int) startTime;
                         if ((temp + forwardTime) <= finalTime) {
                             startTime = startTime + forwardTime;
@@ -249,7 +244,6 @@ public class PdfShowingActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try {
-                        // Log.d("TAG_PDFM", " backward playing : " + startTime + ":" + ((int) startTime) + ":" + mediaPlayer.getCurrentPosition());
                         int temp = (int) startTime;
                         if ((temp - backwardTime) > 0) {
                             startTime = startTime - backwardTime;
@@ -283,7 +277,6 @@ public class PdfShowingActivity extends AppCompatActivity {
                     if (getIntent().getExtras() != null) {
                         if (getIntent().getStringExtra("file") != null) {
                             pdfFile = new File(getIntent().getStringExtra("file").trim().replaceAll("%20", " "));
-                            // Log.d("TAG", "name : " + pdfFile.getName());
                             if (pdfFile.exists()) {
                                 try {
                                     if (getSupportActionBar() != null) {
@@ -292,12 +285,9 @@ public class PdfShowingActivity extends AppCompatActivity {
 
                                     fileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
                                     pdfRenderer = new PdfRenderer(fileDescriptor);
-                                    // Log.d("TAG_PDFM", " ToGetPdfImages Page count  : " + pdfRenderer.getPageCount());
-                                    totalPages = pdfRenderer.getPageCount();
+                                    totalPagesCreate = pdfRenderer.getPageCount();
 
-//                                    for (int i = 0; i < pdfRenderer.getPageCount(); i++) {
-                                    showPage(currentPageRead);
-//                                    }
+                                    showPage(currentPageCreate);
                                 } catch (Exception | Error e) {
                                     e.printStackTrace();
                                     FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -306,17 +296,14 @@ public class PdfShowingActivity extends AppCompatActivity {
                                 }
                             } else {
                                 CommonMethod.toDisplayToast(PdfShowingActivity.this, "Can't file does not exists");
-//                            finish();
                                 toExit();
                             }
                         } else {
                             CommonMethod.toDisplayToast(PdfShowingActivity.this, "Can't Open Pdf File ");
-//                        finish();
                             toExit();
                         }
                     } else {
                         CommonMethod.toDisplayToast(PdfShowingActivity.this, "Unable  to open Pdf File 2");
-//                    finish();
                         toExit();
                     }
 
@@ -330,16 +317,9 @@ public class PdfShowingActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("TAG_PDF", "onStart : ");
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void showPage(final int index) {
         try {
-            // Log.d("TAG_PDFM", " showPage " + index);
             CommonMethod.toReleaseMemory();
             if (pdfRenderer.getPageCount() <= index) {
                 return;
@@ -347,15 +327,13 @@ public class PdfShowingActivity extends AppCompatActivity {
             if (null != currentPage) {
                 currentPage.close();
             }
+
             currentPage = pdfRenderer.openPage(index);
             bitmap = Bitmap.createBitmap(currentPage.getWidth() + 500, currentPage.getHeight() + 500, Bitmap.Config.ARGB_8888);
             currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+
             list.add(bitmap);
-//            if (bitmap != null && !bitmap.isRecycled()) {
-//                bitmap.recycle();
-//                bitmap = null;
-//            }
-//            CommonMethod.toReleaseMemory();
+
             if (index == 0) {
                 pdfAdapter = new PDfPagesShowingAdapter(PdfShowingActivity.this, list);
                 vp.setAdapter(pdfAdapter);
@@ -368,17 +346,15 @@ public class PdfShowingActivity extends AppCompatActivity {
                 vp.invalidate();
             }
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // // Log.d("TAG", " new_page ");
-                    if (currentPageRead < totalPages) {
-                        currentPageRead++;
-                        showPage(currentPageRead);
+            if (currentPageCreate < totalPagesCreate) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentPageCreate++;
+                        showPage(currentPageCreate);
                     }
-                }
-            }, 1500);
-
+                }, 1500);
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -390,11 +366,9 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toGetData(int pos, boolean status) {
         try {
-            // // Log.d("TAG_PDFM", " toGetData " + pos + status);
-            currentPageRead = pos;
+            currentPageCreate = pos;
             PdfReader pr = new PdfReader(pdfFile.getPath());
             String textForReading = PdfTextExtractor.getTextFromPage(pr, pos);
-            // // Log.d("TAG_PDF ", " text " + pos + ":" + textForReading.length() + "\n" + textForReading);
             if (textForReading.trim().length() != 0) {
                 toSpeak(textForReading, status);
                 CommonMethod.toReleaseMemory();
@@ -413,64 +387,37 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toSpeak(String textForReading, final boolean status) {
         try {
-            Log.d("AKS", "toSpeak 0 " + status + ":" + textForReading.length());
-            // Log.d("TAG_PDFM", " toSpeak");
             CommonMethod.toReleaseMemory();
             texts = new ArrayList<>();
-            // Log.d("TAG_PDFM", "directory " + appTmpPath + " is created : " + appTmpPath.exists());
             if (status) {
                 progressBarSpeak.setVisibility(View.VISIBLE);
             }
             if (textForReading.length() >= dividerLimit) {
-                try {
 
-                    isAudioDivided = true;
+                isAudioDivided = true;
 
-                    int textLength = textForReading.length();
+                int textLength = textForReading.length();
 
-                    System.out.println("full Text length = " + textLength);
+                System.out.println("full Text length = " + textLength);
 
-                    int c = textLength / dividerLimit + ((textLength % dividerLimit == 0) ? 0 : 1);
+                int c = textLength / dividerLimit + ((textLength % dividerLimit == 0) ? 0 : 1);
 
-                    System.out.println("Number of division of whole text = " + c);
+                int start = 0;
+                int end = textForReading.indexOf(" ", dividerLimit);
 
-                    int start = 0;
-                    int end = textForReading.indexOf(" ", dividerLimit);
-
-                    for (int i = 1; i <= c; i++) {
-                        texts.add(textForReading.substring(start, end));
-                        start = end;
-                        if ((start + dividerLimit) < textLength) {
-                            end = textForReading.indexOf(" ", start + dividerLimit);
-                        } else {
-                            end = textLength;
-                        }
-                        Log.d("AKS", "toSpeak 1 File loop " + i+ ":"+texts.size());
+                for (int i = 1; i <= c; i++) {
+                    texts.add(textForReading.substring(start, end));
+                    start = end;
+                    if ((start + dividerLimit) < textLength) {
+                        end = textForReading.indexOf(" ", start + dividerLimit);
+                    } else {
+                        end = textLength;
                     }
-                    // Log.d("TAGLLL", " File 1 " + fileCnt+":" + texts.get(fileCnt).length()+":"+ playCnt);
-                    Log.d("AKS", "toSpeak 1 File " + texts.get(fileCnt) + ":" + fileCnt + ":" + playCnt);
-                    toSetAudioFiles(texts.get(fileCnt), fileCnt, true);
-                } catch (Exception | Error e) {
-                    e.printStackTrace();
-                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                    Crashlytics.logException(e);
-                    FirebaseCrash.report(e);
                 }
+                toSetAudioFiles(texts.get(fileCnt), fileCnt, true);
             } else {
-                try {
-                    // Log.d("TAGLLL", " File 2 " + fileCnt+":" + textForReading+":"+ playCnt);
-                    //You need to generate only single file
-                    Log.d("AKS", "toSpeak 2 File single " + textForReading.length() + ":" + fileCnt + ":" + playCnt);
-                    toSetAudioFiles(textForReading, fileCnt, true);
-                } catch (Exception | Error e) {
-                    progressBarSpeak.setVisibility(View.GONE);
-                    e.printStackTrace();
-                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                    Crashlytics.logException(e);
-                    FirebaseCrash.report(e);
-                }
+                toSetAudioFiles(textForReading, fileCnt, true);
                 CommonMethod.toReleaseMemory();
-
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -482,71 +429,40 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toSetAudioFiles(String text, int genCount, boolean b) {
         try {
-//          4  appTmpPath.getAbsolutePath()
-//                                            + File.separator
-//                                            + (pdfFile.getName().substring(0, (pdfFile.getName().length() - 4)))
-//                                            + String.valueOf(vp.getCurrentItem() + 1)
-//                                            + fileCnt + ".wav",
-
-//          3  appTmpPath.getAbsolutePath()
-//                                                        + File.separator
-//                                                        + (pdfFile.getName().substring(0, (pdfFile.getName().length() - 4)))
-//                                                        + String.valueOf(vp.getCurrentItem() + 1)
-//                                                        + fileCnt + ".wav",
-            //2 appTmpPath.getAbsolutePath()
-            //                                    + File.separator
-            //                                    + (pdfFile.getName().substring(0, (pdfFile.getName().length() - 4)))
-            //                                    + String.valueOf(vp.getCurrentItem() + 1)
-            //                                    + fileCnt + ".wav",
             String path = appTmpPath.getAbsolutePath()
                     + File.separator
                     + (pdfFile.getName().substring(0, (pdfFile.getName().length() - 4)))
                     + String.valueOf(vp.getCurrentItem() + 1)
                     + genCount + ".wav";
             Log.d("AKS", "toSetAudioFiles " + b + ":" + genCount + ":" + text.length() + ":" + path);
-            // Log.d("TAG_PDFM", " toSetAudioFiles " + b + text.length() + ":" + path + "\n" + +genCount);
             if (b) {
                 destFile = new File(path);
-                // Log.d("TAG_PDFM", " FILE Name 122: " + path + ":" + destFile.exists());
                 if (destFile.exists()) {
                     if (CommonMethod.getFileSize(destFile).equals("0 B")) {
-                        // Log.d("TAG_PDFM", " File 112 ");
                         if (destFile.delete()) {
-                            // Log.d("TAG_PDFM", " File 1121 ");
                             toGenerateAudio(text, b);
-                        } else {
-                            // Log.d("TAG_PDFM", " File 1121 ");
                         }
                     } else {
-                        // Log.d("TAG_PDFM", " File 122 ");
                         if (b) {
                             toPlayAudio(b);
                         }
                     }
                 } else {
-                    // Log.d("TAG_PDFM", " File 132 ");
                     toGenerateAudio(text, b);
                 }
             } else {
                 File destFile1 = new File(path);
-                // Log.d("TAG_PDFM", " FILE Name 122: " + path + ":" + destFile.exists());
                 if (destFile1.exists()) {
                     if (CommonMethod.getFileSize(destFile1).equals("0 B")) {
-                        // Log.d("TAG_PDFM", " File 112 ");
                         if (destFile1.delete()) {
-                            // Log.d("TAG_PDFM", " File 1121 ");
                             toGenerateAudio(text, b);
-                        } else {
-                            // Log.d("TAG_PDFM", " File 1121 ");
                         }
                     } else {
-                        // Log.d("TAG_PDFM", " File 122 ");
                         if (b) {
                             toPlayAudio(b);
                         }
                     }
                 } else {
-                    // Log.d("TAG_PDFM", " File 132 ");
                     toGenerateAudio(text, b);
                 }
             }
@@ -561,11 +477,9 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toGenerateAudio(final String string, final boolean b) {
         try {
-            Log.d("AKS", "toGenerateAudio " + b +":"+ string.length());
             if (b) {
                 progressBarSpeak.setVisibility(View.VISIBLE);
             }
-            // Log.d("TAG_PDFM", " toGenerateAudio : " + b + string.trim().length());
             tts = new TextToSpeech(PdfShowingActivity.this, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int i) {
@@ -632,89 +546,48 @@ public class PdfShowingActivity extends AppCompatActivity {
                         }
                     }
 
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        // Log.d("TTS_TAG_PDF", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
-                    }
                     if (i == TextToSpeech.SUCCESS) {
                         if (lang == TextToSpeech.LANG_MISSING_DATA || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                            // Log.d("TTS_TAG_PDF", "This Language is not supported");
+                            Log.d("TTS_TAG_PDF", "This Language is not supported");
                         } else {
-                            // Log.d("TTS_TAG_PDF", " Else ");
+                            Log.d("TTS_TAG_PDF", " Else ");
                         }
                     } else {
-                        // Log.d("TTS_TAG_PDF", "Initialization Failed!");
+                        Log.d("TTS_TAG_PDF", "Initialization Failed!");
                     }
 
-                    // Log.d("log", "initi");
-                    // Log.d("TAG_PDFM", " Path  : " + destFile.getAbsolutePath());
                     HashMap<String, String> myHashRender = new HashMap<>();
                     myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, string);
                     int i3 = tts.synthesizeToFile(string, myHashRender, destFile.getAbsolutePath());
-                    // Log.d("TAG_PDF ", " errrr " + i3);
                     if (i3 != TextToSpeech.SUCCESS) {
-//                                CommonMethod.toDisplayToast(PdfShowingActivity.this, "Saved ");
-//                    } else {
                         if (b) {
                             CommonMethod.toDisplayToast(PdfShowingActivity.this, " Can't play audio ");
                             progressBarSpeak.setVisibility(View.GONE);
                         }
                     }
-
-                    tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                        @Override
-                        public void onStart(String s) {
-                            // Log.d("TAG_PDFM", "Utter onStart" + ":" + s);
-                        }
-
-                        @Override
-                        public void onDone(String s) {
-                            // Log.d("TAG_PDFM", "Utter onDone" + ":" + s);
-                        }
-
-                        @Override
-                        public void onError(String s) {
-                            // Log.d("TAG_PDFM", "Utter onError" + ":" + s);
-                        }
-                    });
-
                     tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
                         @Override
                         public void onUtteranceCompleted(final String str) {
                             try {
-                                Log.d("AKS", "onUtteranceCompleted " + str.length() + ":"+b +":"+isAudioDivided +":"+fileCnt+":"+playCnt);
+                                Log.d("AKS", "onUtteranceCompleted " + str.length() + ":" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt);
                                 fileCnt++;
-                                // Log.d("TAG_PDFM", "Utter cmp 0 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        // Log.d("TAG_PDFM", "Utter cmp 1 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
                                         if (b) {
                                             progressBarSpeak.setVisibility(View.GONE);
                                         }
-
                                         if (b) {
-                                            // Log.d("TAG_PDFM", "Utter cmp 2 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
                                             toPlayAudio(b);
-                                        } else {
-                                            // Log.d("TAG_PDFM", "Utter cmp 3 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
                                         }
                                     }
                                 });
 
                                 if (isAudioDivided) {
-                                    // Log.d("TAG_PDFM", "Utter cmp 4 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
                                     if (fileCnt < texts.size()) {
-                                        // Log.d("TAG_PDFM", "Utter cmp 41 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
-                                        // Log.d("TAGLLL", " File 3 " + fileCnt+":" + texts.get(fileCnt).length()+":"+ playCnt);
                                         toSetAudioFiles(texts.get(fileCnt), fileCnt, false);
-                                    } else {
-                                        // Log.d("TAG_PDFM", "Utter cmp 42 " + isAudioDivided + ":" + fileCnt + ":" + texts.size() + ":" + playCnt + ":" + fileCnt);
                                     }
-                                } else {
-                                    // Log.d("TAG_PDFM", "Utter cmp 5 " + isAudioDivided + ":" + fileCnt + ":" + str.length() + ":" + playCnt + ":" + fileCnt);
                                 }
-
                             } catch (Exception | Error e) {
                                 CommonMethod.toReleaseMemory();
                                 e.printStackTrace();
@@ -741,8 +614,7 @@ public class PdfShowingActivity extends AppCompatActivity {
     private void toPlayAudio(final boolean b) {
         CommonMethod.toReleaseMemory();
         try {
-            Log.d("AKS", "toPlayAudio :"+b +":"+isAudioDivided +":"+fileCnt+":"+playCnt+":"+destFile.getName());
-            // Log.d("TAG_PDFM", " toPlayAudio");
+            Log.d("TAG", "toPlayAudio :" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt + ":" + destFile.getName());
             if (b) {
                 progressBarSpeak.setVisibility(View.VISIBLE);
             }
@@ -752,34 +624,22 @@ public class PdfShowingActivity extends AppCompatActivity {
             mediaPlayer = new MediaPlayer();
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//            File file = new File(tempDestFile);
-            Log.d("AKS", " suixzse " + CommonMethod.getFileSize(destFile) + ":" + destFile.getAbsolutePath());
+            Log.d("TAG", " size " + CommonMethod.getFileSize(destFile) + ":" + destFile.getAbsolutePath());
             FileInputStream fis = new FileInputStream(destFile);
             mediaPlayer.setDataSource(fis.getFD());
             mediaPlayer.prepare();
             mediaPlayer.start();
 
-//            sbPlayer.setMax(mediaPlayer.getDuration());
-//            sbPlayer.setEnabled(true);
             finalTime = mediaPlayer.getDuration();
             startTime = mediaPlayer.getCurrentPosition();
-            // Log.d("TAG_PDFM", " Times::: " + finalTime + " : " + startTime);
             if (oneTimeOnly == 0) {
-//                                        seekbar.setMax((int) finalTime);
-                // Log.d("TAG_PDFM", " Time 22 " + ((int) finalTime));
                 oneTimeOnly = 1;
             }
-
-//                                    tx2.setText(
-            // Log.d("TAG_PDFM", " TIME 11 : " +String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes((long) finalTime), TimeUnit.MILLISECONDS.toSeconds((long) finalTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime))));
-
-//                                    tx1.setText(
-            // Log.d("TAG_PDFM", " TIME 12 : " +String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes((long) startTime), TimeUnit.MILLISECONDS.toSeconds((long) startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime))));
+            Log.d("TAG_PDFM", " TIME 11 : " + String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes((long) finalTime), TimeUnit.MILLISECONDS.toSeconds((long) finalTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime))));
+            Log.d("TAG_PDFM", " TIME 12 : " + String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes((long) startTime), TimeUnit.MILLISECONDS.toSeconds((long) startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime))));
             if (b) {
                 progressBarSpeak.setVisibility(View.GONE);
             }
-//            mSeekbarUpdateHandler.postDelayed(mUpdateSeekBar, 0);
-//            }
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -802,14 +662,12 @@ public class PdfShowingActivity extends AppCompatActivity {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     try {
-                        Log.d("AKS", "onCompletion :"+b +":"+isAudioDivided +":"+fileCnt+":"+playCnt+":"+destFile.getName());
-                        // Log.d("TAG_PDFM", "onCompletion Audio : " + isAudioDivided + fileCnt + ":" + playCnt+ texts.size());
+                        Log.d("TAG", "onCompletion :" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt + ":" + destFile.getName());
                         playCnt++;
                         if (!isAudioDivided) {
                             toStopAudioPlayer();
                         } else {
                             if (playCnt < texts.size()) {
-                                // Log.d("TAGLLL", " File 4 " + fileCnt+":" + texts.get(playCnt).length()+":"+ playCnt);
                                 toSetAudioFiles(texts.get(playCnt), playCnt, true);
                             } else {
                                 toStopAudioPlayer();
@@ -830,7 +688,6 @@ public class PdfShowingActivity extends AppCompatActivity {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
             playerStatus = false;
-//            playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
             if (b) {
                 CommonMethod.toDisplayToast(PdfShowingActivity.this, " Unable to play audio");
                 progressBarSpeak.setVisibility(View.GONE);
@@ -841,12 +698,9 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toStopAudioPlayer() {
         try {
-            // Log.d("TAG_PDFM", "toStopAudioPlayer : ");
             playerStatus = false;
             resumePosition = 0;
-//            if (b) {
             progressBarSpeak.setVisibility(View.GONE);
-//            }
             if (mediaPlayer != null) {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.stop();
@@ -854,7 +708,6 @@ public class PdfShowingActivity extends AppCompatActivity {
                 }
             }
             playPause.setBackground(getResources().getDrawable(R.drawable.play_button));
-//            mSeekbarUpdateHandler.removeCallbacks(mUpdateSeekBar);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -966,7 +819,6 @@ public class PdfShowingActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         CommonMethod.toReleaseMemory();
-//        finish();
         toExit();
     }
 

@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:scrollbars="none"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:context=".fragments.MainHomeFragment">
 
         <LinearLayout

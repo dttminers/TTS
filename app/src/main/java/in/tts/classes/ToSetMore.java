@@ -23,6 +23,7 @@ import in.tts.activities.HelpActivity;
 import in.tts.activities.MyCameraActivity;
 import in.tts.activities.OurOtherAppActivity;
 import in.tts.activities.RecentVoiceActivity;
+import in.tts.activities.ScanDeviceActivity;
 import in.tts.activities.SettingActivity;
 
 public class ToSetMore {
@@ -56,12 +57,16 @@ public class ToSetMore {
                     context.startActivity(new Intent(context, HelpActivity.class));
                     break;
 
-//                case R.id.give_feedback:
-//                    context.startActivity(new Intent(context, Contact_us.class));
-//                    break;
+                case R.id.give_feedback:
+                    context.startActivity(new Intent(context, Contact_us.class));
+                    break;
 
                 case R.id.rate_us:
                     showRateDialog(context);
+                    break;
+
+                case R.id.scan_device:
+                    context.startActivity(new Intent(context, ScanDeviceActivity.class));
                     break;
 
                 case R.id.share_apps:

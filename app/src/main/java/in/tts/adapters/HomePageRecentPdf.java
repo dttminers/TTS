@@ -29,7 +29,7 @@ import in.tts.activities.PdfReadersActivity;
 import in.tts.activities.PdfShowingActivity;
 import in.tts.utils.CommonMethod;
 
-public class PDFHomePage extends PagerAdapter {
+public class HomePageRecentPdf extends PagerAdapter {
 
     private ArrayList<String> list;
     private Context context;
@@ -39,7 +39,7 @@ public class PDFHomePage extends PagerAdapter {
     private PdfRenderer.Page currentPage;
     private File file;
 
-    public PDFHomePage(Context ctx, ArrayList<String> listfile) {
+    public HomePageRecentPdf(Context ctx, ArrayList<String> listfile) {
         context = ctx;
         list = listfile;
     }
@@ -62,17 +62,18 @@ public class PDFHomePage extends PagerAdapter {
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
-            vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
-
-            CardView cv = vg.findViewById(R.id.cvBi);
-            ImageView iv = vg.findViewById(R.id.ivBi);
-
-            TextView tv1 = vg.findViewById(R.id.tvBiReadTime);
-            TextView tv2 = vg.findViewById(R.id.tvBiReadStatus);
-
-            Log.d("TAG", " PDF " + position + ":" + list.get(position));
             file = new File(list.get(position).trim().replaceAll("%20", " "));
             if (file.exists()) {
+                vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
+
+                CardView cv = vg.findViewById(R.id.cvBi);
+                ImageView iv = vg.findViewById(R.id.ivBi);
+
+                TextView tv1 = vg.findViewById(R.id.tvBiReadTime);
+                TextView tv2 = vg.findViewById(R.id.tvBiReadStatus);
+
+                Log.d("TAG", " PDF " + position + ":" + list.get(position));
+
                 fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
                 pdfRenderer = new PdfRenderer(fileDescriptor);
                 if (null != currentPage) {
@@ -112,6 +113,7 @@ public class PDFHomePage extends PagerAdapter {
                         }
                     }
                 });
+                container.addView(vg);
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -120,7 +122,7 @@ public class PDFHomePage extends PagerAdapter {
             FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
-        container.addView(vg);
+
         return vg;
     }
 
@@ -132,5 +134,9 @@ public class PDFHomePage extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
+    }
+
+    public void setData(ArrayList<String> newList) {
+        list = newList;
     }
 }

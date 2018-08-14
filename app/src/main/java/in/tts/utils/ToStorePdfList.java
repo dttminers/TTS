@@ -2,6 +2,7 @@ package in.tts.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -9,26 +10,26 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import in.tts.model.PdfModel;
 import in.tts.model.PrefManager;
 
-public class ToGetPdfFiles {
+public class ToStorePdfList {
 
-    static ArrayList<String> fileList = new ArrayList<>();
-    static boolean status = false;
-    static PrefManager prefManager;
+    private static ArrayList<String> fileList = new ArrayList<>();
+    private static List<PdfModel> list = new ArrayList<>();
+    private static DatabaseHelper db;
 
     @AddTrace(name = "onGetPDF", enabled = true)
     public static void getFile(final File dir, final Context context) {
         try {
-            prefManager = new PrefManager(context);
+            db = new DatabaseHelper(context);
+            list.addAll(db.getAllNotes());
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (prefManager.toGetPDFList() != null) {
-                        fileList = prefManager.toGetPDFList();
-                    }
-                    status = true;
                     File listFile[] = dir.listFiles();
                     if (listFile != null && listFile.length > 0) {
                         for (int i = 0; i < listFile.length; i++) {
@@ -45,31 +46,25 @@ public class ToGetPdfFiles {
                                     if (booleanpdf) {
                                         booleanpdf = false;
                                     } else {
-//                                        if (fileList.size() < 10) {
-                                            if (!fileList.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))) {
-                                                fileList.add(fileList.size() - 1, listFile[i].getPath().trim().replaceAll("\\s", "%20"));
-                                            }
-//                                        } else {
-//                                            break;
-//                                        }
+                                        // inserting note in db and getting
+                                        // newly inserted note id
+                                        if (!list.contains(listFile[i].getPath().trim())) {
+                                        long id = db.insertNote(listFile[i].getPath().trim(), String.valueOf(new Date(listFile[i].lastModified())));
+                                        Log.d("TAG", "ToStorePdfList PDF " + id);
+                                        }
                                     }
                                 }
                             }
                         }
-                        prefManager.toSetPDFFileList(fileList, false);
+                        new PrefManager(context).toSetPDFFileList(fileList, false);
                     }
                 }
             });
-            status = false;
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
         }
-    }
-
-    public static boolean isRunning() {
-        return status;
     }
 }

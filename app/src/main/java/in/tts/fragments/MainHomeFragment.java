@@ -36,8 +36,8 @@ import java.util.Objects;
 
 import in.tts.R;
 import in.tts.adapters.CustomPagerAdapter;
-import in.tts.adapters.PDFHomePage;
-import in.tts.adapters.PDFHomePageImages;
+import in.tts.adapters.HomePageRecentImages;
+import in.tts.adapters.HomePageRecentPdf;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
@@ -61,11 +61,11 @@ public class MainHomeFragment extends Fragment {
 
     //pdf
     private ArrayList<String> pdfFile;
-    private PDFHomePage pdfHomePage;
+    private HomePageRecentPdf pdfHomePage;
 
     // images
     private ArrayList<String> imageFile;
-    private PDFHomePageImages pdfHomePageImages;
+    private HomePageRecentImages pdfHomePageImages;
 
     PrefManager prefManager;
 
@@ -115,10 +115,12 @@ public class MainHomeFragment extends Fragment {
             if ((ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             } else {
+                toSetData();
+
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
 //                    public void run() {
-                        new toSetSomeData().execute();
+//                new toSetSomeData().execute();
 //                    }
 //                }, 1000);
             }
@@ -186,7 +188,8 @@ public class MainHomeFragment extends Fragment {
         try {
             if (requestCode == 1) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    new toSetSomeData().execute();
+//                    new toSetSomeData().execute();
+                    toSetData();
                 } else {
                     CommonMethod.toDisplayToast(getContext(), "Please allow the permission");
                 }
@@ -200,42 +203,93 @@ public class MainHomeFragment extends Fragment {
         }
     }
 
-    private class toSetSomeData extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if (prefManager.toGetPDFListRecent() != null) {
-                pdfFile = prefManager.toGetPDFListRecent();
-            } else if (prefManager.toGetPDFList() == null) {
-                pdfFile = new ArrayList<>();
-                getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
-            } else {
-                pdfFile = prefManager.toGetPDFList();
-            }
-            pdfHomePage = new PDFHomePage(getContext(), pdfFile);
-
-            if (prefManager.toGetImageListRecent() != null) {
-                imageFile = prefManager.toGetImageListRecent();
-            } else if (prefManager.toGetImageList() == null) {
-                imageFile = new ArrayList<>();
-                getAllShownImagesPath();
-            } else {
-                imageFile = prefManager.toGetImageList();
-            }
-            pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            toBindRecentPdf();
-            toBindRecentImages();
-
-            nsv.setVisibility(View.VISIBLE);
-            mLoading.setVisibility(View.GONE);
+    private void toSetData() {
+        try {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toSetRecentPdf();
+                    toSetRecentImages();
+                    mLoading.setVisibility(View.GONE);
+                }
+            }, 500);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
         }
     }
+
+    private void toSetRecentPdf() {
+        try {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pdfFile = new ArrayList<>();
+                    if (prefManager.toGetPDFListRecent() != null && prefManager.toGetPDFListRecent().size() != 0) {
+                        pdfFile = prefManager.toGetPDFListRecent();
+                        pdfHomePage = new HomePageRecentPdf(getContext(), pdfFile);
+                        toBindRecentPdf();
+//                    } else if (prefManager.toGetPDFList() != null) {
+//                        pdfFile = prefManager.toGetPDFList();
+//                        pdfHomePage = new HomePageRecentPdf(getContext(), pdfFile);
+//                        toBindRecentPdf();
+//                    } else {
+//                        getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+                    }
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toSetRecentImages() {
+        try {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    imageFile = new ArrayList<>();
+                    if (prefManager.toGetImageListRecent() != null) {
+                        imageFile = prefManager.toGetImageListRecent();
+                        pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
+                        toBindRecentImages();
+//                    } else if (prefManager.toGetImageList() != null) {
+//                        imageFile = prefManager.toGetImageList();
+//                        pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
+//                        toBindRecentImages();
+//                    } else {
+//                        getAllShownImagesPath();
+                    } else {
+
+                    }
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//            toBindRecentPdf();
+//            toBindRecentImages();
+//
+//            nsv.setVisibility(View.VISIBLE);
+//            mLoading.setVisibility(View.GONE);
+//        }
+//    }
 
 //    public void toSetSomeData() {
 //        try {
@@ -251,7 +305,7 @@ public class MainHomeFragment extends Fragment {
 //                        } else {
 //                            pdfFile = prefManager.toGetPDFList();
 //                        }
-//                        pdfHomePage = new PDFHomePage(getContext(), pdfFile);
+//                        pdfHomePage = new HomePageRecentPdf(getContext(), pdfFile);
 //                        toBindRecentPdf();
 //
 //                        if (prefManager.toGetImageListRecent() != null) {
@@ -262,7 +316,7 @@ public class MainHomeFragment extends Fragment {
 //                        } else {
 //                            imageFile = prefManager.toGetImageList();
 //                        }
-//                        pdfHomePageImages = new PDFHomePageImages(getContext(), imageFile);
+//                        pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
 //                        toBindRecentImages();
 //                        nsv.setVisibility(View.VISIBLE);
 //                        mLoading.setVisibility(View.GONE);
@@ -304,10 +358,17 @@ public class MainHomeFragment extends Fragment {
                             if (booleanpdf) {
                                 booleanpdf = false;
                             } else {
-                                if (pdfFile.size() < 11) {
+                                if (pdfFile.size() < 10) {
                                     pdfFile.add(listFile[i].getPath());
                                 } else {
                                     break;
+                                }
+                                if (pdfFile.size() == 1) {
+                                    pdfHomePage = new HomePageRecentPdf(getContext(), pdfFile);
+                                    toBindRecentPdf();
+                                } else {
+                                    pdfHomePage.setData(pdfFile);
+                                    pdfHomePage.notifyDataSetChanged();
                                 }
                             }
                         }
@@ -331,6 +392,9 @@ public class MainHomeFragment extends Fragment {
                 if (getContext() != null) {
                     LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     if (inflater != null) {
+                        if (mLoading != null && mLoading.getVisibility() == View.VISIBLE) {
+                            mLoading.setVisibility(View.GONE);
+                        }
                         view = inflater.inflate(R.layout.layout_home_page_recent_items, null, false);
 
                         TextView tvHeader = view.findViewById(R.id.tvRecent);
@@ -392,6 +456,13 @@ public class MainHomeFragment extends Fragment {
                     while (cursor.moveToNext() && imageFile.size() < 11) {
                         String imageLocation = cursor.getString(1);
                         imageFile.add(imageLocation.replaceAll("\\s", "%20"));
+                        if (imageFile.size() == 1) {
+                            pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
+                            toBindRecentImages();
+                        } else {
+                            pdfHomePageImages.setData(imageFile);
+                            pdfHomePageImages.notifyDataSetChanged();
+                        }
                     }
                 }
                 if (cursor != null) {
@@ -415,6 +486,9 @@ public class MainHomeFragment extends Fragment {
                 if (getContext() != null) {
                     LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     if (inflater != null) {
+                        if (mLoading != null && mLoading.getVisibility() == View.VISIBLE) {
+                            mLoading.setVisibility(View.GONE);
+                        }
                         view1 = inflater.inflate(R.layout.layout_home_page_recent_items1, null, false);
 
                         TextView tvHeader = view1.findViewById(R.id.tvRecent);
@@ -490,9 +564,8 @@ public class MainHomeFragment extends Fragment {
     }
 
     public void setLoadData() {
-//        fn_permission();
         if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
-            new toSetSomeData().execute();
+            toSetData();
         }
     }
 
@@ -518,7 +591,7 @@ public class MainHomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
-            new toSetSomeData().execute();
+            toSetData();
         }
         CommonMethod.toReleaseMemory();
     }

@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -21,16 +21,20 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.PdfShowingActivity;
+import in.tts.fragments.MyBooksListFragment;
 import in.tts.utils.CommonMethod;
 
 public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHolder> {
     private Context context;
     private ArrayList<String> list;
     private File file;
+    private MyBooksListFragment myBooksListFragment;
 
-    public PdfListAdapter(Context _context, ArrayList<String> _list) {
+    public PdfListAdapter(Context _context, ArrayList<String> _list, MyBooksListFragment myBooksListFragment) {
         context = _context;
         list = _list;
+        this.myBooksListFragment = myBooksListFragment;
+        Log.d("TAG", " count 30: " + list.size() + ":" + _list.size());
     }
 
     @NonNull
@@ -42,11 +46,11 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull PdfListAdapter.ViewHolder viewHolder, int i) {
         try {
-            Log.d("TAG", " onBindViewHolder " + i);
-            file = new File(list.get(i));
+            file = new File(list.get(i).trim().replaceAll("%20", " "));
+            Log.d("TAG", " count  onBindViewHolder " + i + list.get(i) + ":" + file.getName() + ":" + file.getAbsolutePath());
             viewHolder.mtv.setText(file.getName());
             viewHolder.mtv1.setText(CommonMethod.getFileSize(file));
-            viewHolder.mtv2.setText(String.valueOf(new PdfReader(file.getAbsolutePath()).getNumberOfPages())+ " Pages");
+            viewHolder.mtv2.setText(String.valueOf(new PdfReader(file.getAbsolutePath()).getNumberOfPages()) + " Pages");
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -57,13 +61,12 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-
         return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mtv, mtv1, mtv2;
-        private RelativeLayout mRl;
+        private LinearLayout mLl;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,9 +75,9 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
                 mtv1 = itemView.findViewById(R.id.tv_duration);
                 mtv2 = itemView.findViewById(R.id.tv_remaining);
 
-                mRl = itemView.findViewById(R.id.mRlPdfListItem);
+                mLl = itemView.findViewById(R.id.mLlPdfListItem);
 
-                mRl.setOnClickListener(new View.OnClickListener() {
+                mLl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         try {
@@ -93,7 +96,6 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
                         }
                     }
                 });
-
             } catch (Exception | Error e) {
                 e.printStackTrace();
                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -101,5 +103,12 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
                 FirebaseCrash.report(e);
             }
         }
+    }
+
+    public void addItem(int position, String _list_data){
+        list.add(position, _list_data);
+        notifyItemInserted(position);
+        notifyItemRangeChanged(position, list.size());
+        notifyDataSetChanged();
     }
 }

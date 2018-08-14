@@ -120,7 +120,6 @@ public class PrefManager {
             editor.putString(USER_INFO, new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", " setUserInfo : " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -135,7 +134,6 @@ public class PrefManager {
             editor.clear();
             editor.apply();
             editor.commit();
-            Log.d("TAG", " toClearUserInfo : " + new JSONObject(new Gson().toJson(User.getUser(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -150,7 +148,6 @@ public class PrefManager {
             AudioSetting audioSetting = AudioSetting.getAudioSetting(_context);
             if (Audio != null) {
                 JSONObject audioJSON = new JSONObject(Audio);
-                Log.d("TAG ", "getAudioSetting : " + audioJSON);
                 if (!audioJSON.isNull("VoiceSelection")) {
                     audioSetting.setVoiceSelection(audioJSON.getString("VoiceSelection"));
                 } else {
@@ -174,9 +171,7 @@ public class PrefManager {
                 } else {
                     audioSetting.setVoiceSpeed(0);
                 }
-                Log.d("TAG ", "getAudioSetting : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
             } else {
-                Log.d("TAG ", "getAudioSetting : null");
                 audioSetting.setVoiceSelection("Male");
                 audioSetting.setLangSelection(String.valueOf(Locale.US));
                 audioSetting.setVoiceSpeed(0);
@@ -196,7 +191,6 @@ public class PrefManager {
             editor.putString(AUDIO_SETTING_INFO, new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG ", "setAudioSetting : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(_context))).toString());
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -209,7 +203,7 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(PDF_LIST, 0).getString(PDF_LIST_INFO, null);
             if (us != null) {
-                return new ArrayList<>(Arrays.asList(us.trim().replace("[", "").replace("]", "").split(",")));
+                return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
             }
@@ -274,7 +268,6 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(PDF_LIST_RECENT, 0).getString(PDF_LIST_INFO_RECENT, null);
             if (us != null) {
-                Log.d("TAG", " toGetPDFFileListRecent " + us);
                 return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
@@ -294,7 +287,6 @@ public class PrefManager {
             editor.putString(PDF_LIST_INFO_RECENT, list.toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", " toSetPDFFileListRecent " + list);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -307,7 +299,6 @@ public class PrefManager {
         try {
             String us = _context.getSharedPreferences(IMAGE_LIST_RECENT, 0).getString(IMAGE_LIST_INFO_RECENT, null);
             if (us != null) {
-                Log.d("TAG", " toGetImageListRecent1 " + us);
                 return new ArrayList<>(Arrays.asList(us.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").trim().split(",")));
             } else {
                 return null;
@@ -327,7 +318,6 @@ public class PrefManager {
             editor.putString(IMAGE_LIST_INFO_RECENT, list.toString());
             editor.apply();
             editor.commit();
-            Log.d("TAG", " toSetImageListRecent " + list);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

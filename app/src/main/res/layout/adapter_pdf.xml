@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mRlPdfListItem"
+    android:id="@+id/mLlPdfListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
     android:background="@color/white1"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@color/white">
 
         <TextView
@@ -19,9 +19,9 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_marginEnd="0dp"
+            android:layout_marginEnd="05dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="0dp"
+            android:layout_marginRight="05dp"
             android:layout_marginStart="10dp"
             android:ellipsize="end"
             android:lines="1"
@@ -34,22 +34,30 @@
             android:textColor="@color/dark_pink_two"
             android:textSize="15sp" />
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/iv_image"
-            android:layout_width="32dp"
+            android:layout_width="35dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            android:background="@drawable/ic_pdf">
+            android:contentDescription="@string/str_pdf"
+            android:src="@drawable/ic_pdf_1" />
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="8dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:layout_margin="3dp"
-                android:contentDescription="@string/str_pdf"
-                android:src="@drawable/ic_pdf_text" />
-        </RelativeLayout>
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/iv_image"-->
+        <!--android:layout_width="32dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:background="@drawable/ic_pdf">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="16dp"-->
+        <!--android:layout_height="8dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_margin="3dp"-->
+        <!--android:contentDescription="@string/str_pdf"-->
+        <!--android:src="@drawable/ic_pdf_text" />-->
+        <!--</RelativeLayout>-->
 
         <TextView
             android:id="@+id/tv_name"

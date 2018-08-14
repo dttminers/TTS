@@ -30,6 +30,7 @@ import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
+import in.tts.utils.ToStorePdfList;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -101,33 +102,34 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-//    private void toLoadData() {
-//        try {
-//            PrefManager prefManager = new PrefManager(LoginActivity.this);
-////            prefManager.toSetPDFFileList(
-//            ToGetImages.isRunning();
-//            ToGetPdfFiles.isRunning();
-//            if (prefManager.toGetPDFList() == null) {
-//                if (!ToGetPdfFiles.isRunning()) {
-//                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
-//                }
-//            }
-////            );
-////            prefManager.toSetImageFileList(
+    private void toLoadData() {
+        try {
+//            ToStorePdfList.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
+            PrefManager prefManager = new PrefManager(LoginActivity.this);
+//            prefManager.toSetPDFFileList(
+            ToGetImages.isRunning();
+            ToGetPdfFiles.isRunning();
+            if (prefManager.toGetPDFList() == null) {
+                if (!ToGetPdfFiles.isRunning()) {
+                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
+                }
+            }
+//            );
+//            prefManager.toSetImageFileList(
 //            if (prefManager.toGetImageList() == null) {
 //                if (!ToGetImages.isRunning()) {
 //                    ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
 //                }
 //            }
-////            );
-//        } catch (Exception | Error e) {
-//            e.printStackTrace();
-//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-//            Crashlytics.logException(e);
-//            FirebaseCrash.report(e);
-//            CommonMethod.toReleaseMemory();
-//        }
-//    }
+//            );
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
+        }
+    }
 
     private void replaceMainTabsFragment(Fragment fragment) throws Exception, Error {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

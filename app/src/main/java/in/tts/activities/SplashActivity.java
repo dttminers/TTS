@@ -23,8 +23,8 @@ import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.services.ClipboardMonitorService;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
+import in.tts.utils.ToStorePdfList;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -51,25 +51,32 @@ public class SplashActivity extends AppCompatActivity {
                 public void run() {
                     prefManager.getUserInfo();
                     if (auth.getCurrentUser() != null) {
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     } else if (User.getUser(SplashActivity.this).getId() != null) {
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     } else {
                         if (prefManager.isFirstTimeLaunch()) {
-                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         } else {
-                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         }
                     }
 //                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
-                    overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                 }
             }, 3000);
             prefManager.getAudioSetting();
 //            if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 //                try {
+//                    ToStorePdfList.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
+//            prefManager.toSetPDFFileList(
+//                    if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
+//                        if (!ToGetPdfFiles.isRunning()) {
+//                            ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
+//                        }
+//                    }
 //                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
 //                    ToGetImages.getAllShownImagesPath(SplashActivity.this, SplashActivity.this);
 //                } catch (Exception | Error e) {

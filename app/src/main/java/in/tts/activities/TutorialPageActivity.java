@@ -35,6 +35,7 @@ import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
+import in.tts.utils.ToStorePdfList;
 
 public class TutorialPageActivity extends AppCompatActivity {
 
@@ -119,32 +120,33 @@ public class TutorialPageActivity extends AppCompatActivity {
         }
     }
 
-//    private void toLoadData() {
-//        if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-//            try {
-//                PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
-////            prefManager.toSetPDFFileList(
+    private void toLoadData() {
+        if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            try {
+//                ToStorePdfList.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
+                PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
+//            prefManager.toSetPDFFileList(
 //                if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
-//                    if (!ToGetPdfFiles.isRunning()) {
-//                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
-//                    }
+                    if (!ToGetPdfFiles.isRunning()) {
+                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
+                    }
 //                }
-////            );
-////            prefManager.toSetImageFileList(
+//            );
+//            prefManager.toSetImageFileList(
 //                if (prefManager.toGetImageList() == null && prefManager.toGetImageList().size() == 0) {
-//                    if (!ToGetImages.isRunning()) {
-//                        ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
-//                    }
+                    if (!ToGetImages.isRunning()) {
+                        ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
+                    }
 //                }
-////            );
-//            } catch (Exception | Error e) {
-//                e.printStackTrace();
-//                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-//                Crashlytics.logException(e);
-//                FirebaseCrash.report(e);
-//            }
-//        }
-//    }
+//            );
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
+        }
+    }
 
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;

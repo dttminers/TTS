@@ -34,7 +34,8 @@ public class PdfFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    private MyBooksListFragment tab1;
+//    private MyBooksListFragment tab1;
+    private PdfListFragment tab1;
     private EBookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Library"};
@@ -190,11 +191,13 @@ public class PdfFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return tab1 = MyBooksListFragment.newInstance();
+//                    return tab1 = MyBooksListFragment.newInstance();
+                    return tab1 = PdfListFragment.newInstance();
                 case 1:
                     return tab2 = EBookFragment.newInstance();
                 default:
-                    return tab1 = MyBooksListFragment.newInstance();
+//                    return tab1 = MyBooksListFragment.newInstance();
+                    return tab1 = PdfListFragment.newInstance();
             }
         }
 

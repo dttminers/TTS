@@ -33,16 +33,29 @@
 
         <menu>
             <item
-                android:id="@+id/audio_settings"
-                android:title="@string/str_audio_settings"
-                app:showAsAction="ifRoom" />
-            <item
                 android:id="@+id/recent_audios"
                 android:title="@string/str_recent_audios"
                 app:showAsAction="ifRoom" />
             <item
+                android:id="@+id/audio_settings"
+                android:title="@string/str_audio_settings"
+                app:showAsAction="ifRoom" />
+            <item
                 android:id="@+id/settings"
                 android:title="@string/str_settings"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/scan_device"
+                android:title="@string/str_scan_device"
+                android:visible="false"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/share_apps"
+                android:title="@string/str_share_app"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/rate_us"
+                android:title="@string/str_rate_us"
                 app:showAsAction="ifRoom" />
             <item
                 android:id="@+id/our_other_apps"
@@ -53,17 +66,9 @@
                 android:title="@string/str_help"
                 app:showAsAction="ifRoom" />
             <item
-                android:id="@+id/share_apps"
-                android:title="@string/str_share_app"
+                android:id="@+id/give_feedback"
+                android:title="@string/str_give_feedback"
                 app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/rate_us"
-                android:title="@string/str_rate_us"
-                app:showAsAction="ifRoom" />
-            <!--<item-->
-                <!--android:id="@+id/give_feedback"-->
-                <!--android:title="@string/str_give_feedback"-->
-                <!--app:showAsAction="ifRoom" />-->
         </menu>
     </item>
 </menu>

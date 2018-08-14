@@ -149,7 +149,7 @@ public class MyBooksFragment extends Fragment {
                 list = prefManager.toGetPDFList();
                 Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
             }
-            pdfListAdapter = new PdfListAdapter(getContext(), list);
+//            pdfListAdapter = new PdfListAdapter(getContext(), list);
             mRv.setAdapter(pdfListAdapter);
             pdfListAdapter.notifyDataSetChanged();
             count += 20;
