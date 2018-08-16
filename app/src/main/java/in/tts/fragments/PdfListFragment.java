@@ -74,7 +74,7 @@ public class PdfListFragment extends Fragment {
             rl = Objects.requireNonNull(getActivity()).findViewById(R.id.rlLoader12);
 
             recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.rvList12);
-
+            recyclerView.setNestedScrollingEnabled(false);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } catch (Exception | Error e) {
@@ -224,7 +224,7 @@ public class PdfListFragment extends Fragment {
 
     public void getFile(final File dir) {
         try {
-            AsyncTask.execute(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -261,14 +261,19 @@ public class PdfListFragment extends Fragment {
                         Crashlytics.logException(e);
                     }
                 }
-            });
-            Log.d("TAG", " count  5:" + list.size() + ":" + pdfListAdapter.getItemCount());
-            new PrefManager(getContext()).toSetPDFFileList(list);
-            recyclerView.post(new Runnable() {
+            }, 1000);
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    pdfListAdapter.notifyDataSetChanged();
-                    Log.d("TAG", " count  7:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                    Log.d("TAG", " count  5:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                    new PrefManager(getContext()).toSetPDFFileList(list);
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            pdfListAdapter.notifyDataSetChanged();
+                            Log.d("TAG", " count  7:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                        }
+                    });
                 }
             });
         } catch (Exception | Error e) {

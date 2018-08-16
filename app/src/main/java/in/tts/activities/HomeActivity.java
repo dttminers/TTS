@@ -91,6 +91,8 @@ public class HomeActivity extends AppCompatActivity implements
 
     private void toBindData() {
         try {
+            tabLayout = findViewById(R.id.tabsHome);
+            viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
             Log.d("TAG_Main", "  toBindData ha ");
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -98,8 +100,7 @@ public class HomeActivity extends AppCompatActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tabLayout = findViewById(R.id.tabsHome);
-                            viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
+
                             tab1 = BrowserFragment.newInstance();
                             tab2 = PdfFragment.newInstance();
                             tab3 = MainHomeFragment.newInstance();
@@ -116,31 +117,32 @@ public class HomeActivity extends AppCompatActivity implements
                             tabLayout.getTabAt(3).setText(tabHomeText[3]).setIcon(tabHomeIcon[3]);
                             tabLayout.getTabAt(4).setText(tabHomeText[4]).setIcon(tabHomeIcon[4]);
 
-                            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                                @Override
-                                public void onTabSelected(TabLayout.Tab tab) {
-                                    Log.d("TAG_Main", "  setCurrentViewPagerItem tab " + tab.getPosition());
-                                    setCurrentViewPagerItem(tab.getPosition());
-                                    CommonMethod.toReleaseMemory();
-                                    CommonMethod.setAnalyticsData(HomeActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
-                                }
 
-                                @Override
-                                public void onTabUnselected(TabLayout.Tab tab) {
-                                    CommonMethod.toReleaseMemory();
-                                }
-
-                                @Override
-                                public void onTabReselected(TabLayout.Tab tab) {
-                                    CommonMethod.toReleaseMemory();
-                                }
-                            });
                             viewPager.setOffscreenPageLimit(5);
                             setCurrentViewPagerItem(2);
                         }
                     });
                 }
             }, 50);
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    Log.d("TAG_Main", "  setCurrentViewPagerItem tab " + tab.getPosition());
+                    setCurrentViewPagerItem(tab.getPosition());
+                    CommonMethod.toReleaseMemory();
+                    CommonMethod.setAnalyticsData(HomeActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    CommonMethod.toReleaseMemory();
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    CommonMethod.toReleaseMemory();
+                }
+            });
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

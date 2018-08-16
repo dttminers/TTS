@@ -22,8 +22,6 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.PdfShowingActivity;
-import in.tts.fragments.MyBooksListFragment;
-import in.tts.fragments.PdfListFragment;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetPdfFiles;
 

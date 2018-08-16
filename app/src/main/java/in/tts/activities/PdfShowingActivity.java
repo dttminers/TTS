@@ -188,6 +188,7 @@ public class PdfShowingActivity extends AppCompatActivity {
                             playerStatus = !playerStatus;
                         } else {
                             toGetData(vp.getCurrentItem() + 1, true);
+                            progressBarSpeak.setVisibility(View.VISIBLE);
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
