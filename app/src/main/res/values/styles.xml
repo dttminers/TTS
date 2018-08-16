@@ -10,6 +10,7 @@
         <item name="android:actionModeBackground">@drawable/bg_main</item>
         <item name="actionModeBackground">@drawable/bg_main</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <!-- Splash Screen theme. -->

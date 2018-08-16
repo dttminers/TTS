@@ -8,7 +8,9 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -37,18 +39,18 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.activity_splash);
-            startService(new Intent(this, ClipboardMonitorService.class));
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
+//            startService(new Intent(this, ClipboardMonitorService.class));
 
             prefManager = new PrefManager(SplashActivity.this);
-            //Get Firebase auth instance
             auth = FirebaseAuth.getInstance();
-            CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+//                    findViewById(R.id.ivSplash).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out));
                     prefManager.getUserInfo();
                     if (auth.getCurrentUser() != null) {
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -61,32 +63,28 @@ public class SplashActivity extends AppCompatActivity {
                             startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         }
                     }
-//                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                     finish();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                 }
             }, 3000);
+
             prefManager.getAudioSetting();
-//            if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-//                try {
-//                    ToStorePdfList.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
-//            prefManager.toSetPDFFileList(
-//                    if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
-//                        if (!ToGetPdfFiles.isRunning()) {
-//                            ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
-//                        }
-//                    }
-//                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
-//                    ToGetImages.getAllShownImagesPath(SplashActivity.this, SplashActivity.this);
-//                } catch (Exception | Error e) {
-//                    e.printStackTrace();
-//                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-//                    Crashlytics.logException(e);
-//                    FirebaseCrash.report(e);
-//                }
-//            }
-            CommonMethod.isSignedIn(SplashActivity.this);
+            if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                try {
+                    if (!ToGetPdfFiles.isRunning()) {
+                        Log.d("TAG", "toGetPDFList Splash : ");
+                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
+                    }
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    Crashlytics.logException(e);
+                    FirebaseCrash.report(e);
+                }
+            }
+
+//            CommonMethod.isSignedIn(SplashActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

@@ -2,6 +2,7 @@ package in.tts.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -14,9 +15,9 @@ import in.tts.model.PrefManager;
 
 public class ToGetPdfFiles {
 
-    static ArrayList<String> fileList = new ArrayList<>();
-    static boolean status = false;
-    static PrefManager prefManager;
+    private static ArrayList<String> fileList = new ArrayList<>();
+    private static boolean status = false;
+    private static PrefManager prefManager;
 
     @AddTrace(name = "onGetPDF", enabled = true)
     public static void getFile(final File dir, final Context context) {
@@ -25,6 +26,7 @@ public class ToGetPdfFiles {
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
+                    status = true;
                     if (prefManager.toGetPDFList() != null) {
                         fileList = prefManager.toGetPDFList();
                     }
@@ -35,6 +37,7 @@ public class ToGetPdfFiles {
                             if (listFile[i].isDirectory()) {
                                 getFile(listFile[i], context);
                             } else {
+                                Log.d("TAG", "toGetPDFList  Count lu2  "+ listFile.length);
                                 boolean booleanpdf = false;
                                 if (listFile[i].getName().endsWith(".pdf")) {
                                     for (int j = 0; j < fileList.size(); j++) {
@@ -45,22 +48,30 @@ public class ToGetPdfFiles {
                                     if (booleanpdf) {
                                         booleanpdf = false;
                                     } else {
-//                                        if (fileList.size() < 10) {
+                                        Log.d("TAG", "toGetPDFList +l : "+fileList.size() + ":"+listFile[i].getPath().trim().replaceAll("\\s", "%20"));
+                                        if (fileList.size() < 30) {
+                                            Log.d("TAG", "toGetPDFList +l : "+listFile[i].getPath().trim().replaceAll("\\s", "%20") + (!fileList.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))));
                                             if (!fileList.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))) {
-                                                fileList.add(fileList.size() - 1, listFile[i].getPath().trim().replaceAll("\\s", "%20"));
+                                                fileList.add(listFile[i].getPath().trim().replaceAll("\\s", "%20"));
                                             }
-//                                        } else {
-//                                            break;
-//                                        }
+                                        } else {
+                                            break;
+                                        }
                                     }
+                                } else {
+                                    Log.d("TAG", "toGetPDFList  Count lu3  "+ listFile.length);
                                 }
                             }
+                            Log.d("TAG", "toGetPDFList  Count for ends lu "+ listFile.length);
                         }
-                        prefManager.toSetPDFFileList(fileList, false);
+                        prefManager.toSetPDFFileList(fileList);
+                    } else {
+                        Log.d("TAG", "toGetPDFList  Count lur "+ listFile.length);
                     }
                 }
             });
             status = false;
+            Log.d("TAG", "toGetPDFList  Counet "+ fileList.size());
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -70,6 +81,7 @@ public class ToGetPdfFiles {
     }
 
     public static boolean isRunning() {
+        Log.d("TAG", "toGetPDFList  isRunning " + status);
         return status;
     }
 }

@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.login.Login;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
@@ -26,11 +25,8 @@ import java.io.File;
 import in.tts.R;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.RegisterFragment;
-import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
-import in.tts.utils.ToStorePdfList;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -70,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
             CommonMethod.toReleaseMemory();
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//            } else {
-//                toLoadData();
+            } else {
+                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -95,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 fn_permission();
             } else {
-                CommonMethod.toDisplayToast(LoginActivity.this,  "Please allow the permission");
+                CommonMethod.toDisplayToast(LoginActivity.this, "Please allow the permission");
             }
         } else {
             fn_permission();
@@ -104,24 +100,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void toLoadData() {
         try {
-//            ToStorePdfList.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
-            PrefManager prefManager = new PrefManager(LoginActivity.this);
-//            prefManager.toSetPDFFileList(
-            ToGetImages.isRunning();
-            ToGetPdfFiles.isRunning();
-            if (prefManager.toGetPDFList() == null) {
-                if (!ToGetPdfFiles.isRunning()) {
-                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
-                }
+            if (!ToGetPdfFiles.isRunning()) {
+                Log.d("TAG", "toGetPDFList Login : ");
+                ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
             }
-//            );
-//            prefManager.toSetImageFileList(
-//            if (prefManager.toGetImageList() == null) {
-//                if (!ToGetImages.isRunning()) {
-//                    ToGetImages.getAllShownImagesPath(LoginActivity.this, LoginActivity.this);
-//                }
-//            }
-//            );
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

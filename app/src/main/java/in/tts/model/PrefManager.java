@@ -216,12 +216,12 @@ public class PrefManager {
         }
     }
 
-    public void toSetPDFFileList(ArrayList<String> list, boolean status) {
+    public void toSetPDFFileList(ArrayList<String> list) {
         try {
             SharedPreferences.Editor editor = _context.getSharedPreferences(PDF_LIST, 0).edit();
-            if (status) {
-                editor.clear();
-            }
+//            if (status) {
+//                editor.clear();
+//            }
             editor.putString(PDF_LIST_INFO, list.toString());
             editor.apply();
             editor.commit();

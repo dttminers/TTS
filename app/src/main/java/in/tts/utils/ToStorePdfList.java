@@ -46,17 +46,18 @@ public class ToStorePdfList {
                                     if (booleanpdf) {
                                         booleanpdf = false;
                                     } else {
+                                        fileList.add(fileList.size() - 1, listFile[i].getPath().trim().replaceAll("\\s", "%20"));
                                         // inserting note in db and getting
                                         // newly inserted note id
                                         if (!list.contains(listFile[i].getPath().trim())) {
-                                        long id = db.insertNote(listFile[i].getPath().trim(), String.valueOf(new Date(listFile[i].lastModified())));
-                                        Log.d("TAG", "ToStorePdfList PDF " + id);
+                                            long id = db.insertNote(listFile[i].getPath().trim(), String.valueOf(new Date(listFile[i].lastModified())));
+                                            Log.d("TAG", "ToStorePdfList PDF " + id);
                                         }
                                     }
                                 }
                             }
                         }
-                        new PrefManager(context).toSetPDFFileList(fileList, false);
+                        new PrefManager(context).toSetPDFFileList(fileList);
                     }
                 }
             });

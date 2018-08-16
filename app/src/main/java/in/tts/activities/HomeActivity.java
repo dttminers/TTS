@@ -64,60 +64,83 @@ public class HomeActivity extends AppCompatActivity implements
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_home);
-            toBindData();
-            fn_permission();
-            setCurrentViewPagerItem(2);
+            Log.d("TAG_Main", "  onCreate ha ");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("TAG_Main", "  onCreatehg ha ");
+                            toBindData();
+                            fn_permission();
+                        }
+                    });
+                    Log.d("TAG_Main", "  setCurrentViewPagerItem ha ");
+//                    setCurrentViewPagerItem(2);
+                }
+            }, 10);
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
-        CommonMethod.toReleaseMemory();
     }
 
     private void toBindData() {
         try {
-            CommonMethod.toReleaseMemory();
-            tab1 = BrowserFragment.newInstance();
-            tab2 = PdfFragment.newInstance();
-            tab3 = MainHomeFragment.newInstance();
-            tab4 = MakeYourOwnReadFragment.newInstance();
-            tab5 = GalleryFragment.newInstance();
-
-            tabLayout = findViewById(R.id.tabsHome);
-            viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
-
-            SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-            viewPager.setAdapter(adapter);
-            tabLayout.setupWithViewPager(viewPager);
-
-            tabLayout.getTabAt(0).setText(tabHomeText[0]).setIcon(tabHomeIcon[0]);
-            tabLayout.getTabAt(1).setText(tabHomeText[1]).setIcon(tabHomeIcon[1]);
-            tabLayout.getTabAt(2).setText(tabHomeText[2]).setIcon(tabHomeIcon[2]);
-            tabLayout.getTabAt(3).setText(tabHomeText[3]).setIcon(tabHomeIcon[3]);
-            tabLayout.getTabAt(4).setText(tabHomeText[4]).setIcon(tabHomeIcon[4]);
-
-            viewPager.setOffscreenPageLimit(5);
-
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            Log.d("TAG_Main", "  toBindData ha ");
+            new Handler().postDelayed(new Runnable() {
                 @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    setCurrentViewPagerItem(tab.getPosition());
-                    CommonMethod.toReleaseMemory();
-                    CommonMethod.setAnalyticsData(HomeActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
-                }
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tabLayout = findViewById(R.id.tabsHome);
+                            viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
+                            tab1 = BrowserFragment.newInstance();
+                            tab2 = PdfFragment.newInstance();
+                            tab3 = MainHomeFragment.newInstance();
+                            tab4 = MakeYourOwnReadFragment.newInstance();
+                            tab5 = GalleryFragment.newInstance();
 
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                    CommonMethod.toReleaseMemory();
-                }
+                            SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                            viewPager.setAdapter(adapter);
+                            tabLayout.setupWithViewPager(viewPager);
 
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                    CommonMethod.toReleaseMemory();
+                            tabLayout.getTabAt(0).setText(tabHomeText[0]).setIcon(tabHomeIcon[0]);
+                            tabLayout.getTabAt(1).setText(tabHomeText[1]).setIcon(tabHomeIcon[1]);
+                            tabLayout.getTabAt(2).setText(tabHomeText[2]).setIcon(tabHomeIcon[2]);
+                            tabLayout.getTabAt(3).setText(tabHomeText[3]).setIcon(tabHomeIcon[3]);
+                            tabLayout.getTabAt(4).setText(tabHomeText[4]).setIcon(tabHomeIcon[4]);
+
+                            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                                @Override
+                                public void onTabSelected(TabLayout.Tab tab) {
+                                    Log.d("TAG_Main", "  setCurrentViewPagerItem tab " + tab.getPosition());
+                                    setCurrentViewPagerItem(tab.getPosition());
+                                    CommonMethod.toReleaseMemory();
+                                    CommonMethod.setAnalyticsData(HomeActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
+                                }
+
+                                @Override
+                                public void onTabUnselected(TabLayout.Tab tab) {
+                                    CommonMethod.toReleaseMemory();
+                                }
+
+                                @Override
+                                public void onTabReselected(TabLayout.Tab tab) {
+                                    CommonMethod.toReleaseMemory();
+                                }
+                            });
+                            viewPager.setOffscreenPageLimit(5);
+                            setCurrentViewPagerItem(2);
+                        }
+                    });
                 }
-            });
+            }, 50);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -208,7 +231,7 @@ public class HomeActivity extends AppCompatActivity implements
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     fn_permission();
                 } else {
-                    CommonMethod.toDisplayToast(HomeActivity.this,  "Please allow the permission");
+                    CommonMethod.toDisplayToast(HomeActivity.this, "Please allow the permission");
                 }
             } else {
                 fn_permission();
@@ -230,7 +253,6 @@ public class HomeActivity extends AppCompatActivity implements
             menuCamera.findViewById(R.id.ivCameraMenu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    startActivity(new Intent(HomeActivity.this, MyCameraActivity.class));
                     startActivity(new Intent(HomeActivity.this, CameraActivity.class));
                 }
             });
@@ -289,6 +311,7 @@ public class HomeActivity extends AppCompatActivity implements
     public void onBackPressed() {
         try {
             if (tabLayout.getSelectedTabPosition() != 2) {
+                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress");
                 setCurrentViewPagerItem(2);
             } else {
                 doExit();
@@ -306,6 +329,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     public void setCurrentViewPagerItem(int i) {
         try {
+            Log.d("TAG_Main", "  setCurrentViewPagerItem " + i);
             if (tabLayout != null) {
                 tabLayout.getTabAt(i).select();
             }
@@ -389,13 +413,11 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        CommonMethod.toReleaseMemory();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        CommonMethod.toReleaseMemory();
     }
 
     @Override

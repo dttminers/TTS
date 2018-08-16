@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +35,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -292,6 +295,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                 }
             });
 
+
             ivSpeak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -326,11 +330,11 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
-            Log.d("TAG", " SPEACKKKKK "+ menu.size()) ;
+            Log.d("TAG", " SPEACKKKKK " + menu.size());
             CommonMethod.toReleaseMemory();
             if (menu != null) {
                 MenuItem search = menu.findItem(R.id.actionSearch);
-                Log.d("TAG", " SPEACKKKKK "+ search.getIcon());
+                Log.d("TAG", " SPEACKKKKK " + search.getIcon());
                 if (search != null) {
                     search.setVisible(false);
                 }

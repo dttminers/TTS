@@ -76,25 +76,180 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/llData"
+            <RelativeLayout
+                android:id="@+id/rlRecentItemPdfMain"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cvRecentItemPdf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="-10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/dark_pink_two"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="5dp">
+
+                    <RelativeLayout
+                        android:id="@+id/rlRecentItemPdf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvSeeMorePdf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/dark_pink_two"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvRecentPdf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_toLeftOf="@id/tvSeeMorePdf"
+                            android:layout_toStartOf="@id/tvSeeMorePdf"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/vpRecentItemPdf"
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:layout_below="@id/tvRecentPdf"
+                            android:layout_margin="10dp"
+                            android:background="@color/white"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tvNoRecentPDF"
+                            android:layout_width="wrap_content"
+                            android:layout_height="140dp"
+                            android:layout_below="@id/tvRecentPdf"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="10dp"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="No Pdf Viewed"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlRecentItemImageMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cvRecentItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="-10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/dark_pink_two"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="5dp">
+
+                    <RelativeLayout
+                        android:id="@+id/rlRecentItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvSeeMore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/dark_pink_two"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvRecent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_toLeftOf="@id/tvSeeMore"
+                            android:layout_toStartOf="@id/tvSeeMore"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/vpRecentItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:layout_below="@id/tvRecent"
+                            android:layout_margin="10dp"
+                            android:background="@color/white"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tvNoRecentImage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="140dp"
+                            android:layout_below="@id/tvRecent"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="10dp"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="No Image Viewed"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
-    <ProgressBar
-        android:id="@+id/progressBar100"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:visibility="visible"
-        android:layout_centerInParent="true"
-        android:layout_margin="20dp" />
 </RelativeLayout>

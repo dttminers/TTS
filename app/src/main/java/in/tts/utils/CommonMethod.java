@@ -187,19 +187,22 @@ public class CommonMethod {
         DecimalFormat format = new DecimalFormat("#.##");
         long MiB = 1024 * 1024;
         long KiB = 1024;
+        if (file.exists()) {
+            if (!file.isFile()) {
+                throw new IllegalArgumentException("Expected a file");
+            }
+            final double length = file.length();
 
-        if (!file.isFile()) {
-            throw new IllegalArgumentException("Expected a file");
+            if (length > MiB) {
+                return format.format(length / MiB) + " Mb";//" MiB";
+            }
+            if (length > KiB) {
+                return format.format(length / KiB) + " Kb";//" KiB";
+            }
+            return format.format(length) + " B";
+        } else {
+            return "0 B";
         }
-        final double length = file.length();
-
-        if (length > MiB) {
-            return format.format(length / MiB) + " Mb";//" MiB";
-        }
-        if (length > KiB) {
-            return format.format(length / KiB) + " Kb";//" KiB";
-        }
-        return format.format(length) + " B";
     }
 
     public static Locale LocaleFromString(String locale) {

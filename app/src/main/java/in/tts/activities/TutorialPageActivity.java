@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,6 @@ import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToGetImages;
 import in.tts.utils.ToGetPdfFiles;
-import in.tts.utils.ToStorePdfList;
 
 public class TutorialPageActivity extends AppCompatActivity {
 
@@ -91,8 +91,8 @@ public class TutorialPageActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 fn_permission();
-            } else {
-                CommonMethod.toDisplayToast(TutorialPageActivity.this,  "Please allow the permission");
+//            } else {
+//                CommonMethod.toDisplayToast(TutorialPageActivity.this,  "Please allow the permission");
             }
         } else {
             fn_permission();
@@ -103,8 +103,8 @@ public class TutorialPageActivity extends AppCompatActivity {
         try {
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//            } else {
-//                toLoadData();
+            } else {
+                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -123,22 +123,13 @@ public class TutorialPageActivity extends AppCompatActivity {
     private void toLoadData() {
         if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             try {
-//                ToStorePdfList.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
-                PrefManager prefManager = new PrefManager(TutorialPageActivity.this);
-//            prefManager.toSetPDFFileList(
-//                if (prefManager.toGetPDFList() == null && prefManager.toGetPDFList().size() == 0) {
-                    if (!ToGetPdfFiles.isRunning()) {
-                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
-                    }
-//                }
-//            );
-//            prefManager.toSetImageFileList(
-//                if (prefManager.toGetImageList() == null && prefManager.toGetImageList().size() == 0) {
-                    if (!ToGetImages.isRunning()) {
-                        ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
-                    }
-//                }
-//            );
+                if (!ToGetPdfFiles.isRunning()) {
+                    Log.d("TAG", "toGetPDFList Tutorial : ");
+                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
+                }
+                if (!ToGetImages.isRunning()) {
+                    ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
+                }
             } catch (Exception | Error e) {
                 e.printStackTrace();
                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -158,8 +149,7 @@ public class TutorialPageActivity extends AppCompatActivity {
             prefManager.setFirstTimeLaunch(false);
             prefManager.getUserInfo();
             if (User.getUser(TutorialPageActivity.this).getId() != null) {
-//                startActivity(new Intent(TutorialPageActivity.this, MainActivity.class));
-                startActivity(new Intent(TutorialPageActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                startActivity(new Intent(TutorialPageActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 finish();
             } else {
                 startActivity(new Intent(TutorialPageActivity.this, LoginActivity.class).putExtra("LOGIN", "login"));

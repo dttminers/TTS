@@ -12,7 +12,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,7 +146,7 @@ public class LoginFragment extends Fragment {
                     FirebaseUser account = firebaseAuth.getCurrentUser();
                     if (account != null) {
                         // User is signed in
-                        Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
+//                        // Log.d("TAG", "onAuthStateChanged:signed_in:" + account.getUid());
                         user.setEmail(account.getEmail());
                         user.setId(account.getUid());
                         user.setUsername(account.getDisplayName());
@@ -157,7 +156,7 @@ public class LoginFragment extends Fragment {
 //                        toExit();
                     } else {
                         // User is signed out
-                        Log.d("TAG", "onAuthStateChanged:signed_out");
+//                        // Log.d("TAG", "onAuthStateChanged:signed_out");
                     }
                     // ...
                 }
@@ -213,16 +212,16 @@ public class LoginFragment extends Fragment {
                                                 @Override
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                                     if (task.isSuccessful()) {
-                                                        Log.d("TAG", " Login Successful2");
+                                                        // Log.d("TAG", " Login Successful2");
                                                     } else {
-                                                        Log.d("TAG", " Login Failed ");
+                                                        // Log.d("TAG", " Login Failed ");
                                                     }
                                                 }
                                             })
                                             .addOnCanceledListener(getActivity(), new OnCanceledListener() {
                                                 @Override
                                                 public void onCanceled() {
-                                                    Log.d("TAG", " Login Cancel ");
+                                                    // Log.d("TAG", " Login Cancel ");
                                                 }
                                             });
                                 }
@@ -370,7 +369,7 @@ public class LoginFragment extends Fragment {
                         public void onSuccess(LoginResult loginResult) {
                             try {
                                 AccessToken accessToken = loginResult.getAccessToken();
-                                Log.d("TAG", "facebook:onSuccess:" + loginResult + ":" + accessToken);
+                                // Log.d("TAG", "facebook:onSuccess:" + loginResult + ":" + accessToken);
                                 handleFacebookAccessToken(loginResult.getAccessToken());
                                 ProfileTracker profileTracker = new ProfileTracker() {
                                     @Override
@@ -383,7 +382,7 @@ public class LoginFragment extends Fragment {
                                             user.setFullName(currentProfile.getFirstName() + " " + currentProfile.getMiddleName() + " " + currentProfile.getLastName());
                                             user.setUsername(currentProfile.getName());
                                             user.setLoginFrom(2);
-                                            Log.d("TAG", " Pic Path : " + currentProfile.getProfilePictureUri(100, 100));
+                                            // Log.d("TAG", " Pic Path : " + currentProfile.getProfilePictureUri(100, 100));
                                             user.setPicPath(currentProfile.getProfilePictureUri(1000, 1000).toString());
                                             CommonMethod.toCloseLoader();
                                             checkInternetConnection(3);
@@ -564,20 +563,20 @@ public class LoginFragment extends Fragment {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         try {
-            Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
+            // Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
             if (getActivity() != null) {
                 AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
                 mAuth.signInWithCredential(credential)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
+                                // Log.d("TAG", "signInWithCredential:onComplete:" + task.isSuccessful());
 
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    Log.w("TAG", "signInWithCredential", task.getException());
+                                   // Log.d("TAG", "signInWithCredential", task.getException());
 //                                    Toast.makeText(getContext(), "Authentication failed.",
 //                                            Toast.LENGTH_SHORT).show();
                                 }
@@ -595,7 +594,7 @@ public class LoginFragment extends Fragment {
 
     private void handleFacebookAccessToken(AccessToken token) {
         try {
-            Log.d("TAG", "handleFacebookAccessToken:" + token);
+            // Log.d("TAG", "handleFacebookAccessToken:" + token);
             if (getActivity() != null) {
                 AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
                 mAuth.signInWithCredential(credential)
@@ -604,13 +603,13 @@ public class LoginFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d("TAG", "signInWithCredential:success");
+                                    // Log.d("TAG", "signInWithCredential:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    Log.d("TAG", " FB user " + user.getUid());
+                                    // Log.d("TAG", " FB user " + user.getUid());
 //                            updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Log.w("TAG", "signInWithCredential:failure", task.getException());
+                                   // Log.d("TAG", "signInWithCredential:failure", task.getException());
 //                                    Toast.makeText(getContext(), "Authentication failed.",
 //                                            Toast.LENGTH_SHORT).show();
 //                            updateUI(null);
@@ -729,13 +728,13 @@ public class LoginFragment extends Fragment {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
-                                                    Log.d("TAG", "login Response " + response);
+                                                    // Log.d("TAG", "login Response " + response);
                                                     if (response != null) {
                                                         JSONObject obj = new JSONObject(response.trim());
                                                         if (obj != null) {
                                                             if (!obj.isNull("status")) {
                                                                 if (obj.getString("status").trim().equals("1")) {
-                                                                    Log.d("TAG", " login success  ");
+                                                                    // Log.d("TAG", " login success  ");
                                                                     user = User.getUser(getContext());
                                                                     user.setLoginFrom(3);
                                                                     if (!obj.isNull("id")) {
@@ -745,7 +744,7 @@ public class LoginFragment extends Fragment {
                                                                     user.setEmail(mEdtEmail.getText().toString());
                                                                     toExit();
                                                                 } else {
-                                                                    Log.d("TAG", " login failed ");
+                                                                    // Log.d("TAG", " login failed ");
                                                                 }
                                                             }
                                                         }
@@ -761,7 +760,7 @@ public class LoginFragment extends Fragment {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Log.d("TAG", " login error " + error.getMessage());
+                                                // Log.d("TAG", " login error " + error.getMessage());
                                             }
                                         }
                                 ) {
@@ -810,13 +809,13 @@ public class LoginFragment extends Fragment {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
-                                                    Log.d("TAG", "g-login Response " + response);
+                                                    // Log.d("TAG", "g-login Response " + response);
                                                     if (response != null) {
                                                         JSONObject obj = new JSONObject(response.trim());
                                                         if (obj != null) {
                                                             if (!obj.isNull("status")) {
                                                                 if (obj.getString("status").trim().equals("1")) {
-                                                                    Log.d("TAG", "g-login success  ");
+                                                                    // Log.d("TAG", "g-login success  ");
                                                                     user = User.getUser(getContext());
                                                                     user.setLoginFrom(3);
                                                                     if (!obj.isNull("id")) {
@@ -826,7 +825,7 @@ public class LoginFragment extends Fragment {
                                                                     user.setEmail(mEdtEmail.getText().toString());
                                                                     toExit();
                                                                 } else {
-                                                                    Log.d("TAG", "g-login failed ");
+                                                                    // Log.d("TAG", "g-login failed ");
                                                                 }
                                                             }
                                                         }
@@ -842,7 +841,7 @@ public class LoginFragment extends Fragment {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Log.d("TAG", "g-login error " + error.getMessage());
+                                                // Log.d("TAG", "g-login error " + error.getMessage());
                                             }
                                         }
                                 ) {
@@ -854,7 +853,7 @@ public class LoginFragment extends Fragment {
                                         params.put("username", account.getDisplayName());
                                         params.put("name", account.getGivenName());
                                         params.put("pic_url", String.valueOf(account.getPhotoUrl()));
-                                        Log.d("TAG", " glogin Params" + params);
+                                        // Log.d("TAG", " glogin Params" + params);
                                         return params;
                                     }
                                 }
@@ -894,13 +893,13 @@ public class LoginFragment extends Fragment {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
-                                                    Log.d("TAG", "fb login Response " + response);
+                                                    // Log.d("TAG", "fb login Response " + response);
                                                     if (response != null) {
                                                         JSONObject obj = new JSONObject(response.trim());
                                                         if (obj != null) {
                                                             if (!obj.isNull("status")) {
                                                                 if (obj.getString("status").trim().equals("1")) {
-                                                                    Log.d("TAG", "fb login success  ");
+                                                                    // Log.d("TAG", "fb login success  ");
                                                                     user = User.getUser(getContext());
                                                                     user.setLoginFrom(3);
                                                                     if (!obj.isNull("id")) {
@@ -910,7 +909,7 @@ public class LoginFragment extends Fragment {
                                                                     user.setEmail(mEdtEmail.getText().toString());
                                                                     toExit();
                                                                 } else {
-                                                                    Log.d("TAG", "fb login failed ");
+                                                                    // Log.d("TAG", "fb login failed ");
                                                                 }
                                                             }
                                                         }
@@ -926,7 +925,7 @@ public class LoginFragment extends Fragment {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Log.d("TAG", "fb login error " + error.getMessage());
+                                                // Log.d("TAG", "fb login error " + error.getMessage());
                                             }
                                         }
                                 ) {
@@ -943,7 +942,7 @@ public class LoginFragment extends Fragment {
                                         if (user.getPicPath() != null) {
                                             params.put("pic_url", user.getPicPath());
                                         }
-                                        Log.d("TAG", " Fb params " + params);
+                                        // Log.d("TAG", " Fb params " + params);
                                         return params;
                                     }
                                 }

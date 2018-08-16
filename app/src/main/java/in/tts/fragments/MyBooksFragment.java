@@ -39,6 +39,7 @@ public class MyBooksFragment extends Fragment {
     private boolean userScrolled = true;
     private int visibleItemCount;
     private PrefManager prefManager;
+
     private OnFragmentInteractionListener mListener;
 
     public MyBooksFragment() {

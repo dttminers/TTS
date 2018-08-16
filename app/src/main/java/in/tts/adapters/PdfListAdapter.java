@@ -2,6 +2,7 @@ package in.tts.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,19 +23,19 @@ import java.util.ArrayList;
 import in.tts.R;
 import in.tts.activities.PdfShowingActivity;
 import in.tts.fragments.MyBooksListFragment;
+import in.tts.fragments.PdfListFragment;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToGetPdfFiles;
 
 public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHolder> {
     private Context context;
     private ArrayList<String> list;
     private File file;
-    private MyBooksListFragment myBooksListFragment;
+    private LinearLayout mLl;
 
-    public PdfListAdapter(Context _context, ArrayList<String> _list, MyBooksListFragment myBooksListFragment) {
+    public PdfListAdapter(Context _context, ArrayList<String> _list) {
         context = _context;
         list = _list;
-        this.myBooksListFragment = myBooksListFragment;
-        Log.d("TAG", " count 30: " + list.size() + ":" + _list.size());
     }
 
     @NonNull
@@ -46,11 +47,36 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull PdfListAdapter.ViewHolder viewHolder, int i) {
         try {
-            file = new File(list.get(i).trim().replaceAll("%20", " "));
-            Log.d("TAG", " count  onBindViewHolder " + i + list.get(i) + ":" + file.getName() + ":" + file.getAbsolutePath());
-            viewHolder.mtv.setText(file.getName());
-            viewHolder.mtv1.setText(CommonMethod.getFileSize(file));
-            viewHolder.mtv2.setText(String.valueOf(new PdfReader(file.getAbsolutePath()).getNumberOfPages()) + " Pages");
+            if (list.get(i).trim().length() > 0 && !list.get(i).trim().equals("\\")) {
+                file = new File(list.get(i).trim().replaceAll("%20", " "));
+                Log.d("TAG", " count  onBindViewHolder " + i + list.get(i) + file.exists() + ":" + file.getName() + ":" + file.getAbsolutePath());
+                viewHolder.mtv.setText(file.getName());
+                viewHolder.mtv1.setText(CommonMethod.getFileSize(file));
+                viewHolder.mtv2.setText(String.valueOf(new PdfReader(file.getAbsolutePath()).getNumberOfPages()) + " Pages");
+            } else {
+                toRemove(i);
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toRemove(final int i) {
+        try {
+            mLl.post(new Runnable() {
+                @Override
+                public void run() {
+                    list.remove(i);
+                    notifyItemRemoved(i);
+                    notifyDataSetChanged();
+                    if (list.size() == 0) {
+                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), context);
+                    }
+                }
+            });
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -66,7 +92,7 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mtv, mtv1, mtv2;
-        private LinearLayout mLl;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -105,7 +131,7 @@ public class PdfListAdapter extends RecyclerView.Adapter<PdfListAdapter.ViewHold
         }
     }
 
-    public void addItem(int position, String _list_data){
+    public void addItem(int position, String _list_data) {
         list.add(position, _list_data);
         notifyItemInserted(position);
         notifyItemRangeChanged(position, list.size());

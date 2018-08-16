@@ -122,7 +122,7 @@ public class MyBooksListFragment extends Fragment {
                                 recyclerView.setVisibility(View.VISIBLE);
                             }
 
-                            pdfListAdapter = new PdfListAdapter(getActivity(), file, MyBooksListFragment.this);
+                            pdfListAdapter = new PdfListAdapter(getActivity(), file);
                             recyclerView.setAdapter(pdfListAdapter);
                             pdfListAdapter.notifyDataSetChanged();
 
