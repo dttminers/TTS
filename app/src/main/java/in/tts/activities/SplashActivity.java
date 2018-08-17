@@ -73,7 +73,6 @@ public class SplashActivity extends AppCompatActivity {
             if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
                 try {
                     if (!ToGetPdfFiles.isRunning()) {
-                        Log.d("TAG", "toGetPDFList Splash : ");
                         ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
                     }
                 } catch (Exception | Error e) {

@@ -39,7 +39,7 @@ import in.tts.utils.CommonMethod;
 
 public class ImageOcrActivity extends AppCompatActivity {
 
-    private String photoPath;
+    private String photoPath, name;
     private Bitmap bitmap;
     private TextRecognizer textRecognizer;
     private Frame imageFrame;
@@ -60,7 +60,8 @@ public class ImageOcrActivity extends AppCompatActivity {
             photoPath = getIntent().getStringExtra("PATH");
 
             if (getSupportActionBar() != null) {
-                CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this, photoPath.substring(photoPath.lastIndexOf("/") + 1));
+                name =  photoPath.substring(photoPath.lastIndexOf("/") + 1);
+                CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this,name);
             }
 
             mRl = findViewById(R.id.rlImageOcrActivity);
@@ -215,7 +216,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             try {
                                 tts.SpeakLoud(stringBuilder.toString());
-                                tts.toSaveAudioFile(stringBuilder.toString());
+                                tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image"+name.substring(0, (name.length()-4) )+System.currentTimeMillis());
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

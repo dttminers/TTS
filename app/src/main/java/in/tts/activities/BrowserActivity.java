@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,11 +32,20 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 import in.tts.R;
 import in.tts.classes.ClipBoard;
+import in.tts.classes.TTS;
 import in.tts.model.Browser;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
@@ -51,7 +61,9 @@ public class BrowserActivity extends AppCompatActivity {
     private List<String> linkList;
     private View menuBookMark;
     private CheckBox cbMenu;
-    String historyUrl = "";
+    private TTS tts;
+    private String historyUrl = "";
+    private String text = "";
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -59,9 +71,8 @@ public class BrowserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            checkInternetConnection();
             setContentView(R.layout.activity_browser);
-
+            checkInternetConnection();
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.app_name));
             }
@@ -100,13 +111,27 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
+                    text = "";
                 }
 
                 @Override
-                public void onPageFinished(WebView view, String url) {
+                public void onPageFinished(WebView view, final String url) {
                     super.onPageFinished(view, url);
-
                     startOfHistory();
+
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                text = Jsoup.connect(url).get().getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
+                            } catch (Exception | Error e) {
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
+                            }
+                        }
+                    });
                 }
 
 //                @Override
@@ -220,7 +245,7 @@ public class BrowserActivity extends AppCompatActivity {
 //                    try {
 //                        ClipData clipData = ClipData.newPlainText("", "");
 //                        clipboardManager.setPrimaryClip(clipData);
-                        ClipBoard.ToPopup(BrowserActivity.this, BrowserActivity.this, null);
+                    ClipBoard.ToPopup(BrowserActivity.this, BrowserActivity.this, null);
 //                    } catch (Exception | Error e) {
 //                        e.printStackTrace();
 //                        Crashlytics.logException(e);
@@ -230,6 +255,7 @@ public class BrowserActivity extends AppCompatActivity {
                 }
             });
 
+            tts = new TTS(BrowserActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -255,17 +281,17 @@ public class BrowserActivity extends AppCompatActivity {
 
     public boolean startOfHistory() {
         try {
-            Log.d("TAGWEB", "WEB Histroy");
+//            Log.d("TAGWEB", "WEB Histroy");
             WebBackForwardList currentList = superWebView.copyBackForwardList();
-            Log.d("TAGWEB", " Web " + currentList.getCurrentItem() + ":" + currentList.getSize() + ":" + currentList.getCurrentItem());
+//            Log.d("TAGWEB", " Web " + currentList.getCurrentItem() + ":" + currentList.getSize() + ":" + currentList.getCurrentItem());
             for (int i = 0; i < currentList.getSize(); i++) {
                 WebHistoryItem item = currentList.getItemAtIndex(i);
-                Log.d("TAGWEB", " web item " + item.getTitle());
+//                Log.d("TAGWEB", " web item " + item.getTitle());
                 if (item != null) { // Null-fence in case they haven't called loadUrl yet (CB-2458)
                     String url = item.getUrl();
                     String currentUrl = superWebView.getUrl();
-                    Log.d("TAGWEB", i + ". The current URL is: " + currentUrl);
-                    Log.d("TAGWEB", i + ". The URL at item 0 is:" + url);
+//                    Log.d("TAGWEB", i + ". The current URL is: " + currentUrl);
+//                    Log.d("TAGWEB", i + ". The URL at item 0 is:" + url);
 //                    return currentUrl.equals(url);
                 }
             }
@@ -320,14 +346,16 @@ public class BrowserActivity extends AppCompatActivity {
             linkList = prefManager.populateSelectedSearch();
             if (linkList != null) {
                 if (linkList.contains(superWebView.getUrl())) {
-                    menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
+                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
                 } else {
-                    menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
                 }
             } else {
                 linkList = new ArrayList<>();
-                menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+                menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
             }
+
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -341,6 +369,10 @@ public class BrowserActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             switch (item.getItemId()) {
+
+                case R.id.menuSpeakBrowser:
+                    toSpeakWebPage();
+                    break;
 
                 case R.id.menuBack:
                     onBackPressed();
@@ -373,6 +405,21 @@ public class BrowserActivity extends AppCompatActivity {
             FirebaseCrash.report(e);
         }
         return true;
+    }
+
+    private void toSpeakWebPage() {
+        try {
+//            Log.d("WEB", "text  " + text.length() + ":" + text);
+            if (text.trim().length() > 0) {
+                tts.SpeakLoud(text.replaceAll("&nbsp;", "\\s"));
+                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     private void toChangeData(boolean b) {
@@ -427,6 +474,33 @@ public class BrowserActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            tts.toStop();
+            tts.toShutDown();
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            tts.toShutDown();
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
+    }
+
 }
 
 /*
@@ -459,3 +533,40 @@ public class BrowserActivity extends AppCompatActivity {
         return null;
     }
     */
+
+/*
+AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Document doc = Jsoup.connect(url).get();
+                                Log.d("WEB", "Doc " + doc + ":lll\n" + doc.getAllElements());
+                                Log.d("WEB", "Doc 1" + doc.getElementsByTag("body"));
+                                Elements newsHeadlines = doc.getElementsByAttribute("value1");
+                                Log.d("WEB", "Ele  " + newsHeadlines.text());
+//                        String ip = newsHeadlines[0].text().split("**")[1];
+//                                String text = "<B>I don't want this to be bold<\\B>";
+//                                System.out.println(text);
+                               String text = doc.getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
+//                                System.out.println(text);
+                                Log.d("WEB", "text  " + text);
+
+
+                                URL url1 = new URL(url);
+                                URLConnection yc = url1.openConnection();
+                                BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+                                String inputLine;
+                                StringBuilder builder = new StringBuilder();
+                                while ((inputLine = in.readLine()) != null)
+                                    builder.append(inputLine.trim());
+                                in.close();
+                                String htmlPage = builder.toString();
+                                Log.d("WEB", "text1  " + htmlPage);
+                                String versionNumber = htmlPage.replaceAll("\\<.*?>","");
+                                Log.d("WEB", "text2  " + versionNumber);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    */

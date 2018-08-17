@@ -3,4 +3,7 @@
     android:id="@+id/cbBookmark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:button="@drawable/bookmark_selector" />
+    android:background="@color/transparent"
+    android:layout_centerInParent="true"
+    android:button="@drawable/bookmark_selector"
+    android:gravity="center" />

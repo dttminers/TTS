@@ -103,8 +103,8 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             } else {
                                 // voice=v_male;
                                 // If nothing is similar then select default voice
-                                CommonMethod.toDisplayToast(mContext, "Selected language not found. Reading data using default language");
-                                v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
+//                                CommonMethod.toDisplayToast(mContext, "Selected language not found. Reading data using default language");
+                                v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
                             }
 
@@ -162,19 +162,26 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
     }
 
     public void SpeakLoud(String text) throws Exception, Error {
-        if (!isSpeaking()) {
+        Log.d("Tag", " Speak " + tts.isSpeaking()+ text);
+        if (tts.isSpeaking()) {
             //Log.d("TTS_TAG", "NOT SPEAKING "+text);
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(text.substring(0, 3999), TextToSpeech.QUEUE_FLUSH, null, text);
             //  tts.speak(text, TextToSpeech.QUEUE_ADD, null);
         } else {
 
             // Log.d("TTS_TAG", "SPEAKING");
-            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+//            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+            if (text.length() > 3999) {
+                tts.speak(text.substring(0, 3999), TextToSpeech.QUEUE_ADD, null, text);
+            } else {
+                tts.speak(text.substring(4000, text.length() > 7000 ? 7000 : text.length()), TextToSpeech.QUEUE_ADD, null, text);
+            }
         }
     }
 
-    public String toSaveAudioFile(String text) throws Exception, Error {
+    public String toSaveAudioFile(String text, String fileName) throws Exception, Error {
         Log.d("TAG", " SPEAK_Text " + text);
+        File audio;
         File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
         // Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
 
@@ -182,17 +189,24 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             mMainFolder.mkdirs();
         }
 //        } else {
-        File audio = new File(mMainFolder + "/" + System.currentTimeMillis() + ".mp3");//;+ mAudioFilename);
+        if (fileName == null) {
+            audio = new File(mMainFolder + "/" + System.currentTimeMillis() + ".wav");//;+ mAudioFilename);
+        } else {
+            audio = new File(mMainFolder + "/" + fileName + ".wav");
+        }
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            tts.synthesizeToFile(text, null, audio, "READ_IT");
 //            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
 //        } else {
-        HashMap<String, String> hm = new HashMap<>();
-//            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
-//            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
-        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
-        tts.synthesizeToFile(text, hm, audio.getPath());
-        Log.d("TAG", " TTS  :  audio size 2: " + CommonMethod.getFileSize(audio));
+//        HashMap<String, String> hm = new HashMap<>();
+////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
+////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
+//        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+//        tts.synthesizeToFile(text, hm, audio.getPath());
+        HashMap<String, String> myHashRender = new HashMap<>();
+        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+        int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
+        Log.d("TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
 //        }
         //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
         return audio.getAbsolutePath();

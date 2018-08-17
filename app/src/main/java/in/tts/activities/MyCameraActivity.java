@@ -347,7 +347,7 @@ public class MyCameraActivity extends AppCompatActivity {
                                 //tts.SpeakLoud("Hi MANASI");
                                 if (tts != null) {
                                     tts.SpeakLoud(stringBuilder.toString());
-                                    tts.toSaveAudioFile(stringBuilder.toString());
+                                    tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image" + getResources().getString(R.string.app_name).substring(0, (getResources().getString(R.string.app_name).length() - 4)) + System.currentTimeMillis());
                                 }
                             } catch (Exception | Error e) {
                                 Log.d("OnPostExecuteEXP", "exception  " + e);

@@ -2,7 +2,6 @@ package in.tts.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -30,48 +29,44 @@ public class ToGetPdfFiles {
                     if (prefManager.toGetPDFList() != null) {
                         fileList = prefManager.toGetPDFList();
                     }
-                    status = true;
-                    File listFile[] = dir.listFiles();
-                    if (listFile != null && listFile.length > 0) {
-                        for (int i = 0; i < listFile.length; i++) {
-                            if (listFile[i].isDirectory()) {
-                                getFile(listFile[i], context);
-                            } else {
-                                Log.d("TAG", "toGetPDFList  Count lu2  "+ listFile.length);
-                                boolean booleanpdf = false;
-                                if (listFile[i].getName().endsWith(".pdf")) {
-                                    for (int j = 0; j < fileList.size(); j++) {
-                                        if (fileList.get(j).equals(listFile[i].getPath())) {
-                                            booleanpdf = true;
-                                        }
-                                    }
-                                    if (booleanpdf) {
-                                        booleanpdf = false;
-                                    } else {
-                                        Log.d("TAG", "toGetPDFList +l : "+fileList.size() + ":"+listFile[i].getPath().trim().replaceAll("\\s", "%20"));
-                                        if (fileList.size() < 30) {
-                                            Log.d("TAG", "toGetPDFList +l : "+listFile[i].getPath().trim().replaceAll("\\s", "%20") + (!fileList.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))));
-                                            if (!fileList.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))) {
-                                                fileList.add(listFile[i].getPath().trim().replaceAll("\\s", "%20"));
-                                            }
-                                        } else {
-                                            break;
-                                        }
-                                    }
+                    if (fileList.size() < 30) {
+                        status = true;
+                        File listFile[] = dir.listFiles();
+                        if (listFile != null && listFile.length > 0) {
+                            for (int i = 0; i < listFile.length; i++) {
+                                if (listFile[i].isDirectory()) {
+                                    getFile(listFile[i], context);
                                 } else {
-                                    Log.d("TAG", "toGetPDFList  Count lu3  "+ listFile.length);
+                                    boolean booleanpdf = false;
+                                    if (listFile[i].getName().endsWith(".pdf")) {
+                                        for (int j = 0; j < fileList.size(); j++) {
+                                            if (fileList.get(j).equals(listFile[i].getPath())) {
+                                                booleanpdf = true;
+                                            }
+                                        }
+                                        if (booleanpdf) {
+                                            booleanpdf = false;
+                                        } else {
+                                            if (fileList.size() < 30) {
+                                                if (!fileList.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))) {
+                                                    fileList.add(listFile[i].getPath().trim().replaceAll("\\s", "%20"));
+                                                }
+                                            } else {
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            Log.d("TAG", "toGetPDFList  Count for ends lu "+ listFile.length);
+                            prefManager.toSetPDFFileList(fileList);
                         }
-                        prefManager.toSetPDFFileList(fileList);
                     } else {
-                        Log.d("TAG", "toGetPDFList  Count lur "+ listFile.length);
+                        status = false;
+                        return;
                     }
                 }
             });
             status = false;
-            Log.d("TAG", "toGetPDFList  Counet "+ fileList.size());
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -81,7 +76,6 @@ public class ToGetPdfFiles {
     }
 
     public static boolean isRunning() {
-        Log.d("TAG", "toGetPDFList  isRunning " + status);
         return status;
     }
 }

@@ -84,7 +84,7 @@ public class CameraOcrActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     try {
                         ttsFile.SpeakLoud(stringBuilder.toString());
-                        ttsFile.toSaveAudioFile(stringBuilder.toString());
+                        ttsFile.toSaveAudioFile(stringBuilder.toString(), "AUD_Camera"+System.currentTimeMillis() );
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

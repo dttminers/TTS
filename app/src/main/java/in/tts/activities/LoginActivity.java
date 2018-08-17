@@ -101,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
     private void toLoadData() {
         try {
             if (!ToGetPdfFiles.isRunning()) {
-                Log.d("TAG", "toGetPDFList Login : ");
                 ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
             }
         } catch (Exception | Error e) {

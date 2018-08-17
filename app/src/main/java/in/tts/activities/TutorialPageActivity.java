@@ -124,7 +124,6 @@ public class TutorialPageActivity extends AppCompatActivity {
         if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             try {
                 if (!ToGetPdfFiles.isRunning()) {
-                    Log.d("TAG", "toGetPDFList Tutorial : ");
                     ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
                 }
                 if (!ToGetImages.isRunning()) {

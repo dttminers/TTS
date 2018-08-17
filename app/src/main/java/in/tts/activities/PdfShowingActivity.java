@@ -139,6 +139,26 @@ public class PdfShowingActivity extends AppCompatActivity {
 
             progressBarSpeak = findViewById(R.id.progressBarSpeak120);
 
+            vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int i, float v, int i1) {
+                    Log.d("TAG"," current " + i +":"+ currentPageCreate +":"+currentPageAudioCreate);
+                    if (i != currentPageAudioCreate) {
+                        toStopAudioPlayer();
+                    }
+                }
+
+                @Override
+                public void onPageSelected(int i) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int i) {
+
+                }
+            });
+
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -505,12 +525,20 @@ public class PdfShowingActivity extends AppCompatActivity {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         //Get all available voices
-                        if (tts != null) {
-                            for (Voice tmpVoice : tts.getVoices()) {
-                                if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
-                                    voiceValidator(tmpVoice.getName());
+                        try {
+                            if (tts != null) {
+                                for (Voice tmpVoice : tts.getVoices()) {
+                                    if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
+                                        voiceValidator(tmpVoice.getName());
+                                    }
                                 }
                             }
+                        } catch (Exception| Error e){
+                            CommonMethod.toReleaseMemory();
+                            e.printStackTrace();
+                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                            Crashlytics.logException(e);
+                            FirebaseCrash.report(e);
                         }
 
                         if (selectedVoice.equalsIgnoreCase("male")) {
@@ -519,9 +547,9 @@ public class PdfShowingActivity extends AppCompatActivity {
                                 v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
                                 tts.setVoice(v);
                             } else {
-                                if (b) {
-                                    CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
-                                }
+//                                if (b) {
+//                                    CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
+//                                }
                                 v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
                                 tts.setVoice(v);
                             }
@@ -563,7 +591,7 @@ public class PdfShowingActivity extends AppCompatActivity {
                         @Override
                         public void onUtteranceCompleted(final String str) {
                             try {
-                                Log.d("TAG_PDF", "onUtteranceCompleted " + fileName+ ":" +CommonMethod.getFileSize(new File(fileName))+ ":"  + str.length() + ":" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt);
+                                Log.d("TAG_PDF", "onUtteranceCompleted " + fileName + ":" + CommonMethod.getFileSize(new File(fileName)) + ":" + str.length() + ":" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt);
                                 fileCnt++;
                                 runOnUiThread(new Runnable() {
                                     @Override
