@@ -361,7 +361,6 @@ public class MainHomeFragment extends Fragment {
                     Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            imageFile = new ArrayList<>();
 //                            if (prefManager.toGetImageListRecent() != null) {
 //                                imageFile = prefManager.toGetImageListRecent();
 //                                pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
@@ -450,51 +449,6 @@ public class MainHomeFragment extends Fragment {
         CommonMethod.toReleaseMemory();
     }
 
-    // To Bind views
-    public void getFile(final File dir) {
-        try {
-            File listFile[] = dir.listFiles();
-            if (listFile != null && listFile.length > 0) {
-                for (int i = 0; i < listFile.length; i++) {
-                    if (listFile[i].isDirectory()) {
-                        getFile(listFile[i]);
-                    } else {
-                        boolean booleanpdf = false;
-                        if (listFile[i].getName().endsWith(".pdf")) {
-                            for (int j = 0; j < pdfFile.size(); j++) {
-                                if (pdfFile.get(j).equals(listFile[i].getPath())) {
-                                    booleanpdf = true;
-                                } else {
-                                }
-                            }
-                            if (booleanpdf) {
-                                booleanpdf = false;
-                            } else {
-                                if (pdfFile.size() < 10) {
-                                    pdfFile.add(listFile[i].getPath());
-                                } else {
-                                    break;
-                                }
-                                if (pdfFile.size() == 1) {
-                                    pdfHomePage = new HomePageRecentPdf(getContext(), pdfFile);
-                                    toBindRecentPdf();
-                                } else {
-                                    pdfHomePage.setData(pdfFile);
-                                    pdfHomePage.notifyDataSetChanged();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-    }
-
     private void toBindRecentPdf() {
         try {
             Log.d("TAG_Main", "toBindRecentPdf");
@@ -506,9 +460,7 @@ public class MainHomeFragment extends Fragment {
             }
 
             if (pdfFile.size() != 0) {
-
                 if (getContext() != null) {
-
                     vpRecentPDF.setClipToPadding(true);
                     vpRecentPDF.setOffscreenPageLimit(10);
                     vpRecentPDF.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
@@ -531,6 +483,115 @@ public class MainHomeFragment extends Fragment {
             CommonMethod.toReleaseMemory();
         }
     }
+
+    private void toBindRecentImages() {
+        try {
+            Log.d("TAG_Main", "toBindRecentImages");
+            imageFile = new ArrayList<>();
+            if (prefManager.toGetImageListRecent() != null) {
+                imageFile = prefManager.toGetImageListRecent();
+                pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
+            }
+            Log.d("TAG_Main", "toBindRecentImages1" + imageFile.size());
+            if (imageFile.size() != 0) {
+                if (getContext() != null) {
+                    vpRecentImage.setClipToPadding(false);
+                    vpRecentImage.setOffscreenPageLimit(10);
+                    vpRecentImage.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
+                    vpRecentImage.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
+                    vpRecentImage.setAdapter(pdfHomePageImages);
+//                    pdfHomePageImages.notifyDataSetChanged();
+                    vpRecentImage.setVisibility(View.VISIBLE);
+                    tvNoRecentImage.setVisibility(View.GONE);
+
+                }
+            } else {
+                vpRecentImage.setVisibility(View.GONE);
+                tvNoRecentImage.setVisibility(View.VISIBLE);
+            }
+            getActivity().findViewById(R.id.rlRecentItemPdfMain).setVisibility(View.VISIBLE);
+            CommonMethod.toReleaseMemory();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
+        }
+    }
+
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            if (context instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) context;
+            }
+            CommonMethod.toReleaseMemory();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        CommonMethod.toReleaseMemory();
+        mListener = null;
+    }
+
+    public void setLoadData() {
+        Log.d("TAG_Main", "setLoadData " + status + ":" + PrefManager.AddedRecentPDF + ":" + PrefManager.AddedRecentImage);
+        if (!status) {
+            fn_permission();
+        }
+        if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
+            toSetData();
+        }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+
+        void setCurrentViewPagerItem(int i);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("TAG_Main", "onPause");
+
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("TAG_Main", "onDestroy");
+
+        CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("TAG_Main", "onResume");
+        if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
+            toSetData();
+        }
+        CommonMethod.toReleaseMemory();
+    }
+}
 
 //    private void toBindRecentPdf() {
 //        try {
@@ -587,79 +648,45 @@ public class MainHomeFragment extends Fragment {
 //        }
 //    }
 
-    public void getAllShownImagesPath() {
-        try {
-
-            String[] projection = new String[]{
-                    MediaStore.Images.ImageColumns._ID,
-                    MediaStore.Images.ImageColumns.DATA,
-                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN,
-                    MediaStore.Images.ImageColumns.MIME_TYPE
-            };
-            if (getActivity() != null) {
-                Cursor cursor =
-                        getActivity().getContentResolver()
-                                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-                                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-                if (cursor != null) {
-                    while (cursor.moveToNext() && imageFile.size() < 11) {
-                        String imageLocation = cursor.getString(1);
-                        imageFile.add(imageLocation.replaceAll("\\s", "%20"));
-                        if (imageFile.size() == 1) {
-                            pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
-                            toBindRecentImages();
-                        } else {
-                            pdfHomePageImages.setData(imageFile);
-                            pdfHomePageImages.notifyDataSetChanged();
-                        }
-                    }
-                }
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-    }
-
-    private void toBindRecentImages() {
-        try {
-            Log.d("TAG_Main", "toBindRecentImages");
-
-            if (prefManager.toGetImageListRecent() != null) {
-                imageFile = prefManager.toGetImageListRecent();
-                pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
-            }
-
-            if (imageFile.size() != 0) {
-                if (getContext() != null) {
-                    vpRecentImage.setClipToPadding(false);
-                    vpRecentImage.setOffscreenPageLimit(10);
-                    vpRecentImage.setPageMargin(CommonMethod.dpToPx(10, getActivity()));
-                    vpRecentImage.setPadding(CommonMethod.dpToPx(5, getActivity()), 0, CommonMethod.dpToPx(10, getActivity()), 0);
-                    vpRecentImage.setAdapter(pdfHomePageImages);
-                    pdfHomePageImages.notifyDataSetChanged();
-
-                }
-            } else {
-                vpRecentImage.setVisibility(View.GONE);
-                tvNoRecentImage.setVisibility(View.VISIBLE);
-            }
-            getActivity().findViewById(R.id.rlRecentItemPdfMain).setVisibility(View.VISIBLE);
-            CommonMethod.toReleaseMemory();
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-            CommonMethod.toReleaseMemory();
-        }
-    }
+//    public void getAllShownImagesPath() {
+//        try {
+//
+//            String[] projection = new String[]{
+//                    MediaStore.Images.ImageColumns._ID,
+//                    MediaStore.Images.ImageColumns.DATA,
+//                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+//                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+//                    MediaStore.Images.ImageColumns.MIME_TYPE
+//            };
+//            if (getActivity() != null) {
+//                Cursor cursor =
+//                        getActivity().getContentResolver()
+//                                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
+//                                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+//                if (cursor != null) {
+//                    while (cursor.moveToNext() && imageFile.size() < 11) {
+//                        String imageLocation = cursor.getString(1);
+//                        imageFile.add(imageLocation.replaceAll("\\s", "%20"));
+//                        if (imageFile.size() == 1) {
+//                            pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
+//                            toBindRecentImages();
+//                        } else {
+//                            pdfHomePageImages.setData(imageFile);
+//                            pdfHomePageImages.notifyDataSetChanged();
+//                        }
+//                    }
+//                }
+//                if (cursor != null) {
+//                    cursor.close();
+//                }
+//            }
+//        } catch (Exception | Error e) {
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
+//        }
+//    }
 
 //    private void toBindRecentImages() {
 //        try {
@@ -718,77 +745,47 @@ public class MainHomeFragment extends Fragment {
 //        }
 //    }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            if (context instanceof OnFragmentInteractionListener) {
-                mListener = (OnFragmentInteractionListener) context;
-            }
-            CommonMethod.toReleaseMemory();
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        CommonMethod.toReleaseMemory();
-        mListener = null;
-    }
-
-    public void setLoadData() {
-        Log.d("TAG_Main", "setLoadData " + status + ":" + PrefManager.AddedRecentPDF + ":" + PrefManager.AddedRecentImage);
-
-        if (!status) {
-//        toSetData();
-            fn_permission();
-        }
-        if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
-            toSetData();
-        }
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-
-        void setCurrentViewPagerItem(int i);
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("TAG_Main", "onPause");
-
-        CommonMethod.toReleaseMemory();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("TAG_Main", "onDestroy");
-
-        CommonMethod.toReleaseMemory();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("TAG_Main", "onResume");
-        if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
-            toSetData();
-        }
-        CommonMethod.toReleaseMemory();
-    }
-}
+//    // To Bind views
+//    public void getFile(final File dir) {
+//        try {
+//            File listFile[] = dir.listFiles();
+//            if (listFile != null && listFile.length > 0) {
+//                for (int i = 0; i < listFile.length; i++) {
+//                    if (listFile[i].isDirectory()) {
+//                        getFile(listFile[i]);
+//                    } else {
+//                        boolean booleanpdf = false;
+//                        if (listFile[i].getName().endsWith(".pdf")) {
+//                            for (int j = 0; j < pdfFile.size(); j++) {
+//                                if (pdfFile.get(j).equals(listFile[i].getPath())) {
+//                                    booleanpdf = true;
+//                                } else {
+//                                }
+//                            }
+//                            if (booleanpdf) {
+//                                booleanpdf = false;
+//                            } else {
+//                                if (pdfFile.size() < 10) {
+//                                    pdfFile.add(listFile[i].getPath());
+//                                } else {
+//                                    break;
+//                                }
+//                                if (pdfFile.size() == 1) {
+//                                    pdfHomePage = new HomePageRecentPdf(getContext(), pdfFile);
+//                                    toBindRecentPdf();
+//                                } else {
+//                                    pdfHomePage.setData(pdfFile);
+//                                    pdfHomePage.notifyDataSetChanged();
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (Exception | Error e) {
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
+//        }
+//    }

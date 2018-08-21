@@ -197,7 +197,7 @@ public class ClipBoard {
                     try {
                         Log.d("TAG", " Speak " + editText.getText().toString());
                         TTS tts = new TTS(context);
-                        tts.SpeakLoud(editText.getText().toString());
+                        tts.SpeakLoud(editText.getText().toString(),"AUD_Clip"+System.currentTimeMillis());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

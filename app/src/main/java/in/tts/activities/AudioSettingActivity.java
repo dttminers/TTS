@@ -130,6 +130,7 @@ public class AudioSettingActivity extends AppCompatActivity {
 
                             case R.id.rbTamilLs:
                                 audioSetting.setLangSelection(String.valueOf(new Locale("ta", "IND")));
+//                                audioSetting.setLangSelection(String.valueOf(new Locale("ta")));
                                 setPrefData();
                                 break;
 
@@ -219,7 +220,8 @@ public class AudioSettingActivity extends AppCompatActivity {
                             toSetLanguageSelection(rbMarathi, rbHindi, rbTamil, rbEnglish, false);
                             break;
 
-                        case "ta_IND":
+//                        case "ta_IND":
+                        case "ta":
                             toSetLanguageSelection(rbTamil, rbHindi, rbEnglish, rbMarathi, false);
                             break;
 

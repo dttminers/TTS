@@ -57,7 +57,6 @@ public class HomePageRecentPdf extends PagerAdapter {
         return view == object;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         ViewGroup vg = null;

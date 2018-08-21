@@ -21,37 +21,33 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import in.tts.activities.AudioSettingActivity;
 import in.tts.model.AudioSetting;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
-public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
+public class TTS10 implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
 
     private AudioSetting audioSetting;
     private PrefManager prefManager;
-    ArrayList<String> male_voice_array = new ArrayList<String>();
-    ArrayList<String> female_voice_array = new ArrayList<String>();
+    ArrayList<Voice> male_voice_array = new ArrayList<>();
+    ArrayList<Voice> female_voice_array = new ArrayList<>();
+    ArrayList<Voice> normal = new ArrayList<>();
     String selectedLang;
     String langCountry;
     String selectedVoice;
     String v_male = "en-us-x-sfg#male_3-local";
     String v_female = "en-us-x-sfg#female_2-local";
-    Voice v = null;
+    //    Voice v = null;
     String voice = "";
     int lang;
 
-    public TTS(final Context mContext) {
+    public TTS10(final Context mContext) {
         try {
-
             prefManager = new PrefManager(mContext);
             prefManager.getAudioSetting();
-
 
             tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
 
@@ -68,16 +64,15 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                         tts.setPitch((float) 0.8);
                         tts.setSpeechRate(audioSetting.getVoiceSpeed());
 
-                        // int lang =tts.setLanguage(new Locale("hin","IND"));
-                        // int lang =tts.setLanguage(new Locale(selectedLang,langCountry));
-                        //int lang =  tts.setLanguage(Locale.US);
-
                         if (audioSetting.getLangSelection().equals("hin_IND")) {
                             lang = tts.setLanguage(new Locale("hin", "IND"));
                         } else if (audioSetting.getLangSelection().equals("mar_IND")) {
                             lang = tts.setLanguage(new Locale("mar", "IND"));
-                        } else if (audioSetting.getLangSelection().equals("ta_IND")) {
-                            lang = tts.setLanguage(new Locale("ta", "IND"));
+//                        } else if (audioSetting.getLangSelection().equals("ta_IND")) {
+                        } else if (audioSetting.getLangSelection().equals("ta")) {
+//                            lang = tts.setLanguage(new Locale("ta", "IND"));
+                            lang = tts.setLanguage(new Locale("ta"));
+                            //  getVoices Voice[Name: ta, locale: ta, quality: 100, latency: 400, requiresNetwork: true, features: [networkTimeoutMs, networkRetriesCount, notInstalled]]:ta:ta_IND:false:false
                         } else {
                             lang = tts.setLanguage(Locale.US);
                         }
@@ -89,45 +84,57 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
                         //Get all available voices
                         for (Voice tmpVoice : tts.getVoices()) {
-                            if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
-                                voiceValidator(tmpVoice.getName());
+                            Log.d("TAG", " getVoices "
+                                    + tmpVoice + ":"
+                                    + tmpVoice.getLatency() + ":"
+                                    + tmpVoice.isNetworkConnectionRequired() + ":"
+                                    + tmpVoice.getName() + ":"
+                                    + audioSetting.getLangSelection() + ":"
+                                    + (tmpVoice.getLocale().toString().equalsIgnoreCase(audioSetting.getLangSelection())) + ":"
+                                    + (tmpVoice.getLocale().equals(audioSetting.getLangSelection())));
+                            if (tmpVoice.getLocale().toString().equalsIgnoreCase(audioSetting.getLangSelection())) {
+                                voiceValidator(tmpVoice);
                             }
-
                         }
 
                         if (selectedVoice.equalsIgnoreCase("male")) {
+                            Log.d("TAG", " setVoices male 1");
                             if (male_voice_array.size() > 0) {
-                                voice = male_voice_array.get(0);
-                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
-                                tts.setVoice(v);
+                                Log.d("TAG", " setVoices  male 2");
+                                tts.setVoice(new Voice(male_voice_array.get(0).getName(), male_voice_array.get(0).getLocale(), male_voice_array.get(0).getQuality(), male_voice_array.get(0).getLatency(), male_voice_array.get(0).isNetworkConnectionRequired(), a));
                             } else {
-                                // voice=v_male;
-                                // If nothing is similar then select default voice
-//                                CommonMethod.toDisplayToast(mContext, "Selected language not found. Reading data using default language");
-                                v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
-                                tts.setVoice(v);
+                                Log.d("TAG", " setVoices male 3" + normal.size());
+                                if (normal.size() > 0) {
+                                    Log.d("TAG", " setVoices male 31 " + normal.get(0).getName());
+                                    tts.setVoice(new Voice(normal.get(0).getName(), normal.get(0).getLocale(), normal.get(0).getQuality(), normal.get(0).getLatency(), normal.get(0).isNetworkConnectionRequired(), a));
+                                } else {
+                                    Log.d("TAG", " setVoices male 32 " + normal.size());
+                                    tts.setVoice(new Voice(v_male, new Locale("en", "US"), 400, 200, true, a));
+                                }
                             }
-
-                        } else {
+                        } else if (selectedVoice.equalsIgnoreCase("female")) {
+                            Log.d("TAG", " setVoices female 1");
                             if (female_voice_array.size() > 0) {
-                                voice = female_voice_array.get(0);
-                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
-                                tts.setVoice(v);
+                                Log.d("TAG", " setVoices female 2");
+                                tts.setVoice(new Voice(female_voice_array.get(0).getName(), female_voice_array.get(0).getLocale(), female_voice_array.get(0).getQuality(), female_voice_array.get(0).getLatency(), female_voice_array.get(0).isNetworkConnectionRequired(), a));
                             } else {
-                                // voice=v_female;
-                                // If nothing is similar then select default voice
-                                CommonMethod.toDisplayToast(mContext, "Selected language not found. Reading data using default language");
-                                v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
-                                tts.setVoice(v);
+                                Log.d("TAG", " setVoices female 3 " + normal.size());
+                                if (normal.size() > 0) {
+                                    Log.d("TAG", " setVoices female 31 " + normal.get(0).getName());
+                                    tts.setVoice(new Voice(normal.get(0).getName(), normal.get(0).getLocale(), normal.get(0).getQuality(), normal.get(0).getLatency(), normal.get(0).isNetworkConnectionRequired(), a));
+                                } else {
+                                    Log.d("TAG", " setVoices female 32 " + normal.size());
+                                    tts.setVoice(new Voice(v_female, new Locale("en", "US"), 400, 200, true, a));
+                                }
                             }
+                        } else {
+                            Log.d("TAG", " setVoices others 3 " + normal.size());
                         }
 
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             Log.d("TTS_TAG", " DATA LAng " + ":" + audioSetting.getLangSelection() + ":" + lang + ":" + tts.getLanguage() + ":" + tts.getAvailableLanguages());
                         }
-//                        }
-//                        int lang = tts.setLanguage(audioSetting.getLangSelection() != null ? audioSetting.getLangSelection() : Locale.US);
 
                         if (i == TextToSpeech.SUCCESS) {
                             if (lang == TextToSpeech.LANG_MISSING_DATA
@@ -150,9 +157,6 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                     }
                 }
             }, "com.google.android.tts");
-//            tts.setEngineByname("com.google.android.tts");
-
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -163,6 +167,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     public void SpeakLoud(String text, String fileName) throws Exception, Error {
         Log.d("Tag", " Speak " + tts.isSpeaking() + text);
+        text = "namaste ";
         if (text.length() >= 1000) {
             List<String> texts = new ArrayList<>();
             int textLength = text.length();
@@ -181,61 +186,43 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             }
 
             for (int i = 0; i < texts.size(); i++) {
+                Log.d("TAG", " Speak 1 " + fileName + ":" + text);
                 tts.speak(texts.get(i), isSpeaking() ? TextToSpeech.QUEUE_ADD : TextToSpeech.QUEUE_FLUSH, null, text);
                 toSaveAudioFile(texts.get(i), fileName + "_" + c + i);
             }
 
         } else {
+            Log.d("TAG", " Speak 1 " + fileName + ":" + text);
             tts.speak(text, isSpeaking() ? TextToSpeech.QUEUE_ADD : TextToSpeech.QUEUE_FLUSH, null, text);
             toSaveAudioFile(text, fileName);
         }
-
     }
 
-    public String toSaveAudioFile(String text, String fileName) throws Exception, Error {
-        Log.d("TAG", " SPEAK_Text " + text);
-        File audio;
+    private String toSaveAudioFile(String text, final String fileName) throws Exception, Error {
+        Log.d("TAG", " toSaveAudioFile 1 " + fileName + ":" + text);
         File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
-        // Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
-
         if (!mMainFolder.exists()) {
             mMainFolder.mkdirs();
         }
-//        } else {
+        final File audio;
         if (fileName == null) {
             audio = new File(mMainFolder + "/" + "AUDIO" + System.currentTimeMillis() + ".wav");//;+ mAudioFilename);
         } else {
             audio = new File(mMainFolder + "/" + fileName + ".wav");
         }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            tts.synthesizeToFile(text, null, audio, "READ_IT");
-//            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
-//        } else {
-//        HashMap<String, String> hm = new HashMap<>();
-////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
-////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
-//        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
-//        tts.synthesizeToFile(text, hm, audio.getPath());
+
         HashMap<String, String> myHashRender = new HashMap<>();
         myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
-        int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
-        Log.d("TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
-//        }
-        //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
+        final int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
+
+        Log.d("TAG", " TTS  :  toSaveAudioFile 2: " + i3 + CommonMethod.getFileSize(audio));
+        tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+            @Override
+            public void onUtteranceCompleted(String s) {
+                Log.d("TAG", " TTS  :  toSaveAudioFile 3: " + CommonMethod.getFileSize(audio) + ":" + audio.getAbsolutePath() + "\n:::: " + s);
+            }
+        });
         return audio.getAbsolutePath();
-//        }
-//        } else {
-//            if (mContext != null) {
-//                CommonMethod.toDisplayToast(mContext, "Unable to create audio file");
-//            }
-//            return null;
-//        }
-//        } else {
-//            if (mContext != null) {
-//                CommonMethod.toDisplayToast(mContext, "Unable to create audio File");
-//            }
-//            return null;
-//        }
     }
 
     public int toSeLanguage() throws Exception, Error {
@@ -341,7 +328,8 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
     }
 
     //synthesizes the given text to a file using the specified parameters.
-    public void toSynthesizeToFileBundle(CharSequence text, Bundle bundle, HashMap<String, String> params, File file, String utteranceId, String filename) {
+    public void toSynthesizeToFileBundle(CharSequence text, Bundle
+            bundle, HashMap<String, String> params, File file, String utteranceId, String filename) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.synthesizeToFile(text, bundle, file, utteranceId);
@@ -351,17 +339,27 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
     }
 
 
-    public void voiceValidator(String voice) {
+    public void voiceValidator(Voice voice) {
 
-        if (voice.contains("#female")) {
+        if (voice.toString().contains("#female")) {
+            Log.d("TAG", " setVoices voiceValidator female if " + voice);
             female_voice_array.add(voice);
+        } else {
+            Log.d("TAG", " setVoices  voiceValidator female else " + voice + ":" + normal.contains(voice));
+            if (!normal.contains(voice)) {
+                normal.add(voice);
+            }
         }
-        if (voice.contains("#male")) {
+        if (voice.toString().contains("#male")) {
+            Log.d("TAG", " setVoices  voiceValidator male if " + voice);
             male_voice_array.add(voice);
+        } else {
+            Log.d("TAG", " setVoices  voiceValidator male else " + voice + ":" + normal.contains(voice));
+            if (!normal.contains(voice)) {
+                normal.add(voice);
+            }
         }
-
     }
-
 }
 
 //        if (tts.isSpeaking()) {
@@ -381,4 +379,78 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 //            }
 //        }
 
+/*
+if (selectedVoice.equalsIgnoreCase("male")) {
+        if (male_voice_array.size() > 0) {
+        voice = male_voice_array.get(0);
+        v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+        tts.setVoice(v);
+        } else {
+//                                if (b) {
+//                                    CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
+//                                }
+        v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
+        tts.setVoice(v);
+        }
+        } else {
+        if (female_voice_array.size() > 0) {
+        voice = female_voice_array.get(0);
+        v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+        tts.setVoice(v);
+        } else {
+        if (b) {
+        CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
+        }
+        v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
+        tts.setVoice(v);
+        }
+        }
+//                    }
+*/
+/*
 
+    public String toSaveAudioFile(String text, String fileName) throws Exception, Error {
+        Log.d("TAG", " SPEAK_Text " + text);
+        File audio;
+        File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
+        // Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
+
+        if (!mMainFolder.exists()) {
+            mMainFolder.mkdirs();
+        }
+//        } else {
+        if (fileName == null) {
+            audio = new File(mMainFolder + "/" + "AUDIO" + System.currentTimeMillis() + ".wav");//;+ mAudioFilename);
+        } else {
+            audio = new File(mMainFolder + "/" + fileName + ".wav");
+        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            tts.synthesizeToFile(text, null, audio, "READ_IT");
+//            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
+//        } else {
+//        HashMap<String, String> hm = new HashMap<>();
+////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
+////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
+//        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+//        tts.synthesizeToFile(text, hm, audio.getPath());
+        HashMap<String, String> myHashRender = new HashMap<>();
+        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+        int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
+        Log.d("TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
+//        }
+        //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
+        return audio.getAbsolutePath();
+//        }
+//        } else {
+//            if (mContext != null) {
+//                CommonMethod.toDisplayToast(mContext, "Unable to create audio file");
+//            }
+//            return null;
+//        }
+//        } else {
+//            if (mContext != null) {
+//                CommonMethod.toDisplayToast(mContext, "Unable to create audio File");
+//            }
+//            return null;
+//        }
+    }*/

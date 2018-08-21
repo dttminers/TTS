@@ -34,7 +34,6 @@ import in.tts.model.AudioModel;
 import in.tts.utils.PlaybackStatus;
 import in.tts.utils.StorageUtils;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
         MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener,

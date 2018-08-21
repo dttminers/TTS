@@ -192,11 +192,11 @@ public class TutorialPageActivity extends AppCompatActivity {
     };
 
     private void changeStatusBarColor() throws Exception, Error {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-        }
+//        }
     }
 
     public void toChangeScreen(View view) {

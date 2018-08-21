@@ -60,8 +60,8 @@ public class ImageOcrActivity extends AppCompatActivity {
             photoPath = getIntent().getStringExtra("PATH");
 
             if (getSupportActionBar() != null) {
-                name =  photoPath.substring(photoPath.lastIndexOf("/") + 1);
-                CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this,name);
+                name = photoPath.substring(photoPath.lastIndexOf("/") + 1);
+                CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this, name);
             }
 
             mRl = findViewById(R.id.rlImageOcrActivity);
@@ -215,8 +215,9 @@ public class ImageOcrActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             try {
-                                tts.SpeakLoud(stringBuilder.toString());
-                                tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image"+name.substring(0, (name.length()-4) )+System.currentTimeMillis());
+                                tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, name.lastIndexOf(".")) + System.currentTimeMillis());
+//                                tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, (name.length() - 4)) + System.currentTimeMillis());
+//                                tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image"+name.substring(0, (name.length()-4) )+System.currentTimeMillis());
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -270,9 +271,10 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         try {
-            tts.toStop();
+            if (tts != null) {
+                tts.toStop();
+            }
             if (mRl != null) {
                 if (mRl.getChildCount() > 1) {
                     if (view != null) {
@@ -286,13 +288,15 @@ public class ImageOcrActivity extends AppCompatActivity {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         try {
-            tts.toShutDown();
+            if (tts != null) {
+                tts.toShutDown();
+            }
             if (mRl != null) {
                 if (mRl.getChildCount() > 1) {
                     if (view != null) {
@@ -306,5 +310,6 @@ public class ImageOcrActivity extends AppCompatActivity {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
+        super.onDestroy();
     }
 }

@@ -34,6 +34,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
@@ -123,7 +124,11 @@ public class BrowserActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                text = Jsoup.connect(url).get().getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
+//                                Document doc = Jsoup.connect(url).get();
+//                                Log.d("TAG_WEb ", " DATa 23 " + doc.getElementsByTag("script") );
+//                                Log.d("TAG_WEb ", " DATa 24" + doc.getElementsByTag("body").text() );
+//                                text = Jsoup.connect(url).get().getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
+                                text = Jsoup.connect(url).get().getElementsByTag("body").text();
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -409,10 +414,10 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void toSpeakWebPage() {
         try {
-//            Log.d("WEB", "text  " + text.length() + ":" + text);
+            Log.d("WEB", "text  " + text.length() + ":" + text);
             if (text.trim().length() > 0) {
-                tts.SpeakLoud(text.replaceAll("&nbsp;", "\\s"));
-                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+                tts.SpeakLoud(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+//                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -476,29 +481,33 @@ public class BrowserActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         try {
-            tts.toStop();
-            tts.toShutDown();
+            if (tts != null) {
+                tts.toStop();
+                tts.toShutDown();
+            }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         try {
-            tts.toShutDown();
+            if (tts != null) {
+                tts.toShutDown();
+            }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
+        super.onDestroy();
     }
 
 }

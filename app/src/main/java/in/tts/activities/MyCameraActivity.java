@@ -346,8 +346,8 @@ public class MyCameraActivity extends AppCompatActivity {
                                 //   TTS tts = new TTS(MyCameraActivity.this);
                                 //tts.SpeakLoud("Hi MANASI");
                                 if (tts != null) {
-                                    tts.SpeakLoud(stringBuilder.toString());
-                                    tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image" + getResources().getString(R.string.app_name).substring(0, (getResources().getString(R.string.app_name).length() - 4)) + System.currentTimeMillis());
+                                    tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + getResources().getString(R.string.app_name).substring(0, (getResources().getString(R.string.app_name).length() - 4)) + System.currentTimeMillis());
+//                                    tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image" + getResources().getString(R.string.app_name).substring(0, (getResources().getString(R.string.app_name).length() - 4)) + System.currentTimeMillis());
                                 }
                             } catch (Exception | Error e) {
                                 Log.d("OnPostExecuteEXP", "exception  " + e);
@@ -438,9 +438,9 @@ public class MyCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         try {
             if (tts != null) {
+                tts.toStop();
                 tts.toShutDown();
             }
             if (mrl != null) {
@@ -456,6 +456,7 @@ public class MyCameraActivity extends AppCompatActivity {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
+        super.onDestroy();
     }
 
     @Override
