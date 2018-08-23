@@ -3,14 +3,12 @@ package in.tts.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Window;
-import android.view.animation.AnimationUtils;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -23,10 +21,9 @@ import java.io.File;
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
-import in.tts.services.ClipboardMonitorService;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToCheckFileExists;
 import in.tts.utils.ToGetPdfFiles;
-import in.tts.utils.ToStorePdfList;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -40,9 +37,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_splash);
-//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+
             CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
-//            startService(new Intent(this, ClipboardMonitorService.class));
 
             prefManager = new PrefManager(SplashActivity.this);
             auth = FirebaseAuth.getInstance();
@@ -50,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-//                    findViewById(R.id.ivSplash).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out));
                     prefManager.getUserInfo();
                     if (auth.getCurrentUser() != null) {
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -75,6 +70,26 @@ public class SplashActivity extends AppCompatActivity {
                     if (!ToGetPdfFiles.isRunning()) {
                         ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
                     }
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (prefManager.toGetPDFListRecent().size() > 0) {
+                                prefManager.toSetPDFFileListRecent(ToCheckFileExists.fileList(prefManager.toGetPDFListRecent()));
+                            }
+
+                            if (prefManager.toGetImageListRecent().size() > 0) {
+                                prefManager.toSetImageFileListRecent(ToCheckFileExists.fileList(prefManager.toGetImageListRecent()));
+                            }
+
+                            if (prefManager.toGetPDFList().size() > 0) {
+                                prefManager.toSetPDFFileList(ToCheckFileExists.fileList(prefManager.toGetPDFList()));
+                            }
+
+                            if (prefManager.toGetImageList().size() > 0) {
+                                prefManager.toSetImageFileList(ToCheckFileExists.fileList(prefManager.toGetImageList()));
+                            }
+                        }
+                    });
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                     FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -82,8 +97,6 @@ public class SplashActivity extends AppCompatActivity {
                     FirebaseCrash.report(e);
                 }
             }
-
-//            CommonMethod.isSignedIn(SplashActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

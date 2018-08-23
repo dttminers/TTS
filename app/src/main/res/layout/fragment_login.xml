@@ -246,7 +246,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/txtNewUser"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -255,7 +254,6 @@
                     android:textColor="@color/white1" />
 
                 <TextView
-                    android:id="@+id/txtSignIn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -283,7 +281,6 @@
         android:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progressBar550"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"

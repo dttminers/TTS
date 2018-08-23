@@ -1,5 +1,6 @@
 package in.tts.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.Arrays;
 
+@SuppressLint("StaticFieldLeak")
 public class VolleySingleton {
     private static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;

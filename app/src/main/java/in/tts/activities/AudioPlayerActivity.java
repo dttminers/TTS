@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+
 import in.tts.adapters.MediaCursorAdapter;
 import in.tts.R;
 
@@ -48,11 +49,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
-        selectedfile = (TextView) findViewById(R.id.selecteditem);
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
-        prev = (ImageButton) findViewById(R.id.previous);
-        play = (ImageButton) findViewById(R.id.play);
-        next = (ImageButton) findViewById(R.id.next);
+        selectedfile = findViewById(R.id.selecteditem);
+        seekBar = findViewById(R.id.seekBar);
+        prev = findViewById(R.id.previous);
+        play = findViewById(R.id.play);
+        next = findViewById(R.id.next);
 
         player = new MediaPlayer();
         player.setOnCompletionListener(onCompletion);
@@ -72,7 +73,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
+    //    @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 //        super.onListItemClick(l, v, position, id);
         currentFile = (String) v.getTag();
@@ -177,7 +178,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             stopPlay();
         }
 
-        ;
     };
     private MediaPlayer.OnErrorListener onError = new MediaPlayer.OnErrorListener() {
         @Override

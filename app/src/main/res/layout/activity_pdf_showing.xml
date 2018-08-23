@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlPdfReader"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -100,7 +99,6 @@
         </LinearLayout>
 
         <SeekBar
-            android:id="@+id/sbPlayer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/llPDFReader"
@@ -132,7 +130,6 @@
         android:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progressBar120"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"

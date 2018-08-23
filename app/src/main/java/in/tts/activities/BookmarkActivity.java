@@ -27,7 +27,6 @@ public class BookmarkActivity extends AppCompatActivity {
 
     ArrayList<String> list;
     RecyclerView rv;
-//    ListView listView;
     BookMarkAdapter adapter;
     LinearLayout linearLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;

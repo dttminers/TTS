@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/llCustom_loader12"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -24,7 +23,6 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/rlHome"
                 android:layout_width="match_parent"
                 android:layout_height="180dp">
 
@@ -83,7 +81,6 @@
                 android:visibility="visible">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cvRecentItemPdf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -97,7 +94,6 @@
                     app:cardElevation="5dp">
 
                     <RelativeLayout
-                        android:id="@+id/rlRecentItemPdf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -163,13 +159,11 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlRecentItemImageMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cvRecentItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -183,7 +177,6 @@
                     app:cardElevation="5dp">
 
                     <RelativeLayout
-                        android:id="@+id/rlRecentItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 

@@ -43,16 +43,6 @@ public class CustomPagerAdapter extends PagerAdapter {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
         ImageView imageView = itemView.findViewById(R.id.imageView);
         imageView.setImageResource(mResources[position]);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Global.Init(context);
-//                Intent intent = new Intent();
-//                intent.setClass(context, PDFViewAct.class);
-//                intent.putExtra("PDFPath", "/storage/emulated/0/Download/easymock_tutorial.pdf");
-//                context.startActivity(intent);
-            }
-        });
         container.addView(itemView);
         return itemView;
     }

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="AlwaysShowAction">
     <item
-        android:id="@+id/action_notification1"
         android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="500"
         android:title="@string/str_more_options"

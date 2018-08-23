@@ -7,7 +7,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,15 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.util.Locale;
-
 import in.tts.R;
+import in.tts.utils.CommonMethod;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -34,15 +31,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 @SuppressLint("StaticFieldLeak")
 public class ClipBoard {
+
     private static TextView tvCopy, tvPaste, tvShare, tvSpeak;
     private static ImageView ivCopy, ivPaste, ivShare, ivSpeak;
-    private static ClipboardManager myClipboard;
-    private static ClipData myClip;
-    private TextToSpeech t1;
-    // class member variable to save the X,Y coordinates
-    private static float[] lastTouchDownXY = new float[2];
-//    private static String text;
 
+    private static ClipboardManager myClipboard;
+    private static TTS tts;
+    private static float[] lastTouchDownXY = new float[2];
 
     @SuppressLint("ClickableViewAccessibility")
     public static void ToPopup(final Context context, final Activity activity, final EditText editText) {
@@ -93,10 +88,17 @@ public class ClipBoard {
             ivCopy.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    tvCopy.setVisibility(View.VISIBLE);
-                    tvPaste.setVisibility(View.GONE);
-                    tvShare.setVisibility(View.GONE);
-                    tvSpeak.setVisibility(View.GONE);
+                    try {
+                        tvCopy.setVisibility(View.VISIBLE);
+                        tvPaste.setVisibility(View.GONE);
+                        tvShare.setVisibility(View.GONE);
+                        tvSpeak.setVisibility(View.GONE);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     return false;
                 }
             });
@@ -104,10 +106,17 @@ public class ClipBoard {
             ivPaste.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    tvCopy.setVisibility(View.GONE);
-                    tvPaste.setVisibility(View.VISIBLE);
-                    tvShare.setVisibility(View.GONE);
-                    tvSpeak.setVisibility(View.GONE);
+                    try {
+                        tvCopy.setVisibility(View.GONE);
+                        tvPaste.setVisibility(View.VISIBLE);
+                        tvShare.setVisibility(View.GONE);
+                        tvSpeak.setVisibility(View.GONE);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     return false;
                 }
             });
@@ -115,10 +124,17 @@ public class ClipBoard {
             ivShare.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    tvCopy.setVisibility(View.GONE);
-                    tvPaste.setVisibility(View.GONE);
-                    tvShare.setVisibility(View.VISIBLE);
-                    tvSpeak.setVisibility(View.GONE);
+                    try {
+                        tvCopy.setVisibility(View.GONE);
+                        tvPaste.setVisibility(View.GONE);
+                        tvShare.setVisibility(View.VISIBLE);
+                        tvSpeak.setVisibility(View.GONE);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     return false;
                 }
             });
@@ -126,10 +142,17 @@ public class ClipBoard {
             ivSpeak.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    tvCopy.setVisibility(View.GONE);
-                    tvPaste.setVisibility(View.GONE);
-                    tvShare.setVisibility(View.GONE);
-                    tvSpeak.setVisibility(View.VISIBLE);
+                    try {
+                        tvCopy.setVisibility(View.GONE);
+                        tvPaste.setVisibility(View.GONE);
+                        tvShare.setVisibility(View.GONE);
+                        tvSpeak.setVisibility(View.VISIBLE);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     return false;
                 }
             });
@@ -137,24 +160,25 @@ public class ClipBoard {
             ivCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (editText != null) {
-
-//                    CharSequence text = editText.getText();//.subSequence(editText.getSelectionStart(), editText.getSelectionEnd());
-//                    myClip = ClipData.newPlainText("text", text);
-//                    myClipboard.setPrimaryClip(myClip);
-//                    Toast.makeText(getContext(), "Text Copied : " + text, Toast.LENGTH_SHORT).show();
-                        String text = editText.getText().toString().trim();
-                        Log.d("TAG", " copy " + text + ":" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()));
-                        if (text.length() != 0) {
-                            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("Clip", text);
-                            Toast.makeText(getApplicationContext(), "Text Copied to Clipboard", Toast.LENGTH_SHORT).show();
-                            if (clipboard != null) {
-                                clipboard.setPrimaryClip(clip);
+                    try {
+                        if (editText != null) {
+                            String text = editText.getText().toString().trim();
+                            if (text.length() != 0) {
+                                ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("Clip", text);
+                                CommonMethod.toDisplayToast(getApplicationContext(), "Text Copied");
+                                if (clipboard != null) {
+                                    clipboard.setPrimaryClip(clip);
+                                }
+                            } else {
+                                CommonMethod.toDisplayToast(getApplicationContext(), "Nothing to Copy");
                             }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Nothing to Copy", Toast.LENGTH_SHORT).show();
                         }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
@@ -162,32 +186,46 @@ public class ClipBoard {
             ivPaste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (myClipboard.hasPrimaryClip()) {
-                        ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
-                        String ptext = item.getText().toString();
-                        if (editText != null) {
-//                        editText.setText(ptext);
-                            int cursorPosition = editText.getSelectionStart();
-                            CharSequence enteredText = editText.getText().toString();
-                            CharSequence cursorToEnd = enteredText.subSequence(cursorPosition, enteredText.length());
-                            editText.setText(ptext);
-//                            Log.d("TAG paste", " paste " + editText.getText().toString() + ":" + ptext + ":" + cursorPosition + ":" + cursorToEnd + ":" + ptext.substring(cursorPosition, ptext.length()));
+                    try {
+                        if (myClipboard.hasPrimaryClip()) {
+                            ClipData.Item item = myClipboard.getPrimaryClip().getItemAt(0);
+                            String ptext = item.getText().toString();
+                            if (editText != null) {
+                                int cursorPosition = editText.getSelectionStart();
+                                CharSequence enteredText = editText.getText().toString();
+                                String d = enteredText.subSequence(0, cursorPosition) + ptext + enteredText.subSequence(cursorPosition, enteredText.length());
+                                editText.setText(d);
+                                editText.setSelection(d.length());
+                            }
+                        } else {
+                            CommonMethod.toDisplayToast(getApplicationContext(), "Nothing to Paste");
                         }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
-
             });
 
             ivShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("TAG", " Speak " + editText.getText().toString());
-                    tvShare.setVisibility(View.VISIBLE);
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    sharingIntent.setType("text/plain");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
-                    context.startActivity(Intent.createChooser(sharingIntent, "Share"));
+                    try {
+                        Log.d("TAG", " Speak " + editText.getText().toString());
+                        tvShare.setVisibility(View.VISIBLE);
+                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        sharingIntent.setType("text/plain");
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                        context.startActivity(Intent.createChooser(sharingIntent, "Share"));
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                 }
             });
 
@@ -196,21 +234,34 @@ public class ClipBoard {
                 public void onClick(View v) {
                     try {
                         Log.d("TAG", " Speak " + editText.getText().toString());
-                        TTS tts = new TTS(context);
-                        tts.SpeakLoud(editText.getText().toString(),"AUD_Clip"+System.currentTimeMillis());
-                    } catch (Exception e) {
+                        tts = new TTS(context);
+                        tts.SpeakLoud(editText.getText().toString(), "AUD_Clip" + System.currentTimeMillis());
+                    } catch (Exception | Error e) {
                         e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
                     }
                 }
             });
             popupWindow.setOutsideTouchable(true);
             customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             popupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.NO_GRAVITY, (int) (lastTouchDownXY[0] - 10), ((int) lastTouchDownXY[1] + customView.getMeasuredHeight() + 170));
-            //(int)event.getX(), (int)event.getY() - customView.getMeasuredHeight());
 
             activity.getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                    try {
+                        if (tts != null) {
+                            tts.toStop();
+                            tts.toShutDown();
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     return false;
                 }
             });
@@ -219,22 +270,6 @@ public class ClipBoard {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
-        }
-    }
-
-//    t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-//        @Override
-//        public void onInit(int status) {
-//            if(status != TextToSpeech.ERROR) {
-//                t1.setLanguage(Locale.UK);
-//            }
-//        }
-//    });
-
-    public void onPause() {
-        if (t1 != null) {
-            t1.stop();
-            t1.shutdown();
         }
     }
 }

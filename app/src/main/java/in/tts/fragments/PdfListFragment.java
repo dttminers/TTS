@@ -165,7 +165,7 @@ public class PdfListFragment extends Fragment {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             Log.d("TAG", " count  200:" + list.size() + values[0]);
-            tv.setText(String.valueOf(values[0]));
+            tv.setText(String.valueOf(values[0])+"%");
             mProgress.setProgress(values[0]);
 //            if (values[0] <= 100) {
 //                rl.setVisibility(View.GONE);
@@ -310,7 +310,7 @@ public class PdfListFragment extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             Log.d("TAG", " count  500:" + list.size() + values[0]);
-            tv.setText(String.valueOf(values[0]));
+            tv.setText(String.valueOf(values[0])+ " %");
             mProgress.setProgress(values[0]);
             if (values[0] <= 100) {
                 rl.setVisibility(View.GONE);

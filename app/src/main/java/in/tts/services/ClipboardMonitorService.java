@@ -1,5 +1,4 @@
 package in.tts.services;
-//https://github.com/twaddington/Android-Clipboard-Monitor/blob/master/src/com/example/clipboardmonitor/service/ClipboardMonitorService.java
 
 import android.app.Service;
 import android.content.ClipData;
@@ -16,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.Date;
 
 public class ClipboardMonitorService extends Service {
-//    private static final String TAG = "ClipboardManager";
+
     private static final String FILENAME = "clipboard-history.txt";
 
     private File mHistoryFile;
@@ -111,3 +110,5 @@ public class ClipboardMonitorService extends Service {
         }
     }
 }
+
+//https://github.com/twaddington/Android-Clipboard-Monitor/blob/master/src/com/example/clipboardmonitor/service/ClipboardMonitorService.java

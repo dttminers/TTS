@@ -65,6 +65,7 @@ public class BrowserActivity extends AppCompatActivity {
     private TTS tts;
     private String historyUrl = "";
     private String text = "";
+    private MenuItem menuSpeak;
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -110,33 +111,59 @@ public class BrowserActivity extends AppCompatActivity {
             superWebView.setWebViewClient(new WebViewClient() {
 
                 @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                public void onPageStarted(WebView view, final String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
-                    text = "";
+                    try {
+
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                 }
 
                 @Override
                 public void onPageFinished(WebView view, final String url) {
                     super.onPageFinished(view, url);
-                    startOfHistory();
-
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
+                    try {
+                        startOfHistory();
+                        tts = new TTS(BrowserActivity.this);
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
 //                                Document doc = Jsoup.connect(url).get();
 //                                Log.d("TAG_WEb ", " DATa 23 " + doc.getElementsByTag("script") );
 //                                Log.d("TAG_WEb ", " DATa 24" + doc.getElementsByTag("body").text() );
 //                                text = Jsoup.connect(url).get().getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
-                                text = Jsoup.connect(url).get().getElementsByTag("body").text();
-                            } catch (Exception | Error e) {
-                                e.printStackTrace();
-                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                Crashlytics.logException(e);
-                                FirebaseCrash.report(e);
+                                    text = Jsoup.connect(url).get().getElementsByTag("body").text();
+                                    if (text.trim().length() > 0) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (menuSpeak != null) {
+                                                    menuSpeak.setVisible(true);
+                                                }
+                                            }
+                                        });
+                                    }
+                                } catch (Exception | Error e) {
+                                    e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    Crashlytics.logException(e);
+                                    FirebaseCrash.report(e);
+                                }
                             }
-                        }
-                    });
+                        });
+
+
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                 }
 
 //                @Override
@@ -260,7 +287,6 @@ public class BrowserActivity extends AppCompatActivity {
                 }
             });
 
-            tts = new TTS(BrowserActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -334,7 +360,7 @@ public class BrowserActivity extends AppCompatActivity {
         try {
             MenuInflater myMenuInflater = getMenuInflater();
             myMenuInflater.inflate(R.menu.browser_menu, menu);
-
+            menuSpeak = menu.findItem(R.id.menuSpeakBrowser);
             menuBookMark = menu.findItem(R.id.menuBookmark).getActionView();
             cbMenu = menuBookMark.findViewById(R.id.cbBookmark);
             cbMenu.setOnClickListener(new View.OnClickListener() {
@@ -374,7 +400,6 @@ public class BrowserActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             switch (item.getItemId()) {
-
                 case R.id.menuSpeakBrowser:
                     toSpeakWebPage();
                     break;
@@ -414,10 +439,13 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void toSpeakWebPage() {
         try {
-            Log.d("WEB", "text  " + text.length() + ":" + text);
+            Log.d("WEB", "toSpeakWebPage  " + text.length() + ":" + text);
             if (text.trim().length() > 0) {
                 tts.SpeakLoud(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+                CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
 //                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+            } else {
+                CommonMethod.toDisplayToast(BrowserActivity.this, " Unable to fetch data ");
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -466,6 +494,11 @@ public class BrowserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         try {
+            if (tts != null) {
+                tts.toStop();
+                tts.toShutDown();
+            }
+
             if (superWebView.canGoBack()) {
                 superWebView.goBack();
             } else {
@@ -499,6 +532,7 @@ public class BrowserActivity extends AppCompatActivity {
     protected void onDestroy() {
         try {
             if (tts != null) {
+                tts.toStop();
                 tts.toShutDown();
             }
         } catch (Exception | Error e) {

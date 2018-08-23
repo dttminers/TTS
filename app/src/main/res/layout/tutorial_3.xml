@@ -7,7 +7,6 @@
 
 
     <ImageView
-        android:id="@+id/ivCircle_pink"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_alignParentBottom="true"
@@ -63,7 +62,6 @@
         android:src="@drawable/vector_smart_object" />
 
     <ImageView
-        android:id="@+id/ivMakeRead"
         android:layout_width="25dp"
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"

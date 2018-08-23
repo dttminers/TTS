@@ -7,7 +7,6 @@
 
 
     <ImageView
-        android:id="@+id/ivCircle_pink"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:contentDescription="@string/str_logo_image"
@@ -46,7 +45,6 @@
         android:layout_above="@id/ivPink_line"/>
 
     <ImageView
-        android:id="@+id/ivImages"
         android:layout_width="25dp"
         android:layout_height="30dp"
         android:contentDescription="@string/str_logo_image"

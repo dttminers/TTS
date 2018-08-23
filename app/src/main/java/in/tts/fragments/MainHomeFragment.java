@@ -45,20 +45,16 @@ import in.tts.utils.CommonMethod;
 public class MainHomeFragment extends Fragment {
 
     private NestedScrollView nsv;
-//    private ProgressBar mLoading;
 
     // Main View Pager
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+
     private ImageView imageView;
     private ImageView ivLeft, ivRight;
 
     private int currentImage = 0;
     private int mResources[] = {R.drawable.t1, R.drawable.t2, R.drawable.t3, R.drawable.t4, R.drawable.t5};
-
-    // Other data
-//    private LinearLayout ll;
-//    private View view, view1;
 
     //pdf
     private ArrayList<String> pdfFile;

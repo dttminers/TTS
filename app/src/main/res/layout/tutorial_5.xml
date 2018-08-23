@@ -44,13 +44,11 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl53"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent_black1" />
 
     <ImageView
-        android:id="@+id/ivCircle_pink"
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:layout_alignParentEnd="true"

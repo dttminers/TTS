@@ -356,4 +356,35 @@ public class PrefManager {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
     }
+
+//    public ArrayList<String> populateSelectedSearch() {
+//        try {
+//            String s = _context.getSharedPreferences(WEB_PREFERENCES, 0).getString(WEB_LINKS, null);
+//            if (s != null) {
+//                return new ArrayList<>(Arrays.asList(s.trim().replaceAll("\\s+", "").replace("[", "").replace("]", "").split(",")));
+//            } else {
+//                return null;
+//            }
+//        } catch (Exception | Error e) {
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//            return null;
+//        }
+//    }
+//
+//    public void setSearchResult(List<String> selectedSearch) {
+//        try {
+//            SharedPreferences.Editor editor = _context.getSharedPreferences(WEB_PREFERENCES, 0).edit();
+//            editor.putString(WEB_LINKS, selectedSearch.toString());
+//            editor.apply();
+//            editor.commit();
+//        } catch (Exception | Error e) {
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//        }
+//    }
 }

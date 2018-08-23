@@ -1,7 +1,5 @@
 package in.tts.model;
 
-import java.util.Date;
-
 public class PdfModel {
 
     public static final String TABLE_NAME = "userDevicePdfList";

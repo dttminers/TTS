@@ -8,6 +8,7 @@
         android:id="@+id/menuSpeakBrowser"
         android:icon="@drawable/white_speak"
         android:orderInCategory="100"
+        android:visible="false"
         android:title="@string/str_speak"
         app:showAsAction="always" />
 
@@ -19,7 +20,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_notification11"
         android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="500"
         android:title="@string/str_more_options"

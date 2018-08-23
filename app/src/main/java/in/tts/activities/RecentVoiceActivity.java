@@ -44,7 +44,6 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
 
     private ActionMode mActionMode;
     private Menu context_menu;
-    private ArrayList<Audio> audioList;
 
     private RecentVoiceAdapter mAdapter;
     private ArrayList<AudioModel> user_list = new ArrayList<>();

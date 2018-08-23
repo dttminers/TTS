@@ -109,7 +109,7 @@ public class PdfShowingActivity extends AppCompatActivity {
     private int fileCnt = 0;
     private int playCnt = 0;
     List<String> texts;
-    int dividerLimit = 1000;//3900;
+    int dividerLimit = 300;//3900;
     private String audio = "AUD_";
     private File appTmpPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/READ_IT/Audio/");
 
@@ -411,12 +411,13 @@ public class PdfShowingActivity extends AppCompatActivity {
             PdfReader pr = new PdfReader(pdfFile.getPath());
             String textForReading = PdfTextExtractor.getTextFromPage(pr, pos);
 
+            fileCnt =0;
             if (textForReading.trim().length() != 0) {
                 toSpeak(textForReading, status);
                 CommonMethod.toReleaseMemory();
             } else {
                 TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-                Frame imageFrame = new Frame.Builder().setBitmap(list.get(pos-1)).build();
+                Frame imageFrame = new Frame.Builder().setBitmap(list.get(pos - 1)).build();
                 StringBuilder stringBuilder = new StringBuilder();
                 SparseArray<TextBlock> items = textRecognizer.detect(imageFrame);
                 for (int i = 0; i < items.size(); i++) {
@@ -542,128 +543,130 @@ public class PdfShowingActivity extends AppCompatActivity {
                 @Override
                 public void onInit(int i) {
                     CommonMethod.toReleaseMemory();
-                    audioSetting = AudioSetting.getAudioSetting(PdfShowingActivity.this);
-                    selectedLang = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getLanguage();
-                    langCountry = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getCountry();
-                    selectedVoice = audioSetting.getVoiceSelection();
+                    Log.d("TAG_PDF", "onInit " + i);
+                    if (i == TextToSpeech.SUCCESS) {
+                        audioSetting = AudioSetting.getAudioSetting(PdfShowingActivity.this);
+                        selectedLang = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getLanguage();
+                        langCountry = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getCountry();
+                        selectedVoice = audioSetting.getVoiceSelection();
+                        Log.d("TAG_PDF", "audioSetting : " + audioSetting.getLangSelection() + ":" + selectedLang + ":" + langCountry + ":" + selectedVoice);
 
-                    Log.d("TAG_PDF", "audioSetting : " + audioSetting.getLangSelection() + ":" + selectedLang + ":" + langCountry + ":" + selectedVoice);
+                        tts.setEngineByPackageName("com.google.android.tts");
+                        tts.setPitch((float) 0.8);
+                        tts.setSpeechRate(audioSetting.getVoiceSpeed());
 
-                    tts.setEngineByPackageName("com.google.android.tts");
-                    tts.setPitch((float) 0.8);
-                    tts.setSpeechRate(audioSetting.getVoiceSpeed());
+                        if (audioSetting.getLangSelection().equals("hin_IND")) {
+                            lang = tts.setLanguage(new Locale("hin", "IND"));
+                        } else if (audioSetting.getLangSelection().equals("mar_IND")) {
+                            lang = tts.setLanguage(new Locale("mar", "IND"));
+//                        } else if (audioSetting.getLangSelection().equals("ta_IND")) {
+                        } else if (audioSetting.getLangSelection().equals("ta")) {
+                            lang = tts.setLanguage(new Locale("ta"));
+//                            lang = tts.setLanguage(new Locale("ta", "IND"));
+                        } else {
+                            lang = tts.setLanguage(Locale.US);
+                        }
 
-                    if (audioSetting.getLangSelection().equals("hin_IND")) {
-                        lang = tts.setLanguage(new Locale("hin", "IND"));
-                    } else if (audioSetting.getLangSelection().equals("mar_IND")) {
-                        lang = tts.setLanguage(new Locale("mar", "IND"));
-                    } else if (audioSetting.getLangSelection().equals("ta_IND")) {
-                        lang = tts.setLanguage(new Locale("ta", "IND"));
-                    } else {
-                        lang = tts.setLanguage(Locale.US);
-                    }
-
-                    Set<String> a = new HashSet<>();
-                    a.add("female");
-                    a.add("male");
+                        Set<String> a = new HashSet<>();
+                        a.add("female");
+                        a.add("male");
 
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //Get all available voices
-                    try {
-                        if (tts != null) {
-                            for (Voice tmpVoice : tts.getVoices()) {
-                                if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
-                                    voiceValidator(tmpVoice.getName());
+                        //Get all available voices
+                        try {
+                            if (tts != null) {
+                                for (Voice tmpVoice : tts.getVoices()) {
+                                    if (tmpVoice.getLocale().equals(audioSetting.getLangSelection())) {
+                                        voiceValidator(tmpVoice.getName());
+                                    }
                                 }
                             }
+                        } catch (Exception | Error e) {
+                            CommonMethod.toReleaseMemory();
+                            e.printStackTrace();
+                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                            Crashlytics.logException(e);
+                            FirebaseCrash.report(e);
                         }
-                    } catch (Exception | Error e) {
-                        CommonMethod.toReleaseMemory();
-                        e.printStackTrace();
-                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e);
-                        FirebaseCrash.report(e);
-                    }
 
-                    if (selectedVoice.equalsIgnoreCase("male")) {
-                        if (male_voice_array.size() > 0) {
-                            voice = male_voice_array.get(0);
-                            v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
-                            tts.setVoice(v);
-                        } else {
+                        if (selectedVoice.equalsIgnoreCase("male")) {
+                            if (male_voice_array.size() > 0) {
+                                voice = male_voice_array.get(0);
+                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+                                tts.setVoice(v);
+                            } else {
 //                                if (b) {
 //                                    CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
 //                                }
-                            v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
-                            tts.setVoice(v);
-                        }
-                    } else {
-                        if (female_voice_array.size() > 0) {
-                            voice = female_voice_array.get(0);
-                            v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
-                            tts.setVoice(v);
-                        } else {
-                            if (b) {
-                                CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
+                                v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
+                                tts.setVoice(v);
                             }
-                            v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
-                            tts.setVoice(v);
+                        } else {
+                            if (female_voice_array.size() > 0) {
+                                voice = female_voice_array.get(0);
+                                v = new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a);
+                                tts.setVoice(v);
+                            } else {
+                                if (b) {
+                                    CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
+                                }
+                                v = new Voice(v_female, new Locale("en", "US"), 400, 200, true, a);
+                                tts.setVoice(v);
+                            }
                         }
-                    }
 //                    }
-
-                    if (i == TextToSpeech.SUCCESS) {
                         if (lang == TextToSpeech.LANG_MISSING_DATA || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
                             Log.d("TAG_PDF", "This Language is not supported");
                         } else {
                             Log.d("TAG_PDF", " Else ");
                         }
-                    } else {
-                        Log.d("TAG_PDF", "Initialization Failed!");
-                    }
 
-                    HashMap<String, String> myHashRender = new HashMap<>();
-                    myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, string);
-                    int i3 = tts.synthesizeToFile(string, myHashRender, fileName);
-                    if (i3 != TextToSpeech.SUCCESS) {
-                        if (b) {
+                        HashMap<String, String> myHashRender = new HashMap<>();
+                        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, string);
+                        int i3 = tts.synthesizeToFile(string, myHashRender, fileName);
+                        if (i3 != TextToSpeech.SUCCESS) {
+                            if (b) {
 //                            CommonMethod.toDisplayToast(PdfShowingActivity.this, " Can't play audio ");
-                            progressBarSpeak.setVisibility(View.GONE);
-                        }
-                    }
-                    tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
-                        @Override
-                        public void onUtteranceCompleted(final String str) {
-                            try {
-                                Log.d("TAG_PDF", "onUtteranceCompleted " + fileName + ":" + CommonMethod.getFileSize(new File(fileName)) + ":" + str.length() + ":" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt);
-                                fileCnt++;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (b) {
-                                            progressBarSpeak.setVisibility(View.GONE);
-                                            toPlayAudio(b);
-                                        }
-                                    }
-                                });
-
-                                if (isAudioDivided) {
-                                    if (fileCnt < texts.size()) {
-                                        toSetAudioFiles(texts.get(fileCnt), fileCnt, false);
-                                    } else {
-                                        currentPageAudioCreate++;
-                                        toGetData(currentPageAudioCreate, true);
-                                    }
-                                }
-                            } catch (Exception | Error e) {
-                                CommonMethod.toReleaseMemory();
-                                e.printStackTrace();
-                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                Crashlytics.logException(e);
-                                FirebaseCrash.report(e);
+                                progressBarSpeak.setVisibility(View.GONE);
                             }
                         }
-                    });
+                        tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+                            @Override
+                            public void onUtteranceCompleted(final String str) {
+                                try {
+                                    Log.d("TAG_PDF", "onUtteranceCompleted " + fileName + ":" + CommonMethod.getFileSize(new File(fileName)) + ":" + str.length() + ":" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt);
+                                    fileCnt++;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (b) {
+                                                progressBarSpeak.setVisibility(View.GONE);
+                                                toPlayAudio(b);
+                                            }
+                                        }
+                                    });
+
+                                    if (isAudioDivided) {
+                                        if (fileCnt < texts.size()) {
+                                            toSetAudioFiles(texts.get(fileCnt), fileCnt, false);
+                                        } else {
+                                            currentPageAudioCreate++;
+                                            toGetData(currentPageAudioCreate, true);
+                                        }
+                                    }
+                                } catch (Exception | Error e) {
+                                    CommonMethod.toReleaseMemory();
+                                    e.printStackTrace();
+                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                    Crashlytics.logException(e);
+                                    FirebaseCrash.report(e);
+                                }
+                            }
+                        });
+                    } else {
+                        Log.d("TAG_PDF", "Initialization Failed!");
+                        CommonMethod.toDisplayToast(PdfShowingActivity.this, "Initialization Failed!");
+                    }
                 }
             }, "com.google.android.tts");
         } catch (Exception | Error e) {
@@ -901,9 +904,20 @@ public class PdfShowingActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        super.onBackPressed();
-        CommonMethod.toReleaseMemory();
-        toExit();
+        try {
+            super.onBackPressed();
+            CommonMethod.toReleaseMemory();
+            toExit();
+            if (tts != null) {
+                tts.stop();
+                tts.shutdown();
+            }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     @Override

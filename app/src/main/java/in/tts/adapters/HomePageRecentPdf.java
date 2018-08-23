@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -25,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import in.tts.R;
-import in.tts.activities.PdfReadersActivity;
 import in.tts.activities.PdfShowingActivity;
 import in.tts.utils.CommonMethod;
 
@@ -34,10 +31,7 @@ public class HomePageRecentPdf extends PagerAdapter {
     private ArrayList<String> list;
     private Context context;
 
-    private ParcelFileDescriptor fileDescriptor;
-    private PdfRenderer pdfRenderer;
     private PdfRenderer.Page currentPage;
-    private File file;
 
     public HomePageRecentPdf(Context ctx, ArrayList<String> listfile) {
         context = ctx;
@@ -61,7 +55,7 @@ public class HomePageRecentPdf extends PagerAdapter {
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         ViewGroup vg = null;
         try {
-            file = new File(list.get(position).trim().replaceAll("%20", " "));
+            File file = new File(list.get(position).trim().replaceAll("%20", " "));
             if (file.exists()) {
                 vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.layout_books_item, container, false);
 
@@ -70,11 +64,10 @@ public class HomePageRecentPdf extends PagerAdapter {
 
                 TextView tv1 = vg.findViewById(R.id.tvBiReadTime);
                 TextView tv2 = vg.findViewById(R.id.tvBiReadStatus);
+                //                Log.d("TAG", " PDF " + position + ":" + list.get(position));
 
-                Log.d("TAG", " PDF " + position + ":" + list.get(position));
-
-                fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-                pdfRenderer = new PdfRenderer(fileDescriptor);
+                ParcelFileDescriptor fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+                PdfRenderer pdfRenderer = new PdfRenderer(fileDescriptor);
                 if (null != currentPage) {
                     currentPage.close();
                 }
@@ -91,17 +84,8 @@ public class HomePageRecentPdf extends PagerAdapter {
                         try {
                             CommonMethod.toCallLoader(context, "Loading...");
                             Intent intent = new Intent(context, PdfShowingActivity.class);
-//                            Intent intent = new Intent(context, PdfReadersActivity.class);
-//                            Intent intent = new Intent(context, AfterFileSelected.class);
                             intent.putExtra("file", list.get(position));
                             context.startActivity(intent);
-//
-//                            // Using the configuration builder, you can define options for the activity.
-//                            final PdfActivityConfiguration config = new PdfActivityConfiguration.Builder(context).build();
-//                            // Launch the activity, viewing the PDF document directly from the assets.
-//                            PdfActivity.showDocument(context, Uri.parse("file://" + list.get(position)), config);
-////                            context.startActivity(new Intent(context, MediaFile.class));
-
                             CommonMethod.toCloseLoader();
                         } catch (Exception | Error e) {
                             e.printStackTrace();

@@ -6,7 +6,6 @@
     tools:context=".fragments.EBookFragment">
 
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsvEbook"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -14,7 +13,6 @@
         tools:context=".fragments.EBookFragment">
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/vpEbook"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_below="@id/tvRecent"

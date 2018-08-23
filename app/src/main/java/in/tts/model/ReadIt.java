@@ -37,17 +37,6 @@ public class ReadIt extends Application {
                     .build();
             Fabric.with(fabric);
 
-//            AndroidAudioConverter.load(this, new ILoadCallback() {
-//                @Override
-//                public void onSuccess() {
-//                    // Great!
-//                }
-//                @Override
-//                public void onFailure(Exception error) {
-//                    // FFmpeg is not supported by device
-//                }
-//            });
-
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -60,14 +49,9 @@ public class ReadIt extends Application {
         super.onConfigurationChanged(newConfig);
     }
 
-    public void onLowMemory() {
-        super.onLowMemory();
-        Log.d("TAG", "onLowMemory");
-    }
+    public void onLowMemory() { super.onLowMemory(); }
 
-    public void onTerminate() {
-        super.onTerminate();
-    }
+    public void onTerminate() { super.onTerminate(); }
 
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);

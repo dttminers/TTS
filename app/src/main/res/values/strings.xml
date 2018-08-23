@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Read It</string>
-    <string name="lorem">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Why do we use it? It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like). </string>
 
     <string name="str_title_settings">Settings</string>
     <string name="str_title_help">Help</string>
@@ -17,11 +16,8 @@
     <string name="str_camera">Camera</string>
     <string name="str_settings">Settings</string>
     <string name="str_skip">Skip</string>
-    <string name="str_google_logout">Logout</string>
     <string name="str_fb_data">218149285671521</string>
     <string name="str_flurry_app">JVGXYTFK2PVNJ4RJBNVJ</string>
-    <string name="str_login_to_get_access_to_read">Login to get access to read</string>
-    <string name="str_username">Username</string>
     <string name="str_password">Password</string>
     <string name="str_logo_image">logo image</string>
     <string name="str_voice_selection">Voice Selection</string>
@@ -66,10 +62,8 @@
     <string name="str_next">Next</string>
     <string name="str_previous">Previous</string>
     <string name="str_recent_audios">Recent Audios</string>
-    <string name="str_txt_message">No Text Available</string>
     <string name="str_more_options">More Options</string>
     <string name="str_copy">Copy</string>
-    <string name="str_replace">Share</string>
     <string name="str_reload">Reload</string>
     <string name="str_lbl_logout_from_app">Do you want to Logout from App ?</string>
     <string name="str_50mins">50 mins</string>
@@ -77,56 +71,28 @@
     <string name="str_speak">Speak</string>
     <string name="str_left">left</string>
     <string name="str_right">right</string>
-    <string name="str_listen_whatever_you_are_browsing">listen whatever you are browsing</string>
     <string name="str_login_data">Login to get access to read \nmore than millions books</string>
     <string name="str_pdf">pdf</string>
-    <string name="str_100_remaining">100% Remaining</string>
     <string name="str_field_cant_be_empty">Field can\'t be empty</string>
     <string name="str_error_valid_email">Please enter valid Email-Id</string>
     <string name="str_error_minimum_8">Minimum 8 characters</string>
     <string name="str_error_maximum_15">Maximum 15 Character</string>
-    <string name="str_error_invalid_name">Only Character Allowed</string>
     <string name="str_error_pswd">Required at least 1 Uppercase letter, 1 Lowercase letter, 1 Number and 1 Special character</string>
     <string name="str_forward">Forward</string>
     <string name="str_bookmark">Bookmark</string>
     <string name="str_refresh">Refresh</string>
     <string name="str_share">Share</string>
     <string name="str_paste">Paste</string>
-    <string name="str_speak_tv">Speak</string>
-    <string name="auth_failed">Please try again, Login failed</string>
-    <string name="minimum_password" />
     <string name="lbl_no_check_internet">No Internet Connection</string>
     <string name="str_share_app">Share App</string>
     <string name="str_give_feedback">Your Feedback</string>
     <string name="lbl_username">We want to know what you thought of your experience at \n our App Read It so we\'d love to hear your feedback.</string>
     <string name="lbl_email_id">Email-Id</string>
     <string name="lbl_mobile_no">Mobile No.</string>
-    <string name="lbl_message">Feedback</string>
     <string name="lbl_submit">Send Feedback</string>
-    <string name="str_action_">login</string>
     <string name="str_rate_us">Rate Us</string>
     <string name="str_error_valid_mobile">Invalid Mobile No</string>
     <string name="str_play">play</string>
-    <string name="str_capture">Capture</string>
-    <string name="str_read_out">Read Out</string>
-    <string name="str_terms_n_condition1">
-
-    <!--Terms and Conditions ("Terms")-->
-        <!--Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using-->
-        <!--the website and the ReadIt mobile application (the "Service") operated by DttMiner ("us", "we", or "our").-->
-        <!--Your access to and use of the Service is conditioned on your acceptance of and compliance with-->
-        <!--these Terms. These Terms apply to all visitors, users and others who access or use the Service.-->
-        <!--By accessing or using the Service you agree to be bound by these Terms. If you disagree-->
-        <!--with any part of the terms then you may not access the Service.-->
-
-        <!--Changes-->
-        <!--We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a-->
-        <!--revision is material we will try to provide at least 30 days' notice prior to any new terms-->
-        <!--taking effect. What constitutes a material change will be determined at our sole discretion.-->
-        <!--Contact Us-->
-        <!--If you have any questions about these Terms, please contact us.-->
-    </string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="str_terms_n_condition">
 ReadIt
         \n
@@ -269,5 +235,7 @@ ebook reading software is free and easy to download from the internet.
     </string>
     <string name="str_scan_device">Scan Device</string>
     <string name="str_splash">splash</string>
+    <string name="str_enjoy_listening_millions_of_free_ebooks_and_many_more">Enjoy listening \n millions of free eBooks \nand many more</string>
+    <string name="str_name">Name</string>
 </resources>
 

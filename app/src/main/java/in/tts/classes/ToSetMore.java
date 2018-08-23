@@ -14,16 +14,12 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
 import in.tts.R;
-import in.tts.activities.AudioPlayerActivity;
 import in.tts.activities.AudioSettingActivity;
 import in.tts.activities.CameraActivity;
-import in.tts.activities.CameraOcrActivity;
 import in.tts.activities.Contact_us;
 import in.tts.activities.HelpActivity;
-import in.tts.activities.MyCameraActivity;
 import in.tts.activities.OurOtherAppActivity;
 import in.tts.activities.RecentVoiceActivity;
-import in.tts.activities.ScanDeviceActivity;
 import in.tts.activities.SettingActivity;
 
 public class ToSetMore {
@@ -63,10 +59,6 @@ public class ToSetMore {
 
                 case R.id.rate_us:
                     showRateDialog(context);
-                    break;
-
-                case R.id.scan_device:
-                    context.startActivity(new Intent(context, ScanDeviceActivity.class));
                     break;
 
                 case R.id.share_apps:

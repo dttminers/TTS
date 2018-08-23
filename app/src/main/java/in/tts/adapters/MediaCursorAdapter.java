@@ -10,16 +10,13 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import in.tts.R;
 
-/**
- * Created by Boss on 12/13/2016.
- */
+import in.tts.R;
 
 public class MediaCursorAdapter extends SimpleCursorAdapter {
     public MediaCursorAdapter(Context context, int layout, Cursor c) {
-        super(context, layout, c, new String[]{MediaStore.MediaColumns.DISPLAY_NAME,
-                        MediaStore.MediaColumns.TITLE,MediaStore.Audio.AudioColumns.DURATION},
+        super(context, layout, c,
+                new String[]{MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns.TITLE, MediaStore.Audio.AudioColumns.DURATION},
                 new int[]{R.id.displayname, R.id.title, R.id.duration});
     }
 
@@ -29,17 +26,15 @@ public class MediaCursorAdapter extends SimpleCursorAdapter {
         TextView name = (TextView) view.findViewById(R.id.displayname);
         TextView duration = (TextView) view.findViewById(R.id.duration);
 
-        name.setText(cursor.getString(cursor.getColumnIndex(
-                MediaStore.MediaColumns.DISPLAY_NAME)));
-        title.setText(cursor.getString(cursor.getColumnIndex(
-                MediaStore.MediaColumns.TITLE)));
-        long durationInMS = Long.parseLong(cursor.getString(
-                cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)));
+        name.setText(cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)));
+
+        title.setText(cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE)));
+
+        long durationInMS = Long.parseLong(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)));
 
         double durationInMin = ((double) durationInMS / 1000.0) / 60.0;
-        durationInMin = new BigDecimal(Double.toString(durationInMin)).
-                setScale(2, BigDecimal.ROUND_UP).doubleValue();
-        duration.setText("" + durationInMin);
+        durationInMin = new BigDecimal(Double.toString(durationInMin)).setScale(2, BigDecimal.ROUND_UP).doubleValue();
+        duration.setText(String.valueOf(durationInMin));
         view.setTag(cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA)));
     }
 

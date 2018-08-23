@@ -77,7 +77,6 @@ public class CommonMethod {
     public static void toCallLoader(Context context, String msg) {
         try {
             Log.d("TAG", " LOADER stxt : " + msg);
-
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

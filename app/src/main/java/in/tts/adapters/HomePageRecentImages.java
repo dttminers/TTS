@@ -49,10 +49,10 @@ public class HomePageRecentImages extends PagerAdapter {
         try {
             vg = (ViewGroup) LayoutInflater.from(this.context).inflate(R.layout.image_item, container, false);
             ImageView iv = vg.findViewById(R.id.ivItem);
-            Log.d("TAG", " IMAGES " + position + ":" + list.get(position).replaceAll("\\s", "%20")+":"+ list.get(position));
+//            Log.d("TAG", " IMAGES " + position + ":" + list.get(position).replaceAll("\\s", "%20") + ":" + list.get(position));
             Picasso.get()
                     .load("file://" + list.get(position).replaceAll("\\s", "%20"))
-                    .resize(250,250)
+                    .resize(250, 250)
                     .onlyScaleDown()
                     .centerCrop()
                     .error(R.color.grey)
@@ -63,7 +63,7 @@ public class HomePageRecentImages extends PagerAdapter {
                 @Override
                 public void onClick(View view) {
                     try {
-                        Log.d("TAG", " Image " + list.get(position));
+//                        Log.d("TAG", " Image " + list.get(position));
                         CommonMethod.toCallLoader(context, "Loading...");
                         context.startActivity(new Intent(context, ImageOcrActivity.class).putExtra("PATH", list.get(position)));
                         CommonMethod.toCloseLoader();

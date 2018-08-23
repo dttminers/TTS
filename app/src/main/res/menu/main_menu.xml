@@ -25,7 +25,6 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_notification1"
         android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="200"
         android:title="@string/str_more_options"
@@ -44,11 +43,11 @@
                 android:id="@+id/settings"
                 android:title="@string/str_settings"
                 app:showAsAction="ifRoom" />
-            <item
-                android:id="@+id/scan_device"
-                android:title="@string/str_scan_device"
-                android:visible="false"
-                app:showAsAction="ifRoom" />
+            <!--<item-->
+                <!--android:id="@+id/scan_device"-->
+                <!--android:title="@string/str_scan_device"-->
+                <!--android:visible="false"-->
+                <!--app:showAsAction="ifRoom" />-->
             <item
                 android:id="@+id/share_apps"
                 android:title="@string/str_share_app"

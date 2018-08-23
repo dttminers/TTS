@@ -72,19 +72,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullScreen" />
         <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.PROCESS_TEXT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activities.AudioSettingActivity"
             android:label="@string/str_audio_settings"
             android:screenOrientation="portrait"
@@ -115,21 +102,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.PdfReadersActivity"
-            android:label="@string/str_pdf"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.AfterFileSelected"
-            android:label="@string/str_pdf"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.CameraOcrActivity"
-            android:label="@string/str_camera"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
@@ -151,11 +123,6 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.MyCameraActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
@@ -199,7 +166,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activities.ScanDeviceActivity"></activity>
     </application>
 
 </manifest>

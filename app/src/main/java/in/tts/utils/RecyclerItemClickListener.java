@@ -2,23 +2,17 @@ package in.tts.utils;
 
 import android.support.v7.widget.RecyclerView;
 
-import in.tts.activities.RecentVoiceActivity;
-
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-/**
- * Created by Jaison on 21/10/15.
- */
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener
 {
-    public static interface OnItemClickListener
+    public interface OnItemClickListener
     {
-        public void onItemClick(View view, int position);
-        public void onItemLongClick(View view, int position);
+        void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 
     private OnItemClickListener mListener;

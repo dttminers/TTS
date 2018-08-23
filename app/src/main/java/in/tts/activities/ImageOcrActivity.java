@@ -90,6 +90,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                 prefManager.toSetImageFileListRecent(list);
             }
 
+            tts = new TTS(ImageOcrActivity.this);
+
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -102,7 +104,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         try {
-            tts = new TTS(ImageOcrActivity.this);
+
             new toGetImage().execute();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -295,6 +297,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     protected void onDestroy() {
         try {
             if (tts != null) {
+                tts.toStop();
                 tts.toShutDown();
             }
             if (mRl != null) {
