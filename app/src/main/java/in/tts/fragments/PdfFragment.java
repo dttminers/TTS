@@ -1,6 +1,8 @@
 package in.tts.fragments;
 
+import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -27,6 +29,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.util.Objects;
 
 import in.tts.R;
+import in.tts.model.Browser;
 import in.tts.utils.CommonMethod;
 
 public class PdfFragment extends Fragment {
@@ -35,7 +38,8 @@ public class PdfFragment extends Fragment {
     private ViewPager viewPager;
 
 //    private MyBooksListFragment tab1;
-    private PdfListFragment tab1;
+//    private PdfListFragment tab1;
+    BrowsePdfFragment tab1;
     private EBookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Library"};
@@ -192,18 +196,36 @@ public class PdfFragment extends Fragment {
             switch (position) {
                 case 0:
 //                    return tab1 = MyBooksListFragment.newInstance();
-                    return tab1 = PdfListFragment.newInstance();
+//                    return tab1 = PdfListFragment.newInstance();
+                    return tab1 = BrowsePdfFragment.newInstance();
                 case 1:
                     return tab2 = EBookFragment.newInstance();
                 default:
 //                    return tab1 = MyBooksListFragment.newInstance();
-                    return tab1 = PdfListFragment.newInstance();
+//                    return tab1 = PdfListFragment.newInstance();
+                    return tab1 = BrowsePdfFragment.newInstance();
             }
         }
 
         public int getCount() {
             return tabHomeText.length;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            Log.d("TAG", " FRa onActivityResult " + resultCode + ":" + requestCode + " :" + data.getData() +":"+ data.getData().getPath());
+            Fragment fragment = getChildFragmentManager().findFragmentById(R.id.fragmentrepalce);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+        CommonMethod.toReleaseMemory();
     }
 
     @Override

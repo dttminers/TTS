@@ -44,21 +44,21 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:background="@drawable/bg_black_ring"
             android:contentDescription="@string/str_reload"
             android:padding="5dp"
-            android:src="@drawable/ic_refresh" />
+            android:src="@drawable/ripple_reload" />
 
         <ImageView
             android:id="@+id/ivSpeak"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:contentDescription="@string/str_speak"
             android:padding="3dp"
-            android:src="@drawable/ic_speak" />
+            android:src="@drawable/ripple_speak" />
 
     </LinearLayout>
 

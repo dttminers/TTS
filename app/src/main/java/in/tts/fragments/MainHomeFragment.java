@@ -97,7 +97,7 @@ public class MainHomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            Log.d("TAG_Main", "onActivityCreated");
+            // Log.d("TAG_Main", "onActivityCreated");
             CommonMethod.toReleaseMemory();
             toBindViews();
 
@@ -118,12 +118,12 @@ public class MainHomeFragment extends Fragment {
 
     private void fn_permission() {
         try {
-            Log.d("TAG_Main", "fn_permission1");
+            // Log.d("TAG_Main", "fn_permission1");
             if ((ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                Log.d("TAG_Main", "fn_permission2");
+                // Log.d("TAG_Main", "fn_permission2");
                 ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             } else {
-                Log.d("TAG_Main", "fn_permission3");
+                // Log.d("TAG_Main", "fn_permission3");
 //                toSetDisplay();
                 toSetData();
 
@@ -144,7 +144,7 @@ public class MainHomeFragment extends Fragment {
     }
 
     private void toBindViews() throws Exception, Error {
-        Log.d("TAG_Main", "toBindViews");
+        // Log.d("TAG_Main", "toBindViews");
         if (getActivity() != null) {
             prefManager = new PrefManager(getContext());
 
@@ -248,7 +248,7 @@ public class MainHomeFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         try {
-            Log.d("TAG_Main", "onRequestPermissionsResult");
+            // Log.d("TAG_Main", "onRequestPermissionsResult");
             if (requestCode == 1) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                    new toSetSomeData().execute();
@@ -268,7 +268,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toSetData() {
         try {
-            Log.d("TAG_Main", "toSetData");
+            // Log.d("TAG_Main", "toSetData");
             if (!status) {
 //                fn_permission();
 //                mLoading.setVisibility(View.GONE);
@@ -285,7 +285,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toSetDisplay() {
         try {
-            Log.d("TAG_Main", "toSetDisplay");
+            // Log.d("TAG_Main", "toSetDisplay");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -317,7 +317,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toSetRecentPdf() {
         try {
-            Log.d("TAG_Main", "toSetRecentPdf");
+            // Log.d("TAG_Main", "toSetRecentPdf");
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -350,7 +350,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toSetRecentImages() {
         try {
-            Log.d("TAG_Main", "toSetRecentImages");
+            // Log.d("TAG_Main", "toSetRecentImages");
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -438,7 +438,7 @@ public class MainHomeFragment extends Fragment {
 //    }
 
     private void toBindTopBanners() throws Exception, Error {
-        Log.d("TAG_Main", "toBindTopBanners");
+        // Log.d("TAG_Main", "toBindTopBanners");
 
         mViewPager.setAdapter(new CustomPagerAdapter(mResources, getContext()));
         tabLayout.setupWithViewPager(mViewPager);
@@ -447,7 +447,7 @@ public class MainHomeFragment extends Fragment {
 
     private void toBindRecentPdf() {
         try {
-            Log.d("TAG_Main", "toBindRecentPdf");
+            // Log.d("TAG_Main", "toBindRecentPdf");
 
             pdfFile = new ArrayList<>();
             if (prefManager.toGetPDFListRecent() != null && prefManager.toGetPDFListRecent().size() != 0) {
@@ -482,13 +482,13 @@ public class MainHomeFragment extends Fragment {
 
     private void toBindRecentImages() {
         try {
-            Log.d("TAG_Main", "toBindRecentImages");
+            // Log.d("TAG_Main", "toBindRecentImages");
             imageFile = new ArrayList<>();
             if (prefManager.toGetImageListRecent() != null) {
                 imageFile = prefManager.toGetImageListRecent();
                 pdfHomePageImages = new HomePageRecentImages(getContext(), imageFile);
             }
-            Log.d("TAG_Main", "toBindRecentImages1" + imageFile.size());
+            // Log.d("TAG_Main", "toBindRecentImages1" + imageFile.size());
             if (imageFile.size() != 0) {
                 if (getContext() != null) {
                     vpRecentImage.setClipToPadding(false);
@@ -546,7 +546,7 @@ public class MainHomeFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("TAG_Main", "setLoadData " + status + ":" + PrefManager.AddedRecentPDF + ":" + PrefManager.AddedRecentImage);
+        // Log.d("TAG_Main", "setLoadData " + status + ":" + PrefManager.AddedRecentPDF + ":" + PrefManager.AddedRecentImage);
         if (!status) {
             fn_permission();
         }
@@ -565,7 +565,7 @@ public class MainHomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("TAG_Main", "onPause");
+        // Log.d("TAG_Main", "onPause");
 
         CommonMethod.toReleaseMemory();
     }
@@ -573,7 +573,7 @@ public class MainHomeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("TAG_Main", "onDestroy");
+        // Log.d("TAG_Main", "onDestroy");
 
         CommonMethod.toReleaseMemory();
     }
@@ -581,7 +581,7 @@ public class MainHomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("TAG_Main", "onResume");
+        // Log.d("TAG_Main", "onResume");
         if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
             toSetData();
         }

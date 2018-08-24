@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity implements
 
 
                             viewPager.setOffscreenPageLimit(5);
-                            setCurrentViewPagerItem(2);
+                            setCurrentViewPagerItem(1);
                         }
                     });
                 }
@@ -212,9 +212,9 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :");
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
-            fragment.onActivityResult(requestCode, resultCode, data);
+//            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
+//            Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :"+ fragment.getClass().getName());
+//            fragment.onActivityResult(requestCode, resultCode, data);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

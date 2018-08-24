@@ -9,13 +9,7 @@
         android:orderInCategory="100"
         android:title="@string/str_speak"
         app:showAsAction="always" />
-    <!--<item-->
-        <!--android:id="@+id/actionSearch"-->
-        <!--android:icon="@drawable/ic_search_white_24dp"-->
-        <!--android:orderInCategory="200"-->
-        <!--android:title="@string/str_send"-->
-        <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
-        <!--app:showAsAction="always|collapseActionView" />-->
+
     <item
         android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="200"
@@ -24,16 +18,24 @@
 
         <menu>
             <item
-                android:id="@+id/audio_settings"
-                android:title="@string/str_audio_settings"
-                app:showAsAction="ifRoom" />
-            <item
                 android:id="@+id/recent_audios"
                 android:title="@string/str_recent_audios"
                 app:showAsAction="ifRoom" />
             <item
+                android:id="@+id/audio_settings"
+                android:title="@string/str_audio_settings"
+                app:showAsAction="ifRoom" />
+            <item
                 android:id="@+id/settings"
                 android:title="@string/str_settings"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/share_apps"
+                android:title="@string/str_share_app"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/rate_us"
+                android:title="@string/str_rate_us"
                 app:showAsAction="ifRoom" />
             <item
                 android:id="@+id/our_other_apps"
@@ -43,6 +45,12 @@
                 android:id="@+id/help"
                 android:title="@string/str_help"
                 app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/give_feedback"
+                android:title="@string/str_give_feedback"
+                app:showAsAction="ifRoom" />
         </menu>
+
     </item>
+
 </menu>

@@ -237,5 +237,11 @@ ebook reading software is free and easy to download from the internet.
     <string name="str_splash">splash</string>
     <string name="str_enjoy_listening_millions_of_free_ebooks_and_many_more">Enjoy listening \n millions of free eBooks \nand many more</string>
     <string name="str_name">Name</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_get_pdf">Get PDF</string>
+    <string name="str_delete">Delete</string>
+    <string name="str_select_all">Select All</string>
 </resources>
 

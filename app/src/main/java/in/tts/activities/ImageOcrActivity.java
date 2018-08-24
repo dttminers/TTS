@@ -16,6 +16,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,6 +40,7 @@ import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.MyBounceInterpolator;
 
 public class ImageOcrActivity extends AppCompatActivity {
 
@@ -50,6 +55,9 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     private RelativeLayout mRl;
     private TTS tts;
+
+    private TextView tvImgOcr;
+    private ImageView ivSpeak, ivReload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,9 +199,9 @@ public class ImageOcrActivity extends AppCompatActivity {
                 if (inflater != null) {
                     view = inflater.inflate(R.layout.layout_ocr_image, null, false);
 
-                    final TextView tvImgOcr = view.findViewById(R.id.tvImgOcr);
-                    ImageView ivSpeak = view.findViewById(R.id.ivSpeak);
-                    ImageView ivReload = view.findViewById(R.id.ivReload);
+                    tvImgOcr = view.findViewById(R.id.tvImgOcr);
+                    ivSpeak = view.findViewById(R.id.ivSpeak);
+                    ivReload = view.findViewById(R.id.ivReload);
 
                     tvImgOcr.setText(stringBuilder);
 
@@ -201,9 +209,12 @@ public class ImageOcrActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             try {
+
                                 tvImgOcr.setText("");
                                 tts.toStop();
+
                                 new toGetImage().execute();
+
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -217,6 +228,14 @@ public class ImageOcrActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             try {
+//                                Animation myAnim = AnimationUtils.loadAnimation(ImageOcrActivity.this, R.anim.bounce);
+//
+//                                // Use bounce interpolator with amplitude 0.2 and frequency 20
+//                                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+//                                myAnim.setInterpolator(interpolator);
+//
+//                                ivSpeak.startAnimation(myAnim);
+
                                 tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, name.lastIndexOf(".")) + System.currentTimeMillis());
 //                                tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, (name.length() - 4)) + System.currentTimeMillis());
 //                                tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image"+name.substring(0, (name.length()-4) )+System.currentTimeMillis());

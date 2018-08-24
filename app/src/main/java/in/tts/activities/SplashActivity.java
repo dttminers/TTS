@@ -73,20 +73,28 @@ public class SplashActivity extends AppCompatActivity {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
-                            if (prefManager.toGetPDFListRecent().size() > 0) {
-                                prefManager.toSetPDFFileListRecent(ToCheckFileExists.fileList(prefManager.toGetPDFListRecent()));
+                            if (prefManager.toGetPDFListRecent() != null) {
+                                if (prefManager.toGetPDFListRecent().size() > 0) {
+                                    prefManager.toSetPDFFileListRecent(ToCheckFileExists.fileList(prefManager.toGetPDFListRecent()));
+                                }
                             }
 
-                            if (prefManager.toGetImageListRecent().size() > 0) {
-                                prefManager.toSetImageFileListRecent(ToCheckFileExists.fileList(prefManager.toGetImageListRecent()));
+                            if (prefManager.toGetImageListRecent() != null) {
+                                if (prefManager.toGetImageListRecent().size() > 0) {
+                                    prefManager.toSetImageFileListRecent(ToCheckFileExists.fileList(prefManager.toGetImageListRecent()));
+                                }
                             }
 
-                            if (prefManager.toGetPDFList().size() > 0) {
-                                prefManager.toSetPDFFileList(ToCheckFileExists.fileList(prefManager.toGetPDFList()));
+                            if (prefManager.toGetPDFList() != null) {
+                                if (prefManager.toGetPDFList().size() > 0) {
+                                    prefManager.toSetPDFFileList(ToCheckFileExists.fileList(prefManager.toGetPDFList()));
+                                }
                             }
 
-                            if (prefManager.toGetImageList().size() > 0) {
-                                prefManager.toSetImageFileList(ToCheckFileExists.fileList(prefManager.toGetImageList()));
+                            if (prefManager.toGetImageList() != null) {
+                                if (prefManager.toGetImageList().size() > 0) {
+                                    prefManager.toSetImageFileList(ToCheckFileExists.fileList(prefManager.toGetImageList()));
+                                }
                             }
                         }
                     });

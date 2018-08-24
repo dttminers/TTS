@@ -151,6 +151,10 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                 case R.id.action_delete:
                     alertDialogHelper.showAlertDialog("", "Delete Audio", "DELETE", "CANCEL", 1, false);
                     return true;
+                case R.id.action_seelct_all:
+                    selectAll();
+//                    alertDialogHelper.showAlertDialog("", "Delete Audio", "DELETE", "CANCEL", 1, false);
+                    return true;
                 case R.id.action_share:
                     if (multiselect_list.size() > 0) {
                         Intent intent = new Intent();
@@ -188,6 +192,24 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
             refreshAdapter();
         }
     };
+
+    private void selectAll() {
+        for (int i = 0; i < user_list.size(); i++) {
+            if (mActionMode != null) {
+                if (!multiselect_list.contains(user_list.get(i))) {
+                    multiselect_list.add(user_list.get(i));
+                }
+
+                if (multiselect_list.size() > 0) {
+                    mActionMode.setTitle("" + multiselect_list.size());
+                } else {
+                    mActionMode.setTitle("");
+                }
+
+                refreshAdapter();
+            }
+        }
+    }
 
     // AlertDialog Callback Functions
 

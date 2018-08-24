@@ -358,8 +358,7 @@ public class BrowserActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            MenuInflater myMenuInflater = getMenuInflater();
-            myMenuInflater.inflate(R.menu.browser_menu, menu);
+            getMenuInflater().inflate(R.menu.browser_menu, menu);
             menuSpeak = menu.findItem(R.id.menuSpeakBrowser);
             menuBookMark = menu.findItem(R.id.menuBookmark).getActionView();
             cbMenu = menuBookMark.findViewById(R.id.cbBookmark);
