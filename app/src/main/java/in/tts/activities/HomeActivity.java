@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity implements
 
 
                             viewPager.setOffscreenPageLimit(5);
-                            setCurrentViewPagerItem(1);
+                            setCurrentViewPagerItem(2);
                         }
                     });
                 }

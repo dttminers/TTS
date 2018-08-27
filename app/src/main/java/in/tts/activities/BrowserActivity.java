@@ -6,58 +6,47 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
-import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
-import android.webkit.WebHistoryItem;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import in.tts.R;
 import in.tts.classes.ClipBoard;
 import in.tts.classes.TTS;
-import in.tts.model.Browser;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
-
-import static java.security.AccessController.getContext;
 
 public class BrowserActivity extends AppCompatActivity {
 
     private ProgressBar superProgressBar;
     private WebView superWebView;
-    private RelativeLayout rl;
+    private RelativeLayout rl, rlPb;
     private PrefManager prefManager;
     private List<String> linkList;
     private View menuBookMark;
@@ -66,7 +55,8 @@ public class BrowserActivity extends AppCompatActivity {
     private String historyUrl = "";
     private String text = "";
     private MenuItem menuSpeak;
-
+    private int currentPosition = 0, setBackPosition = 0;
+    private StringBuilder stringBuilder;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -84,6 +74,7 @@ public class BrowserActivity extends AppCompatActivity {
                 superProgressBar = findViewById(R.id.myProgressBar);
                 superWebView = findViewById(R.id.myWebView);
                 rl = findViewById(R.id.llBrowser);
+                rlPb = findViewById(R.id.rlPb);
 
                 superProgressBar.setMax(100);
 
@@ -97,7 +88,6 @@ public class BrowserActivity extends AppCompatActivity {
                     superWebView.loadUrl("https://www.google.co.in");
                 }
 
-//                superWebView.setHapticFeedbackEnabled(false);
                 superWebView.getSettings().setJavaScriptEnabled(true);
                 superWebView.getSettings().setSupportZoom(true);
                 superWebView.getSettings().setBuiltInZoomControls(true);
@@ -127,37 +117,9 @@ public class BrowserActivity extends AppCompatActivity {
                 public void onPageFinished(WebView view, final String url) {
                     super.onPageFinished(view, url);
                     try {
-                        startOfHistory();
-                        tts = new TTS(BrowserActivity.this);
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-//                                Document doc = Jsoup.connect(url).get();
-//                                Log.d("TAG_WEb ", " DATa 23 " + doc.getElementsByTag("script") );
-//                                Log.d("TAG_WEb ", " DATa 24" + doc.getElementsByTag("body").text() );
-//                                text = Jsoup.connect(url).get().getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
-                                    text = Jsoup.connect(url).get().getElementsByTag("body").text();
-                                    if (text.trim().length() > 0) {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (menuSpeak != null) {
-                                                    menuSpeak.setVisible(true);
-                                                }
-                                            }
-                                        });
-                                    }
-                                } catch (Exception | Error e) {
-                                    e.printStackTrace();
-                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e);
-                                    FirebaseCrash.report(e);
-                                }
-                            }
-                        });
-
-
+                        if (menuSpeak != null) {
+                            menuSpeak.setVisible(true);
+                        }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -166,25 +128,22 @@ public class BrowserActivity extends AppCompatActivity {
                     }
                 }
 
-//                @Override
-//                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                    // open in Webview
-//                    if (url.contains("android_asset") ){
-//                        // Can be clever about it like so where myshost is defined in your strings file
-//                        // if (Uri.parse(url).getHost().equals(getString(R.string.myhost)))
-//                        return false;
-//                    }
-//                    // open rest of URLS in default browser
-//                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//                    startActivity(intent);
-//                    return true;
-//                }
-
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     return super.shouldOverrideUrlLoading(view, request);
                 }
             });
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                superWebView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                    @Override
+                    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                        currentPosition = i1;
+                        Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth()+ currentPosition);
+                    }
+                });
+            }
+
             superWebView.setWebChromeClient(new WebChromeClient() {
 
                 @Override
@@ -213,7 +172,6 @@ public class BrowserActivity extends AppCompatActivity {
                 public void onReceivedTitle(WebView view, String title) {
                     super.onReceivedTitle(view, title);
                     try {
-//                        getSupportActionBar().setTitle(title);
                         if (getSupportActionBar() != null) {
                             CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, title);
                         }
@@ -228,10 +186,6 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onReceivedIcon(WebView view, Bitmap icon) {
                     super.onReceivedIcon(view, icon);
-//                    ImageView iv = new ImageView(BrowserActivity.this);
-//                    iv.setImageBitmap(icon);
-//                    rl.addView(iv);
-
                 }
             });
 
@@ -273,16 +227,14 @@ public class BrowserActivity extends AppCompatActivity {
             superWebView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-
-//                    try {
-//                        ClipData clipData = ClipData.newPlainText("", "");
-//                        clipboardManager.setPrimaryClip(clipData);
-                    ClipBoard.ToPopup(BrowserActivity.this, BrowserActivity.this, null);
-//                    } catch (Exception | Error e) {
-//                        e.printStackTrace();
-//                        Crashlytics.logException(e);
-//                    }
-////                    Toast.makeText(BrowserActivity.this, "jhjm ", Toast.LENGTH_SHORT).show();
+                    try {
+                        ClipBoard.ToPopup(BrowserActivity.this, BrowserActivity.this, null);
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     return false;
                 }
             });
@@ -308,31 +260,6 @@ public class BrowserActivity extends AppCompatActivity {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
-    }
-
-    public boolean startOfHistory() {
-        try {
-//            Log.d("TAGWEB", "WEB Histroy");
-            WebBackForwardList currentList = superWebView.copyBackForwardList();
-//            Log.d("TAGWEB", " Web " + currentList.getCurrentItem() + ":" + currentList.getSize() + ":" + currentList.getCurrentItem());
-            for (int i = 0; i < currentList.getSize(); i++) {
-                WebHistoryItem item = currentList.getItemAtIndex(i);
-//                Log.d("TAGWEB", " web item " + item.getTitle());
-                if (item != null) { // Null-fence in case they haven't called loadUrl yet (CB-2458)
-                    String url = item.getUrl();
-                    String currentUrl = superWebView.getUrl();
-//                    Log.d("TAGWEB", i + ". The current URL is: " + currentUrl);
-//                    Log.d("TAGWEB", i + ". The URL at item 0 is:" + url);
-//                    return currentUrl.equals(url);
-                }
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-        return false;
     }
 
     private void toUpdateBookMarkIcon() {
@@ -400,7 +327,21 @@ public class BrowserActivity extends AppCompatActivity {
         try {
             switch (item.getItemId()) {
                 case R.id.menuSpeakBrowser:
-                    toSpeakWebPage();
+                    try {
+                        stringBuilder= new StringBuilder();
+                        if (tts != null) {
+                            tts.toStop();
+                            tts.toShutDown();
+                        }
+                        setBackPosition = currentPosition;
+                        tts = new TTS(BrowserActivity.this);
+                        toGetTextFromCurrentScreen();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
                     break;
 
                 case R.id.menuBack:
@@ -436,11 +377,77 @@ public class BrowserActivity extends AppCompatActivity {
         return true;
     }
 
-    private void toSpeakWebPage() {
+    private void toGetTextFromCurrentScreen() {
         try {
+            Date now = new Date();
+            android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+            // create bitmap screen capture
+            View v1 = getWindow().getDecorView().getRootView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+            toGetTextFromBitmap(bitmap);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toGetTextFromBitmap(Bitmap bitmap) {
+        try {
+            rlPb.setVisibility(View.VISIBLE);
+
+            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+            Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
+
+            SparseArray<TextBlock> items = textRecognizer.detect(imageFrame);
+
+            for (int i = 0; i < items.size(); i++) {
+                TextBlock item = items.valueAt(i);
+                stringBuilder.append(item.getValue());
+                stringBuilder.append("\n");
+            }
+
+            superWebView.post(new Runnable() {
+                public void run() {
+                    Log.d("TAG_WEB", " data11 " + superWebView.getContentHeight() + ":" + superWebView.getScale() + ":" + superWebView.getScrollY());
+
+                    if (superWebView.getContentHeight() * superWebView.getScale() >= superWebView.getScrollY()) {
+                        Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
+
+                        superWebView.scrollBy(0, (int) superWebView.getHeight());
+                        toGetTextFromCurrentScreen();
+
+                    } else {
+                        Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
+
+                        superWebView.scrollTo(0, setBackPosition);
+                        rlPb.setVisibility(View.GONE);
+
+                        toSpeakFromWebPage();
+                    }
+                }
+            });
+
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            rlPb.setVisibility(View.GONE);
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toCloseLoader();
+        }
+    }
+
+    private void toSpeakFromWebPage() {
+        try {
+            CommonMethod.toCloseLoader();
             Log.d("WEB", "toSpeakWebPage  " + text.length() + ":" + text);
-            if (text.trim().length() > 0) {
-                tts.SpeakLoud(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+            if (stringBuilder.toString().trim().length() > 0) {
+                tts.SpeakLoud(stringBuilder.toString().replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
                 CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
 //                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
             } else {
@@ -451,6 +458,7 @@ public class BrowserActivity extends AppCompatActivity {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
+            CommonMethod.toCloseLoader();
         }
     }
 
@@ -477,6 +485,10 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void GoForward() {
         try {
+            if (tts != null) {
+                tts.toStop();
+                tts.toShutDown();
+            }
             if (superWebView.canGoForward()) {
                 superWebView.goForward();
             } else {

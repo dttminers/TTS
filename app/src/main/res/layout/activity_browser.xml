@@ -4,6 +4,7 @@
     android:id="@+id/llBrowser"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".activities.BrowserActivity">
 
@@ -13,12 +14,58 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:progressDrawable="@drawable/progress_blue"
-        android:visibility="gone" />
+        android:visibility="visible" />
+
+    <!--<ScrollView-->
+    <!--android:id="@+id/svWb"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@id/myProgressBar">-->
 
     <WebView
         android:id="@+id/myWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/myProgressBar" />
+        android:layout_below="@id/myProgressBar"
+        android:nestedScrollingEnabled="false" />
 
+    <!--</ScrollView>-->
+    <RelativeLayout
+        android:id="@+id/rlPb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:background="@color/transparent_white1">
+
+        <LinearLayout
+            android:id="@+id/llCustom_loader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/shadow_linear"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:layout_weight="0.5" />
+
+            <TextView
+                android:id="@+id/txtLoaderMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_weight="1.5"
+                android:gravity="start"
+                android:text="Fetching data ..." />
+
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

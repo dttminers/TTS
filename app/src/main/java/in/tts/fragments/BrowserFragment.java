@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -112,15 +113,18 @@ public class BrowserFragment extends Fragment {
             ivRecent2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "https://www.wikipedia.org/"));
+                    CommonMethod.toCloseLoader();
                 }
             });
 
             ivRecent3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "https://www.blogger.com"));
@@ -131,7 +135,8 @@ public class BrowserFragment extends Fragment {
             ivRecent4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
+                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "https://www.swiggy.com/"));
                     CommonMethod.toCloseLoader();
@@ -141,6 +146,7 @@ public class BrowserFragment extends Fragment {
             ivRecent5.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "http://dttminer.com/"));
@@ -151,6 +157,7 @@ public class BrowserFragment extends Fragment {
             ivRecent6.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    CommonMethod.toCallLoader(getContext(), "Please wait");
                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "https://twitter.com/login?lang=en"));

@@ -262,7 +262,7 @@ public class PdfShowingActivity extends AppCompatActivity {
                 CommonMethod.toDisplayToast(this, "Pause");
                 toHideLoading(playerStatus);
             } else if ((playPausePage) != (vp.getCurrentItem() + 1)) {
-                CommonMethod.toDisplayToast(this, "Play1");
+                CommonMethod.toDisplayToast(this, "Play ");
                 fileCnt = 0;
                 resumePosition = 0;
                 toGetData(vp.getCurrentItem() + 1, true);
@@ -275,7 +275,7 @@ public class PdfShowingActivity extends AppCompatActivity {
                 playerStatus = !playerStatus;
                 toHideLoading(playerStatus);
             } else {
-                CommonMethod.toDisplayToast(this, "Play2");
+                CommonMethod.toDisplayToast(this, "Play ");
                 fileCnt = 0;
                 resumePosition = 0;
                 toGetData(vp.getCurrentItem() + 1, true);
@@ -611,9 +611,6 @@ public class PdfShowingActivity extends AppCompatActivity {
                                 voice = female_voice_array.get(0);
                                 tts.setVoice(new Voice(voice, new Locale(selectedLang, langCountry), 400, 200, true, a));
                             } else {
-                                if (b) {
-                                    CommonMethod.toDisplayToast(PdfShowingActivity.this, "Selected language not found. Reading data using default language");
-                                }
                                 tts.setVoice(new Voice(v_female, new Locale("en", "US"), 400, 200, true, a));
                             }
                         }
@@ -739,10 +736,25 @@ public class PdfShowingActivity extends AppCompatActivity {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     try {
-                        Log.d("TAG_PDF", "onCompletion :" + b + ":" + isAudioDivided + ":" + fileCnt + ":" + playCnt + ":" + texts.size() + ":" + destFile.getName() + totalPagesCreate + playPausePage + currentPageAudioCreate);
+                        Log.d("TAG_PDF", "onCompletion \nb :" + b
+                                + "\nisAudioDivided :" + isAudioDivided
+                                + "\nfileCnt :" + fileCnt
+                                + "\nplayCnt :" + playCnt
+                                + "\ntexts.size() :" + texts.size()
+                                + "\ndestFile.getName() :" + destFile.getName()
+                                + "\ntotalPagesCreate :" + totalPagesCreate
+                                + "\nplayPausePage :" + playPausePage
+                                + "\ncurrentPageAudioCreate :" + currentPageAudioCreate);
                         playCnt++;
                         if (!isAudioDivided) {
-                            toStopAudioPlayer(true);
+//                            toStopAudioPlayer(true);
+                            playPausePage++;
+                            if (playPausePage <= totalPagesCreate) {
+                                toGetData(playPausePage, true);
+                                vp.setCurrentItem(playPausePage, true);
+                            } else {
+                                toStopAudioPlayer(true);
+                            }
                         } else {
                             if (playCnt < texts.size()) {
                                 toSetAudioFiles(texts.get(playCnt), playCnt, true);
@@ -781,7 +793,7 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toStopAudioPlayer(boolean b) {
         try {
-            toShowLoading();
+            toHideLoading(playerStatus);
             if (b) {
                 playerStatus = false;
                 resumePosition = 0;
