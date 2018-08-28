@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlbm"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/rlbm"
-    android:background="@color/white"
-    android:layout_marginBottom="1dp">
+    android:layout_marginBottom="1dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/ivFavicon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/str_favicon" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_toEndOf="@id/ivFavicon"
+        android:layout_toRightOf="@id/ivFavicon"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingBottom="2dp"
         android:paddingTop="4dp"
-        android:textColor="#000"
-        android:textSize="16sp" />
+        android:textColor="@color/black"
+        android:textSize="15sp" />
 
 
     <TextView
@@ -23,11 +35,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
+        android:layout_margin="2dp"
+        android:layout_toEndOf="@id/ivFavicon"
+        android:layout_toRightOf="@id/ivFavicon"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingBottom="4dp"
         android:paddingTop="2dp"
-        android:textSize="14sp" />
-
+        android:textColor="@color/warm_grey"
+        android:textSize="12sp" />
 
 </RelativeLayout>

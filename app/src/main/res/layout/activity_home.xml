@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".activities.HomeActivity">
 
     <android.support.design.widget.TabLayout
@@ -33,5 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/viewHome" />
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rlHomePage"
+        android:layout_above="@id/tabsHome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

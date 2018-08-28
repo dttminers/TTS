@@ -17,15 +17,18 @@ import com.google.firebase.crash.FirebaseCrash;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import in.tts.R;
 import in.tts.adapters.BookMarkAdapter;
+import in.tts.model.BookmarkModel;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class BookmarkActivity extends AppCompatActivity {
 
-    ArrayList<String> list;
+//    ArrayList<String> list;
+    List<BookmarkModel> bookmarkModelList;
     RecyclerView rv;
     BookMarkAdapter adapter;
     LinearLayout linearLayout;
@@ -44,9 +47,8 @@ public class BookmarkActivity extends AppCompatActivity {
             }
 
             prefManager = new PrefManager(BookmarkActivity.this);
-            list = prefManager.populateSelectedSearch();
+            bookmarkModelList = prefManager.loadList();
 
-//            listView = findViewById(R.id.listView);
             rv = findViewById(R.id.rvBookmarkList);
             linearLayout = findViewById(R.id.emptyList);
 
@@ -61,34 +63,6 @@ public class BookmarkActivity extends AppCompatActivity {
             });
 
             loadBookmarks();
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//                public void onItemClick(AdapterView<?> parent, View view,
-//                                        int position, long id) {
-//
-//                    Object o = listView.getAdapter().getItem(position);
-//                    if (o instanceof Map) {
-//                        Map map = (Map) o;
-//                        Intent in = new Intent(BookmarkActivity.this, BrowserActivity.class);
-//                        in.putExtra("url", list.get(position));
-//                        startActivity(in);
-//                    }
-//
-//                }
-//            });
-//
-//            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//                @Override
-//                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                    Object o = listView.getAdapter().getItem(position);
-//                    if (o instanceof Map) {
-//                        Map map = (Map) o;
-//                        deleteBookmark("Delete", list.get(position), position);
-//                    }
-//
-//                    return true;
-//                }
-//            });
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -99,8 +73,9 @@ public class BookmarkActivity extends AppCompatActivity {
 
     private void loadBookmarks() {
         try {
-            if (list != null && list.size() > 0) {
-                adapter = new BookMarkAdapter(BookmarkActivity.this, list);
+//            if (list != null && list.size() > 0) {
+            if (bookmarkModelList != null && bookmarkModelList.size() > 0) {
+                adapter = new BookMarkAdapter(BookmarkActivity.this, bookmarkModelList);
                 rv.setLayoutManager(new LinearLayoutManager(BookmarkActivity.this));
                 rv.setHasFixedSize(true);
                 rv.setAdapter(adapter);
@@ -116,25 +91,6 @@ public class BookmarkActivity extends AppCompatActivity {
             e.printStackTrace(); FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e); FirebaseCrash.report(e);
         }
-    }
-
-    private void deleteBookmark(final String title, final String link, final int position) {
-
-        new AlertDialog.Builder(this)
-                .setTitle("DELETE")
-                .setMessage("Confirm that you want to delete this bookmark?")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        list.remove(position);
-                        dialogInterface.dismiss();
-                    }
-                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        }).show();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -158,8 +114,7 @@ public class BookmarkActivity extends AppCompatActivity {
         finish();
     }
 
-    private class LoadBookmarks {
-    }
+
 }
 /*
 package in.tts.activities;

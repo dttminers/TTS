@@ -235,7 +235,7 @@ public class ClipBoard {
                     try {
                         Log.d("TAG", " Speak " + editText.getText().toString());
                         tts = new TTS(context);
-                        tts.SpeakLoud(editText.getText().toString(), "AUD_Clip" + System.currentTimeMillis());
+                        tts.SpeakLoud(editText.getText().toString());//, "AUD_Clip" + System.currentTimeMillis());
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

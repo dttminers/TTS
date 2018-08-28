@@ -2,10 +2,12 @@ package in.tts.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,12 +36,15 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import in.tts.*;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
+import in.tts.fragments.BlankFragment;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.FilePath;
 import in.tts.utils.MyBounceInterpolator;
 
 public class ImageOcrActivity extends AppCompatActivity {
@@ -65,7 +70,22 @@ public class ImageOcrActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_image_ocr);
 
-            photoPath = getIntent().getStringExtra("PATH");
+            Intent intent = getIntent();
+            if (getIntent().getStringExtra("PATH") != null) {
+                photoPath = getIntent().getStringExtra("PATH");
+            } else if (getIntent().getData() != null) {
+                photoPath = FilePath.getPath(ImageOcrActivity.this, getIntent().getData());
+            } else {
+                CommonMethod.toDisplayToast(ImageOcrActivity.this, " No Image Found ");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 1500);
+            }
+
+            Log.d("TAG_IMage   ", " int  "+photoPath);
 
             if (getSupportActionBar() != null) {
                 name = photoPath.substring(photoPath.lastIndexOf("/") + 1);
@@ -93,12 +113,10 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }
             } else {
                 list = new ArrayList<>();
-                list.add(photoPath);
+                list.add(photoPath.replaceAll("\\s", "%20"));
                 PrefManager.AddedRecentImage = true;
                 prefManager.toSetImageFileListRecent(list);
             }
-
-            tts = new TTS(ImageOcrActivity.this);
 
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -108,11 +126,12 @@ public class ImageOcrActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
         try {
-
+//            tts = new TTS(ImageOcrActivity.this);
             new toGetImage().execute();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -120,14 +139,26 @@ public class ImageOcrActivity extends AppCompatActivity {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
         }
+    }
 
+    @Override
+    protected void onRestart() {
+        try {
+            super.onRestart();
+//            tts = new TTS(ImageOcrActivity.this);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
     }
 
     @Override
     protected void onResume() {
         try {
             super.onResume();
-//            new toGetImage().execute();
+            tts = new TTS(ImageOcrActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -144,9 +175,6 @@ public class ImageOcrActivity extends AppCompatActivity {
             if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
-//            if ((ContextCompat.checkSelfPermission(ImageOcrActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
-//                ActivityCompat.requestPermissions(ImageOcrActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1);
-//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -236,7 +264,7 @@ public class ImageOcrActivity extends AppCompatActivity {
 //
 //                                ivSpeak.startAnimation(myAnim);
 
-                                tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, name.lastIndexOf(".")) + System.currentTimeMillis());
+                                tts.SpeakLoud(stringBuilder.toString());//, "AUD_Image" + name.substring(0, name.lastIndexOf(".")) + System.currentTimeMillis());
 //                                tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, (name.length() - 4)) + System.currentTimeMillis());
 //                                tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image"+name.substring(0, (name.length()-4) )+System.currentTimeMillis());
                             } catch (Exception | Error e) {

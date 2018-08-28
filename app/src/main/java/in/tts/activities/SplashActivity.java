@@ -23,7 +23,6 @@ import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToCheckFileExists;
-import in.tts.utils.ToGetPdfFiles;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -67,9 +66,6 @@ public class SplashActivity extends AppCompatActivity {
             prefManager.getAudioSetting();
             if ((ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
                 try {
-                    if (!ToGetPdfFiles.isRunning()) {
-                        ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), SplashActivity.this);
-                    }
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -82,18 +78,6 @@ public class SplashActivity extends AppCompatActivity {
                             if (prefManager.toGetImageListRecent() != null) {
                                 if (prefManager.toGetImageListRecent().size() > 0) {
                                     prefManager.toSetImageFileListRecent(ToCheckFileExists.fileList(prefManager.toGetImageListRecent()));
-                                }
-                            }
-
-                            if (prefManager.toGetPDFList() != null) {
-                                if (prefManager.toGetPDFList().size() > 0) {
-                                    prefManager.toSetPDFFileList(ToCheckFileExists.fileList(prefManager.toGetPDFList()));
-                                }
-                            }
-
-                            if (prefManager.toGetImageList() != null) {
-                                if (prefManager.toGetImageList().size() > 0) {
-                                    prefManager.toSetImageFileList(ToCheckFileExists.fileList(prefManager.toGetImageList()));
                                 }
                             }
                         }

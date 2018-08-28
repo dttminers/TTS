@@ -93,7 +93,6 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                                     v = new Voice(v_male, new Locale("en", "US"), 400, 200, true, a);
                                     tts.setVoice(v);
                                 }
-
                             } else {
                                 if (female_voice_array.size() > 0) {
                                     voice = female_voice_array.get(0);
@@ -113,20 +112,18 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             } else {
                                 Log.d("TTS_TAG", " Else ");
                             }
+
                         } else {
                             Log.d("TTS_TAG", "Initialization Failed!");
                             CommonMethod.toDisplayToast(context, "Initialization Failed!");
                         }
-
-                        Log.d("log", "initi");
-
+                        Log.d("TTS_TAG", "initi");
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         Crashlytics.logException(e);
                         FirebaseCrash.report(e);
                     }
-
                 }
             }, "com.google.android.tts");
         } catch (Exception | Error e) {
@@ -137,13 +134,13 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
         }
     }
 
-    public void SpeakLoud(final String text, final String fileName) {
+    public void SpeakLoud(final String text) {
         try {
             CommonMethod.toCallLoader(context, "Loading....");
             if (tts == null) {
                 new TTS(context);
             }
-            Log.d("Tag", " SpeakLoud " + tts.isSpeaking() + text);
+            Log.d("TTS_TAG", " SpeakLoud " + tts.isSpeaking()+":" + text);
             if (text.length() >= 3990) {
 
                 int textLength = text.length();
@@ -164,22 +161,10 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                 for (i = 0; i < texts.size(); i++) {
                     CommonMethod.toCloseLoader();
                     tts.speak(texts.get(i), isSpeaking() ? TextToSpeech.QUEUE_ADD : TextToSpeech.QUEUE_FLUSH, null, text);
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            toSaveAudioFile(texts.get(i), fileName + "_" + c + i);
-//                        }
-//                    }, 1000);
                 }
             } else {
-                CommonMethod.toCloseLoader();
                 tts.speak(text, isSpeaking() ? TextToSpeech.QUEUE_ADD : TextToSpeech.QUEUE_FLUSH, null, text);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        toSaveAudioFile(text, fileName);
-//                    }
-//                }, 1000);
+                CommonMethod.toCloseLoader();
             }
         } catch (Exception | Error e) {
             CommonMethod.toCloseLoader();
@@ -192,49 +177,26 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     public String toSaveAudioFile(String text, String fileName) {
         try {
-            Log.d("TAG", " toSaveAudioFile " + text);
+            Log.d("TTS_TAG", " toSaveAudioFile " + text);
             File audio;
             File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
-            // Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
-
             if (!mMainFolder.exists()) {
                 mMainFolder.mkdirs();
             }
-//        } else {
+
             if (fileName == null) {
                 audio = new File(mMainFolder + "/" + "AUDIO" + System.currentTimeMillis() + ".wav");//;+ mAudioFilename);
             } else {
                 audio = new File(mMainFolder + "/" + fileName + ".wav");
             }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            tts.synthesizeToFile(text, null, audio, "READ_IT");
-//            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
-//        } else {
-//        HashMap<String, String> hm = new HashMap<>();
-////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
-////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
-//        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
-//        tts.synthesizeToFile(text, hm, audio.getPath());
+
             HashMap<String, String> myHashRender = new HashMap<>();
             myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+
             int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
-            Log.d("TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
-//        }
-            //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
+            Log.d("TTS_TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
+
             return audio.getAbsolutePath();
-//        }
-//        } else {
-//            if (mContext != null) {
-//                CommonMethod.toDisplayToast(mContext, "Unable to create audio file");
-//            }
-//            return null;
-//        }
-//        } else {
-//            if (mContext != null) {
-//                CommonMethod.toDisplayToast(mContext, "Unable to create audio File");
-//            }
-//            return null;
-//        }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -391,3 +353,71 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 //        }
 
 
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        toSaveAudioFile(text, fileName);
+//                    }
+//                }, 1000);
+
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            toSaveAudioFile(texts.get(i), fileName + "_" + c + i);
+//                        }
+//                    }, 1000);
+/*
+    public String toSaveAudioFile(String text, String fileName) {
+        try {
+            Log.d("TTS_TAG", " toSaveAudioFile " + text);
+            File audio;
+            File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
+            // Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
+
+            if (!mMainFolder.exists()) {
+                mMainFolder.mkdirs();
+            }
+//        } else {
+            if (fileName == null) {
+                audio = new File(mMainFolder + "/" + "AUDIO" + System.currentTimeMillis() + ".wav");//;+ mAudioFilename);
+            } else {
+                audio = new File(mMainFolder + "/" + fileName + ".wav");
+            }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            tts.synthesizeToFile(text, null, audio, "READ_IT");
+//            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
+//        } else {
+//        HashMap<String, String> hm = new HashMap<>();
+////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
+////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(System.currentTimeMillis()));
+//        hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+//        tts.synthesizeToFile(text, hm, audio.getPath());
+            HashMap<String, String> myHashRender = new HashMap<>();
+            myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
+            int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
+            Log.d("TTS_TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
+//        }
+            //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
+            return audio.getAbsolutePath();
+//        }
+//        } else {
+//            if (mContext != null) {
+//                CommonMethod.toDisplayToast(mContext, "Unable to create audio file");
+//            }
+//            return null;
+//        }
+//        } else {
+//            if (mContext != null) {
+//                CommonMethod.toDisplayToast(mContext, "Unable to create audio File");
+//            }
+//            return null;
+//        }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
+    }
+    */

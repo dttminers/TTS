@@ -26,9 +26,9 @@ public class ToGetPdfFiles {
                 @Override
                 public void run() {
                     status = true;
-                    if (prefManager.toGetPDFList() != null) {
-                        fileList = prefManager.toGetPDFList();
-                    }
+//                    if (prefManager.toGetPDFList() != null) {
+//                        fileList = prefManager.toGetPDFList();
+//                    }
                     if (fileList.size() < 30) {
                         status = true;
                         File listFile[] = dir.listFiles();
@@ -58,7 +58,7 @@ public class ToGetPdfFiles {
                                     }
                                 }
                             }
-                            prefManager.toSetPDFFileList(fileList);
+//                            prefManager.toSetPDFFileList(fileList);
                         }
                     } else {
                         status = false;

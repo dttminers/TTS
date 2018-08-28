@@ -176,9 +176,9 @@ public class PdfListFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             try {
                 Log.d("TAG", " count  300:" + list.size());
-                if (new PrefManager(getContext()).toGetPDFList() != null && new PrefManager(getContext()).toGetPDFList().size() != 0) {
-                    list = new PrefManager(getContext()).toGetPDFList();
-                }
+//                if (new PrefManager(getContext()).toGetPDFList() != null && new PrefManager(getContext()).toGetPDFList().size() != 0) {
+//                    list = new PrefManager(getContext()).toGetPDFList();
+//                }
                 Log.d("TAG", " count  400:" + list.size());
 
                 while (i <= 100) {
@@ -324,7 +324,7 @@ public class PdfListFragment extends Fragment {
                 populateRecyclerView();
             }
             Log.d("TAG", " count  501:" + list.size() + ":" + pdfListAdapter.getItemCount());
-            new PrefManager(getContext()).toSetPDFFileList(list);
+//            new PrefManager(getContext()).toSetPDFFileList(list);
 //            pdfListAdapter.notifyDataSetChanged();
             if (rl.getVisibility() == View.VISIBLE) {
                 rl.setVisibility(View.GONE);

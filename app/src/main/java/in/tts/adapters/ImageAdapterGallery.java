@@ -45,6 +45,8 @@ public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGaller
                     .resize(220, 220)
                     .onlyScaleDown()
                     .centerCrop()
+                    .error(R.color.grey)
+                    .placeholder(R.color.light)
                     .into(viewHolder.picturesView);
         } catch (Exception | Error e) {
             e.printStackTrace();

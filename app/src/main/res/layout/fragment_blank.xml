@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.BlankFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvListSeeMore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:nestedScrollingEnabled="true"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/llCustom_loader12000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp" />
+
+    </LinearLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rlLoaderSeeMore"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#fff">-->
+
+        <!--<ProgressBar-->
+            <!--android:id="@+id/cpbSeeMore"-->
+            <!--style="?android:attr/progressBarStyleHorizontal"-->
+            <!--android:layout_width="250dp"-->
+            <!--android:layout_height="250dp"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:indeterminate="false"-->
+            <!--android:max="100"-->
+            <!--android:progress="20"-->
+            <!--android:progressDrawable="@drawable/circular_progress_bar"-->
+            <!--android:secondaryProgress="100" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/ivLoaderSeeMore"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:background="@drawable/white_circle"-->
+            <!--android:contentDescription="@string/com_facebook_loading" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tvLoaderSeeMore"-->
+            <!--android:layout_width="250dp"-->
+            <!--android:layout_height="250dp"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:gravity="center"-->
+            <!--android:text="20%"-->
+            <!--android:textColor="@color/colorPrimaryDark"-->
+            <!--android:textSize="20sp" />-->
+
+    <!--</RelativeLayout>-->
+
+</RelativeLayout>

@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import in.tts.R;
 
 import in.tts.adapters.ImageAdapterGallery;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.ToCheckFileExists;
 
 public class GalleryFragment extends Fragment {
 
@@ -97,17 +99,18 @@ public class GalleryFragment extends Fragment {
         CommonMethod.toReleaseMemory();
         try {
             if (getActivity() != null) {
-                // change UI elements here
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-
-                imageFile = new ArrayList<>();
-                imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
-                imageAdapterGallery.notifyDataSetChanged();
                 if (!status) {
-                    new toGet().execute();
+                    // change UI elements here
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+                    imageFile = new ArrayList<>();
+                    imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
+                    imageAdapterGallery.notifyDataSetChanged();
+
+                    mLoading.setVisibility(View.GONE);
                 }
-                mLoading.setVisibility(View.GONE);
+                new toGet().execute();
             }
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -135,7 +138,12 @@ public class GalleryFragment extends Fragment {
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         String imageLocation = cursor.getString(1);
-                        imageFile.add(imageLocation);
+                        Log.d("TAG_G", " Image : " + imageLocation + " : " + ToCheckFileExists.singleFile(imageLocation));
+                        if (ToCheckFileExists.singleFile(imageLocation)) {
+                            if (!imageFile.contains(imageLocation)) {
+                                imageFile.add(imageLocation);
+                            }
+                        }
                         imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
                     }
                 }

@@ -47,7 +47,7 @@ public class ToGetImages {
                             cursor.close();
                         }
                     }
-                    new PrefManager(context).toSetImageFileList(imageFile);
+//                    new PrefManager(context).toSetImageFileList(imageFile);
 
                 }
             });

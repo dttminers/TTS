@@ -22,15 +22,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import in.tts.R;
 import in.tts.classes.ToSetMore;
+import in.tts.fragments.BlankFragment;
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.fragments.MainHomeFragment;
@@ -55,7 +58,9 @@ public class HomeActivity extends AppCompatActivity implements
     private MainHomeFragment tab3;
     private MakeYourOwnReadFragment tab4;
     private GalleryFragment tab5;
+    private RelativeLayout rl;
 
+    private String data;
     private String[] tabHomeText = new String[]{"", "", "", "", ""};
     private int[] tabHomeIcon = new int[]{R.drawable.tab1, R.drawable.tab2, R.drawable.tab3, R.drawable.tab4, R.drawable.tab5};
 
@@ -91,9 +96,11 @@ public class HomeActivity extends AppCompatActivity implements
 
     private void toBindData() {
         try {
+            rl = findViewById(R.id.rlHomePage);
             tabLayout = findViewById(R.id.tabsHome);
             viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
             Log.d("TAG_Main", "  toBindData ha ");
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -111,15 +118,23 @@ public class HomeActivity extends AppCompatActivity implements
                             viewPager.setAdapter(adapter);
                             tabLayout.setupWithViewPager(viewPager);
 
-                            tabLayout.getTabAt(0).setText(tabHomeText[0]).setIcon(tabHomeIcon[0]);
-                            tabLayout.getTabAt(1).setText(tabHomeText[1]).setIcon(tabHomeIcon[1]);
-                            tabLayout.getTabAt(2).setText(tabHomeText[2]).setIcon(tabHomeIcon[2]);
-                            tabLayout.getTabAt(3).setText(tabHomeText[3]).setIcon(tabHomeIcon[3]);
-                            tabLayout.getTabAt(4).setText(tabHomeText[4]).setIcon(tabHomeIcon[4]);
-
+                            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(tabHomeText[0]).setIcon(tabHomeIcon[0]);
+                            Objects.requireNonNull(tabLayout.getTabAt(1)).setText(tabHomeText[1]).setIcon(tabHomeIcon[1]);
+                            Objects.requireNonNull(tabLayout.getTabAt(2)).setText(tabHomeText[2]).setIcon(tabHomeIcon[2]);
+                            Objects.requireNonNull(tabLayout.getTabAt(3)).setText(tabHomeText[3]).setIcon(tabHomeIcon[3]);
+                            Objects.requireNonNull(tabLayout.getTabAt(4)).setText(tabHomeText[4]).setIcon(tabHomeIcon[4]);
 
                             viewPager.setOffscreenPageLimit(5);
-                            setCurrentViewPagerItem(2);
+                            if (getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT) != null) {
+//                                Bundle bundle = new Bundle();
+                                data = getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT).toString();
+                                Log.d("TAG_Main", " DaTa " + data);
+//                                bundle.putString("DATA", " " + getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT));
+//                                tab3.setArguments(bundle);
+                                setCurrentViewPagerItem(3);
+                            } else {
+                                setCurrentViewPagerItem(2);
+                            }
                         }
                     });
                 }
@@ -313,10 +328,20 @@ public class HomeActivity extends AppCompatActivity implements
     public void onBackPressed() {
         try {
             if (tabLayout.getSelectedTabPosition() != 2) {
-                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress");
+                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress1");
                 setCurrentViewPagerItem(2);
             } else {
-                doExit();
+                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress2");
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.rlHomePage);
+//                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                if (fragment != null) {
+                    Log.d("TAG_Main", "  setCurrentViewPagerItem backPress");
+                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                    rl.setVisibility(View.GONE);
+                } else {
+                    Log.d("TAG_Main", "  setCurrentViewPagerItem backPress4");
+                    doExit();
+                }
             }
             CommonMethod.toReleaseMemory();
         } catch (Exception | Error e) {
@@ -353,7 +378,7 @@ public class HomeActivity extends AppCompatActivity implements
                     break;
                 case 3:
                     toSetTitle(getString(R.string.str_title_make_your_own_read));
-                    tab4.setLoadData();
+                    tab4.setLoadData(data);
                     break;
                 case 4:
                     toSetTitle(getString(R.string.str_title_images));
@@ -374,6 +399,19 @@ public class HomeActivity extends AppCompatActivity implements
             CommonMethod.toReleaseMemory();
         }
         CommonMethod.toReleaseMemory();
+    }
+
+    @Override
+    public void setVisible() {
+        try{
+            rl.setVisibility(View.VISIBLE);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
+        }
     }
 
     private void doExit() {

@@ -26,7 +26,6 @@ import in.tts.R;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.RegisterFragment;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.ToGetPdfFiles;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,8 +65,6 @@ public class LoginActivity extends AppCompatActivity {
             CommonMethod.toReleaseMemory();
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -95,20 +92,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else {
             fn_permission();
-        }
-    }
-
-    private void toLoadData() {
-        try {
-            if (!ToGetPdfFiles.isRunning()) {
-                ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), LoginActivity.this);
-            }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-            CommonMethod.toReleaseMemory();
         }
     }
 

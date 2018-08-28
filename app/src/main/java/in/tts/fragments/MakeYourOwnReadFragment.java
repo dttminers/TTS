@@ -59,7 +59,6 @@ public class MakeYourOwnReadFragment extends Fragment {
     }
 
     @Override
-
     @AddTrace(name = "onCreateMakeYourOurReadFragment", enabled = true)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_make_your_own_read, container, false);
@@ -73,6 +72,13 @@ public class MakeYourOwnReadFragment extends Fragment {
             setHasOptionsMenu(true);
             CommonMethod.setAnalyticsData(Objects.requireNonNull(getContext()), "MainTab", "MakeYourRead", null);
             editText = Objects.requireNonNull(getActivity()).findViewById(R.id.edMakeRead);
+
+
+            if (getArguments() != null) {
+                if (getArguments().getString("DATA") != null) {
+                    editText.setText(getArguments().getString("DATA"));
+                }
+            }
 
             editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -140,8 +146,6 @@ public class MakeYourOwnReadFragment extends Fragment {
                     }
                 });
             }
-
-            tts = new TTS(getContext());
 
             getActivity().getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -353,7 +357,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                     try {
                         String toSpeak = editText.getText().toString();
                         CommonMethod.toDisplayToast(getContext(), toSpeak);
-                        tts.SpeakLoud(toSpeak, "AUD_Write" + System.currentTimeMillis());
+                        tts.SpeakLoud(toSpeak);//, "AUD_Write" + System.currentTimeMillis());
                     } catch (Exception e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -396,10 +400,19 @@ public class MakeYourOwnReadFragment extends Fragment {
                     speak.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
-                            if (editText.getText().toString().trim().length() > 0) {
-                                tts.SpeakLoud(editText.getText().toString(), "AUD_Write" + System.currentTimeMillis());
-                            } else {
-                                CommonMethod.toDisplayToast(getContext(), " No data to read");
+                            try {
+                                if (!tts.isSpeaking()) {
+                                    if (editText.getText().toString().trim().length() > 0) {
+                                        tts.SpeakLoud(editText.getText().toString());//, "AUD_Write" + System.currentTimeMillis());
+                                    } else {
+                                        CommonMethod.toDisplayToast(getContext(), " No data to read");
+                                    }
+                                }
+                            } catch (Exception | Error e) {
+                                e.printStackTrace();
+                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                Crashlytics.logException(e);
+                                FirebaseCrash.report(e);
                             }
                             return false;
                         }
@@ -449,7 +462,11 @@ public class MakeYourOwnReadFragment extends Fragment {
         CommonMethod.toReleaseMemory();
     }
 
-    public void setLoadData() {
+    public void setLoadData(String data) {
+        Log.d("TAG_", " setLoadData " + getArguments() + ":" + data);
+        if (editText != null) {
+            editText.setText(data);
+        }
     }
 
     public interface OnFragmentInteractionListener {
@@ -460,17 +477,22 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d("TAG_", " onStart ");
+//        tts = new TTS(getContext());
         CommonMethod.toReleaseMemory();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("TAG_", " Resume ");
+        tts = new TTS(getContext());
         CommonMethod.toReleaseMemory();
     }
 
     public void onPause() {
         try {
+            Log.d("TAG_", " onPause ");
             if (tts != null) {
                 tts.toStop();
             }
@@ -490,6 +512,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onDestroy() {
         try {
+            Log.d("TAG_", " onDestroy ");
             if (tts != null) {
                 tts.toStop();
                 tts.toShutDown();

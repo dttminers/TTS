@@ -50,9 +50,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="752c9b164b8b11cb297caceb967a4009f7433ab0" />
-        <meta-data
-            android:name="pspdfkit_license_key"
-            android:value="YydfqYlnS6eoAcc4_UCuL55yUO-jl9CdAVHunX2E02O0F1G2mFUGh_n2K7iTmq4fp3GSqkKfpJsKD7nBEYSAMTIylBfFw0lwFDjzfvtAJMyL6ZLhXCKqtbWUVsW00-_p5bE7arUaZfVkc7-CraqEeAI29SZdrlxYnwHEoxZwJxdNRJ1EuBmxN9YR5m8NuQAkbGJdCfhP9aS8bkuEEp_mHT9rGnJDjiuV7WfhG5m2ZhfnFtPF2YvqHJJ0wDNq64KXsmhQWtmYC2pr7m1M61DxNcc7kV0FcNoj8MaefT0SD-MSL6QgZOulGusreWEWsmNXMB0vY7Er9Nr8nE1hXBZ74OFKCJyvb9T6EPselHVn7-6QgvUC6LbuLzaRfJXD4XqJ6V68tM9imjdDvwTJ0lqyTNR_56GM-vywobmbaXb4QHxtPYq1uJgBppTjDVupK3VN" />
 
         <!-- Splash screen -->
         <activity
@@ -110,12 +107,48 @@
             android:name=".activities.ImageOcrActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="image/*" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.BrowserActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <!--<intent-filter>-->
+            <!--<data-->
+            <!--android:scheme="http"-->
+            <!--android:host="docs.google.com"-->
+            <!--android:pathPrefix="/forms"/>-->
+            <!--<data-->
+            <!--android:scheme="http"-->
+            <!--android:host="www.docs.google.com"-->
+            <!--android:pathPrefix="/forms" />-->
+
+            <!--<data-->
+            <!--android:scheme="https"-->
+            <!--android:host="www.docs.google.com"-->
+            <!--android:pathPrefix="/forms" />-->
+
+            <!--<data-->
+            <!--android:scheme="https"-->
+            <!--android:host="docs.google.com"-->
+            <!--android:pathPrefix="/forms" />-->
+            <!--<action android:name="android.intent.action.VIEW" />-->
+
+            <!--<category android:name="android.intent.category.BROWSABLE" />-->
+            <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        </activity>
         <activity
             android:name=".activities.BookmarkActivity"
             android:label="@string/str_bookmark"
@@ -125,7 +158,13 @@
             android:name=".activities.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.Contact_us"
             android:label="@string/str_give_feedback"
@@ -149,7 +188,18 @@
             android:name=".activities.PdfShowingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.CameraActivity"
             android:label="@string/app_name"

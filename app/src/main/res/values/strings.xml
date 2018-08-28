@@ -243,5 +243,7 @@ ebook reading software is free and easy to download from the internet.
     <string name="str_get_pdf">Get PDF</string>
     <string name="str_delete">Delete</string>
     <string name="str_select_all">Select All</string>
+    <string name="str_fetching_data">Fetching data ...</string>
+    <string name="str_favicon">favicon</string>
 </resources>
 

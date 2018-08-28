@@ -43,7 +43,7 @@ public class BrowserFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            CommonMethod.setAnalyticsData(getContext(), "MainTab", "Browser", null);
+            CommonMethod.setAnalyticsData(getContext(), "MainTab", "BookmarkModel", null);
             CommonMethod.toCloseLoader();
             CommonMethod.toReleaseMemory();
 

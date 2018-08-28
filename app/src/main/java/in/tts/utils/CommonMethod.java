@@ -2,12 +2,16 @@ package in.tts.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +27,7 @@ import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -142,6 +147,7 @@ public class CommonMethod {
 
     public static void toDisplayToast(Context context, String str) {
         try {
+            Log.d("TAG ", " toDisplayToast " + str);
             if (context != null) {
                 if (str != null) {
                     Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
@@ -178,38 +184,114 @@ public class CommonMethod {
 
     // Online Connection checking Code.................
     public static boolean isOnline(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return !(connectivityManager == null || connectivityManager.getActiveNetworkInfo() == null || !connectivityManager.getActiveNetworkInfo().isConnected());
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            return !(connectivityManager == null || connectivityManager.getActiveNetworkInfo() == null || !connectivityManager.getActiveNetworkInfo().isConnected());
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return false;
+        }
     }
 
     public static String getFileSize(File file) {
-        DecimalFormat format = new DecimalFormat("#.##");
-        long MiB = 1024 * 1024;
-        long KiB = 1024;
-        if (file.exists()) {
-            if (!file.isFile()) {
-                throw new IllegalArgumentException("Expected a file");
-            }
-            final double length = file.length();
+        try {
+            DecimalFormat format = new DecimalFormat("#.##");
+            long MiB = 1024 * 1024;
+            long KiB = 1024;
+            if (file.exists()) {
+                if (!file.isFile()) {
+                    throw new IllegalArgumentException("Expected a file");
+                }
+                final double length = file.length();
 
-            if (length > MiB) {
-                return format.format(length / MiB) + " Mb";//" MiB";
+                if (length > MiB) {
+                    return format.format(length / MiB) + " Mb";//" MiB";
+                }
+                if (length > KiB) {
+                    return format.format(length / KiB) + " Kb";//" KiB";
+                }
+                return format.format(length) + " B";
+            } else {
+                return "0 B";
             }
-            if (length > KiB) {
-                return format.format(length / KiB) + " Kb";//" KiB";
-            }
-            return format.format(length) + " B";
-        } else {
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
             return "0 B";
         }
     }
 
     public static Locale LocaleFromString(String locale) {
-        String parts[] = locale.split("_", -1);
-        if (parts.length == 1) return new Locale(parts[0]);
-        else if (parts.length == 2
-                || (parts.length == 3 && parts[2].startsWith("#")))
-            return new Locale(parts[0], parts[1]);
-        else return new Locale(parts[0], parts[1], parts[2]);
+        try {
+            String parts[] = locale.split("_", -1);
+            if (parts.length == 1) return new Locale(parts[0]);
+            else if (parts.length == 2
+                    || (parts.length == 3 && parts[2].startsWith("#")))
+                return new Locale(parts[0], parts[1]);
+            else return new Locale(parts[0], parts[1], parts[2]);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return Locale.US;
+        }
+    }
+
+
+    public static String BitmapToString(Bitmap bitmap) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] b = baos.toByteArray();
+            return Base64.encodeToString(b, Base64.DEFAULT);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
+    }
+
+    /**
+     * @param encodedString
+     * @return bitmap (from given string)
+     */
+    public static Bitmap StringToBitmap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            return Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length), 50, 50, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return null;
+        }
+    }
+
+
+    public static int sizeOf(Bitmap data) {
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+                return data.getRowBytes() * data.getHeight();
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                return data.getByteCount();
+            } else {
+                return data.getAllocationByteCount();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return 0;
+        }
     }
 }

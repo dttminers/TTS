@@ -1,6 +1,5 @@
 package in.tts.fragments;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,7 +28,6 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.util.Objects;
 
 import in.tts.R;
-import in.tts.model.Browser;
 import in.tts.utils.CommonMethod;
 
 public class PdfFragment extends Fragment {
@@ -37,9 +35,7 @@ public class PdfFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-//    private MyBooksListFragment tab1;
-//    private PdfListFragment tab1;
-    BrowsePdfFragment tab1;
+    private BrowsePdfFragment tab1;
     private EBookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Library"};
@@ -216,7 +212,7 @@ public class PdfFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Log.d("TAG", " FRa onActivityResult " + resultCode + ":" + requestCode + " :" + data.getData() +":"+ data.getData().getPath());
+            Log.d("TAG", " FRa onActivityResult " + resultCode + ":" + requestCode + " :" + data.getData() + ":" + data.getData().getPath());
             Fragment fragment = getChildFragmentManager().findFragmentById(R.id.fragmentrepalce);
             fragment.onActivityResult(requestCode, resultCode, data);
         } catch (Exception | Error e) {

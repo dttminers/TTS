@@ -14,14 +14,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -34,8 +32,6 @@ import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
-import in.tts.utils.ToGetImages;
-import in.tts.utils.ToGetPdfFiles;
 
 public class TutorialPageActivity extends AppCompatActivity {
 
@@ -103,8 +99,6 @@ public class TutorialPageActivity extends AppCompatActivity {
         try {
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                toLoadData();
             }
             if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(TutorialPageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -117,24 +111,6 @@ public class TutorialPageActivity extends AppCompatActivity {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
-        }
-    }
-
-    private void toLoadData() {
-        if ((ContextCompat.checkSelfPermission(TutorialPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            try {
-                if (!ToGetPdfFiles.isRunning()) {
-                    ToGetPdfFiles.getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()), TutorialPageActivity.this);
-                }
-                if (!ToGetImages.isRunning()) {
-                    ToGetImages.getAllShownImagesPath(TutorialPageActivity.this, TutorialPageActivity.this);
-                }
-            } catch (Exception | Error e) {
-                e.printStackTrace();
-                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e);
-                FirebaseCrash.report(e);
-            }
         }
     }
 

@@ -6,7 +6,10 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +35,8 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +44,7 @@ import java.util.List;
 import in.tts.R;
 import in.tts.classes.ClipBoard;
 import in.tts.classes.TTS;
+import in.tts.model.BookmarkModel;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
@@ -48,15 +54,18 @@ public class BrowserActivity extends AppCompatActivity {
     private WebView superWebView;
     private RelativeLayout rl, rlPb;
     private PrefManager prefManager;
-    private List<String> linkList;
+    private List<BookmarkModel> list;
     private View menuBookMark;
     private CheckBox cbMenu;
     private TTS tts;
     private String historyUrl = "";
-    private String text = "";
+    private String webTitle = "";
     private MenuItem menuSpeak;
     private int currentPosition = 0, setBackPosition = 0;
     private StringBuilder stringBuilder;
+    private SparseArray<TextBlock> items;
+    private Frame imageFrame;
+    private TextRecognizer textRecognizer;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -67,6 +76,18 @@ public class BrowserActivity extends AppCompatActivity {
             checkInternetConnection();
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.app_name));
+            }
+
+            if (getIntent() != null) {
+                if (getIntent().getData() != null) {
+                    Log.d("TAG_WEB", " Data 1 " + getIntent().getData());
+                }
+                if (getIntent().getAction() != null) {
+                    Log.d("TAG_WEB", " Data 2 " + getIntent().getAction());
+                }
+                if (getIntent().getExtras() != null) {
+                    Log.d("TAG_WEB", " Data 3 " + getIntent().getExtras());
+                }
             }
 
             prefManager = new PrefManager(BrowserActivity.this);
@@ -104,7 +125,7 @@ public class BrowserActivity extends AppCompatActivity {
                 public void onPageStarted(WebView view, final String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
                     try {
-
+                        stringBuilder = new StringBuilder();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -120,6 +141,7 @@ public class BrowserActivity extends AppCompatActivity {
                         if (menuSpeak != null) {
                             menuSpeak.setVisible(true);
                         }
+                        toUpdateBookMarkIcon();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -139,7 +161,7 @@ public class BrowserActivity extends AppCompatActivity {
                     @Override
                     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                         currentPosition = i1;
-                        Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth()+ currentPosition);
+                        Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth() + currentPosition);
                     }
                 });
             }
@@ -150,15 +172,25 @@ public class BrowserActivity extends AppCompatActivity {
                 public void onProgressChanged(WebView view, int newProgress) {
                     super.onProgressChanged(view, newProgress);
                     try {
+                        try {
+                            if (tts != null) {
+                                tts.toStop();
+                                tts.toShutDown();
+                            }
+                        } catch (Exception | Error e) {
+                            Crashlytics.logException(e);
+                            FirebaseCrash.report(e);
+                            e.printStackTrace();
+                            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        }
                         superProgressBar.setVisibility(View.VISIBLE);
                         superProgressBar.setProgress(newProgress);
                         if (newProgress == 100) {
                             superProgressBar.setVisibility(View.GONE);
-                            linkList = prefManager.populateSelectedSearch();
-                            toUpdateBookMarkIcon();
+//                            linkList = prefManager.populateSelectedSearch();
+                            list = prefManager.loadList();
                         } else {
                             superProgressBar.setVisibility(View.VISIBLE);
-
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -172,6 +204,7 @@ public class BrowserActivity extends AppCompatActivity {
                 public void onReceivedTitle(WebView view, String title) {
                     super.onReceivedTitle(view, title);
                     try {
+                        webTitle = title;
                         if (getSupportActionBar() != null) {
                             CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, title);
                         }
@@ -263,23 +296,36 @@ public class BrowserActivity extends AppCompatActivity {
     }
 
     private void toUpdateBookMarkIcon() {
-        try {
-            if (linkList != null) {
-                if (linkList.contains(superWebView.getUrl())) {
-                    cbMenu.setChecked(true);
-                } else {
-                    cbMenu.setChecked(false);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (list != null) {
+                                for (int i = 0; i < list.size(); i++) {
+                                    Log.d("TAG_List ", " toUpdateBookMarkIcon : " + list.get(i).getPageUrl() + ":" + (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))));
+                                    if (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))) {
+                                        cbMenu.setChecked(true);
+                                    } else {
+                                        cbMenu.setChecked(false);
+                                    }
+                                }
+                            } else {
+                                list = new ArrayList<>();
+                                cbMenu.setChecked(false);
+                            }
+                        }
+                    });
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    Crashlytics.logException(e);
+                    FirebaseCrash.report(e);
                 }
-            } else {
-                linkList = new ArrayList<>();
-                cbMenu.setChecked(false);
             }
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
+        });
     }
 
     @Override
@@ -300,17 +346,19 @@ public class BrowserActivity extends AppCompatActivity {
                 }
             });
 
-            linkList = prefManager.populateSelectedSearch();
-            if (linkList != null) {
-                if (linkList.contains(superWebView.getUrl())) {
-                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
-                } else {
-                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
-                }
-            } else {
-                linkList = new ArrayList<>();
-                menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
-            }
+//            list = prefManager.loadList();
+//            if (list != null) {
+//                BookmarkModel model = new BookmarkModel(superWebView.getTitle(), superWebView.getUrl().trim().replaceAll("\\s+", "%20"), CommonMethod.BitmapToString(superWebView.getFavicon()));
+//                Log.d("TAG_List ", " onCreateOptionsMenu : " + model.toString() + ":" + list.contains(model));
+//                if (list.contains(model)) {
+//                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
+//                } else {
+//                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+//                }
+//            } else {
+//                list = new ArrayList<>();
+//                menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+//            }
 
 
         } catch (Exception | Error e) {
@@ -323,18 +371,30 @@ public class BrowserActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+//            tts = new TTS(BrowserActivity.this);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             switch (item.getItemId()) {
                 case R.id.menuSpeakBrowser:
                     try {
-                        stringBuilder= new StringBuilder();
                         if (tts != null) {
                             tts.toStop();
                             tts.toShutDown();
                         }
+//                        tts = new TTS(BrowserActivity.this);
                         setBackPosition = currentPosition;
-                        tts = new TTS(BrowserActivity.this);
                         toGetTextFromCurrentScreen();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -379,13 +439,12 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void toGetTextFromCurrentScreen() {
         try {
-            Date now = new Date();
-            android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
             // create bitmap screen capture
             View v1 = getWindow().getDecorView().getRootView();
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
             v1.setDrawingCacheEnabled(false);
+
             toGetTextFromBitmap(bitmap);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -397,38 +456,74 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void toGetTextFromBitmap(Bitmap bitmap) {
         try {
+            Log.d("TAG_WEB", " toGetTextFromBitmap " + bitmap.getHeight() + ":" + bitmap.isRecycled() + ":" + currentPosition + ":" + setBackPosition);
             rlPb.setVisibility(View.VISIBLE);
 
-            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+            if (getSupportActionBar() != null) {
+                CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.str_fetching_data));
+            }
 
-            Frame imageFrame = new Frame.Builder().setBitmap(bitmap).build();
+            try {
+                Date now = new Date();
+                android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+                File dirPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/READ_IT/IMAGE/");
+                if (!dirPath.exists()) {
+                    dirPath.mkdirs();
+                }
+                File imageFile = new File(dirPath.getAbsolutePath() + File.separator + "aksh_" + now + ".jpg");
+                Log.d("TAG_WEB", " getpath " + imageFile.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(imageFile);
+                if (fos != null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                }
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                Crashlytics.logException(e);
+                FirebaseCrash.report(e);
+            }
 
-            SparseArray<TextBlock> items = textRecognizer.detect(imageFrame);
+            textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+            imageFrame = new Frame.Builder().setBitmap(bitmap).build();
+
+            items = textRecognizer.detect(imageFrame);
 
             for (int i = 0; i < items.size(); i++) {
                 TextBlock item = items.valueAt(i);
                 stringBuilder.append(item.getValue());
                 stringBuilder.append("\n");
             }
+            Log.d("TAG_WEB", " data10 " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
+
 
             superWebView.post(new Runnable() {
                 public void run() {
                     Log.d("TAG_WEB", " data11 " + superWebView.getContentHeight() + ":" + superWebView.getScale() + ":" + superWebView.getScrollY());
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (superWebView.getContentHeight() * superWebView.getScale() >= superWebView.getScrollY()) {
+                                Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
 
-                    if (superWebView.getContentHeight() * superWebView.getScale() >= superWebView.getScrollY()) {
-                        Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
+                                superWebView.scrollBy(0, (int) superWebView.getHeight());
+                                toGetTextFromCurrentScreen();
 
-                        superWebView.scrollBy(0, (int) superWebView.getHeight());
-                        toGetTextFromCurrentScreen();
+                            } else {
+                                Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
+                                superWebView.scrollTo(0, setBackPosition);
+                                if (getSupportActionBar() != null) {
+                                    CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, webTitle);
+                                }
 
-                    } else {
-                        Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
+                                rlPb.setVisibility(View.GONE);
+                                toSpeakFromWebPage();
+                            }
 
-                        superWebView.scrollTo(0, setBackPosition);
-                        rlPb.setVisibility(View.GONE);
-
-                        toSpeakFromWebPage();
-                    }
+                        }
+                    }, 100);
                 }
             });
 
@@ -445,9 +540,11 @@ public class BrowserActivity extends AppCompatActivity {
     private void toSpeakFromWebPage() {
         try {
             CommonMethod.toCloseLoader();
-            Log.d("WEB", "toSpeakWebPage  " + text.length() + ":" + text);
+            Log.d("WEB", "toSpeakWebPage  " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
             if (stringBuilder.toString().trim().length() > 0) {
-                tts.SpeakLoud(stringBuilder.toString().replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+//                tts = new TTS(BrowserActivity.this);
+
+                tts.SpeakLoud(stringBuilder.toString().replaceAll("Fetching data...", "\\s"));//, "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
                 CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
 //                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
             } else {
@@ -466,13 +563,14 @@ public class BrowserActivity extends AppCompatActivity {
         try {
             String message;
             if (!b) {
-                linkList.remove(superWebView.getUrl().trim().replaceAll("\\s+", "%20"));
+                list.remove(new BookmarkModel(superWebView.getTitle(), superWebView.getUrl().trim().replaceAll("\\s+", "%20"), CommonMethod.BitmapToString(superWebView.getFavicon())));
                 message = "Bookmark Removed";
             } else {
-                linkList.add(superWebView.getUrl().trim().replaceAll("\\s+", "%20"));
+                Log.d("TAG", "Added : " + superWebView.getFavicon().getHeight() + ":" + superWebView.getFavicon().getWidth() + ":" + superWebView.getFavicon().getGenerationId());
+                list.add(new BookmarkModel(superWebView.getTitle(), superWebView.getUrl().trim().replaceAll("\\s+", "%20"), CommonMethod.BitmapToString(superWebView.getFavicon())));
                 message = "Bookmarked";
             }
-            prefManager.setSearchResult(linkList);
+            prefManager.saveList(list);
             Snackbar snackbar = Snackbar.make(rl, message, Snackbar.LENGTH_LONG);
             snackbar.show();
         } catch (Exception | Error e) {
@@ -623,4 +721,16 @@ AsyncTask.execute(new Runnable() {
                             }
                         }
                     });
+
+                    linkList = prefManager.populateSelectedSearch();
+            if (linkList != null) {
+                if (linkList.contains(superWebView.getUrl())) {
+                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
+                } else {
+                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+                }
+            } else {
+                linkList = new ArrayList<>();
+                menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+            }
                     */

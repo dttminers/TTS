@@ -1,5 +1,6 @@
 package in.tts.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.media.AudioManager;
@@ -48,6 +49,7 @@ import in.tts.classes.ToSetMore;
 import in.tts.model.AudioSetting;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.FilePath;
 
 public class PdfShowingActivity extends AppCompatActivity {
 
@@ -117,11 +119,19 @@ public class PdfShowingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdf_showing);
         toBindViews();
         toDisplayPdf();
-        toSetRecent();
+
     }
 
     private void toBindViews() {
         try {
+//            Intent intent = getIntent();
+//            if(intent != null) {
+//                Log.d("TAG_PDF  ", " int  " + intent.getAction() +"\n: " + intent.getData() +":"+ intent.getExtras());
+//                if(Intent.ACTION_VIEW.equals(intent.getAction())) {
+//                    startActivity(intent);
+//                }
+//            }
+
             CommonMethod.toReleaseMemory();
             llCustom_loader = findViewById(R.id.llCustom_loader120);
             llCustom_loader.setVisibility(View.VISIBLE);
@@ -296,40 +306,10 @@ public class PdfShowingActivity extends AppCompatActivity {
                     if (getIntent().getExtras() != null) {
                         if (getIntent().getStringExtra("file") != null) {
                             pdfFile = new File(getIntent().getStringExtra("file").trim().replaceAll("%20", " "));
-                            if (pdfFile.exists()) {
-                                try {
-                                    if (getSupportActionBar() != null) {
-                                        CommonMethod.toSetTitle(getSupportActionBar(), PdfShowingActivity.this, pdfFile.getName());
-                                    }
-
-                                    fileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
-                                    pdfRenderer = new PdfRenderer(fileDescriptor);
-                                    totalPagesCreate = pdfRenderer.getPageCount();
-
-                                    showPage(currentPageCreate);
-
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            runOnUiThread(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-////                                                    vp.setOffscreenPageLimit(2);
-//                                                    toGetData(vp.getCurrentItem() + 1, false);
-//                                                }
-//                                            });
-//                                        }
-//                                    }, 1000);
-                                } catch (Exception | Error e) {
-                                    e.printStackTrace();
-                                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                                    Crashlytics.logException(e);
-                                    FirebaseCrash.report(e);
-                                }
-                            } else {
-                                CommonMethod.toDisplayToast(PdfShowingActivity.this, "Can't file does not exists");
-                                toExit();
-                            }
+                            toSetPdf(pdfFile);
+                        } else if (getIntent().getData() != null) {
+                            pdfFile = new File(FilePath.getPath(PdfShowingActivity.this, getIntent().getData()).trim().replaceAll("%20", " "));
+                            toSetPdf(pdfFile);
                         } else {
                             CommonMethod.toDisplayToast(PdfShowingActivity.this, "Can't Open Pdf File ");
                             toExit();
@@ -338,9 +318,42 @@ public class PdfShowingActivity extends AppCompatActivity {
                         CommonMethod.toDisplayToast(PdfShowingActivity.this, "Unable  to open Pdf File 2");
                         toExit();
                     }
-
-                }//
+                }
             });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
+
+    private void toSetPdf(File pdfFile) {
+        try {
+            Log.d("TAG_PDF ", " Path  : " + pdfFile.getName() + ";" + pdfFile.getAbsolutePath());
+            if (pdfFile.exists()) {
+                try {
+                    if (getSupportActionBar() != null) {
+                        CommonMethod.toSetTitle(getSupportActionBar(), PdfShowingActivity.this, pdfFile.getName());
+                    }
+
+                    fileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
+                    pdfRenderer = new PdfRenderer(fileDescriptor);
+                    totalPagesCreate = pdfRenderer.getPageCount();
+
+                    showPage(currentPageCreate);
+
+                    toSetRecent();
+                } catch (Exception | Error e) {
+                    e.printStackTrace();
+                    FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                    Crashlytics.logException(e);
+                    FirebaseCrash.report(e);
+                }
+            } else {
+                CommonMethod.toDisplayToast(PdfShowingActivity.this, "Can't file does not exists");
+                toExit();
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -854,14 +867,14 @@ public class PdfShowingActivity extends AppCompatActivity {
                     PrefManager prefManager = new PrefManager(PdfShowingActivity.this);
                     ArrayList<String> list = prefManager.toGetPDFListRecent();
                     if (list != null) {
-                        if (!list.contains(getIntent().getStringExtra("file").trim())) {
-                            list.add(getIntent().getStringExtra("file").trim());
+                        if (!list.contains(pdfFile.getAbsolutePath().trim())) {
+                            list.add(pdfFile.getAbsolutePath().trim());
                             PrefManager.AddedRecentPDF = true;
                             prefManager.toSetPDFFileListRecent(list);
                         }
                     } else {
                         list = new ArrayList<>();
-                        list.add(getIntent().getStringExtra("file").trim().replaceAll("\\s", "%20"));
+                        list.add(pdfFile.getAbsolutePath().trim().replaceAll("\\s", "%20"));
                         PrefManager.AddedRecentPDF = true;
                         prefManager.toSetPDFFileListRecent(list);
                     }
