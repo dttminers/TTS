@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import in.tts.R;
 import in.tts.activities.PdfShowingActivity;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.FilePath;
 import in.tts.utils.RealPathUtil;

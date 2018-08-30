@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".activities.HomeActivity">
 
     <android.support.design.widget.TabLayout
@@ -33,13 +32,28 @@
         android:id="@+id/nonSwipeableViewPagerHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/viewHome" />
+        android:layout_above="@id/viewHome"
+        android:visibility="visible" />
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/rlHomePage"
-        android:layout_above="@id/tabsHome"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/viewHome"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/llLoaderHomePage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
 
 </RelativeLayout>

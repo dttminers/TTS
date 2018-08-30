@@ -28,6 +28,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.util.Objects;
 
 import in.tts.R;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class PdfFragment extends Fragment {
@@ -71,6 +72,7 @@ public class PdfFragment extends Fragment {
 
     public void setLoadData() {
         try {
+            PrefManager.CurrentPage = 1;
             Log.d("Tag", "tab2 setLoadData " + viewPager.getCurrentItem());
             if (viewPager != null) {
                 setCurrentViewPagerItem(viewPager.getCurrentItem());

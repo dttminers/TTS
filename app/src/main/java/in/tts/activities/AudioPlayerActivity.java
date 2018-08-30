@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import in.tts.adapters.MediaCursorAdapter;
 import in.tts.R;
+import in.tts.model.PrefManager;
 
 public class AudioPlayerActivity extends AppCompatActivity {
 
@@ -49,6 +50,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
+        PrefManager.ActivityCount =+1;
         selectedfile = findViewById(R.id.selecteditem);
         seekBar = findViewById(R.id.seekBar);
         prev = findViewById(R.id.previous);

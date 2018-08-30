@@ -10,6 +10,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.BuildConfig;
 import in.tts.R;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class OurOtherAppActivity extends AppCompatActivity {
@@ -18,14 +19,19 @@ public class OurOtherAppActivity extends AppCompatActivity {
     @AddTrace(name = "onCreateOurOtherAppActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_our_other_app);
-        CommonMethod.setAnalyticsData(OurOtherAppActivity.this, "MainTab", "OurOtherApp", null);
+        try {
+            setContentView(R.layout.activity_our_other_app);
+            PrefManager.ActivityCount =+1;
+            CommonMethod.setAnalyticsData(OurOtherAppActivity.this, "MainTab", "OurOtherApp", null);
 
-        if (getSupportActionBar() != null) {
-            CommonMethod.toSetTitle(getSupportActionBar(), OurOtherAppActivity.this, getString(R.string.str_title_our_other_apps));
-        }
+            if (getSupportActionBar() != null) {
+                CommonMethod.toSetTitle(getSupportActionBar(), OurOtherAppActivity.this, getString(R.string.str_title_our_other_apps));
+            }
 //        Log.d("TAG", "VERSION_APP " + BuildConfig.VERSION_CODE + " : " + BuildConfig.VERSION_NAME);
-        CommonMethod.toDisplayToast(OurOtherAppActivity.this, BuildConfig.VERSION_CODE + " : " + BuildConfig.VERSION_NAME);
+            CommonMethod.toDisplayToast(OurOtherAppActivity.this, BuildConfig.VERSION_CODE + " : " + BuildConfig.VERSION_NAME);
+        } catch (Exception|Error e){
+            e.printStackTrace();
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

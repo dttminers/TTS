@@ -42,6 +42,8 @@ public class PrefManager {
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 
+    public static int ActivityCount = 0;
+    public static int CurrentPage = 2;
 
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -257,12 +259,10 @@ public class PrefManager {
 
     public void saveList(List<BookmarkModel> bookmarkModelList) {
         try {
-            Log.d("TAG_Pref", " setList " + bookmarkModelList);
             SharedPreferences mPrefs = _context.getSharedPreferences(WEB_PREFERENCES, 0);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
             Gson gson = new Gson();
             String json = gson.toJson(bookmarkModelList);
-            Log.d("TAG_Pref", " setList str : " + json);
             prefsEditor.putString(WEB_LINKS, json);
             prefsEditor.apply();
             prefsEditor.commit();
@@ -280,7 +280,6 @@ public class PrefManager {
             SharedPreferences mPrefs = _context.getSharedPreferences(WEB_PREFERENCES, 0);
             Gson gson = new Gson();
             String json = mPrefs.getString(WEB_LINKS, "");
-            Log.d("TAG_Pref", " getList str " + json);
             if (json.isEmpty()) {
                 bookmarkModelList = new ArrayList<>();
             } else {
@@ -295,7 +294,6 @@ public class PrefManager {
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             return null;
         }
-        Log.d("TAG_Pref", " getList " + bookmarkModelList.toString());
         return bookmarkModelList;
     }
 }

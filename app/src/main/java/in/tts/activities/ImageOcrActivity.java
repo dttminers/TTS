@@ -18,10 +18,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,19 +29,14 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
 
 import in.tts.*;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
-import in.tts.fragments.BlankFragment;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.FilePath;
-import in.tts.utils.MyBounceInterpolator;
 
 public class ImageOcrActivity extends AppCompatActivity {
 
@@ -70,7 +61,8 @@ public class ImageOcrActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_image_ocr);
 
-            Intent intent = getIntent();
+            PrefManager.ActivityCount = +1;
+
             if (getIntent().getStringExtra("PATH") != null) {
                 photoPath = getIntent().getStringExtra("PATH");
             } else if (getIntent().getData() != null) {
@@ -85,7 +77,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }, 1500);
             }
 
-            Log.d("TAG_IMage   ", " int  "+photoPath);
+            Log.d("TAG_IMage   ", " int  " + photoPath);
 
             if (getSupportActionBar() != null) {
                 name = photoPath.substring(photoPath.lastIndexOf("/") + 1);
@@ -315,7 +307,23 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        try {
+            Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
+            if (PrefManager.ActivityCount <= 1) {
+                if (PrefManager.CurrentPage != 4) {
+                    startActivity(new Intent(ImageOcrActivity.this, HomeActivity.class));
+                } else {
+                    finish();
+                }
+            } else {
+                finish();
+            }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
     }
 
     @Override

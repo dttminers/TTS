@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -35,14 +35,10 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import in.tts.R;
-import in.tts.classes.ClipBoard;
 import in.tts.classes.TTS;
 import in.tts.model.BookmarkModel;
 import in.tts.model.PrefManager;
@@ -73,21 +69,10 @@ public class BrowserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_browser);
+            PrefManager.ActivityCount = +1;
             checkInternetConnection();
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.app_name));
-            }
-
-            if (getIntent() != null) {
-                if (getIntent().getData() != null) {
-                    Log.d("TAG_WEB", " Data 1 " + getIntent().getData());
-                }
-                if (getIntent().getAction() != null) {
-                    Log.d("TAG_WEB", " Data 2 " + getIntent().getAction());
-                }
-                if (getIntent().getExtras() != null) {
-                    Log.d("TAG_WEB", " Data 3 " + getIntent().getExtras());
-                }
             }
 
             prefManager = new PrefManager(BrowserActivity.this);
@@ -105,10 +90,15 @@ public class BrowserActivity extends AppCompatActivity {
                             + "&oq=df&aqs=chrome..69i57j69i60l3j0l2.878j0j7&sourceid=chrome&ie=UTF-8");
                 } else if (getIntent().getStringExtra("url") != null) {
                     superWebView.loadUrl(getIntent().getStringExtra("url"));
+                } else if (getIntent().getData() != null) {
+                    superWebView.loadUrl("" + getIntent().getData());
                 } else {
                     superWebView.loadUrl("https://www.google.co.in");
                 }
 
+                superWebView.setLongClickable(false);
+                superWebView.setOnLongClickListener(null);
+                superWebView.setHapticFeedbackEnabled(false);
                 superWebView.getSettings().setJavaScriptEnabled(true);
                 superWebView.getSettings().setSupportZoom(true);
                 superWebView.getSettings().setBuiltInZoomControls(true);
@@ -161,7 +151,7 @@ public class BrowserActivity extends AppCompatActivity {
                     @Override
                     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                         currentPosition = i1;
-                        Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth() + currentPosition);
+//                        Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth() + currentPosition);
                     }
                 });
             }
@@ -187,7 +177,6 @@ public class BrowserActivity extends AppCompatActivity {
                         superProgressBar.setProgress(newProgress);
                         if (newProgress == 100) {
                             superProgressBar.setVisibility(View.GONE);
-//                            linkList = prefManager.populateSelectedSearch();
                             list = prefManager.loadList();
                         } else {
                             superProgressBar.setVisibility(View.VISIBLE);
@@ -226,6 +215,7 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                     try {
+                        Log.d("TAG_WEB ", " onDownloadStart : " + url + "\n :" + userAgent + "\n: " + contentDisposition + "\n : " + mimetype + "\n :" + contentLength);
                         Uri myUri = Uri.parse(url);
                         Intent superIntent = new Intent(Intent.ACTION_VIEW);
                         superIntent.setData(myUri);
@@ -256,22 +246,6 @@ public class BrowserActivity extends AppCompatActivity {
                     }
                 }
             });
-
-            superWebView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    try {
-                        ClipBoard.ToPopup(BrowserActivity.this, BrowserActivity.this, null);
-                    } catch (Exception | Error e) {
-                        e.printStackTrace();
-                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                        Crashlytics.logException(e);
-                        FirebaseCrash.report(e);
-                    }
-                    return false;
-                }
-            });
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -279,6 +253,61 @@ public class BrowserActivity extends AppCompatActivity {
             FirebaseCrash.report(e);
         }
     }
+
+    @Override
+    public void onActionModeStarted(final android.view.ActionMode mode) {
+        try {
+            Log.d("TAG_WEB", "onActionModeStarted :  " + mode.isTitleOptional());
+            mode.getMenu().clear();
+            Menu menus = mode.getMenu();
+            mode.getMenuInflater().inflate(R.menu.highlight, menus);
+            MenuItem menu1 = menus.findItem(R.id.menu_read);
+            menu1.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    try {
+                        if (superWebView != null) {
+                            superWebView.evaluateJavascript("window.getSelection().toString()",
+                                    new ValueCallback<String>() {
+                                        @Override
+                                        public void onReceiveValue(String value) {
+                                            try {
+                                                Log.d("TAG_WEB", "SelectedText:" + value);
+                                                if (value != null) {
+                                                    if (value.trim().length() > 0) {
+                                                        toSpeakFromWebPage(value);
+                                                    }
+                                                }
+                                            } catch (Exception | Error e) {
+                                                e.printStackTrace();
+                                                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                                                Crashlytics.logException(e);
+                                                FirebaseCrash.report(e);
+                                            }
+                                        }
+                                    });
+                        }
+                        mode.finish();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
+
+                    return false;
+                }
+            });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+
+        super.onActionModeStarted(mode);
+    }
+
 
     private void checkInternetConnection() {
         try {
@@ -305,7 +334,7 @@ public class BrowserActivity extends AppCompatActivity {
                         public void run() {
                             if (list != null) {
                                 for (int i = 0; i < list.size(); i++) {
-                                    Log.d("TAG_List ", " toUpdateBookMarkIcon : " + list.get(i).getPageUrl() + ":" + (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))));
+//                                    Log.d("TAG_List ", " toUpdateBookMarkIcon : " + list.get(i).getPageUrl() + ":" + (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))));
                                     if (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))) {
                                         cbMenu.setChecked(true);
                                     } else {
@@ -345,22 +374,6 @@ public class BrowserActivity extends AppCompatActivity {
                     }
                 }
             });
-
-//            list = prefManager.loadList();
-//            if (list != null) {
-//                BookmarkModel model = new BookmarkModel(superWebView.getTitle(), superWebView.getUrl().trim().replaceAll("\\s+", "%20"), CommonMethod.BitmapToString(superWebView.getFavicon()));
-//                Log.d("TAG_List ", " onCreateOptionsMenu : " + model.toString() + ":" + list.contains(model));
-//                if (list.contains(model)) {
-//                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
-//                } else {
-//                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
-//                }
-//            } else {
-//                list = new ArrayList<>();
-//                menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
-//            }
-
-
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -374,7 +387,7 @@ public class BrowserActivity extends AppCompatActivity {
     protected void onResume() {
         try {
             super.onResume();
-//            tts = new TTS(BrowserActivity.this);
+            tts = new TTS(BrowserActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -389,11 +402,6 @@ public class BrowserActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.menuSpeakBrowser:
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
-//                        tts = new TTS(BrowserActivity.this);
                         setBackPosition = currentPosition;
                         toGetTextFromCurrentScreen();
                     } catch (Exception | Error e) {
@@ -456,34 +464,34 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void toGetTextFromBitmap(Bitmap bitmap) {
         try {
-            Log.d("TAG_WEB", " toGetTextFromBitmap " + bitmap.getHeight() + ":" + bitmap.isRecycled() + ":" + currentPosition + ":" + setBackPosition);
+//            Log.d("TAG_WEB", " toGetTextFromBitmap " + bitmap.getHeight() + ":" + bitmap.isRecycled() + ":" + currentPosition + ":" + setBackPosition);
             rlPb.setVisibility(View.VISIBLE);
 
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.str_fetching_data));
             }
 
-            try {
-                Date now = new Date();
-                android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-                File dirPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/READ_IT/IMAGE/");
-                if (!dirPath.exists()) {
-                    dirPath.mkdirs();
-                }
-                File imageFile = new File(dirPath.getAbsolutePath() + File.separator + "aksh_" + now + ".jpg");
-                Log.d("TAG_WEB", " getpath " + imageFile.getAbsolutePath());
-                FileOutputStream fos = new FileOutputStream(imageFile);
-                if (fos != null) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.flush();
-                    fos.close();
-                }
-            } catch (Exception | Error e) {
-                e.printStackTrace();
-                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-                Crashlytics.logException(e);
-                FirebaseCrash.report(e);
-            }
+//            try {
+//                Date now = new Date();
+//                android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+//                File dirPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/READ_IT/IMAGE/");
+//                if (!dirPath.exists()) {
+//                    dirPath.mkdirs();
+//                }
+//                File imageFile = new File(dirPath.getAbsolutePath() + File.separator + "aksh_" + now + ".jpg");
+//                Log.d("TAG_WEB", " getpath " + imageFile.getAbsolutePath());
+//                FileOutputStream fos = new FileOutputStream(imageFile);
+//                if (fos != null) {
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//                    fos.flush();
+//                    fos.close();
+//                }
+//            } catch (Exception | Error e) {
+//                e.printStackTrace();
+//                FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//                Crashlytics.logException(e);
+//                FirebaseCrash.report(e);
+//            }
 
             textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
@@ -496,30 +504,30 @@ public class BrowserActivity extends AppCompatActivity {
                 stringBuilder.append(item.getValue());
                 stringBuilder.append("\n");
             }
-            Log.d("TAG_WEB", " data10 " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
+//            Log.d("TAG_WEB", " data10 " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
 
 
             superWebView.post(new Runnable() {
                 public void run() {
-                    Log.d("TAG_WEB", " data11 " + superWebView.getContentHeight() + ":" + superWebView.getScale() + ":" + superWebView.getScrollY());
+//                    Log.d("TAG_WEB", " data11 " + superWebView.getContentHeight() + ":" + superWebView.getScale() + ":" + superWebView.getScrollY());
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if (superWebView.getContentHeight() * superWebView.getScale() >= superWebView.getScrollY()) {
-                                Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
+//                                Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
 
                                 superWebView.scrollBy(0, (int) superWebView.getHeight());
                                 toGetTextFromCurrentScreen();
 
                             } else {
-                                Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
+//                                Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
                                 superWebView.scrollTo(0, setBackPosition);
                                 if (getSupportActionBar() != null) {
                                     CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, webTitle);
                                 }
 
                                 rlPb.setVisibility(View.GONE);
-                                toSpeakFromWebPage();
+                                toSpeakFromWebPage(stringBuilder.toString());
                             }
 
                         }
@@ -537,14 +545,19 @@ public class BrowserActivity extends AppCompatActivity {
         }
     }
 
-    private void toSpeakFromWebPage() {
+    private void toSpeakFromWebPage(String text) {
         try {
             CommonMethod.toCloseLoader();
             Log.d("WEB", "toSpeakWebPage  " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
-            if (stringBuilder.toString().trim().length() > 0) {
+            if (text.trim().length() > 0) {
 //                tts = new TTS(BrowserActivity.this);
-
-                tts.SpeakLoud(stringBuilder.toString().replaceAll("Fetching data...", "\\s"));//, "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+                if (tts != null) {
+                    if (tts.isSpeaking()) {
+                        tts.toStop();
+                        tts.toShutDown();
+                    }
+                }
+                tts.SpeakLoud(text.replaceAll("Fetching data...", "\\s"));//, "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
                 CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
 //                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
             } else {
@@ -566,7 +579,6 @@ public class BrowserActivity extends AppCompatActivity {
                 list.remove(new BookmarkModel(superWebView.getTitle(), superWebView.getUrl().trim().replaceAll("\\s+", "%20"), CommonMethod.BitmapToString(superWebView.getFavicon())));
                 message = "Bookmark Removed";
             } else {
-                Log.d("TAG", "Added : " + superWebView.getFavicon().getHeight() + ":" + superWebView.getFavicon().getWidth() + ":" + superWebView.getFavicon().getGenerationId());
                 list.add(new BookmarkModel(superWebView.getTitle(), superWebView.getUrl().trim().replaceAll("\\s+", "%20"), CommonMethod.BitmapToString(superWebView.getFavicon())));
                 message = "Bookmarked";
             }
@@ -610,6 +622,12 @@ public class BrowserActivity extends AppCompatActivity {
 
             if (superWebView.canGoBack()) {
                 superWebView.goBack();
+            } else if (PrefManager.ActivityCount <= 1) {
+                if (PrefManager.CurrentPage != 0) {
+                    startActivity(new Intent(BrowserActivity.this, HomeActivity.class));
+                } else {
+                    finish();
+                }
             } else {
                 finish();
             }
@@ -652,85 +670,4 @@ public class BrowserActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
 }
-
-/*
-*  @Override
-    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-
-        if(url.toLowerCase().contains("/favicon.ico")) {
-            try {
-                return new WebResourceResponse("image/png", null, null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    @SuppressLint("NewApi")
-    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-
-        if(!request.isForMainFrame() && request.getUrl().getPath().endsWith("/favicon.ico")) {
-            try {
-                return new WebResourceResponse("image/png", null, null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-    */
-
-/*
-AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Document doc = Jsoup.connect(url).get();
-                                Log.d("WEB", "Doc " + doc + ":lll\n" + doc.getAllElements());
-                                Log.d("WEB", "Doc 1" + doc.getElementsByTag("body"));
-                                Elements newsHeadlines = doc.getElementsByAttribute("value1");
-                                Log.d("WEB", "Ele  " + newsHeadlines.text());
-//                        String ip = newsHeadlines[0].text().split("**")[1];
-//                                String text = "<B>I don't want this to be bold<\\B>";
-//                                System.out.println(text);
-                               String text = doc.getElementsByTag("body").toString().replaceAll("\\<.*?\\>", "");
-//                                System.out.println(text);
-                                Log.d("WEB", "text  " + text);
-
-
-                                URL url1 = new URL(url);
-                                URLConnection yc = url1.openConnection();
-                                BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-                                String inputLine;
-                                StringBuilder builder = new StringBuilder();
-                                while ((inputLine = in.readLine()) != null)
-                                    builder.append(inputLine.trim());
-                                in.close();
-                                String htmlPage = builder.toString();
-                                Log.d("WEB", "text1  " + htmlPage);
-                                String versionNumber = htmlPage.replaceAll("\\<.*?>","");
-                                Log.d("WEB", "text2  " + versionNumber);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                    linkList = prefManager.populateSelectedSearch();
-            if (linkList != null) {
-                if (linkList.contains(superWebView.getUrl())) {
-                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_black_24dp);
-                } else {
-                    menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
-                }
-            } else {
-                linkList = new ArrayList<>();
-                menu.getItem(1).setIcon(R.drawable.ic_bookmark_border_black_24dp);
-            }
-                    */

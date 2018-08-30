@@ -124,14 +124,6 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toBindViews() {
         try {
-//            Intent intent = getIntent();
-//            if(intent != null) {
-//                Log.d("TAG_PDF  ", " int  " + intent.getAction() +"\n: " + intent.getData() +":"+ intent.getExtras());
-//                if(Intent.ACTION_VIEW.equals(intent.getAction())) {
-//                    startActivity(intent);
-//                }
-//            }
-
             CommonMethod.toReleaseMemory();
             llCustom_loader = findViewById(R.id.llCustom_loader120);
             llCustom_loader.setVisibility(View.VISIBLE);
@@ -219,8 +211,8 @@ public class PdfShowingActivity extends AppCompatActivity {
                             startTime = startTime + forwardTime;
                             mediaPlayer.seekTo((int) startTime);
                             CommonMethod.toDisplayToast(getApplicationContext(), "You have Jumped forward 5 seconds");
-                        } else {
-                            CommonMethod.toDisplayToast(getApplicationContext(), "Cannot jump forward 5 seconds");
+//                        } else {
+//                            CommonMethod.toDisplayToast(getApplicationContext(), "Cannot jump forward 5 seconds");
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -240,8 +232,8 @@ public class PdfShowingActivity extends AppCompatActivity {
                             startTime = startTime - backwardTime;
                             mediaPlayer.seekTo((int) startTime);
                             CommonMethod.toDisplayToast(getApplicationContext(), "You have Jumped backward 5 seconds");
-                        } else {
-                            CommonMethod.toDisplayToast(getApplicationContext(), "Cannot jump backward 5 seconds");
+//                        } else {
+//                            CommonMethod.toDisplayToast(getApplicationContext(), "Cannot jump backward 5 seconds");
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -333,6 +325,7 @@ public class PdfShowingActivity extends AppCompatActivity {
             Log.d("TAG_PDF ", " Path  : " + pdfFile.getName() + ";" + pdfFile.getAbsolutePath());
             if (pdfFile.exists()) {
                 try {
+                    PrefManager.ActivityCount = +1;
                     if (getSupportActionBar() != null) {
                         CommonMethod.toSetTitle(getSupportActionBar(), PdfShowingActivity.this, pdfFile.getName());
                     }
@@ -422,9 +415,12 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toGetData(int pos, boolean status) {
         try {
+            Log.d("TAG_PDF ", "toGetData 1 " + currentPageAudioCreate + ":" + playPausePage + ":" + status + ":" + pos + ":" + playCnt + ":" + fileCnt);
             toShowLoading();
             currentPageAudioCreate = pos;
             playPausePage = pos;
+
+            Log.d("TAG_PDF ", "toGetData 2 " + currentPageAudioCreate + ":" + playPausePage + ":" + status + ":" + pos + ":" + playCnt + ":" + fileCnt);
 
             PdfReader pr = new PdfReader(pdfFile.getPath());
             String textForReading = PdfTextExtractor.getTextFromPage(pr, pos);
@@ -467,7 +463,7 @@ public class PdfShowingActivity extends AppCompatActivity {
 
     private void toSpeak(String textForReading, final boolean status) {
         try {
-            Log.d("TAG_PDF", "toSpeak " + status + ":" + textForReading.length() + ":" + currentPageAudioCreate);
+            Log.d("TAG_PDF", "toSpeak " + status + ":" + textForReading.length() + ":" + currentPageAudioCreate + ":" + playCnt + ":" + fileCnt);
             CommonMethod.toReleaseMemory();
             texts = new ArrayList<>();
             if (status) {
@@ -494,9 +490,9 @@ public class PdfShowingActivity extends AppCompatActivity {
                         end = textLength;
                     }
                 }
-                toSetAudioFiles(texts.get(fileCnt), fileCnt, status);
+                toSetAudioFiles(texts.get(fileCnt), currentPageAudioCreate, fileCnt, status);
             } else {
-                toSetAudioFiles(textForReading, fileCnt, status);
+                toSetAudioFiles(textForReading, currentPageAudioCreate, fileCnt, status);
                 CommonMethod.toReleaseMemory();
             }
         } catch (Exception | Error e) {
@@ -509,13 +505,15 @@ public class PdfShowingActivity extends AppCompatActivity {
         }
     }
 
-    private void toSetAudioFiles(String text, int genCount, boolean b) {
+    private void toSetAudioFiles(String text, int currentPageAudioCreate, int genCount, boolean b) {
         try {
-            Log.d("TAG_PDF ", " Data " + text);
+            Log.d("TAG_PDF ", " Data " + text + ":" + playCnt + ":" + fileCnt + ":" + genCount + ":" + currentPageAudioCreate);
             toShowLoading();
             String path = appTmpPath.getAbsolutePath() + File.separator
                     + "AUD_" + (pdfFile.getName().substring(0, (pdfFile.getName().length() - 4)))
-                    + String.valueOf(vp.getCurrentItem() + 1) + genCount + ".wav";
+//                    + String.valueOf(vp.getCurrentItem() + 1)
+                    + currentPageAudioCreate
+                    + genCount + ".wav";
             Log.d("TAG_PDF", "toSetAudioFiles " + b + File.separator + ":" + genCount + ":" + text.length() + ":" + path);
             if (b) {
                 destFile = new File(path);
@@ -659,14 +657,14 @@ public class PdfShowingActivity extends AppCompatActivity {
                                         }
                                     });
 
-//                                    if (isAudioDivided) {
-//                                        if (fileCnt < texts.size()) {
-//                                            toSetAudioFiles(texts.get(fileCnt), fileCnt, false);
-//                                        } else {
-//                                            currentPageAudioCreate++;
-//                                            toGetData(currentPageAudioCreate, true);
-//                                        }
-//                                    }
+                                    if (isAudioDivided) {
+                                        if (fileCnt < texts.size()) {
+                                            toSetAudioFiles(texts.get(fileCnt), currentPageAudioCreate, fileCnt, false);
+                                        } else {
+                                            currentPageAudioCreate++;
+                                            toGetData(currentPageAudioCreate, true);
+                                        }
+                                    }
                                 } catch (Exception | Error e) {
                                     CommonMethod.toReleaseMemory();
                                     e.printStackTrace();
@@ -770,7 +768,7 @@ public class PdfShowingActivity extends AppCompatActivity {
                             }
                         } else {
                             if (playCnt < texts.size()) {
-                                toSetAudioFiles(texts.get(playCnt), playCnt, true);
+                                toSetAudioFiles(texts.get(playCnt), currentPageAudioCreate, playCnt, true);
                             } else {
                                 playPausePage++;
                                 if (playPausePage <= totalPagesCreate) {
@@ -936,12 +934,22 @@ public class PdfShowingActivity extends AppCompatActivity {
     }
 
     private void toExit() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        Log.d("TAG_BACK", " Pdf " + PrefManager.ActivityCount);
+        if (PrefManager.ActivityCount <= 1) {
+            if (PrefManager.CurrentPage != 1) {
+                startActivity(new Intent(PdfShowingActivity.this, HomeActivity.class));
+            } else {
                 finish();
             }
-        }, 1500);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1000);
+        }
+
     }
 
     @Override

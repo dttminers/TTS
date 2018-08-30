@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import in.tts.R;
 
 import in.tts.adapters.ImageAdapterGallery;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.ToCheckFileExists;
 
@@ -108,7 +109,7 @@ public class GalleryFragment extends Fragment {
                     imageAdapterGallery = new ImageAdapterGallery(getActivity(), imageFile);
                     imageAdapterGallery.notifyDataSetChanged();
 
-                    mLoading.setVisibility(View.GONE);
+
                 }
                 new toGet().execute();
             }
@@ -144,7 +145,7 @@ public class GalleryFragment extends Fragment {
                                 imageFile.add(imageLocation);
                             }
                         }
-                        imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
+//                        imageAdapterGallery.notifyItemChanged(imageFile.size(), imageFile);
                     }
                 }
                 if (cursor != null) {
@@ -216,6 +217,7 @@ public class GalleryFragment extends Fragment {
     public void setLoadData() {
         CommonMethod.toReleaseMemory();
         try {
+            PrefManager.CurrentPage = 4;
             fn_permission();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -245,6 +247,7 @@ public class GalleryFragment extends Fragment {
             recyclerView.setAdapter(imageAdapterGallery);
             imageAdapterGallery.notifyDataSetChanged();
             status = true;
+            mLoading.setVisibility(View.GONE);
         }
     }
 

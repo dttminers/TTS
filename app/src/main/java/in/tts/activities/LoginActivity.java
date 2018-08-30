@@ -25,6 +25,7 @@ import java.io.File;
 import in.tts.R;
 import in.tts.fragments.LoginFragment;
 import in.tts.fragments.RegisterFragment;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,8 +34,9 @@ public class LoginActivity extends AppCompatActivity {
     @AddTrace(name = "onCreateLoginActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try{
         setContentView(R.layout.activity_login);
-        try {
+            PrefManager.ActivityCount =+1;
             String Status = getIntent().getStringExtra("LOGIN");
             if (Status == null) {
                 CommonMethod.setAnalyticsData(LoginActivity.this, "MainTab", "Login1", null);

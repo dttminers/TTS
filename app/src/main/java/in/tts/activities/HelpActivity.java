@@ -15,6 +15,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
 import in.tts.fragments.TextFragment;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class HelpActivity extends AppCompatActivity {
@@ -25,6 +26,8 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         CommonMethod.setAnalyticsData(HelpActivity.this, "MainTab", "Help", null);
+
+        PrefManager.ActivityCount =+1;
 
         if (getSupportActionBar() != null) {
             CommonMethod.toSetTitle(getSupportActionBar(), HelpActivity.this, getString(R.string.str_title_help));

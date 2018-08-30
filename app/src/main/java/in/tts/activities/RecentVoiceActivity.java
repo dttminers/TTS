@@ -30,6 +30,7 @@ import in.tts.R;
 import in.tts.adapters.RecentVoiceAdapter;
 import in.tts.model.Audio;
 import in.tts.model.AudioModel;
+import in.tts.model.PrefManager;
 import in.tts.services.MediaPlayerService;
 import in.tts.utils.AlertDialogHelper;
 import in.tts.utils.CommonMethod;
@@ -61,6 +62,8 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_voice);
+        PrefManager.ActivityCount =+1;
+
         CommonMethod.setAnalyticsData(RecentVoiceActivity.this, "MainTab", "Recent Voice", null);
 
         if (getSupportActionBar() != null) {

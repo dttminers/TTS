@@ -1,12 +1,14 @@
 package in.tts.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -41,6 +43,7 @@ public class BookmarkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_bookmark);
+            PrefManager.ActivityCount =+1;
 
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), BookmarkActivity.this, getString(R.string.str_bookmarks));
@@ -111,9 +114,22 @@ public class BookmarkActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        try{
+//            Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
+//            if (PrefManager.ActivityCount <= 1) {
+//                if (PrefManager.CurrentPage != 0) {
+//                    startActivity(new Intent(BookmarkActivity.this, HomeActivity.class));
+//                }
+//            } else {
+                finish();
+//            }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
     }
-
 
 }
 /*

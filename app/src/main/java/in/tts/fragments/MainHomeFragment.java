@@ -221,13 +221,11 @@ public class MainHomeFragment extends Fragment {
 
     private void toCallSeeMore(boolean status) {
         try {
-            BlankFragment blankFragment = new BlankFragment();
+            SeeMoreContentFragment blankFragment = new SeeMoreContentFragment();
             Bundle bundle = new Bundle();
             bundle.putBoolean("STATUS", status);
             blankFragment.setArguments(bundle);
-//            View view = Objects.requireNonNull(getActivity()).findViewById(R.id.rlHomePage);
-//            view.setVisibility(View.VISIBLE);
-            mListener.setVisible();
+            mListener.setVisible(status);
             Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.rlHomePage, blankFragment).commit();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -445,6 +443,7 @@ public class MainHomeFragment extends Fragment {
     }
 
     public void setLoadData() {
+        PrefManager.CurrentPage = 2;
         if (!status) {
             fn_permission();
         }
@@ -459,7 +458,7 @@ public class MainHomeFragment extends Fragment {
 
         void setCurrentViewPagerItem(int i);
 
-        void setVisible();
+        void setVisible(boolean status);
     }
 
 

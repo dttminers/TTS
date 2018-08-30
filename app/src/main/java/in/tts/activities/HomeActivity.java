@@ -18,10 +18,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
@@ -33,7 +34,7 @@ import java.util.Objects;
 
 import in.tts.R;
 import in.tts.classes.ToSetMore;
-import in.tts.fragments.BlankFragment;
+import in.tts.fragments.SeeMoreContentFragment;
 import in.tts.fragments.BrowserFragment;
 import in.tts.fragments.GalleryFragment;
 import in.tts.fragments.MainHomeFragment;
@@ -48,7 +49,8 @@ public class HomeActivity extends AppCompatActivity implements
         PdfFragment.OnFragmentInteractionListener,
         MainHomeFragment.OnFragmentInteractionListener,
         MakeYourOwnReadFragment.OnFragmentInteractionListener,
-        GalleryFragment.OnFragmentInteractionListener {
+        GalleryFragment.OnFragmentInteractionListener,
+        SeeMoreContentFragment.OnFragmentInteractionListener {
 
     private NonSwipeableViewPager viewPager;
     private TabLayout tabLayout;
@@ -59,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements
     private MakeYourOwnReadFragment tab4;
     private GalleryFragment tab5;
     private RelativeLayout rl;
+    private LinearLayout llLoader;
 
     private String data;
     private String[] tabHomeText = new String[]{"", "", "", "", ""};
@@ -69,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_home);
+            PrefManager.ActivityCount = +1;
             Log.d("TAG_Main", "  onCreate ha ");
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -97,8 +101,11 @@ public class HomeActivity extends AppCompatActivity implements
     private void toBindData() {
         try {
             rl = findViewById(R.id.rlHomePage);
+            llLoader = findViewById(R.id.llLoaderHomePage);
+
             tabLayout = findViewById(R.id.tabsHome);
             viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
+
             Log.d("TAG_Main", "  toBindData ha ");
 
             new Handler().postDelayed(new Runnable() {
@@ -135,6 +142,11 @@ public class HomeActivity extends AppCompatActivity implements
                             } else {
                                 setCurrentViewPagerItem(2);
                             }
+
+                            tabLayout.setVisibility(View.VISIBLE);
+                            viewPager.setVisibility(View.VISIBLE);
+
+                            llLoader.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -328,18 +340,14 @@ public class HomeActivity extends AppCompatActivity implements
     public void onBackPressed() {
         try {
             if (tabLayout.getSelectedTabPosition() != 2) {
-                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress1");
                 setCurrentViewPagerItem(2);
             } else {
-                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress2");
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.rlHomePage);
-//                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 if (fragment != null) {
-                    Log.d("TAG_Main", "  setCurrentViewPagerItem backPress");
                     getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                     rl.setVisibility(View.GONE);
+                    toSetTitle(getString(R.string.app_name));
                 } else {
-                    Log.d("TAG_Main", "  setCurrentViewPagerItem backPress4");
                     doExit();
                 }
             }
@@ -356,9 +364,19 @@ public class HomeActivity extends AppCompatActivity implements
 
     public void setCurrentViewPagerItem(int i) {
         try {
+            if (getSupportFragmentManager().findFragmentById(R.id.rlHomePage) != null) {
+                Log.d("TAG_Main", "  setCurrentViewPagerItem backPress re ");
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                        .remove(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.rlHomePage)))
+                        .commit();
+                rl.setVisibility(View.GONE);
+                toSetTitle(getString(R.string.app_name));
+            }
             Log.d("TAG_Main", "  setCurrentViewPagerItem " + i);
             if (tabLayout != null) {
-                tabLayout.getTabAt(i).select();
+                Objects.requireNonNull(tabLayout.getTabAt(i)).select();
             }
             if (viewPager != null) {
                 viewPager.setCurrentItem(i);
@@ -402,9 +420,22 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setVisible() {
-        try{
+    public void onActionModeStarted(ActionMode mode) {
+        super.onActionModeStarted(mode);
+        mode.getMenu().clear();
+    }
+
+    @Override
+    public void setVisible(boolean status) {
+        try {
             rl.setVisibility(View.VISIBLE);
+            if (getSupportActionBar() != null) {
+                if (status) {
+                    CommonMethod.toSetTitle(getSupportActionBar(), HomeActivity.this, "Recent Images");
+                } else {
+                    CommonMethod.toSetTitle(getSupportActionBar(), HomeActivity.this, "Recent PDF ");
+                }
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

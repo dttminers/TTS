@@ -42,20 +42,22 @@ public class ClipBoard {
     @SuppressLint("ClickableViewAccessibility")
     public static void ToPopup(final Context context, final Activity activity, final EditText editText) {
         try {
-            // the purpose of the touch listener is just to store the touch X,Y coordinates
-            editText.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    // save the X,Y coordinates
-                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        lastTouchDownXY[0] = event.getX();
-                        lastTouchDownXY[1] = event.getY();
-                    }
+            if (editText != null) {
+                // the purpose of the touch listener is just to store the touch X,Y coordinates
+                editText.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        // save the X,Y coordinates
+                        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                            lastTouchDownXY[0] = event.getX();
+                            lastTouchDownXY[1] = event.getY();
+                        }
 
-                    // let the touch event pass on to whoever needs it
-                    return false;
-                }
-            });
+                        // let the touch event pass on to whoever needs it
+                        return false;
+                    }
+                });
+            }
 
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -218,7 +220,11 @@ public class ClipBoard {
                         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                         sharingIntent.setType("text/plain");
                         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                        if (editText != null){
+                         sharingIntent.putExtra(Intent.EXTRA_TEXT, editText.getText().toString());
+                        } else {
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                        }
                         context.startActivity(Intent.createChooser(sharingIntent, "Share"));
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -233,9 +239,15 @@ public class ClipBoard {
                 @Override
                 public void onClick(View v) {
                     try {
-                        Log.d("TAG", " Speak " + editText.getText().toString());
+
                         tts = new TTS(context);
-                        tts.SpeakLoud(editText.getText().toString());//, "AUD_Clip" + System.currentTimeMillis());
+                        if (editText != null) {
+                            Log.d("TAG", " Speak " + editText.getText().toString());
+                            tts.SpeakLoud(editText.getText().toString());//, "AUD_Clip" + System.currentTimeMillis());
+                        } else {
+                            Log.d("TAG", " Speak " + myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                            tts.SpeakLoud(myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                        }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

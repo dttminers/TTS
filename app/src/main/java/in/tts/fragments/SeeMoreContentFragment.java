@@ -1,10 +1,13 @@
 package in.tts.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,25 +25,30 @@ import java.util.Objects;
 
 import in.tts.R;
 import in.tts.adapters.ImageAdapterGallery;
+import in.tts.adapters.PdfListAdapter;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
-public class BlankFragment extends Fragment {
+public class SeeMoreContentFragment extends Fragment {
 
     private RecyclerView recyclerView;
 
     private LinearLayout mll;
 
+    private FloatingActionButton fab;
+
     private PrefManager prefManager;
+
+    private boolean status = false;
 
     private OnFragmentInteractionListener mListener;
 
-    public BlankFragment() {
+    public SeeMoreContentFragment() {
         // Required empty public constructor
     }
 
-    public static BlankFragment newInstance() {
-        return new BlankFragment();
+    public static SeeMoreContentFragment newInstance() {
+        return new SeeMoreContentFragment();
     }
 
     @Override
@@ -49,9 +57,9 @@ public class BlankFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_blank, container, false);
+        return inflater.inflate(R.layout.fragment_see_more_content, container, false);
     }
 
     @Override
@@ -61,66 +69,108 @@ public class BlankFragment extends Fragment {
             mll = Objects.requireNonNull(getActivity()).findViewById(R.id.llCustom_loader12000);
 
             recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.rvListSeeMore);
-
             recyclerView.setNestedScrollingEnabled(false);
             recyclerView.setHasFixedSize(true);
 
+            fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+//                        toExit(false);
+                        if (status) {
+                            mListener.setCurrentViewPagerItem(4);
+                        } else {
+                            mListener.setCurrentViewPagerItem(1);
+                        }
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        CommonMethod.toCloseLoader();
+                        Crashlytics.logException(e);
+                        toExit(true);
+                    }
+                }
+            });
 
             prefManager = new PrefManager(getContext());
 
             if (getArguments() != null) {
+                Log.d("TAG_Blank", "DATA : 1  " + getArguments().getBoolean("STATUS"));
                 if (getArguments().getBoolean("STATUS")) {
+                    Log.d("TAG_Blank", "DATA : 2 ");
                     // Images
                     if (prefManager.toGetImageListRecent() != null) {
+                        Log.d("TAG_Blank", "DATA : 3 ");
                         if (prefManager.toGetImageListRecent().size() > 0) {
+                            status = true;
+                            Log.d("TAG_Blank", "DATA : 4 ");
                             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             recyclerView.setAdapter(new ImageAdapterGallery(getContext(), prefManager.toGetImageListRecent()));
                             toChangeViews();
                         } else {
-                            toExit();
+                            Log.d("TAG_Blank", "DATA : 5 ");
+                            toExit(true);
                         }
                     } else {
-                        toExit();
+                        Log.d("TAG_Blank", "DATA : 6 ");
+                        toExit(true);
                     }
                 } else {
+                    Log.d("TAG_Blank", "DATA : 7 ");
                     // PDf
                     if (prefManager.toGetPDFListRecent() != null) {
+                        Log.d("TAG_Blank", "DATA : 8 ");
                         if (prefManager.toGetPDFListRecent().size() > 0) {
+                            Log.d("TAG_Blank", "DATA : 9 ");
                             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            recyclerView.setAdapter(new ImageAdapterGallery(getContext(), prefManager.toGetPDFListRecent()));
+                            recyclerView.setAdapter(new PdfListAdapter(getContext(), prefManager.toGetPDFListRecent()));
                             toChangeViews();
                         } else {
-                            toExit();
+                            Log.d("TAG_Blank", "DATA : 10 ");
+                            toExit(true);
                         }
                     } else {
-                        toExit();
+                        Log.d("TAG_Blank", "DATA : 11 ");
+                        toExit(true);
                     }
                 }
-            } else {
+            } else
+
+            {
+                Log.d("TAG_Blank", "DATA : 12 ");
                 // Pdf
                 if (prefManager.toGetPDFListRecent() != null) {
+                    Log.d("TAG_Blank", "DATA : 13 ");
                     if (prefManager.toGetPDFListRecent().size() > 0) {
+                        Log.d("TAG_Blank", "DATA : 14 ");
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                         recyclerView.setAdapter(new ImageAdapterGallery(getContext(), prefManager.toGetPDFListRecent()));
                         toChangeViews();
                     } else {
-                        toExit();
+                        Log.d("TAG_Blank", "DATA : 15 ");
+                        toExit(true);
                     }
                 } else {
-                    toExit();
+                    Log.d("TAG_Blank", "DATA : 16 ");
+                    toExit(true);
                 }
             }
         } catch (Exception | Error e) {
+            Log.d("TAG_Blank", "DATA : 17 ");
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
             Crashlytics.logException(e);
+            toExit(true);
         }
     }
 
+    @SuppressLint("RestrictedApi")
     private void toChangeViews() {
         try {
             recyclerView.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
             mll.setVisibility(View.GONE);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -130,15 +180,22 @@ public class BlankFragment extends Fragment {
         }
     }
 
-    private void toExit() {
+    private void toExit(boolean status) {
         try {
-            CommonMethod.toDisplayToast(getContext(), " No Data Found ");
+            if (status) {
+                CommonMethod.toDisplayToast(getContext(), " No Data Found ");
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().remove(BlankFragment.this).commit();
+                    Objects.requireNonNull(getActivity())
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                            .remove(SeeMoreContentFragment.this)
+                            .commit();
                 }
-            }, 1500);
+            }, 1000);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -169,5 +226,7 @@ public class BlankFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+
+        void setCurrentViewPagerItem(int i);
     }
 }

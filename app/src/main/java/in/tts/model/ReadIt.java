@@ -9,6 +9,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.util.Log;
 //import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
 //import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 import in.tts.R;
+import in.tts.services.ClipboardMonitorService;
 import io.fabric.sdk.android.Fabric;
 
 public class ReadIt extends Application {
@@ -23,6 +25,10 @@ public class ReadIt extends Application {
     public void onCreate() {
         super.onCreate();
         try {
+
+            // Show the contents of the clipboard history.
+            startService(new Intent(this, ClipboardMonitorService.class));
+
             new FlurryAgent.Builder()
                     .withLogEnabled(true)
                     .build(this, getString(R.string.str_flurry_app));
@@ -49,9 +55,13 @@ public class ReadIt extends Application {
         super.onConfigurationChanged(newConfig);
     }
 
-    public void onLowMemory() { super.onLowMemory(); }
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
 
-    public void onTerminate() { super.onTerminate(); }
+    public void onTerminate() {
+        super.onTerminate();
+    }
 
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);

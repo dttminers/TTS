@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import in.tts.R;
+import in.tts.model.PrefManager;
 import in.tts.utils.CameraUtils;
 import in.tts.utils.CommonMethod;
 
@@ -53,6 +54,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        PrefManager.ActivityCount =+1;
     }
 
     @Override

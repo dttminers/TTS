@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,8 +25,6 @@ import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
-import java.io.File;
-
 import in.tts.R;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
@@ -40,14 +37,13 @@ public class TutorialPageActivity extends AppCompatActivity {
     private int[] layouts = new int[]{R.layout.tutorial_1, R.layout.tutorial_2, R.layout.tutorial_3, R.layout.tutorial_5, R.layout.tutorial_4};
     private PrefManager prefManager;
 
-
     @Override
     @AddTrace(name = "onCreateTutorialPageActivityActivity", enabled = true)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_tutorial_page);
-
+            PrefManager.ActivityCount = +1;
             prefManager = new PrefManager(this);
             if (!prefManager.isFirstTimeLaunch()) {
                 launchHomeScreen();
@@ -169,9 +165,9 @@ public class TutorialPageActivity extends AppCompatActivity {
 
     private void changeStatusBarColor() throws Exception, Error {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
 //        }
     }
 

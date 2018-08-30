@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import in.tts.R;
+import in.tts.model.PrefManager;
 import in.tts.network.VolleySingleton;
 import in.tts.utils.CommonMethod;
 
@@ -49,6 +50,7 @@ public class Contact_us extends AppCompatActivity {
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), Contact_us.this, getString(R.string.app_name));
             }
+            PrefManager.ActivityCount =+1;
 
             mTxtNameError = findViewById(R.id.txtCuUserNameError);
 

@@ -36,6 +36,7 @@ import java.util.Objects;
 
 import in.tts.R;
 import in.tts.classes.TTS;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.KeyBoard;
 
@@ -463,6 +464,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     }
 
     public void setLoadData(String data) {
+        PrefManager.CurrentPage = 3;
         Log.d("TAG_", " setLoadData " + getArguments() + ":" + data);
         if (editText != null) {
             editText.setText(data);

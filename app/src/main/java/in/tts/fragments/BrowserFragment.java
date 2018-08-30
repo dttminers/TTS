@@ -22,6 +22,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
 import in.tts.activities.BrowserActivity;
+import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class BrowserFragment extends Fragment {
@@ -222,6 +223,7 @@ public class BrowserFragment extends Fragment {
     }
 
     public void setLoadData() {
+        PrefManager.CurrentPage = 0;
     }
 
     public interface OnFragmentInteractionListener {

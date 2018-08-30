@@ -62,7 +62,6 @@ public class ClipboardMonitorService extends Service {
             new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override
                 public void onPrimaryClipChanged() {
-                    Log.d("TAGCM", " onPrimaryClipChanged");
                     Log.d("TAGCM", "onPrimaryClipChanged");
                     ClipData clip = mClipboardManager.getPrimaryClip();
                     mThreadPool.execute(new WriteHistoryRunnable(

@@ -1,5 +1,6 @@
 package in.tts.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,6 +45,7 @@ public class AudioSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_audio_setting);
+            PrefManager.ActivityCount =+1;
             CommonMethod.setAnalyticsData(AudioSettingActivity.this, "MainTab", "AudioSetting", null);
 
             if (getSupportActionBar() != null) {
@@ -343,6 +345,20 @@ public class AudioSettingActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        try{
+//            Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
+//            if (PrefManager.ActivityCount <= 1) {
+//                if (PrefManager.CurrentPage == 2) {
+//                    startActivity(new Intent(AudioSettingActivity.this, HomeActivity.class));
+//                }
+//            } else {
+                finish();
+//            }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+        }
     }
 }

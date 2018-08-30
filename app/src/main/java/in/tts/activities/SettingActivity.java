@@ -57,6 +57,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_setting);
+            PrefManager.ActivityCount =+1;
             CommonMethod.setAnalyticsData(SettingActivity.this, "MainTab", "Setting User", null);
 
             if (getSupportActionBar() != null) {
@@ -216,6 +217,12 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+//        if (PrefManager.ActivityCount <= 1) {
+//            if (PrefManager.CurrentPage != 0) {
+//                startActivity(new Intent(SettingActivity.this, HomeActivity.class));
+//            }
+//        } else {
+            finish();
+//        }
     }
 }
