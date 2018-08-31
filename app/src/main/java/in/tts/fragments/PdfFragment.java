@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -36,7 +35,8 @@ public class PdfFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    private BrowsePdfFragment tab1;
+    private SeeMoreContentFragment tab1;
+    //    private BrowsePdfFragment tab1;
     private EBookFragment tab2;
 
     private String[] tabHomeText = new String[]{"My Books", "Library"};
@@ -195,13 +195,15 @@ public class PdfFragment extends Fragment {
                 case 0:
 //                    return tab1 = MyBooksListFragment.newInstance();
 //                    return tab1 = PdfListFragment.newInstance();
-                    return tab1 = BrowsePdfFragment.newInstance();
+//                    return tab1 = BrowsePdfFragment.newInstance();
+                    return tab1 = SeeMoreContentFragment.newInstance();
                 case 1:
                     return tab2 = EBookFragment.newInstance();
                 default:
 //                    return tab1 = MyBooksListFragment.newInstance();
 //                    return tab1 = PdfListFragment.newInstance();
-                    return tab1 = BrowsePdfFragment.newInstance();
+//                    return tab1 = BrowsePdfFragment.newInstance();
+                    return tab1 = SeeMoreContentFragment.newInstance();
             }
         }
 

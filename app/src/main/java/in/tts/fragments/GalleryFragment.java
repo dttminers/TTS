@@ -32,7 +32,6 @@ import com.google.firebase.perf.metrics.AddTrace;
 import java.util.ArrayList;
 
 import in.tts.R;
-
 import in.tts.adapters.ImageAdapterGallery;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;

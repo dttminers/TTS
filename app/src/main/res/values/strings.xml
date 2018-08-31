@@ -9,6 +9,7 @@
     <string name="str_title_audio_settings">Audio Settings</string>
     <string name="str_title_our_other_apps">Our Other App</string>
     <string name="str_title_images">Images</string>
+    <string name="str_title_pdf_files">PDF Files</string>
     <string name="str_title_recent_voice">Recent Voice</string>
 
     <string name="str_start_typing_here">Start typing here…</string>
@@ -246,5 +247,9 @@ ebook reading software is free and easy to download from the internet.
     <string name="str_fetching_data">Fetching data ...</string>
     <string name="str_favicon">favicon</string>
     <string name="str_read_selected_text">Read Selected Text</string>
+    <string name="str_recent_pdf">Recent Pdf</string>
+    <string name="str_recent_image">Recent Images</string>
+    <string name="str_no_pdf_viewed">No Pdf Viewed</string>
+    <string name="str_no_image_viewed">No Image Viewed</string>
 </resources>
 

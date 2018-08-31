@@ -10,9 +10,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.Date;
 
 public class ClipboardMonitorService extends Service {
 

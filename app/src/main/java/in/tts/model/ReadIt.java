@@ -1,24 +1,23 @@
 package in.tts.model;
 
 import android.app.Application;
-
-import com.crashlytics.android.Crashlytics;
-import com.flurry.android.FlurryAgent;
-import com.google.firebase.crash.FirebaseCrash;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
-//import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-//import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
+import com.crashlytics.android.Crashlytics;
+import com.facebook.appevents.AppEventsLogger;
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+
 import in.tts.R;
 import in.tts.services.ClipboardMonitorService;
 import io.fabric.sdk.android.Fabric;
+
+//import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+//import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 
 public class ReadIt extends Application {
 

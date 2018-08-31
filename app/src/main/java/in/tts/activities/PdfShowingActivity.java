@@ -6,6 +6,7 @@ import android.graphics.pdf.PdfRenderer;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
@@ -13,7 +14,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -937,7 +937,7 @@ public class PdfShowingActivity extends AppCompatActivity {
         Log.d("TAG_BACK", " Pdf " + PrefManager.ActivityCount);
         if (PrefManager.ActivityCount <= 1) {
             if (PrefManager.CurrentPage != 1) {
-                startActivity(new Intent(PdfShowingActivity.this, HomeActivity.class));
+                startActivity(new Intent(PdfShowingActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
             } else {
                 finish();
             }

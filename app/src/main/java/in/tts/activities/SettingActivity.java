@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,9 +17,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
@@ -32,12 +26,9 @@ import java.text.DecimalFormat;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.tts.R;
-import in.tts.fragments.LoginFragment;
 import in.tts.model.PrefManager;
 import in.tts.model.User;
 import in.tts.utils.CommonMethod;
-
-import static java.security.AccessController.getContext;
 
 public class SettingActivity extends AppCompatActivity {
 

@@ -20,12 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.flurry.android.FlurryAgent;
-import com.google.firebase.crash.FirebaseCrash;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

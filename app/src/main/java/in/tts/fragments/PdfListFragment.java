@@ -29,7 +29,6 @@ import java.util.Objects;
 
 import in.tts.R;
 import in.tts.adapters.PdfListAdapter;
-import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
 public class PdfListFragment extends Fragment {

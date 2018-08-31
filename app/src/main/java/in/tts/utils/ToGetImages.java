@@ -11,8 +11,6 @@ import com.flurry.android.FlurryAgent;
 
 import java.util.ArrayList;
 
-import in.tts.model.PrefManager;
-
 public class ToGetImages {
 
     private static ArrayList<String> imageFile = new ArrayList<>();

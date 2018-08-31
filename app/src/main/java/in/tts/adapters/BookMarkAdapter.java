@@ -17,11 +17,9 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import in.tts.R;
-import in.tts.activities.BookmarkActivity;
 import in.tts.activities.BrowserActivity;
 import in.tts.model.BookmarkModel;
 import in.tts.model.PrefManager;

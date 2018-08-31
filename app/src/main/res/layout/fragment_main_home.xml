@@ -148,7 +148,7 @@
                             android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="No Pdf Viewed"
+                            android:text="@string/str_no_pdf_viewed"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp" />
 
@@ -231,7 +231,7 @@
                             android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="No Image Viewed"
+                            android:text="@string/str_no_image_viewed"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp" />
 

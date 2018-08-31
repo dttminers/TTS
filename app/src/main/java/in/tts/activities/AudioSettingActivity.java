@@ -1,6 +1,5 @@
 package in.tts.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,25 +9,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.perf.metrics.AddTrace;
+import com.vsa.seekbarindicated.SeekBarIndicated;
+
+import java.util.Locale;
 
 import in.tts.R;
 import in.tts.model.AudioSetting;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
-
-import com.google.firebase.crash.FirebaseCrash;
-import com.google.firebase.perf.metrics.AddTrace;
-import com.google.gson.Gson;
-import com.vsa.seekbarindicated.SeekBarIndicated;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Locale;
 
 public class AudioSettingActivity extends AppCompatActivity {
 
@@ -45,7 +38,7 @@ public class AudioSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_audio_setting);
-            PrefManager.ActivityCount =+1;
+            PrefManager.ActivityCount = +1;
             CommonMethod.setAnalyticsData(AudioSettingActivity.this, "MainTab", "AudioSetting", null);
 
             if (getSupportActionBar() != null) {
@@ -54,13 +47,14 @@ public class AudioSettingActivity extends AppCompatActivity {
 
             prefManager = new PrefManager(AudioSettingActivity.this);
             prefManager.getAudioSetting();
+
             audioSetting = AudioSetting.getAudioSetting(AudioSettingActivity.this);
 
             rgVoiceSel = findViewById(R.id.rgVoice);
             rbMale = findViewById(R.id.rbMale);
             rbFemale = findViewById(R.id.rbFemale);
 
-            rgLangSel = (RadioGroup) findViewById(R.id.rgLanguageSel);
+            rgLangSel = findViewById(R.id.rgLanguageSel);
             rbEnglish = findViewById(R.id.rbEnglishLs);
             rbHindi = findViewById(R.id.rbHindiLs);
             rbMarathi = findViewById(R.id.rbMarathiLs);
@@ -313,7 +307,6 @@ public class AudioSettingActivity extends AppCompatActivity {
 
     public void setPrefData() {
         try {
-            Log.d("TAG ", "to setAudioSetting : " + new JSONObject(new Gson().toJson(AudioSetting.getAudioSetting(AudioSettingActivity.this))).toString());
             prefManager.setAudioSetting();
             prefManager.getAudioSetting();
         } catch (Exception | Error e) {
@@ -345,15 +338,8 @@ public class AudioSettingActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        try{
-//            Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
-//            if (PrefManager.ActivityCount <= 1) {
-//                if (PrefManager.CurrentPage == 2) {
-//                    startActivity(new Intent(AudioSettingActivity.this, HomeActivity.class));
-//                }
-//            } else {
-                finish();
-//            }
+        try {
+            finish();
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);

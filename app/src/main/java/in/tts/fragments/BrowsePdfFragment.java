@@ -1,39 +1,26 @@
 package in.tts.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.io.File;
-import java.util.Arrays;
 import java.util.Objects;
 
 import in.tts.R;
 import in.tts.activities.PdfShowingActivity;
-import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.FilePath;
-import in.tts.utils.RealPathUtil;
-import in.tts.utils.ToCheckFileExists;
 
 public class BrowsePdfFragment extends Fragment {
 

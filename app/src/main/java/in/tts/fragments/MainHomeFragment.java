@@ -173,7 +173,8 @@ public class MainHomeFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (pdfFile.size() > 0) {
-                            toCallSeeMore(false);
+//                            toCallSeeMore(false);
+                            mListener.setCurrentViewPagerItem(1);
                         } else {
                             CommonMethod.toDisplayToast(getContext(), " No data");
                         }
@@ -203,7 +204,8 @@ public class MainHomeFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (imageFile.size() > 0) {
-                            toCallSeeMore(true);
+//                            toCallSeeMore(true);
+                            mListener.setCurrentViewPagerItem(4);
                         } else {
                             CommonMethod.toDisplayToast(getContext(), " No data");
                         }
@@ -219,21 +221,21 @@ public class MainHomeFragment extends Fragment {
         }
     }
 
-    private void toCallSeeMore(boolean status) {
-        try {
-            SeeMoreContentFragment blankFragment = new SeeMoreContentFragment();
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("STATUS", status);
-            blankFragment.setArguments(bundle);
-            mListener.setVisible(status);
-            Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.rlHomePage, blankFragment).commit();
-        } catch (Exception | Error e) {
-            e.printStackTrace();
-            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-            Crashlytics.logException(e);
-            FirebaseCrash.report(e);
-        }
-    }
+//    private void toCallSeeMore(boolean status) {
+//        try {
+//            SeeMoreContentFragment blankFragment = new SeeMoreContentFragment();
+//            Bundle bundle = new Bundle();
+//            bundle.putBoolean("STATUS", status);
+//            blankFragment.setArguments(bundle);
+//            mListener.setVisible(status);
+//            Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().add(R.id.rlHomePage, blankFragment).commit();
+//        } catch (Exception | Error e) {
+//            e.printStackTrace();
+//            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//            Crashlytics.logException(e);
+//            FirebaseCrash.report(e);
+//        }
+//    }
 
 
     @Override
@@ -449,7 +451,8 @@ public class MainHomeFragment extends Fragment {
         }
         Log.d("TAG ", " main  " + PrefManager.AddedRecentImage + ":" + PrefManager.AddedRecentPDF);
         if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
-            toSetData();
+//            toSetData();
+            toSetDisplay();
         }
     }
 
@@ -458,7 +461,7 @@ public class MainHomeFragment extends Fragment {
 
         void setCurrentViewPagerItem(int i);
 
-        void setVisible(boolean status);
+//        void setVisible(boolean status);
     }
 
 

@@ -13,19 +13,33 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:nestedScrollingEnabled="true"
-        android:scrollbars="none" />
+        android:scrollbars="none"
+        android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:visibility="visible"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_black_24dp" />
+        android:src="@drawable/ic_add_black_24dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvNoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/document"
+        android:gravity="center"
+        android:text="@string/str_no_pdf_viewed"
+        android:textColor="@color/grey5"
+        android:textSize="15sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/llCustom_loader12000"

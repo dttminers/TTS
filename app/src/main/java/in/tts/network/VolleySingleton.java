@@ -8,8 +8,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import java.util.Arrays;
-
 @SuppressLint("StaticFieldLeak")
 public class VolleySingleton {
     private static VolleySingleton mInstance;

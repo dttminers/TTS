@@ -7,11 +7,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -24,14 +24,14 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
-import in.tts.*;
+import in.tts.R;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
 import in.tts.model.PrefManager;
@@ -311,7 +311,7 @@ public class ImageOcrActivity extends AppCompatActivity {
             Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
             if (PrefManager.ActivityCount <= 1) {
                 if (PrefManager.CurrentPage != 4) {
-                    startActivity(new Intent(ImageOcrActivity.this, HomeActivity.class));
+                    startActivity(new Intent(ImageOcrActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 } else {
                     finish();
                 }

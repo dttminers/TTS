@@ -8,10 +8,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -624,7 +624,7 @@ public class BrowserActivity extends AppCompatActivity {
                 superWebView.goBack();
             } else if (PrefManager.ActivityCount <= 1) {
                 if (PrefManager.CurrentPage != 0) {
-                    startActivity(new Intent(BrowserActivity.this, HomeActivity.class));
+                    startActivity(new Intent(BrowserActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 } else {
                     finish();
                 }

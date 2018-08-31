@@ -1,7 +1,6 @@
 package in.tts.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -10,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import in.tts.R;
+
 //import com.radaee.pdf.Global;
 //import com.radaee.reader.PDFViewAct;
-
-import in.tts.R;
 
 public class CustomPagerAdapter extends PagerAdapter {
 
