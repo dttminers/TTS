@@ -45,7 +45,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                 @Override
                 public void onInit(int i) {
                     try {
-                        Log.d("TTS_TAG ", " ini ");
+                        //Log.d("TTS_TAG ", " ini ");
                         if (i == TextToSpeech.SUCCESS) {
                             audioSetting = AudioSetting.getAudioSetting(mContext);
                             selectedLang = CommonMethod.LocaleFromString(audioSetting.getLangSelection()).getLanguage();
@@ -65,7 +65,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             } else {
                                 lang = tts.setLanguage(Locale.US);
                             }
-                            Log.d("TTS_TAG", "VOICE BY APP " + audioSetting.getVoiceSelection() + " " + audioSetting.getLangSelection());
+                            //Log.d("TTS_TAG", "VOICE BY APP " + audioSetting.getVoiceSelection() + " " + audioSetting.getLangSelection());
 
                             Set<String> a = new HashSet<>();
                             a.add("female");
@@ -105,16 +105,16 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
                             }
 
                             if (lang == TextToSpeech.LANG_MISSING_DATA || lang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                                Log.d("TTS_TAG", "This Language is not supported");
+                                //Log.d("TTS_TAG", "This Language is not supported");
                             } else {
-                                Log.d("TTS_TAG", " Else ");
+                                //Log.d("TTS_TAG", " Else ");
                             }
 
                         } else {
-                            Log.d("TTS_TAG", "Initialization Failed!");
+                            //Log.d("TTS_TAG", "Initialization Failed!");
                             CommonMethod.toDisplayToast(context, "Initialization Failed!");
                         }
-                        Log.d("TTS_TAG", "initi");
+                        //Log.d("TTS_TAG", "initi");
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -137,7 +137,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             if (tts == null) {
                 new TTS(context);
             }
-            Log.d("TTS_TAG", " SpeakLoud " + tts.isSpeaking()+":" + text);
+            //Log.d("TTS_TAG", " SpeakLoud " + tts.isSpeaking()+":" + text);
             if (text.length() >= 3990) {
 
                 int textLength = text.length();
@@ -174,7 +174,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     public String toSaveAudioFile(String text, String fileName) {
         try {
-            Log.d("TTS_TAG", " toSaveAudioFile " + text);
+            //Log.d("TTS_TAG", " toSaveAudioFile " + text);
             File audio;
             File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
             if (!mMainFolder.exists()) {
@@ -191,7 +191,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
 
             int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
-            Log.d("TTS_TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
+            //Log.d("TTS_TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
 
             return audio.getAbsolutePath();
         } catch (Exception | Error e) {
@@ -204,18 +204,18 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
     }
 
     public int toSeLanguage() throws Exception, Error {
-        Log.d("TTS_TAG ", " toSetLanguage " + audioSetting.getAccentSelection());
+        //Log.d("TTS_TAG ", " toSetLanguage " + audioSetting.getAccentSelection());
         return tts.setLanguage(CommonMethod.LocaleFromString(audioSetting.getLangSelection()) != null ? CommonMethod.LocaleFromString(audioSetting.getLangSelection()) : Locale.US);
     }
 
 
     public boolean isSpeaking() throws Exception, Error {
-        Log.d("TTS_TAG ", " isSpeaking ");
+        //Log.d("TTS_TAG ", " isSpeaking ");
         return tts.isSpeaking();
     }
 
     public void toStop() throws Exception, Error {
-        Log.d("TTS_TAG ", " toStop ");
+        //Log.d("TTS_TAG ", " toStop ");
         // Don't forget to shutdown tts!
         if (tts != null) {
             tts.stop();
@@ -223,7 +223,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
     }
 
     public void toShutDown() throws Exception, Error {
-        Log.d("TTS_TAG ", " toShutDown ");
+        //Log.d("TTS_TAG ", " toShutDown ");
         // Don't forget to shutdown tts!
         if (tts != null) {
             tts.stop();
@@ -333,14 +333,14 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 }
 
 //        if (tts.isSpeaking()) {
-//            //Log.d("TTS_TAG", "NOT SPEAKING "+text);
+//            ////Log.d("TTS_TAG", "NOT SPEAKING "+text);
 //            if (text.length() > 3999) {
 //            tts.speak(text.substring(0, 3999), TextToSpeech.QUEUE_FLUSH, null, text);
 //
 //            //  tts.speak(text, TextToSpeech.QUEUE_ADD, null);
 //        } else {
 //
-//            // Log.d("TTS_TAG", "SPEAKING");
+//            // //Log.d("TTS_TAG", "SPEAKING");
 ////            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
 //            if (text.length() > 3999) {
 //                tts.speak(text.substring(0, 3999), TextToSpeech.QUEUE_ADD, null, text);
@@ -366,10 +366,10 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 /*
     public String toSaveAudioFile(String text, String fileName) {
         try {
-            Log.d("TTS_TAG", " toSaveAudioFile " + text);
+            //Log.d("TTS_TAG", " toSaveAudioFile " + text);
             File audio;
             File mMainFolder = new File(Environment.getExternalStorageDirectory(), "READ_IT/Audio");
-            // Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
+            // //Log.d("TTS_TAG", "Sound PATH " + mMainFolder.exists());
 
             if (!mMainFolder.exists()) {
                 mMainFolder.mkdirs();
@@ -382,7 +382,7 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             }
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            tts.synthesizeToFile(text, null, audio, "READ_IT");
-//            Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
+//            //Log.d("TAG", " TTS  :  audio size 1: " + CommonMethod.getFileSize(audio));
 //        } else {
 //        HashMap<String, String> hm = new HashMap<>();
 ////            hm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "READ_IT");
@@ -392,9 +392,9 @@ public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
             HashMap<String, String> myHashRender = new HashMap<>();
             myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text);
             int i3 = tts.synthesizeToFile(text, myHashRender, audio.getAbsolutePath());
-            Log.d("TTS_TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
+            //Log.d("TTS_TAG", " TTS  :  audio size 2: " + i3 + CommonMethod.getFileSize(audio));
 //        }
-            //   Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
+            //   //Log.d("TTS_TAG", " sound_path" + audio.getAbsolutePath() + ":" + CommonMethod.getFileSize(audio));
             return audio.getAbsolutePath();
 //        }
 //        } else {

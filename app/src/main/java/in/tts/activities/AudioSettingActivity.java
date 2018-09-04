@@ -86,7 +86,7 @@ public class AudioSettingActivity extends AppCompatActivity {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     audioSetting.setVoiceSpeed(progress);
-                    Log.d("TAG SEEK", " onProgressChanged " + progress + ":" + fromUser + audioSetting.getVoiceSpeed());
+                    //Log.d("TAG SEEK", " onProgressChanged " + progress + ":" + fromUser + audioSetting.getVoiceSpeed());
                     setPrefData();
                 }
 
@@ -151,19 +151,19 @@ public class AudioSettingActivity extends AppCompatActivity {
                         switch (i) {
                             case R.id.rbAccentUS:
                                 audioSetting.setAccentSelection(String.valueOf(Locale.UK));
-                                Log.d("TAG", " Lang Uk " + String.valueOf(Locale.UK));
+                                //Log.d("TAG", " Lang Uk " + String.valueOf(Locale.UK));
                                 setPrefData();
                                 break;
 
                             case R.id.rbAccentUK:
                                 audioSetting.setAccentSelection(String.valueOf(Locale.US));
-                                Log.d("TAG", " Lang Us " + String.valueOf(Locale.US));
+                                //Log.d("TAG", " Lang Us " + String.valueOf(Locale.US));
                                 setPrefData();
                                 break;
 
                             default:
                                 audioSetting.setAccentSelection(String.valueOf(Locale.US));
-                                Log.d("TAG", " Lang def " + String.valueOf(Locale.US));
+                                //Log.d("TAG", " Lang def " + String.valueOf(Locale.US));
                                 setPrefData();
                                 break;
                         }

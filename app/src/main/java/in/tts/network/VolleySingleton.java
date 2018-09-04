@@ -40,7 +40,7 @@ public class VolleySingleton {
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         try {
-            Log.d("Req_URL", " tag : " + tag + " : " + req.getUrl() + " : " + new String(req.getBody(), "UTF-8"));
+            //Log.d("Req_URL", " tag : " + tag + " : " + req.getUrl() + " : " + new String(req.getBody(), "UTF-8"));
             getRequestQueue().add(req).setTag(tag);
         } catch (Exception | Error e) {
             e.printStackTrace();

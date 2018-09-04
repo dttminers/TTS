@@ -75,19 +75,19 @@ public class HomeActivity extends AppCompatActivity implements
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_home);
             PrefManager.ActivityCount = +1;
-            // Log.d("TAG_Main", "  onCreate ha ");
+            // //Log.d("TAG_Main", "  onCreate ha ");
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Log.d("TAG_Main", "  onCreatehg ha ");
+                            // //Log.d("TAG_Main", "  onCreatehg ha ");
                             toBindData();
                             fn_permission();
                         }
                     });
-                    // Log.d("TAG_Main", "  setCurrentViewPagerItem ha ");
+                    // //Log.d("TAG_Main", "  setCurrentViewPagerItem ha ");
 //                    setCurrentViewPagerItem(2);
                 }
             }, 10);
@@ -108,7 +108,7 @@ public class HomeActivity extends AppCompatActivity implements
             tabLayout = findViewById(R.id.tabsHome);
             viewPager = findViewById(R.id.nonSwipeableViewPagerHome);
 
-            // Log.d("TAG_Main", "  toBindData ha ");
+            // //Log.d("TAG_Main", "  toBindData ha ");
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -140,7 +140,7 @@ public class HomeActivity extends AppCompatActivity implements
                             if (getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT) != null) {
 //                                Bundle bundle = new Bundle();
                                 data = getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT).toString();
-                                // Log.d("TAG_Main", " DaTa " + data);
+                                // //Log.d("TAG_Main", " DaTa " + data);
 //                                bundle.putString("DATA", " " + getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT));
 //                                tab3.setArguments(bundle);
                                 setCurrentViewPagerItem(3);
@@ -159,7 +159,7 @@ public class HomeActivity extends AppCompatActivity implements
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    // Log.d("TAG_Main", "  setCurrentViewPagerItem tab " + tab.getPosition());
+                    // //Log.d("TAG_Main", "  setCurrentViewPagerItem tab " + tab.getPosition());
                     setCurrentViewPagerItem(tab.getPosition());
                     CommonMethod.toReleaseMemory();
                     CommonMethod.setAnalyticsData(HomeActivity.this, "MainTab", "Page " + tab.getPosition() + 1, null);
@@ -247,7 +247,7 @@ public class HomeActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         try {
 //            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
-//            // Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :"+ fragment.getClass().getName());
+//            // //Log.d("TAG", " Main onActivityResult " + resultCode + ":" + requestCode + " :"+ fragment.getClass().getName());
 //            fragment.onActivityResult(requestCode, resultCode, data);
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -262,7 +262,7 @@ public class HomeActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         try {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            // Log.d("TAG", "Main onRequestPermissionsResult : " + requestCode + ":" + Arrays.toString(permissions) + ":" + Arrays.toString(grantResults));
+            // //Log.d("TAG", "Main onRequestPermissionsResult : " + requestCode + ":" + Arrays.toString(permissions) + ":" + Arrays.toString(grantResults));
             if (requestCode == 1) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     fn_permission();
@@ -372,7 +372,7 @@ public class HomeActivity extends AppCompatActivity implements
     public void setCurrentViewPagerItem(int i) {
         try {
             if (getSupportFragmentManager().findFragmentById(R.id.rlHomePage) != null) {
-                // Log.d("TAG_Main", "  setCurrentViewPagerItem backPress re ");
+                // //Log.d("TAG_Main", "  setCurrentViewPagerItem backPress re ");
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
@@ -381,7 +381,7 @@ public class HomeActivity extends AppCompatActivity implements
                 rl.setVisibility(View.GONE);
                 toSetTitle(getString(R.string.app_name));
             }
-            // Log.d("TAG_Main", "  setCurrentViewPagerItem " + i);
+            // //Log.d("TAG_Main", "  setCurrentViewPagerItem " + i);
             if (tabLayout != null) {
                 Objects.requireNonNull(tabLayout.getTabAt(i)).select();
             }

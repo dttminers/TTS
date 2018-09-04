@@ -251,5 +251,7 @@ ebook reading software is free and easy to download from the internet.
     <string name="str_recent_image">Recent Images</string>
     <string name="str_no_pdf_viewed">No Pdf Viewed</string>
     <string name="str_no_image_viewed">No Image Viewed</string>
+    <string name="str_rotate">Rotate</string>
+    <string name="str_read_specific_selected_text">You can select specific text and listen too...</string>
 </resources>
 

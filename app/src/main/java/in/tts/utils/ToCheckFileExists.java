@@ -13,7 +13,7 @@ public class ToCheckFileExists {
 
     public static boolean isPDFFile(String fileName) {
         try {
-            Log.d("TAG", " isPDFFile "+fileName+":"+ fileName.endsWith(".pdf")+":"+ new File(fileName.trim().replaceAll("%20", " ")).exists() );
+            //Log.d("TAG", " isPDFFile "+fileName+":"+ fileName.endsWith(".pdf")+":"+ new File(fileName.trim().replaceAll("%20", " ")).exists() );
             return fileName.endsWith(".pdf") && new File(fileName.trim().replaceAll("%20", " ")).exists();
         } catch (Exception | Error e) {
             e.printStackTrace();

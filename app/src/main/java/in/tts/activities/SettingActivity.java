@@ -77,7 +77,7 @@ public class SettingActivity extends AppCompatActivity {
 
             user = User.getUser(SettingActivity.this);
 
-            Log.d("TAG", "user data: " + (user.getUsername() != null ? user.getUsername() : user.getEmail() != null ? user.getEmail() : "UserName") + user.getPicPath());
+            //Log.d("TAG", "user data: " + (user.getUsername() != null ? user.getUsername() : user.getEmail() != null ? user.getEmail() : "UserName") + user.getPicPath());
             tvName.setText(user.getUsername() != null ? user.getUsername() : user.getEmail() != null ? user.getEmail() : "UserName");
             if (user.getPicPath() != null) {
                 Picasso.get()

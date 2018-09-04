@@ -73,7 +73,7 @@ public class PdfFragment extends Fragment {
     public void setLoadData() {
         try {
             PrefManager.CurrentPage = 1;
-            Log.d("Tag", "tab2 setLoadData " + viewPager.getCurrentItem());
+            //Log.d("Tag", "tab2 setLoadData " + viewPager.getCurrentItem());
             if (viewPager != null) {
                 setCurrentViewPagerItem(viewPager.getCurrentItem());
             } else {
@@ -216,7 +216,7 @@ public class PdfFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Log.d("TAG", " FRa onActivityResult " + resultCode + ":" + requestCode + " :" + data.getData() + ":" + data.getData().getPath());
+            //Log.d("TAG", " FRa onActivityResult " + resultCode + ":" + requestCode + " :" + data.getData() + ":" + data.getData().getPath());
             Fragment fragment = getChildFragmentManager().findFragmentById(R.id.fragmentrepalce);
             fragment.onActivityResult(requestCode, resultCode, data);
         } catch (Exception | Error e) {

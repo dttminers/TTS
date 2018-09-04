@@ -262,16 +262,16 @@ public class Contact_us extends AppCompatActivity {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
-                                                    Log.d("TAG", "feedback Response " + response);
+                                                    //Log.d("TAG", "feedback Response " + response);
                                                     if (response != null) {
                                                         JSONObject obj = new JSONObject(response.trim());
                                                         if (obj != null) {
                                                             if (!obj.isNull("status")) {
                                                                 if (obj.getString("status").trim().equals("1")) {
-                                                                    Log.d("TAG", " success  ");
+                                                                    //Log.d("TAG", " success  ");
                                                                     toExit();
                                                                 } else {
-                                                                    Log.d("TAG", " failed ");
+                                                                    //Log.d("TAG", " failed ");
                                                                 }
                                                             }
                                                         }
@@ -287,7 +287,7 @@ public class Contact_us extends AppCompatActivity {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-                                                Log.d("TAG", " error " + error.getMessage());
+                                                //Log.d("TAG", " error " + error.getMessage());
                                             }
                                         }
                                 ) {

@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Log.d("TAG", " LoginActivity onActivityResult : " + resultCode + ":" + requestCode + " :");
+            //Log.d("TAG", " LoginActivity onActivityResult : " + resultCode + ":" + requestCode + " :");
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentrepalce);
             fragment.onActivityResult(requestCode, resultCode, data);
             CommonMethod.toReleaseMemory();

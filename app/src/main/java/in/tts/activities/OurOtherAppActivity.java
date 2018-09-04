@@ -28,7 +28,7 @@ public class OurOtherAppActivity extends AppCompatActivity {
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), OurOtherAppActivity.this, getString(R.string.str_title_our_other_apps));
             }
-//        Log.d("TAG", "VERSION_APP " + BuildConfig.VERSION_CODE + " : " + BuildConfig.VERSION_NAME);
+//        //Log.d("TAG", "VERSION_APP " + BuildConfig.VERSION_CODE + " : " + BuildConfig.VERSION_NAME);
             CommonMethod.toDisplayToast(OurOtherAppActivity.this, BuildConfig.VERSION_CODE + " : " + BuildConfig.VERSION_NAME);
         } catch (Exception|Error e){
             e.printStackTrace();

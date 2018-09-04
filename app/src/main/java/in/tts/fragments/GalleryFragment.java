@@ -138,7 +138,7 @@ public class GalleryFragment extends Fragment {
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         String imageLocation = cursor.getString(1);
-                        Log.d("TAG_G", " Image : " + imageLocation + " : " + ToCheckFileExists.singleFile(imageLocation));
+                        //Log.d("TAG_G", " Image : " + imageLocation + " : " + ToCheckFileExists.singleFile(imageLocation));
                         if (ToCheckFileExists.singleFile(imageLocation)) {
                             if (!imageFile.contains(imageLocation)) {
                                 imageFile.add(imageLocation);

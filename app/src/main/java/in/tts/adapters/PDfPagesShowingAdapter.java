@@ -29,7 +29,7 @@ public class PDfPagesShowingAdapter extends PagerAdapter {
         try {
             context = mContext;
             list = listBitmap;
-            // Log.d("TAG_PDFA", "Con " + listBitmap.size());
+            // //Log.d("TAG_PDFA", "Con " + listBitmap.size());
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -50,7 +50,7 @@ public class PDfPagesShowingAdapter extends PagerAdapter {
     @NonNull
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         try {
-            // Log.d("TAG_PDFA", "ini  " + position);
+            // //Log.d("TAG_PDFA", "ini  " + position);
             ViewGroup vg = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.pdf_page, container, false);
             pageView = vg.findViewById(R.id.pages);
             tvPageNumber = vg.findViewById(R.id.txtPageNumber);
@@ -61,20 +61,20 @@ public class PDfPagesShowingAdapter extends PagerAdapter {
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Log.d("TAG_PDFA", "container ");
+                    // //Log.d("TAG_PDFA", "container ");
                 }
             });
 
             vg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Log.d("TAG_PDFA", "vg ");
+                    // //Log.d("TAG_PDFA", "vg ");
                 }
             });
             vg.findViewById(R.id.rlPages).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Log.d("TAG_PDFA", "rl ");
+                    // //Log.d("TAG_PDFA", "rl ");
                 }
             });
             container.addView(vg);

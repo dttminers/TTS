@@ -71,6 +71,9 @@ public class BrowserActivity extends AppCompatActivity {
             setContentView(R.layout.activity_browser);
             PrefManager.ActivityCount = +1;
             checkInternetConnection();
+
+//            Log.d("TAG", " ON_CREATE_BROWSE");
+
             if (getSupportActionBar() != null) {
                 CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, getString(R.string.app_name));
             }
@@ -115,6 +118,15 @@ public class BrowserActivity extends AppCompatActivity {
                 public void onPageStarted(WebView view, final String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
                     try {
+                        if (cbMenu != null){
+                            cbMenu.setChecked(false);
+                        }
+                        if (tts != null) {
+                            if (tts.isSpeaking()) {
+                                tts.toStop();
+                                tts.toShutDown();
+                            }
+                        }
                         stringBuilder = new StringBuilder();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -151,7 +163,7 @@ public class BrowserActivity extends AppCompatActivity {
                     @Override
                     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                         currentPosition = i1;
-//                        Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth() + currentPosition);
+//                        //Log.d("TAG_WEB", "onScrollChange " + i + ":" + i1 + ":" + i2 + ":" + i3 + ":" + view.getHeight() + ":" + view.getWidth() + currentPosition);
                     }
                 });
             }
@@ -215,7 +227,7 @@ public class BrowserActivity extends AppCompatActivity {
                 @Override
                 public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                     try {
-                        Log.d("TAG_WEB ", " onDownloadStart : " + url + "\n :" + userAgent + "\n: " + contentDisposition + "\n : " + mimetype + "\n :" + contentLength);
+                        //Log.d("TAG_WEB ", " onDownloadStart : " + url + "\n :" + userAgent + "\n: " + contentDisposition + "\n : " + mimetype + "\n :" + contentLength);
                         Uri myUri = Uri.parse(url);
                         Intent superIntent = new Intent(Intent.ACTION_VIEW);
                         superIntent.setData(myUri);
@@ -246,6 +258,25 @@ public class BrowserActivity extends AppCompatActivity {
                     }
                 }
             });
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Snackbar.make(rl, getString(R.string.str_read_specific_selected_text), Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+                        });
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+                        Crashlytics.logException(e);
+                        FirebaseCrash.report(e);
+                    }
+                }
+            }, 500);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -257,7 +288,7 @@ public class BrowserActivity extends AppCompatActivity {
     @Override
     public void onActionModeStarted(final android.view.ActionMode mode) {
         try {
-            Log.d("TAG_WEB", "onActionModeStarted :  " + mode.isTitleOptional());
+            //Log.d("TAG_WEB", "onActionModeStarted :  " + mode.isTitleOptional());
             mode.getMenu().clear();
             Menu menus = mode.getMenu();
             mode.getMenuInflater().inflate(R.menu.highlight, menus);
@@ -272,7 +303,7 @@ public class BrowserActivity extends AppCompatActivity {
                                         @Override
                                         public void onReceiveValue(String value) {
                                             try {
-                                                Log.d("TAG_WEB", "SelectedText:" + value);
+                                                //Log.d("TAG_WEB", "SelectedText:" + value);
                                                 if (value != null) {
                                                     if (value.trim().length() > 0) {
                                                         toSpeakFromWebPage(value);
@@ -334,7 +365,7 @@ public class BrowserActivity extends AppCompatActivity {
                         public void run() {
                             if (list != null) {
                                 for (int i = 0; i < list.size(); i++) {
-//                                    Log.d("TAG_List ", " toUpdateBookMarkIcon : " + list.get(i).getPageUrl() + ":" + (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))));
+//                                    //Log.d("TAG_List ", " toUpdateBookMarkIcon : " + list.get(i).getPageUrl() + ":" + (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))));
                                     if (list.get(i).getPageUrl().equals(superWebView.getUrl().trim().replaceAll("\\s+", "%20"))) {
                                         cbMenu.setChecked(true);
                                     } else {
@@ -464,7 +495,7 @@ public class BrowserActivity extends AppCompatActivity {
 
     private void toGetTextFromBitmap(Bitmap bitmap) {
         try {
-//            Log.d("TAG_WEB", " toGetTextFromBitmap " + bitmap.getHeight() + ":" + bitmap.isRecycled() + ":" + currentPosition + ":" + setBackPosition);
+//            //Log.d("TAG_WEB", " toGetTextFromBitmap " + bitmap.getHeight() + ":" + bitmap.isRecycled() + ":" + currentPosition + ":" + setBackPosition);
             rlPb.setVisibility(View.VISIBLE);
 
             if (getSupportActionBar() != null) {
@@ -479,7 +510,7 @@ public class BrowserActivity extends AppCompatActivity {
 //                    dirPath.mkdirs();
 //                }
 //                File imageFile = new File(dirPath.getAbsolutePath() + File.separator + "aksh_" + now + ".jpg");
-//                Log.d("TAG_WEB", " getpath " + imageFile.getAbsolutePath());
+//                //Log.d("TAG_WEB", " getpath " + imageFile.getAbsolutePath());
 //                FileOutputStream fos = new FileOutputStream(imageFile);
 //                if (fos != null) {
 //                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -504,23 +535,23 @@ public class BrowserActivity extends AppCompatActivity {
                 stringBuilder.append(item.getValue());
                 stringBuilder.append("\n");
             }
-//            Log.d("TAG_WEB", " data10 " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
+            //Log.d("TAG_WEB", " data10 " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
 
 
             superWebView.post(new Runnable() {
                 public void run() {
-//                    Log.d("TAG_WEB", " data11 " + superWebView.getContentHeight() + ":" + superWebView.getScale() + ":" + superWebView.getScrollY());
+                    //Log.d("TAG_WEB", " data11 " + superWebView.getContentHeight() + ":" + superWebView.getScale() + ":" + superWebView.getScrollY());
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if (superWebView.getContentHeight() * superWebView.getScale() >= superWebView.getScrollY()) {
-//                                Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
+                                //Log.d("TAG_WEB", " data12 " + (int) superWebView.getHeight());
 
                                 superWebView.scrollBy(0, (int) superWebView.getHeight());
                                 toGetTextFromCurrentScreen();
 
                             } else {
-//                                Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
+                                //Log.d("TAG_WEB", " data13 " + currentPosition + ":" + setBackPosition);
                                 superWebView.scrollTo(0, setBackPosition);
                                 if (getSupportActionBar() != null) {
                                     CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, webTitle);
@@ -548,7 +579,7 @@ public class BrowserActivity extends AppCompatActivity {
     private void toSpeakFromWebPage(String text) {
         try {
             CommonMethod.toCloseLoader();
-            Log.d("WEB", "toSpeakWebPage  " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
+            //Log.d("WEB", "toSpeakWebPage  " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
             if (text.trim().length() > 0) {
 //                tts = new TTS(BrowserActivity.this);
                 if (tts != null) {
@@ -557,6 +588,7 @@ public class BrowserActivity extends AppCompatActivity {
                         tts.toShutDown();
                     }
                 }
+//                tts = new TTS(BrowserActivity.this);
                 tts.SpeakLoud(text.replaceAll("Fetching data...", "\\s"));//, "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
                 CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
 //                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
@@ -624,7 +656,7 @@ public class BrowserActivity extends AppCompatActivity {
                 superWebView.goBack();
             } else if (PrefManager.ActivityCount <= 1) {
                 if (PrefManager.CurrentPage != 0) {
-                    startActivity(new Intent(BrowserActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    startActivity(new Intent(BrowserActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 } else {
                     finish();
                 }

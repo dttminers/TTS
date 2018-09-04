@@ -89,7 +89,7 @@ public class EBookFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab22 setLoadData ");
+        //Log.d("Tag", "tab22 setLoadData ");
     }
 
     public interface OnFragmentInteractionListener {

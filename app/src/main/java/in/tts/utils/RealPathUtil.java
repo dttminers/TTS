@@ -15,7 +15,7 @@ public class RealPathUtil {
     public static String getRealPathFromURI_API19(Context context, Uri uri){
         String filePath = "";
         String wholeID = DocumentsContract.getDocumentId(uri);
-        Log.d("TAG", " faile " + wholeID + ":"+ uri +":");
+        //Log.d("TAG", " faile " + wholeID + ":"+ uri +":");
         // Split at colon, use second item in the array
         String id = wholeID.split(":")[1];
 

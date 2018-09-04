@@ -32,10 +32,13 @@ import in.tts.model.AudioModel;
 import in.tts.utils.PlaybackStatus;
 import in.tts.utils.StorageUtils;
 
-public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener,
-
+public class MediaPlayerService extends Service implements
+        MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnErrorListener,
+        MediaPlayer.OnSeekCompleteListener,
+        MediaPlayer.OnInfoListener,
+        MediaPlayer.OnBufferingUpdateListener,
         AudioManager.OnAudioFocusChangeListener {
 
     public static final String ACTION_PLAY = "audioplayer.ACTION_PLAY";
@@ -165,7 +168,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //            mediaPlayer.setDataSource(mediaFile);
 //            mediaPlayer.setDataSource(activeAudio.getData());
 
-            Log.d("TAG", " audio path :  " + audio);
+            //Log.d("TAG", " audio path :  " + audio);
             mediaPlayer.setDataSource("file://" + audio);
             mediaPlayer.prepareAsync();
         } catch (Error | Exception e) {
@@ -216,8 +219,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public void onCompletion(MediaPlayer mp) {
         try {
-            Log.d("TAG", " onCompletion " + audioIndex + ":"+ list.size() + (audioIndex != list.size()));
-            if (audioIndex != (list.size()-1)) {
+            //Log.d("TAG", " onCompletion " + audioIndex + ":" + list.size() + (audioIndex != list.size()));
+            if (audioIndex != (list.size() - 1)) {
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
@@ -239,13 +242,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             //Invoked when there has been an error during an asynchronous operation
             switch (what) {
                 case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
-                    Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + extra);
+                    //Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + extra);
                     break;
                 case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                    Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + extra);
+                    //Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + extra);
                     break;
                 case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                    Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + extra);
+                    //Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + extra);
                     break;
             }
         } catch (Error | Exception e) {
@@ -364,7 +367,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             try {
                 //Get the new media index form SharedPreferences
                 audioIndex = new StorageUtils(getApplicationContext()).loadAudioIndex();
-                Log.d("TAG", " Song 1 " + audioIndex +":"+list.size());
+                //Log.d("TAG", " Song 1 " + audioIndex + ":" + list.size());
                 if (audioIndex != -1 && audioIndex < list.size()) {
                     //index is in a valid range
                     audio = list.get(audioIndex).getText();
@@ -513,11 +516,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 //if last in playlist
                 audioIndex = 0;
                 audio = list.get(audioIndex).getText();
-                Log.d("TAG", " ms 1skipToNext : " + audioIndex + ":" + audio);
+                //Log.d("TAG", " ms 1skipToNext : " + audioIndex + ":" + audio);
             } else {
                 //get next in playlist
                 audio = list.get(++audioIndex).getText();
-                Log.d("TAG", " ms skipToNext 2: " + audioIndex + ":" + audio);
+                //Log.d("TAG", " ms skipToNext 2: " + audioIndex + ":" + audio);
             }
 
             //Update stored index
@@ -539,11 +542,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 //set index to the last of audioList
                 audioIndex = list.size() - 1;
                 audio = list.get(audioIndex).getText();
-                Log.d("TAG", " ms 1skipTopre : " + audioIndex + ":" + audio);
+                //Log.d("TAG", " ms 1skipTopre : " + audioIndex + ":" + audio);
             } else {
                 //get previous in playlist
                 audio = list.get(--audioIndex).getText();
-                Log.d("TAG", " ms 2skipToNexpre: " + audioIndex + ":" + audio);
+                //Log.d("TAG", " ms 2skipToNexpre: " + audioIndex + ":" + audio);
             }
 
             //Update stored index
@@ -574,8 +577,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 play_pauseAction = playbackAction(0);
             }
 
-            Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-                    R.mipmap.ic_launcher); //replace with your own image
+            Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher); //replace with your own image
 
             file = new File(audio);
             // Create a new Notification
@@ -681,7 +683,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 //                list = RecentVoiceActivity.user_list;
 
                 audioIndex = storage.loadAudioIndex();
-                Log.d("TAG", "Audio data :" + list.size() + audioIndex + ":" + (audioIndex != -1 && audioIndex < list.size()) );
+                //Log.d("TAG", "Audio data :" + list.size() + audioIndex + ":" + (audioIndex != -1 && audioIndex < list.size()));
                 if (audioIndex != -1 && audioIndex < list.size()) {
                     //index is in a valid range
                     audio = list.get(audioIndex).getText();

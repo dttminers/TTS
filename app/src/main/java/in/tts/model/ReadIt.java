@@ -13,7 +13,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import in.tts.R;
-import in.tts.services.ClipboardMonitorService;
+//import in.tts.services.ClipboardMonitorService;
 import io.fabric.sdk.android.Fabric;
 
 //import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
@@ -26,7 +26,7 @@ public class ReadIt extends Application {
         try {
 
             // Show the contents of the clipboard history.
-            startService(new Intent(this, ClipboardMonitorService.class));
+//            startService(new Intent(this, ClipboardMonitorService.class));
 
             new FlurryAgent.Builder()
                     .withLogEnabled(true)

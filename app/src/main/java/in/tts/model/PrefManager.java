@@ -73,7 +73,7 @@ public class PrefManager {
             if (us != null) {
                 User user = User.getUser(_context);
                 JSONObject userJSON = new JSONObject(us);
-                Log.d("TAG", " getUserInfo : " + userJSON);
+                //Log.d("TAG", " getUserInfo : " + userJSON);
                 if (!userJSON.isNull("email")) {
                     user.setEmail(userJSON.getString("email"));
                 }
@@ -377,7 +377,7 @@ public class PrefManager {
             if (us != null) {
                 User user = User.getUser(_context);
                 JSONObject userJSON = new JSONObject(us);
-                Log.d("TAG", " getUserInfo : " + userJSON);
+                //Log.d("TAG", " getUserInfo : " + userJSON);
                 if (!userJSON.isNull("email")) {
                     user.setEmail(userJSON.getString("email"));
                 }

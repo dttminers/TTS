@@ -99,7 +99,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                     if (mActionMode == null) {
                         mActionMode = startActionMode(mActionModeCallback);
                     }
-                    Log.d("TAG", "Audio : " + position + ":" + user_list.get(position).isSelected());
+                    //Log.d("TAG", "Audio : " + position + ":" + user_list.get(position).isSelected());
                     view.findViewById(R.id.ivSelected).setVisibility(user_list.get(position).isSelected() ? View.VISIBLE : View.INVISIBLE);
                 }
 
@@ -223,11 +223,11 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                     File fdelete = new File(multiselect_list.get(i).getText());
                     if (fdelete.exists()) {
                         if (fdelete.delete()) {
-                            Log.d("TAG", "file Deleted :" + fdelete.getPath());
+                            //Log.d("TAG", "file Deleted :" + fdelete.getPath());
                             user_list.remove(multiselect_list.get(i));
 
                         } else {
-                            Log.d("TAG", "file not Deleted :" + fdelete.getPath());
+                            //Log.d("TAG", "file not Deleted :" + fdelete.getPath());
                         }
                     }
                 }
@@ -277,7 +277,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
                             if (booleanpdf) {
                                 booleanpdf = false;
                             } else {
-                                Log.d("TAG", " Audio File :" + listFile[i].getAbsolutePath() + ":" + CommonMethod.getFileSize(listFile[i]));
+                                //Log.d("TAG", " Audio File :" + listFile[i].getAbsolutePath() + ":" + CommonMethod.getFileSize(listFile[i]));
                                 if (!CommonMethod.getFileSize(listFile[i]).equals("0 B")) {
 //                                file.add(listFile[i].getPath());
                                     user_list.add(new AudioModel(listFile[i].getPath()));
@@ -316,7 +316,7 @@ public class RecentVoiceActivity extends AppCompatActivity implements AlertDialo
     };
 
     private void playAudio(String media) {
-        Log.d("TAG", "Media : " + media + ":" + serviceBound);
+        //Log.d("TAG", "Media : " + media + ":" + serviceBound);
         //Check is service is active
         if (!serviceBound) {
             Intent playerIntent = new Intent(this, MediaPlayerService.class);

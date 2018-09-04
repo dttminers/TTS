@@ -98,7 +98,7 @@ public class PdfListFragment extends Fragment {
                     if (userScrolled && mLayoutManager.getChildCount() + ((LinearLayoutManager) Objects.requireNonNull(recyclerView.getLayoutManager())).findFirstVisibleItemPosition() < mLayoutManager.getItemCount()) {
                         userScrolled = false;
                         if (nextPage <= lastPage) {
-                            Log.d("TAG", " update3 " + nextPage + ":" + lastPage);
+                            //Log.d("TAG", " update3 " + nextPage + ":" + lastPage);
                             updateRecyclerView();
                         }
                     }
@@ -145,7 +145,7 @@ public class PdfListFragment extends Fragment {
     public void setLoadData() {
         try {
             if (!status) {
-                Log.d("TAG", " count  100: " + list.size());
+                //Log.d("TAG", " count  100: " + list.size());
 //                pdfListAdapter = new PdfListAdapter(getContext(), list);
                 new toGet().execute();
             }
@@ -163,7 +163,7 @@ public class PdfListFragment extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            Log.d("TAG", " count  200:" + list.size() + values[0]);
+            //Log.d("TAG", " count  200:" + list.size() + values[0]);
             tv.setText(String.valueOf(values[0])+"%");
             mProgress.setProgress(values[0]);
 //            if (values[0] <= 100) {
@@ -174,20 +174,20 @@ public class PdfListFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Log.d("TAG", " count  300:" + list.size());
+                //Log.d("TAG", " count  300:" + list.size());
 //                if (new PrefManager(getContext()).toGetPDFList() != null && new PrefManager(getContext()).toGetPDFList().size() != 0) {
 //                    list = new PrefManager(getContext()).toGetPDFList();
 //                }
-                Log.d("TAG", " count  400:" + list.size());
+                //Log.d("TAG", " count  400:" + list.size());
 
                 while (i <= 100) {
                     try {
                         Thread.sleep(50);
                         publishProgress(i);
                         i = i + 10;
-                        Log.d("TAG", " e1 " + i);
+                        //Log.d("TAG", " e1 " + i);
                     } catch (Exception e) {
-                        Log.d("TAG", " e1" + e.getMessage());
+                        //Log.d("TAG", " e1" + e.getMessage());
                     }
                 }
 
@@ -205,23 +205,23 @@ public class PdfListFragment extends Fragment {
             super.onPostExecute(aVoid);
             try {
 //                pdfListAdapter = new PdfListAdapter(getContext(), list);
-//                Log.d("TAG", " count  402:" + list.size() + ":" + pdfListAdapter.getItemCount());
+//                //Log.d("TAG", " count  402:" + list.size() + ":" + pdfListAdapter.getItemCount());
 //                recyclerView.setAdapter(pdfListAdapter);
 //                pdfListAdapter.notifyDataSetChanged();
                 if (list.size() > 0) {
                     populateRecyclerView();
-                    Log.d("TAG", " count  402:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                    //Log.d("TAG", " count  402:" + list.size() + ":" + pdfListAdapter.getItemCount());
                     rl.setVisibility(View.GONE);
                 }
                 status = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("TAG", " count  405:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                        //Log.d("TAG", " count  405:" + list.size() + ":" + pdfListAdapter.getItemCount());
                         new toGetFilesCheck().execute();
                     }
                 }, 2000);
-                Log.d("TAG", " count  403:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                //Log.d("TAG", " count  403:" + list.size() + ":" + pdfListAdapter.getItemCount());
             } catch (Exception | Error e) {
                 e.printStackTrace();
                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -237,13 +237,13 @@ public class PdfListFragment extends Fragment {
                 subList = new ArrayList<>();
                 extra = list.size() % 20;
                 lastPage = list.size() / 20;
-                Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
+                //Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
                 for (int i = 0; i < 20; i++) {
                     subList.add(list.get(i));
                 }
             } else {
                 subList = list;
-                Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
+                //Log.d("TAG", " update11" + extra + ":" + lastPage + ":" + nextPage + ":" + count);
             }
             pdfListAdapter = new PdfListAdapter(getContext(), subList);
             recyclerView.setAdapter(pdfListAdapter);
@@ -263,9 +263,9 @@ public class PdfListFragment extends Fragment {
         try {
             if (nextPage < lastPage) {
                 l = count + 20;
-                Log.d("TAG", "update count 1: " + count + ":" + l);
+                //Log.d("TAG", "update count 1: " + count + ":" + l);
                 for (int i = count; i < l; i++) {
-                    Log.d("TAG", "update count 3: " + count + ":" + l);
+                    //Log.d("TAG", "update count 3: " + count + ":" + l);
                     subList.add(list.get(i));
 
                    new Handler().post(new Runnable() {
@@ -280,9 +280,9 @@ public class PdfListFragment extends Fragment {
                 nextPage++;
             } else {
                 l = count + extra;
-                Log.d("TAG", "update count 2: " + count + ":" + l);
+                //Log.d("TAG", "update count 2: " + count + ":" + l);
                 for (int i = count; i < l; i++) {
-                    Log.d("TAG", "update count 4: " + count + ":" + l);
+                    //Log.d("TAG", "update count 4: " + count + ":" + l);
                     subList.add(list.get(i));
                     new Handler().post(new Runnable() {
                         public void run() {
@@ -308,7 +308,7 @@ public class PdfListFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            Log.d("TAG", " count  500:" + list.size() + values[0]);
+            //Log.d("TAG", " count  500:" + list.size() + values[0]);
             tv.setText(String.valueOf(values[0])+ " %");
             mProgress.setProgress(values[0]);
             if (values[0] <= 100) {
@@ -322,7 +322,7 @@ public class PdfListFragment extends Fragment {
             if (subList == null) {
                 populateRecyclerView();
             }
-            Log.d("TAG", " count  501:" + list.size() + ":" + pdfListAdapter.getItemCount());
+            //Log.d("TAG", " count  501:" + list.size() + ":" + pdfListAdapter.getItemCount());
 //            new PrefManager(getContext()).toSetPDFFileList(list);
 //            pdfListAdapter.notifyDataSetChanged();
             if (rl.getVisibility() == View.VISIBLE) {
@@ -333,17 +333,17 @@ public class PdfListFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Log.d("TAG", " count  502:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                //Log.d("TAG", " count  502:" + list.size() + ":" + pdfListAdapter.getItemCount());
                 getFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 
 //                while (i <= 190) {
 //                    try {
-//                        Log.d("TAG", " e2 " + i);
+//                        //Log.d("TAG", " e2 " + i);
 //                        Thread.sleep(50);
 //                        publishProgress(i-100);
 //                        i = +10;
 //                    } catch (Exception e) {
-//                        Log.d("TAG", " e2" + e.getMessage());
+//                        //Log.d("TAG", " e2" + e.getMessage());
 //                    }
 //                }
                 publishProgress(i);
@@ -375,10 +375,10 @@ public class PdfListFragment extends Fragment {
                             if (booleanpdf) {
                                 booleanpdf = false;
                             } else {
-                                Log.d("TAG", " count  2:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                                //Log.d("TAG", " count  2:" + list.size() + ":" + pdfListAdapter.getItemCount());
                                 if (!list.contains(listFile[i].getPath().trim().replaceAll("\\s", "%20"))) {
                                     list.add(listFile[i].getPath().trim().replaceAll("\\s", "%20"));
-                                    Log.d("TAG", " count  3:" + list.size() + ":" + pdfListAdapter.getItemCount());
+                                    //Log.d("TAG", " count  3:" + list.size() + ":" + pdfListAdapter.getItemCount());
                                 }
                             }
                         }

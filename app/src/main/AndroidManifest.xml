@@ -186,10 +186,10 @@
 
         <service android:name=".services.MediaPlayerService" />
         <!-- Services -->
-         <service
-         android:name=".services.ClipboardMonitorService"
-         android:exported="false"
-         android:label="Clipboard Monitor" />
+         <!--<service-->
+         <!--android:name=".services.ClipboardMonitorService"-->
+         <!--android:exported="false"-->
+         <!--android:label="Clipboard Monitor" />-->
         <!-- <service android:name=".services.MusicService" /> -->
         <activity
             android:name=".activities.PdfShowingActivity"

@@ -111,7 +111,7 @@ public class SeeMoreContentFragmentImages extends Fragment {
             prefManager = new PrefManager(getContext());
 
         } catch (Exception | Error e) {
-            Log.d("TAG_Blank", "DATA : 17 ");
+            //Log.d("TAG_Blank", "DATA : 17 ");
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             CommonMethod.toCloseLoader();
@@ -159,9 +159,9 @@ public class SeeMoreContentFragmentImages extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
-            Log.d("TAG ", " See onActivityResult " + requestCode + ":" + resultCode + ":" + data.getExtras() + ": " + data.getData() + ":   " + data.getData().getPath());
+            //Log.d("TAG ", " See onActivityResult " + requestCode + ":" + resultCode + ":" + data.getExtras() + ": " + data.getData() + ":   " + data.getData().getPath());
             String path = FilePath.getPath(getContext(), data.getData());
-            Log.d("TAG", "See File Name " + path);
+            //Log.d("TAG", "See File Name " + path);
             if (path != null) {
 //                if (status) {
                     try {
@@ -279,64 +279,64 @@ public class SeeMoreContentFragmentImages extends Fragment {
     private void toLoadMore() {
         try {
 //            if (getArguments() != null) {
-//            Log.d("TAG_Blank", "DATA : 1  " + getArguments().getBoolean("STATUS"));
+//            //Log.d("TAG_Blank", "DATA : 1  " + getArguments().getBoolean("STATUS"));
 //                if (getArguments().getBoolean("STATUS")) {
 //            if (status) {
-                Log.d("TAG_Blank", "DATA : 2 ");
+                //Log.d("TAG_Blank", "DATA : 2 ");
                 // Images
                 if (prefManager.toGetImageListRecent() != null) {
-                    Log.d("TAG_Blank", "DATA : 3 ");
+                    //Log.d("TAG_Blank", "DATA : 3 ");
                     if (prefManager.toGetImageListRecent().size() > 0) {
 //                        status = true;
-                        Log.d("TAG_Blank", "DATA : 4 ");
+                        //Log.d("TAG_Blank", "DATA : 4 ");
                         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                         recyclerView.setAdapter(new ImageAdapterGallery(getContext(), prefManager.toGetImageListRecent()));
                         toChangeViews();
                     } else {
-                        Log.d("TAG_Blank", "DATA : 5 ");
+                        //Log.d("TAG_Blank", "DATA : 5 ");
                         toExit(true);
                     }
                 } else {
-                    Log.d("TAG_Blank", "DATA : 6 ");
+                    //Log.d("TAG_Blank", "DATA : 6 ");
                     toExit(true);
                 }
 //            } else {
-//                Log.d("TAG_Blank", "DATA : 7 ");
+//                //Log.d("TAG_Blank", "DATA : 7 ");
 //                // PDf
 //                if (prefManager.toGetPDFListRecent() != null) {
-//                    Log.d("TAG_Blank", "DATA : 8 ");
+//                    //Log.d("TAG_Blank", "DATA : 8 ");
 //                    if (prefManager.toGetPDFListRecent().size() > 0) {
-//                        Log.d("TAG_Blank", "DATA : 9 ");
+//                        //Log.d("TAG_Blank", "DATA : 9 ");
 //                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //                        recyclerView.setAdapter(new PdfListAdapter(getContext(), prefManager.toGetPDFListRecent()));
 //                        toChangeViews();
 //                    } else {
-//                        Log.d("TAG_Blank", "DATA : 10 ");
+//                        //Log.d("TAG_Blank", "DATA : 10 ");
 //                        toExit(true);
 //                    }
 //                } else {
-//                    Log.d("TAG_Blank", "DATA : 11 ");
+//                    //Log.d("TAG_Blank", "DATA : 11 ");
 //                    toExit(true);
 //                }
 //            }
 //            } else
 //
 //            {
-//                Log.d("TAG_Blank", "DATA : 12 ");
+//                //Log.d("TAG_Blank", "DATA : 12 ");
 //                // Pdf
 //                if (prefManager.toGetPDFListRecent() != null) {
-//                    Log.d("TAG_Blank", "DATA : 13 ");
+//                    //Log.d("TAG_Blank", "DATA : 13 ");
 //                    if (prefManager.toGetPDFListRecent().size() > 0) {
-//                        Log.d("TAG_Blank", "DATA : 14 ");
+//                        //Log.d("TAG_Blank", "DATA : 14 ");
 //                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //                        recyclerView.setAdapter(new ImageAdapterGallery(getContext(), prefManager.toGetPDFListRecent()));
 //                        toChangeViews();
 //                    } else {
-//                        Log.d("TAG_Blank", "DATA : 15 ");
+//                        //Log.d("TAG_Blank", "DATA : 15 ");
 //                        toExit(true);
 //                    }
 //                } else {
-//                    Log.d("TAG_Blank", "DATA : 16 ");
+//                    //Log.d("TAG_Blank", "DATA : 16 ");
 //                    toExit(true);
 //                }
 //            }

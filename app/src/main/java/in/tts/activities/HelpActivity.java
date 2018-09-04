@@ -102,7 +102,7 @@ public class HelpActivity extends AppCompatActivity {
             finish();
         }
 //        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.llHelp);
-//        Log.d("TAG", " countFragment " + currentFragment+ getSupportFragmentManager().getBackStackEntryCount());
+//        //Log.d("TAG", " countFragment " + currentFragment+ getSupportFragmentManager().getBackStackEntryCount());
 //        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
 //            getSupportFragmentManager().popBackStack();
 //        } else {

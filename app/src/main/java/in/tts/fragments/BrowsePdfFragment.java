@@ -89,9 +89,9 @@ public class BrowsePdfFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
-            Log.d("TAG ", " Bro onActivityResult " + requestCode + ":" + resultCode + ":" + data.getExtras() + ": " + data.getData() + ":   " + data.getData().getPath());
+            //Log.d("TAG ", " Bro onActivityResult " + requestCode + ":" + resultCode + ":" + data.getExtras() + ": " + data.getData() + ":   " + data.getData().getPath());
             String path = FilePath.getPath(getContext(), data.getData());
-            Log.d("TAG", "File Name " + path);
+            //Log.d("TAG", "File Name " + path);
             if (path != null) {
                 try {
                     CommonMethod.toCallLoader(getContext(), "Loading...");
@@ -132,7 +132,7 @@ public class BrowsePdfFragment extends Fragment {
     }
 
     public void setLoadData() {
-        Log.d("Tag", "tab21 setLoadData ");
+        //Log.d("Tag", "tab21 setLoadData ");
     }
 
     public interface OnFragmentInteractionListener {

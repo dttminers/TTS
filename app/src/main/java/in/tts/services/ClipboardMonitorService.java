@@ -25,7 +25,7 @@ public class ClipboardMonitorService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("TAGCM", "onCreate ");
+        //Log.d("TAGCM", "onCreate ");
         mHistoryFile = new File(getExternalFilesDir(null), FILENAME);
         mClipboardManager =
                 (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -36,7 +36,7 @@ public class ClipboardMonitorService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("TAGCM", " onDestroy ");
+        //Log.d("TAGCM", " onDestroy ");
         if (mClipboardManager != null) {
             mClipboardManager.removePrimaryClipChangedListener(
                     mOnPrimaryClipChangedListener);
@@ -45,12 +45,12 @@ public class ClipboardMonitorService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("TAGCM", " IBinder ");
+        //Log.d("TAGCM", " IBinder ");
         return null;
     }
 
     private boolean isExternalStorageWritable() {
-        Log.d("TAGCM", " isExternalStorageWritable ");
+        //Log.d("TAGCM", " isExternalStorageWritable ");
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
@@ -62,7 +62,7 @@ public class ClipboardMonitorService extends Service {
             new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override
                 public void onPrimaryClipChanged() {
-                    Log.d("TAGCM", "onPrimaryClipChanged");
+                    //Log.d("TAGCM", "onPrimaryClipChanged");
                     ClipData clip = mClipboardManager.getPrimaryClip();
                     mThreadPool.execute(new WriteHistoryRunnable(
                             clip.getItemAt(0).getText()));
@@ -75,14 +75,14 @@ public class ClipboardMonitorService extends Service {
         private final CharSequence mTextToWrite;
 
         public WriteHistoryRunnable(CharSequence text) {
-            Log.d("TAGCM", " WriteHistoryRunnable");
+            //Log.d("TAGCM", " WriteHistoryRunnable");
             mNow = new Date(System.currentTimeMillis());
             mTextToWrite = text;
         }
 
         @Override
         public void run() {
-            Log.d("TAGCM", " run");
+            //Log.d("TAGCM", " run");
             if (TextUtils.isEmpty(mTextToWrite)) {
                 // Don't write empty text to the file
                 return;
@@ -98,7 +98,7 @@ public class ClipboardMonitorService extends Service {
 //                    writer.write(mTextToWrite.toString());
 //                    writer.newLine();
 //                    writer.close();
-                    Log.d("TAGCM", "writer : "+ mTextToWrite.toString());
+                    //Log.d("TAGCM", "writer : "+ mTextToWrite.toString());
                 } catch (Exception|Error e) {
                     Log.w("TAGCM", String.format("Failed to open file %s for writing!",
                             mHistoryFile.getAbsoluteFile()));

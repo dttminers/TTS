@@ -11,4 +11,5 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_splash_screen"
         android:contentDescription="@string/str_splash" />
+
 </RelativeLayout>

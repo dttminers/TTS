@@ -215,7 +215,7 @@ public class ClipBoard {
                 @Override
                 public void onClick(View v) {
                     try {
-                        Log.d("TAG", " Speak " + editText.getText().toString());
+                        //Log.d("TAG", " Speak " + editText.getText().toString());
                         tvShare.setVisibility(View.VISIBLE);
                         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                         sharingIntent.setType("text/plain");
@@ -242,10 +242,10 @@ public class ClipBoard {
 
                         tts = new TTS(context);
                         if (editText != null) {
-                            Log.d("TAG", " Speak " + editText.getText().toString());
+                            //Log.d("TAG", " Speak " + editText.getText().toString());
                             tts.SpeakLoud(editText.getText().toString());//, "AUD_Clip" + System.currentTimeMillis());
                         } else {
-                            Log.d("TAG", " Speak " + myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
+                            //Log.d("TAG", " Speak " + myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
                             tts.SpeakLoud(myClipboard.getPrimaryClip().getItemAt(0).getText().toString());
                         }
                     } catch (Exception | Error e) {

@@ -64,7 +64,7 @@ public class HomePageRecentPdf extends PagerAdapter {
 
                 TextView tv1 = vg.findViewById(R.id.tvBiReadTime);
                 TextView tv2 = vg.findViewById(R.id.tvBiReadStatus);
-                                Log.d("TAG", " PDF " + position + ":" + list.get(position));
+                                //Log.d("TAG", " PDF " + position + ":" + list.get(position));
 
                 ParcelFileDescriptor fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
                 PdfRenderer pdfRenderer = new PdfRenderer(fileDescriptor);

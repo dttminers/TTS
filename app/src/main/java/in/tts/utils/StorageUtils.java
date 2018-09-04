@@ -30,7 +30,7 @@ public class StorageUtils {
         String json = gson.toJson(arrayList);
         editor.putString("audioArrayList", json);
         editor.apply();
-        Log.d("TAG", "storeAudio : " +arrayList);
+        //Log.d("TAG", "storeAudio : " +arrayList);
     }
 
     public ArrayList<AudioModel> loadAudio() {
@@ -39,7 +39,7 @@ public class StorageUtils {
         String json = preferences.getString("audioArrayList", null);
         Type type = new TypeToken<ArrayList<AudioModel>>() {
         }.getType();
-        Log.d("TAG", "loadAudio : " + gson.fromJson(json, type));
+        //Log.d("TAG", "loadAudio : " + gson.fromJson(json, type));
         return gson.fromJson(json, type);
     }
 

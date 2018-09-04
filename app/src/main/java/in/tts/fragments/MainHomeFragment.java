@@ -449,7 +449,7 @@ public class MainHomeFragment extends Fragment {
         if (!status) {
             fn_permission();
         }
-        Log.d("TAG ", " main  " + PrefManager.AddedRecentImage + ":" + PrefManager.AddedRecentPDF);
+        //Log.d("TAG ", " main  " + PrefManager.AddedRecentImage + ":" + PrefManager.AddedRecentPDF);
         if (PrefManager.AddedRecentImage || PrefManager.AddedRecentPDF) {
 //            toSetData();
             toSetDisplay();

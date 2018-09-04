@@ -35,6 +35,7 @@ import in.tts.R;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
 import in.tts.model.PrefManager;
+import in.tts.utils.CameraUtils;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.FilePath;
 
@@ -53,7 +54,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     private TTS tts;
 
     private TextView tvImgOcr;
-    private ImageView ivSpeak, ivReload;
+    private ImageView ivSpeak, ivReload, mIvOcr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                 }, 1500);
             }
 
-            Log.d("TAG_IMage   ", " int  " + photoPath);
+            //Log.d("TAG_IMage   ", " int  " + photoPath);
 
             if (getSupportActionBar() != null) {
                 name = photoPath.substring(photoPath.lastIndexOf("/") + 1);
@@ -90,7 +91,7 @@ public class ImageOcrActivity extends AppCompatActivity {
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             bitmap = BitmapFactory.decodeFile(photoPath.trim().replaceAll("%20", " "), options);
 
-            ImageView mIvOcr = findViewById(R.id.imgOcr);
+            mIvOcr = findViewById(R.id.imgOcr);
             mIvOcr.setImageBitmap(bitmap);
             new toGetImage().execute();
             fn_permission();
@@ -149,6 +150,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         try {
+            //Log.d("TAG", "Resume Image "  );
             super.onResume();
             tts = new TTS(ImageOcrActivity.this);
         } catch (Exception | Error e) {
@@ -188,9 +190,9 @@ public class ImageOcrActivity extends AppCompatActivity {
 //            for (int i = 0; i < textBlocks.size(); i++) {
 //                textBlock = textBlocks.get(textBlocks.keyAt(i));
 //                imageText = textBlock.getValue();                   // return string
-//                Log.d("TAG", " Result : " + i + ":" + imageText);
+//                //Log.d("TAG", " Result : " + i + ":" + imageText);
 //            }
-//            Log.d("TAG", " Result Final: " + imageText);
+//            //Log.d("TAG", " Result Final: " + imageText);
 
                 stringBuilder = new StringBuilder();
                 items = textRecognizer.detect(imageFrame);
@@ -199,7 +201,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                     stringBuilder.append(item.getValue());
                     stringBuilder.append("\n");
                 }
-                Log.d("TAG", " Final DATA " + stringBuilder);
+                //Log.d("TAG", " Final DATA " + stringBuilder);
             } catch (Exception | Error e) {
                 e.printStackTrace();
                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -291,16 +293,36 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        try{
         if (menu != null) {
             getMenuInflater().inflate(R.menu.image_menu, menu);
+        }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        try{
         if (item != null) {
+            if (item.getItemId() == R.id.rotate_img){
+                bitmap = CameraUtils.rotateImage(bitmap, 90);
+                mIvOcr.setImageBitmap(bitmap);
+                new toGetImage().execute();
+                fn_permission();
+            }
             ToSetMore.MenuOptions(ImageOcrActivity.this, item);
+        }
+        } catch (Exception | Error e) {
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -308,7 +330,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         try {
-            Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
+            //Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
             if (PrefManager.ActivityCount <= 1) {
                 if (PrefManager.CurrentPage != 4) {
                     startActivity(new Intent(ImageOcrActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));

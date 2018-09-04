@@ -81,7 +81,7 @@ public class CommonMethod {
 
     public static void toCallLoader(Context context, String msg) {
         try {
-            Log.d("TAG", " LOADER stxt : " + msg);
+            //Log.d("TAG", " LOADER stxt : " + msg);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -111,7 +111,7 @@ public class CommonMethod {
         try {
             if (dialog != null && dialog.isShowing()) {
                 if (tvMsg != null) {
-                    Log.d("TAG", " LOADER ctxt : " + tvMsg.getText().toString());
+                    //Log.d("TAG", " LOADER ctxt : " + tvMsg.getText().toString());
                 }
                 dialog.dismiss();
             }
@@ -132,10 +132,10 @@ public class CommonMethod {
 
     public static boolean isSignedIn(Context context) {
         try {
-            Log.d("TAG ", "signed Google : " + (GoogleSignIn.getLastSignedInAccount(context) != null));
-            Log.d("TAG ", "signed Facebook 1 :" + AccessToken.isCurrentAccessTokenActive());
-            Log.d("TAG ", "signed Facebook 2 :" + AccessToken.getCurrentAccessToken());
-            Log.d("TAG ", "signed Facebook 3 :" + Profile.getCurrentProfile());
+            //Log.d("TAG ", "signed Google : " + (GoogleSignIn.getLastSignedInAccount(context) != null));
+            //Log.d("TAG ", "signed Facebook 1 :" + AccessToken.isCurrentAccessTokenActive());
+            //Log.d("TAG ", "signed Facebook 2 :" + AccessToken.getCurrentAccessToken());
+            //Log.d("TAG ", "signed Facebook 3 :" + Profile.getCurrentProfile());
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -147,7 +147,7 @@ public class CommonMethod {
 
     public static void toDisplayToast(Context context, String str) {
         try {
-            Log.d("TAG ", " toDisplayToast " + str);
+            //Log.d("TAG ", " toDisplayToast " + str);
             if (context != null) {
                 if (str != null) {
                     Toast.makeText(context, str, Toast.LENGTH_SHORT).show();

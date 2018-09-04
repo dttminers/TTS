@@ -152,7 +152,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     try {
-                        Log.d("TAG", " onTouch " + v.getId());
+                        //Log.d("TAG", " onTouch " + v.getId());
                         if (popupWindow != null) {
                             popupWindow.dismiss();
                         }
@@ -358,6 +358,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                     try {
                         String toSpeak = editText.getText().toString();
                         CommonMethod.toDisplayToast(getContext(), toSpeak);
+//                        tts = new TTS(getContext());
                         tts.SpeakLoud(toSpeak);//, "AUD_Write" + System.currentTimeMillis());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -404,6 +405,7 @@ public class MakeYourOwnReadFragment extends Fragment {
                             try {
                                 if (!tts.isSpeaking()) {
                                     if (editText.getText().toString().trim().length() > 0) {
+//                                        tts = new TTS(getContext());
                                         tts.SpeakLoud(editText.getText().toString());//, "AUD_Write" + System.currentTimeMillis());
                                     } else {
                                         CommonMethod.toDisplayToast(getContext(), " No data to read");
@@ -465,7 +467,7 @@ public class MakeYourOwnReadFragment extends Fragment {
 
     public void setLoadData(String data) {
         PrefManager.CurrentPage = 3;
-        Log.d("TAG_", " setLoadData " + getArguments() + ":" + data);
+        //Log.d("TAG_", " setLoadData " + getArguments() + ":" + data);
         if (editText != null) {
             editText.setText(data);
         }
@@ -479,7 +481,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("TAG_", " onStart ");
+        //Log.d("TAG_", " onStart ");
 //        tts = new TTS(getContext());
         CommonMethod.toReleaseMemory();
     }
@@ -487,14 +489,14 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("TAG_", " Resume ");
+        //Log.d("TAG_", " Resume ");
         tts = new TTS(getContext());
         CommonMethod.toReleaseMemory();
     }
 
     public void onPause() {
         try {
-            Log.d("TAG_", " onPause ");
+            //Log.d("TAG_", " onPause ");
             if (tts != null) {
                 tts.toStop();
             }
@@ -514,7 +516,7 @@ public class MakeYourOwnReadFragment extends Fragment {
     @Override
     public void onDestroy() {
         try {
-            Log.d("TAG_", " onDestroy ");
+            //Log.d("TAG_", " onDestroy ");
             if (tts != null) {
                 tts.toStop();
                 tts.toShutDown();

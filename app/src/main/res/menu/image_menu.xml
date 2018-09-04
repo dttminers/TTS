@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="AlwaysShowAction">
+
+    <item
+        android:id="@+id/rotate_img"
+        android:icon="@drawable/ic_rotate_right_black_24dp"
+        android:orderInCategory="200"
+        android:title="@string/str_rotate"
+        app:showAsAction="always" />
+
     <item
         android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="500"
