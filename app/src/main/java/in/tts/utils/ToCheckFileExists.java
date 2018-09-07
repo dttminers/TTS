@@ -24,6 +24,21 @@ public class ToCheckFileExists {
         }
     }
 
+    public static boolean isImage(String fileName) {
+        try {
+            //Log.d("TAG", " isPDFFile "+fileName+":"+ fileName.endsWith(".pdf")+":"+ new File(fileName.trim().replaceAll("%20", " ")).exists() );
+            return (
+                    (fileName.toLowerCase().endsWith(".png") || fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg"))
+                            && new File(fileName.trim().replaceAll("%20", " ")).exists());
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            return false;
+        }
+    }
+
     public static boolean singleFile(String fileName) {
         try {
             return new File(fileName.trim().replaceAll("%20", " ")).exists();

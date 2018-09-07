@@ -1,40 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/llBrowser"
+<in.tts.utils.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    tools:context=".activities.BrowserActivity">
+    android:gravity="bottom"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoPanelHeight="50dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@+id/list"
+    sothree:umanoShadowHeight="4dp">
 
-    <ProgressBar
-        android:id="@+id/myProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:progressDrawable="@drawable/progress_blue"
-        android:visibility="visible" />
-
-    <WebView
-        android:id="@+id/myWebView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/myProgressBar"
-        android:nestedScrollingEnabled="false" />
-
+    <!-- MAIN CONTENT -->
     <RelativeLayout
-        android:id="@+id/rlPb"
+        android:id="@+id/rlBrowser"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_white"
-        android:visibility="gone">
+        android:orientation="vertical">
+
+        <!--<include layout="@layout/app_bar" />-->
 
         <ProgressBar
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true" />
+            android:id="@+id/myProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:progressDrawable="@drawable/progress_blue"
+            android:visibility="visible" />
+
+        <WebView
+            android:id="@+id/myWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/myProgressBar"
+            android:nestedScrollingEnabled="false" />
+
+        <RelativeLayout
+            android:id="@+id/rlNoInternetConnection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvNoInternetConnection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:drawablePadding="20dp"
+                android:drawableTop="@drawable/ic_phonelink_erase_black_24dp"
+                android:gravity="center"
+                android:text="@string/lbl_no_check_internet"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_white"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+    <!-- SLIDING LAYOUT -->
+    <LinearLayout
+        android:id="@+id/dragView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_sheet_head1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/above_shadow"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivPrevious"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_previous"
+                android:padding="5dp"
+                android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+            <ImageView
+                android:id="@+id/ivForward"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_next"
+                android:padding="5dp"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+
+            <ImageView
+                android:id="@+id/ivMore"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_more_options"
+                android:padding="5dp"
+                android:src="@drawable/ic_arrow_drop_up_black_24dp" />
+
+            <ImageView
+                android:id="@+id/ivHome"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_home"
+                android:padding="5dp"
+                android:src="@drawable/ic_home_black_24dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_sheet_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow_bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivBookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_previous"
+                android:padding="5dp"
+                android:src="@drawable/ic_bookmark_border_black_24dp" />
+
+            <ImageView
+                android:id="@+id/ivHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_next"
+                android:padding="5dp"
+                android:src="@drawable/ic_history_black_24dp" />
+
+            <ImageView
+                android:id="@+id/ivBrowserSpeak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_more_options"
+                android:padding="5dp"
+                android:src="@drawable/ic_speaker_24" />
+
+            <ImageView
+                android:id="@+id/ivBrowserReload"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/str_home"
+                android:padding="5dp"
+                android:src="@drawable/ic_refresh_black_24dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</in.tts.utils.slidinguppanel.SlidingUpPanelLayout>

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import in.tts.R;
 import in.tts.activities.ImageOcrActivity;
+import in.tts.activities.OCRImageActivity;
 import in.tts.utils.CommonMethod;
 
 public class ImageAdapterGallery extends RecyclerView.Adapter<ImageAdapterGallery.ViewHolder> {

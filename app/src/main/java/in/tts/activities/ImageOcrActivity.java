@@ -38,6 +38,7 @@ import in.tts.model.PrefManager;
 import in.tts.utils.CameraUtils;
 import in.tts.utils.CommonMethod;
 import in.tts.utils.FilePath;
+import in.tts.utils.ToCheckFileExists;
 
 public class ImageOcrActivity extends AppCompatActivity {
 
@@ -70,47 +71,63 @@ public class ImageOcrActivity extends AppCompatActivity {
                 photoPath = FilePath.getPath(ImageOcrActivity.this, getIntent().getData());
             } else {
                 CommonMethod.toDisplayToast(ImageOcrActivity.this, " No Image Found ");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
+                toExit();
+            }
+
+            if (ToCheckFileExists.isImage(photoPath)) {
+
+
+                //Log.d("TAG_IMage   ", " int  " + photoPath);
+
+                if (getSupportActionBar() != null) {
+                    name = photoPath.substring(photoPath.lastIndexOf("/") + 1);
+                    CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this, name);
+                }
+
+                mRl = findViewById(R.id.rlImageOcrActivity);
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                bitmap = BitmapFactory.decodeFile(photoPath.trim().replaceAll("%20", " "), options);
+
+                mIvOcr = findViewById(R.id.imgOcr);
+                mIvOcr.setImageBitmap(bitmap);
+                new toGetImage().execute();
+                fn_permission();
+
+                PrefManager prefManager = new PrefManager(ImageOcrActivity.this);
+                ArrayList<String> list = prefManager.toGetImageListRecent();
+                if (list != null) {
+                    if (!list.contains(photoPath)) {
+                        list.add(photoPath.replaceAll("\\s", "%20"));
+                        PrefManager.AddedRecentImage = true;
+                        prefManager.toSetImageFileListRecent(list);
                     }
-                }, 1500);
-            }
-
-            //Log.d("TAG_IMage   ", " int  " + photoPath);
-
-            if (getSupportActionBar() != null) {
-                name = photoPath.substring(photoPath.lastIndexOf("/") + 1);
-                CommonMethod.toSetTitle(getSupportActionBar(), ImageOcrActivity.this, name);
-            }
-
-            mRl = findViewById(R.id.rlImageOcrActivity);
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeFile(photoPath.trim().replaceAll("%20", " "), options);
-
-            mIvOcr = findViewById(R.id.imgOcr);
-            mIvOcr.setImageBitmap(bitmap);
-            new toGetImage().execute();
-            fn_permission();
-
-            PrefManager prefManager = new PrefManager(ImageOcrActivity.this);
-            ArrayList<String> list = prefManager.toGetImageListRecent();
-            if (list != null) {
-                if (!list.contains(photoPath)) {
+                } else {
+                    list = new ArrayList<>();
                     list.add(photoPath.replaceAll("\\s", "%20"));
                     PrefManager.AddedRecentImage = true;
                     prefManager.toSetImageFileListRecent(list);
                 }
             } else {
-                list = new ArrayList<>();
-                list.add(photoPath.replaceAll("\\s", "%20"));
-                PrefManager.AddedRecentImage = true;
-                prefManager.toSetImageFileListRecent(list);
+                CommonMethod.toDisplayToast(ImageOcrActivity.this, "Not Image");
             }
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+        }
+    }
 
+    private void toExit() {
+        try {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1500);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -293,10 +310,10 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        try{
-        if (menu != null) {
-            getMenuInflater().inflate(R.menu.image_menu, menu);
-        }
+        try {
+            if (menu != null) {
+                getMenuInflater().inflate(R.menu.image_menu, menu);
+            }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -308,16 +325,16 @@ public class ImageOcrActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try{
-        if (item != null) {
-            if (item.getItemId() == R.id.rotate_img){
-                bitmap = CameraUtils.rotateImage(bitmap, 90);
-                mIvOcr.setImageBitmap(bitmap);
-                new toGetImage().execute();
-                fn_permission();
+        try {
+            if (item != null) {
+                if (item.getItemId() == R.id.rotate_img) {
+                    bitmap = CameraUtils.rotateImage(bitmap, 90);
+                    mIvOcr.setImageBitmap(bitmap);
+                    new toGetImage().execute();
+                    fn_permission();
+                }
+                ToSetMore.MenuOptions(ImageOcrActivity.this, item);
             }
-            ToSetMore.MenuOptions(ImageOcrActivity.this, item);
-        }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
             FirebaseCrash.report(e);
@@ -333,12 +350,12 @@ public class ImageOcrActivity extends AppCompatActivity {
             //Log.d("TAG_BACK", " Image " + PrefManager.ActivityCount);
             if (PrefManager.ActivityCount <= 1) {
                 if (PrefManager.CurrentPage != 4) {
-                    startActivity(new Intent(ImageOcrActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    startActivity(new Intent(ImageOcrActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 } else {
-                    finish();
+                    toExit();
                 }
             } else {
-                finish();
+                toExit();
             }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);

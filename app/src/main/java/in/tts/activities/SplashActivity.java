@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_splash);
 
-            CommonMethod.setAnalyticsData(SplashActivity.this, "MainTab", "splash", null);
+            CommonMethod.setAnalyticsData(SplashActivity.this, "Activity", "splash", null);
 
             prefManager = new PrefManager(SplashActivity.this);
             auth = FirebaseAuth.getInstance();
@@ -42,18 +42,18 @@ public class SplashActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    prefManager.getUserInfo();
-                    if (auth.getCurrentUser() != null) {
+//                    prefManager.getUserInfo();
+//                    if (auth.getCurrentUser() != null) {
                         startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                    } else if (User.getUser(SplashActivity.this).getId() != null) {
-                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                    } else {
-                        if (prefManager.isFirstTimeLaunch()) {
-                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                        } else {
-                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                        }
-                    }
+//                    } else if (User.getUser(SplashActivity.this).getId() != null) {
+//                        startActivity(new Intent(SplashActivity.this, HomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+//                    } else {
+//                        if (prefManager.isFirstTimeLaunch()) {
+//                            startActivity(new Intent(SplashActivity.this, TutorialPageActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+//                        } else {
+//                            startActivity(new Intent(SplashActivity.this, LoginActivity.class).putExtra("LOGIN", "login").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+//                        }
+//                    }
                     finish();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 

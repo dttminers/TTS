@@ -145,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements
 //                                tab3.setArguments(bundle);
                                 setCurrentViewPagerItem(3);
                             } else {
-                                setCurrentViewPagerItem(2);
+                                setCurrentViewPagerItem(0);
                             }
 
                             tabLayout.setVisibility(View.VISIBLE);

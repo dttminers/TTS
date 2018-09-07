@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="AlwaysShowAction">
 
-    <item
-        android:id="@+id/menuSpeakBrowser"
-        android:icon="@drawable/white_speak"
-        android:orderInCategory="100"
-        android:visible="false"
-        android:title="@string/str_speak"
-        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/menuSpeakBrowser"-->
+        <!--android:icon="@drawable/white_speak"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:visible="false"-->
+        <!--android:title="@string/str_speak"-->
+        <!--app:showAsAction="always" />-->
 
     <item
         android:id="@+id/menuBookmark"
@@ -19,33 +19,33 @@
         app:actionLayout="@layout/selecting_bookmark"
         app:showAsAction="always" />
 
-    <item
-        android:icon="@drawable/ic_more_vert_white_24dp"
-        android:orderInCategory="500"
-        android:title="@string/str_more_options"
-        app:showAsAction="always">
+    <!--<item-->
+        <!--android:icon="@drawable/ic_more_vert_white_24dp"-->
+        <!--android:orderInCategory="500"-->
+        <!--android:title="@string/str_more_options"-->
+        <!--app:showAsAction="always">-->
 
-        <menu>
-            <item
-                android:id="@+id/menuBookmarksList"
-                android:title="@string/str_bookmarks"
-                app:showAsAction="ifRoom" />
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/menuBookmarksList"-->
+                <!--android:title="@string/str_bookmarks"-->
+                <!--app:showAsAction="ifRoom" />-->
 
-            <item
-                android:id="@+id/menuReload"
-                android:title="@string/str_refresh"
-                app:showAsAction="ifRoom" />
+            <!--<item-->
+                <!--android:id="@+id/menuReload"-->
+                <!--android:title="@string/str_refresh"-->
+                <!--app:showAsAction="ifRoom" />-->
 
-            <item
-                android:id="@+id/menuBack"
-                android:title="@string/str_previous"
-                app:showAsAction="ifRoom" />
+            <!--<item-->
+                <!--android:id="@+id/menuBack"-->
+                <!--android:title="@string/str_previous"-->
+                <!--app:showAsAction="ifRoom" />-->
 
-            <item
-                android:id="@+id/menuForward"
-                android:title="@string/str_forward"
-                app:showAsAction="ifRoom" />
+            <!--<item-->
+                <!--android:id="@+id/menuForward"-->
+                <!--android:title="@string/str_forward"-->
+                <!--app:showAsAction="ifRoom" />-->
 
-        </menu>
-    </item>
+        <!--</menu>-->
+    <!--</item>-->
 </menu>

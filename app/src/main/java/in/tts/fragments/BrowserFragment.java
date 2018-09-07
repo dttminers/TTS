@@ -6,12 +6,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -135,7 +139,7 @@ public class BrowserFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     CommonMethod.toCallLoader(getContext(), "Please wait");
-                     startActivity(
+                    startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "https://www.swiggy.com/"));
                     CommonMethod.toCloseLoader();
@@ -164,22 +168,44 @@ public class BrowserFragment extends Fragment {
                 }
             });
 
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    Log.d("TAG", " onEditorAction " + i);
+//                    if (i == EditorInfo.IME_ACTION_DONE) {
+                        toNavigate();
+//                    }
+                    return false;
+                }
+            });
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CommonMethod.toCallLoader(getContext(), "Please wait");
-                    if (editText != null && editText.getText().toString().trim().length() != 0) {
-                        startActivity(
-                                new Intent(getContext(), BrowserActivity.class)
-                                        .putExtra("Data", editText.getText().toString().trim()));
-                        CommonMethod.toDisplayToast(getContext(), "To " + editText.getText().toString().trim());
-                    } else {
-                        CommonMethod.toDisplayToast(getContext(), "To Data Found");
-                    }
-                    CommonMethod.toCloseLoader();
+                    toNavigate();
                 }
             });
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+            FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+            Crashlytics.logException(e);
+            FirebaseCrash.report(e);
+            CommonMethod.toReleaseMemory();
+        }
+    }
+
+    private void toNavigate() {
+        try {
+            CommonMethod.toCallLoader(getContext(), "Please wait");
+            if (editText != null && editText.getText().toString().trim().length() != 0) {
+                startActivity(
+                        new Intent(getContext(), BrowserActivity.class)
+                                .putExtra("Data", editText.getText().toString().trim()));
+                CommonMethod.toDisplayToast(getContext(), "To " + editText.getText().toString().trim());
+            } else {
+                CommonMethod.toDisplayToast(getContext(), "To Data Found");
+            }
+            CommonMethod.toCloseLoader();
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);

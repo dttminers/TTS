@@ -29,6 +29,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -294,4 +295,45 @@ public class CommonMethod {
             return 0;
         }
     }
+
+//    public static void readDocxFile() {
+//
+//        try {
+//            File file = new File("C:\\test.docx");
+//            FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+//            XWPFDocument document = new XWPFDocument(fis);
+//            List<XWPFParagraph> paragraphs = document.getParagraphs();
+//
+//            for (XWPFParagraph para : paragraphs) {
+//                System.out.println(para.getText());
+//
+//                fis.close();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private String docxRead(String filePath) {
+//        try {
+//            WordDocument doc = new WordDocument(filePath);
+//            String text = doc.toText();
+//            return text;
+//        }
+//        catch (Exception e) {
+////            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
 }
+
+/*
+BigInteger currentParagraphNumberingID = currentPara_Line.getCTP().getPPr().getNumPr().getNumId().getVal();
+BigInteger currentParagraphAbstractNumID2 = currentPara_Line.getDocument().getNumbering().getAbstractNumID(currentParagraphNumberingID);
+XWPFAbstractNum currentParagraphAbstractNum = currentPara_Line.getDocument().getNumbering().getAbstractNum(currentParagraphAbstractNumID2);
+CTAbstractNum currentParagraphAbstractNumFormatting = currentParagraphAbstractNum.getCTAbstractNum();
+
+
+
+ */
