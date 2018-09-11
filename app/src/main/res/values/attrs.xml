@@ -21,4 +21,9 @@
         <attr name="umanoScrollInterpolator" format="reference" />
     </declare-styleable>
 
+
+    <attr name="colorPrimary" format="color" />
+    <attr name="colorPrimaryDark" format="color" />
+    <attr name="colorAccent_trans" format="color" />
+
 </resources>

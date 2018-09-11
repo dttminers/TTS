@@ -97,7 +97,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_previous"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
 
@@ -106,7 +109,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_next"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
 
@@ -115,7 +121,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_more_options"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_arrow_drop_up_black_24dp" />
 
@@ -124,7 +133,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_home"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_home_black_24dp" />
 
@@ -136,6 +148,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shadow_bottom"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
             android:orientation="horizontal">
 
             <ImageView
@@ -143,7 +156,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_previous"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_bookmark_border_black_24dp" />
 
@@ -152,7 +168,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_next"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_history_black_24dp" />
 
@@ -162,7 +181,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_more_options"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_speaker_24" />
 
@@ -171,7 +193,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:contentDescription="@string/str_home"
+                android:focusable="true"
                 android:padding="5dp"
                 android:src="@drawable/ic_refresh_black_24dp" />
 

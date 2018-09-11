@@ -2,11 +2,22 @@ package in.tts.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
+import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -14,8 +25,10 @@ import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +47,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import in.tts.R;
@@ -244,6 +258,83 @@ public class CommonMethod {
         }
     }
 
+    public static void bound(Context context, View view) {
+        int windowWidth = getWindowWidth(context);
+        int windowHeight = getWindowHeight(context);
+        int statusBarHeight = getStatusBarHeight(context);
+        int dimen56dp = context.getResources().getDimensionPixelOffset(R.dimen.layout_margin_56dp);
+
+        int widthSpec = View.MeasureSpec.makeMeasureSpec(windowWidth, View.MeasureSpec.EXACTLY);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(windowHeight - statusBarHeight - dimen56dp, View.MeasureSpec.EXACTLY);
+
+        view.measure(widthSpec, heightSpec);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+    }
+
+    public static Bitmap capture(View view, float width, float height, Bitmap.Config config) {
+        if (!view.isDrawingCacheEnabled()) {
+            view.setDrawingCacheEnabled(true);
+        }
+
+        view.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
+        Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height, config);
+        bitmap.eraseColor(Color.WHITE);
+
+        Canvas canvas = new Canvas(bitmap);
+        int left = view.getLeft();
+        int top = view.getTop();
+        int status = canvas.save();
+        canvas.translate(-left, -top);
+
+        float scale = width / view.getWidth();
+        canvas.scale(scale, scale, left, top);
+
+        view.draw(canvas);
+        canvas.restoreToCount(status);
+
+        Paint alphaPaint = new Paint();
+        alphaPaint.setColor(Color.TRANSPARENT);
+
+        canvas.drawRect(0f, 0f, 1f, height, alphaPaint);
+        canvas.drawRect(width - 1f, 0f, width, height, alphaPaint);
+        canvas.drawRect(0f, 0f, width, 1f, alphaPaint);
+        canvas.drawRect(0f, height - 1f, width, height, alphaPaint);
+        canvas.setBitmap(null);
+
+        return bitmap;
+    }
+
+    public static float dp2px(Context context, float dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
+    }
+
+    public static float getDensity(Context context) {
+        return context.getResources().getDisplayMetrics().density;
+    }
+
+    public static Drawable getDrawable(Context context, int id) {
+        return context.getResources().getDrawable(id, null);
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+
+        return 0;
+    }
+
+    public static int getWindowHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public static int getWindowWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
 
     public static String BitmapToString(Bitmap bitmap) {
         try {
@@ -296,6 +387,58 @@ public class CommonMethod {
         }
     }
 
+    public static Intent getEmailIntent(MailTo mailTo) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mailTo.getTo()});
+        intent.putExtra(Intent.EXTRA_TEXT, mailTo.getBody());
+        intent.putExtra(Intent.EXTRA_SUBJECT, mailTo.getSubject());
+        intent.putExtra(Intent.EXTRA_CC, mailTo.getCc());
+        intent.setType("message/rfc822");
+
+        return intent;
+    }
+
+    public static void share(Context context, String title, String url) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, url);
+        context.startActivity(Intent.createChooser(sharingIntent, (context.getString(R.string.menu_share_link))));
+    }
+
+
+    // Methods
+
+    public static void printPDF (WebView ninjaWebView, Activity activity) {
+
+        try {
+//            sp.edit().putBoolean("pdf_create", true).commit();
+
+//            if (share) {
+//                sp.edit().putBoolean("pdf_share", true).commit();
+//            } else {
+//                sp.edit().putBoolean("pdf_share", false).commit();
+//            }
+
+            String title = HelperUnit.fileName(ninjaWebView.getUrl());
+            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+            File file = new File(dir, title + ".pdf");
+//            sp.edit().putString("pdf_path", file.getPath()).apply();
+
+            String pdfTitle = file.getName().replace(".pdf", "");
+
+            PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
+            PrintDocumentAdapter printAdapter = ninjaWebView.createPrintDocumentAdapter(title);
+            Objects.requireNonNull(printManager).print(pdfTitle, printAdapter, new PrintAttributes.Builder().build());
+
+        } catch (Exception e) {
+//            sp.edit().putBoolean("pdf_create", false).commit();
+            e.printStackTrace();
+        }
+    }
+}
+
 //    public static void readDocxFile() {
 //
 //        try {
@@ -326,7 +469,7 @@ public class CommonMethod {
 //        }
 //        return "";
 //    }
-}
+//}
 
 /*
 BigInteger currentParagraphNumberingID = currentPara_Line.getCTP().getPPr().getNumPr().getNumId().getVal();

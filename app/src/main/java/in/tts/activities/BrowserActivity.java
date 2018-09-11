@@ -1,11 +1,13 @@
 package in.tts.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DownloadManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,7 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.Settings;
+import android.preference.PreferenceManager;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,21 +24,21 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -43,23 +46,19 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.crash.FirebaseCrash;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import in.tts.R;
-//import in.tts.classes.Speaker;
+import in.tts.classes.ScreenshotTask;
 import in.tts.classes.TTS;
 import in.tts.model.BookmarkModel;
-import in.tts.model.BrowserHistory;
 import in.tts.model.PrefManager;
+import in.tts.utils.BrowserUnit;
 import in.tts.utils.CommonMethod;
+import in.tts.utils.HelperUnit;
 import in.tts.utils.slidinguppanel.SlidingUpPanelLayout;
 
 public class BrowserActivity extends AppCompatActivity {
@@ -192,7 +191,8 @@ public class BrowserActivity extends AppCompatActivity {
             ivPrevious.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onBackPressed();
+                    new ScreenshotTask(BrowserActivity.this, superWebView);
+//                    onBackPressed();
                     toCloseBottomOptions();
                 }
             });
@@ -473,25 +473,6 @@ public class BrowserActivity extends AppCompatActivity {
                     dm.enqueue(request);
                     CommonMethod.toDisplayToast(getApplicationContext(), "Downloading File");
 
-////                        Uri myUri = Uri.parse(url);
-////                        Intent superIntent = new Intent(Intent.ACTION_VIEW);
-////                        superIntent.setData(myUri);
-////                        startActivity(superIntent);
-//                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-//                        request.allowScanningByMediaScanner();
-//
-//                        request.setNotificationVisibility(
-//                                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//
-////                        request.setDestinationInExternalPublicDir(
-////                                Environment.DIRECTORY_DOWNLOADS,    //Download folder
-////                                "download");                        //Name of file
-//
-//
-//                        DownloadManager dm = (DownloadManager) getSystemService(
-//                                DOWNLOAD_SERVICE);
-//
-//                        dm.enqueue(request);
 
                 } catch (Exception | Error e) {
                     e.printStackTrace();
@@ -501,56 +482,6 @@ public class BrowserActivity extends AppCompatActivity {
                 }
             }
         };
-/*
-        webView.setDownloadListener(new DownloadListener()
-        {
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength)
-            {
-                //for downloading directly through download manager
-                Request request = new Request(Uri.parse(url));
-                request.allowScanningByMediaScanner();
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "download");
-                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                dm.enqueue(request);
-            }
-        });
-
-        In the above code, if you don’t have sdcard on emulator/device, then you can use internal storage to store a file, by commenting this line.
-
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "download");
-
-        2) Downloading a file using a web browser opened from android webview
-        This will send an intent to web browser and web browser will take care of downloading the file. It will internally use download manager to download a file.
-
-        webView.setDownloadListener(new DownloadListener()
-        {
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength)
-            {
-                //download file using web browser
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
-        });
-        */
-//            superWebView.setDownloadListener(new DownloadListener() {
-//
-//                @Override
-//                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-//                    DownloadManager.Request request = new DownloadManager.Request(
-//                            Uri.parse(url));
-//
-//                    request.allowScanningByMediaScanner();
-//                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); //Notify client once download is completed!
-//                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Name of your downloadble file goes here, example: Mathematics II ");
-//                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//                    dm.enqueue(request);
-//                    Toast.makeText(getApplicationContext(), "Downloading File", //To notify the Client that the file is being downloaded
-//                            Toast.LENGTH_LONG).show();
-//
-//                }
-//            });
     }
 
     private WebChromeClient webChromeClient() {
@@ -800,7 +731,6 @@ public class BrowserActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             getMenuInflater().inflate(R.menu.browser_menu, menu);
-//            menuSpeak = menu.findItem(R.id.menuSpeakBrowser);
             menuBookMark = menu.findItem(R.id.menuBookmark).getActionView();
             cbMenu = menuBookMark.findViewById(R.id.cbBookmark);
             cbMenu.setOnClickListener(new View.OnClickListener() {
@@ -839,34 +769,6 @@ public class BrowserActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             switch (item.getItemId()) {
-//                case R.id.menuSpeakBrowser:
-//                    try {
-//                        setBackPosition = currentPosition;
-//                        toGetTextFromCurrentScreen();
-//                    } catch (Exception | Error e) {
-//                        e.printStackTrace();
-//                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
-//                        Crashlytics.logException(e);
-//                        FirebaseCrash.report(e);
-//                    }
-//                    break;
-
-//                case R.id.menuBack:
-//                    onBackPressed();
-//                    break;
-//
-//                case R.id.menuForward:
-//                    GoForward();
-//                    break;
-//
-//                case R.id.menuBookmarksList:
-//                    startActivity(new Intent(BrowserActivity.this, BookmarkActivity.class));
-//                    break;
-//
-//                case R.id.menuReload:
-//                    superWebView.reload();
-//                    break;
-
                 case R.id.menuBookmark:
                     toChangeData(true);
                     break;
@@ -1110,3 +1012,109 @@ public class BrowserActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+
+
+/*
+
+
+//            menuSpeak = menu.findItem(R.id.menuSpeakBrowser);
+//                case R.id.menuSpeakBrowser:
+//                    try {
+//                        setBackPosition = currentPosition;
+//                        toGetTextFromCurrentScreen();
+//                    } catch (Exception | Error e) {
+//                        e.printStackTrace();
+//                        FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
+//                        Crashlytics.logException(e);
+//                        FirebaseCrash.report(e);
+//                    }
+//                    break;
+
+//                case R.id.menuBack:
+//                    onBackPressed();
+//                    break;
+//
+//                case R.id.menuForward:
+//                    GoForward();
+//                    break;
+//
+//                case R.id.menuBookmarksList:
+//                    startActivity(new Intent(BrowserActivity.this, BookmarkActivity.class));
+//                    break;
+//
+//                case R.id.menuReload:
+//                    superWebView.reload();
+//                    break;
+
+
+
+////                        Uri myUri = Uri.parse(url);
+////                        Intent superIntent = new Intent(Intent.ACTION_VIEW);
+////                        superIntent.setData(myUri);
+////                        startActivity(superIntent);
+//                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+//                        request.allowScanningByMediaScanner();
+//
+//                        request.setNotificationVisibility(
+//                                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//
+////                        request.setDestinationInExternalPublicDir(
+////                                Environment.DIRECTORY_DOWNLOADS,    //Download folder
+////                                "download");                        //Name of file
+//
+//
+//                        DownloadManager dm = (DownloadManager) getSystemService(
+//                                DOWNLOAD_SERVICE);
+//
+//                        dm.enqueue(request);
+        webView.setDownloadListener(new DownloadListener()
+        {
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength)
+            {
+                //for downloading directly through download manager
+                Request request = new Request(Uri.parse(url));
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "download");
+                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                dm.enqueue(request);
+            }
+        });
+
+        In the above code, if you don’t have sdcard on emulator/device, then you can use internal storage to store a file, by commenting this line.
+
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "download");
+
+        2) Downloading a file using a web browser opened from android webview
+        This will send an intent to web browser and web browser will take care of downloading the file. It will internally use download manager to download a file.
+
+        webView.setDownloadListener(new DownloadListener()
+        {
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength)
+            {
+                //download file using web browser
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        */
+//            superWebView.setDownloadListener(new DownloadListener() {
+//
+//                @Override
+//                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+//                    DownloadManager.Request request = new DownloadManager.Request(
+//                            Uri.parse(url));
+//
+//                    request.allowScanningByMediaScanner();
+//                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); //Notify client once download is completed!
+//                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Name of your downloadble file goes here, example: Mathematics II ");
+//                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//                    dm.enqueue(request);
+//                    Toast.makeText(getApplicationContext(), "Downloading File", //To notify the Client that the file is being downloaded
+//                            Toast.LENGTH_LONG).show();
+//
+//                }
+//            });
+//
+//    startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));

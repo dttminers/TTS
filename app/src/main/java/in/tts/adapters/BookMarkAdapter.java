@@ -20,7 +20,8 @@ import com.google.firebase.crash.FirebaseCrash;
 import java.util.List;
 
 import in.tts.R;
-import in.tts.activities.BrowserActivity;
+//import in.tts.activities.BrowserActivity;
+import in.tts.browser.activity.BrowserActivity;
 import in.tts.model.BookmarkModel;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;

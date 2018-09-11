@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,7 +22,8 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.perf.metrics.AddTrace;
 
 import in.tts.R;
-import in.tts.activities.BrowserActivity;
+import in.tts.browser.activity.BrowserActivity;
+//import in.tts.activities.BrowserActivity;
 import in.tts.model.PrefManager;
 import in.tts.utils.CommonMethod;
 
@@ -84,7 +84,7 @@ public class BrowserFragment extends Fragment {
                     startActivity(
                             new Intent(getContext(), BrowserActivity.class)
                                     .putExtra("url", "https://www.amazon.in"));
-                    CommonMethod.toCloseLoader();
+                   CommonMethod.toCloseLoader();
                 }
             });
 
