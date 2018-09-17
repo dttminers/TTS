@@ -5,7 +5,6 @@
     <string name="str_title_help">Help</string>
     <string name="str_title_make_your_own_read">Make Your Own Read</string>
     <string name="str_title_browse_it">Browse It</string>
-    <string name="str_title_docs">Docs</string>
     <string name="str_title_audio_settings">Audio Settings</string>
     <string name="str_title_our_other_apps">Our Other App</string>
     <string name="str_title_images">Images</string>
@@ -79,9 +78,7 @@
     <string name="str_error_minimum_8">Minimum 8 characters</string>
     <string name="str_error_maximum_15">Maximum 15 Character</string>
     <string name="str_error_pswd">Required at least 1 Uppercase letter, 1 Lowercase letter, 1 Number and 1 Special character</string>
-    <string name="str_forward">Forward</string>
     <string name="str_bookmark">Bookmark</string>
-    <string name="str_refresh">Refresh</string>
     <string name="str_share">Share</string>
     <string name="str_paste">Paste</string>
     <string name="lbl_no_check_internet">No Internet Connection</string>
@@ -93,7 +90,6 @@
     <string name="lbl_submit">Send Feedback</string>
     <string name="str_rate_us">Rate Us</string>
     <string name="str_error_valid_mobile">Invalid Mobile No</string>
-    <string name="str_play">play</string>
     <string name="str_terms_n_condition">
 ReadIt
         \n
@@ -234,7 +230,6 @@ ebook reading software is free and easy to download from the internet.
 
 
     </string>
-    <string name="str_scan_device">Scan Device</string>
     <string name="str_splash">splash</string>
     <string name="str_enjoy_listening_millions_of_free_ebooks_and_many_more">Enjoy listening \n millions of free eBooks \nand many more</string>
     <string name="str_name">Name</string>
@@ -244,14 +239,10 @@ ebook reading software is free and easy to download from the internet.
     <string name="str_fetching_data">Fetching data ...</string>
     <string name="str_favicon">favicon</string>
     <string name="str_read_selected_text">Read Selected Text</string>
-    <string name="str_recent_pdf">Recent Pdf</string>
-    <string name="str_recent_image">Recent Images</string>
     <string name="str_no_pdf_viewed">No Pdf Viewed</string>
     <string name="str_no_image_viewed">No Image Viewed</string>
     <string name="str_rotate">Rotate</string>
     <string name="str_read_specific_selected_text">You can select specific text and listen too...</string>
-    <string name="str_search" />
-    <string name="str_back_navigation">Back Navigation</string>
     <string name="str_home">home</string>
 
 
@@ -275,7 +266,6 @@ ebook reading software is free and easy to download from the internet.
     <string name="main_menu_tabPreview">Open tab preview</string>
     <string name="main_menu_new_tab">New tab (background)</string>
     <string name="main_menu_new_tabOpen">New tab (foreground)</string>
-    <string name="main_menu_copy_link">Copy link</string>
     <string name="main_omnibox_input_hint">Search or type URL</string>
     <string name="menu_open_with">Open link with …</string>
 
@@ -545,6 +535,20 @@ ebook reading software is free and easy to download from the internet.
     <string name="whitelist_edit_hint">Domain</string>
     <string name="whitelist_add">Add</string>
     <string name="str_read_whole_page">Read Whole Page</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tts_settings">Setting</string>
+    <string name="tts_prev">Previous</string>
+    <string name="play_pause">Play Pause</string>
+    <string name="tts_next">Next</string>
+    <string name="tts_close">Close</string>
+    <string name="tts_rate">Rate</string>
+    <string name="tts_pitch">Pitch</string>
+    <string name="languages">Languages</string>
+    <string name="voices" >Voices</string>
+    <string name="engines">Engines</string>
+    <string name="hide">Hide</string>
 
 
 </resources>

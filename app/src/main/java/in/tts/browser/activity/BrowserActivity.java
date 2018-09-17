@@ -1,6 +1,8 @@
 package in.tts.browser.activity;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.Notification;
@@ -41,6 +43,7 @@ import android.print.PrintManager;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -85,14 +88,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.google.firebase.crash.FirebaseCrash;
 import com.mobapphome.mahencryptorlib.MAHEncryptor;
 
+import in.tts.browser.fragment.TtsFragment;
 import in.tts.classes.TTS;
 import in.tts.org.askerov.dynamicgrid.DynamicGridView;
 
@@ -140,10 +144,13 @@ import in.tts.utils.CommonMethod;
 import static android.content.ContentValues.TAG;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "FieldCanBeLocal", "ApplySharedPref"})
-public class BrowserActivity extends AppCompatActivity implements BrowserController, View.OnClickListener {
+public class BrowserActivity extends AppCompatActivity implements BrowserController, View.OnClickListener, TtsFragment.OnFragmentInteractionListener {
+
+    public static final String TAG = BrowserActivity.class.getSimpleName();
 
     // Menus
     private TTS tts;
+    private boolean isAudioPlayerOpen = false;
 
     private int currentPosition = 0, setBackPosition = 0;
 
@@ -367,7 +374,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
@@ -588,9 +595,9 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         toDisplayBottomMessage(true, getString(R.string.str_read_specific_selected_text));
     }
 
-    private void toDisplayBottomMessage(boolean b, final String message) {
+    private void toDisplayBottomMessage(boolean status, final String message) {
         try {
-            if (b) {
+            if (status) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -605,7 +612,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                             e.printStackTrace();
                             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                             Crashlytics.logException(e);
-                            FirebaseCrash.report(e);
+                            //FirebaseCrash.report(e);
                         }
                     }
                 }, 1400);
@@ -616,7 +623,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
     }
 
@@ -735,7 +742,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
     }
 
@@ -769,7 +776,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             IntentUnit.setContext(this);
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
@@ -802,12 +809,12 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             BrowserContainer.clear();
             IntentUnit.setContext(null);
 
-            if (exit) {
-                System.exit(0); // For remove all WebView thread
-            }
+//            if (exit) {
+//                System.exit(0); // For remove all WebView thread
+//            }
         } catch (Exception | Error e) {
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
         }
@@ -926,6 +933,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         inputBox.clearFocus();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onClick(View v) {
 
@@ -955,7 +963,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 break;
 
             case R.id.tv_new_tabReadSelected:
-                Log.d("TAG_ Web", "fdddf");
+                Log.d("TAG_ Web", "fdddf" + isAudioPlayerOpen);
                 bottomSheetDialog.cancel();
                 toShowMessage();
                 break;
@@ -1677,6 +1685,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         ninjaWebView = (NinjaWebView) currentAlbumController;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initOmnibox() {
 
         rlMainView = findViewById(R.id.rlMainView);
@@ -2753,7 +2762,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                     e.printStackTrace();
                     FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                     Crashlytics.logException(e);
-                    FirebaseCrash.report(e);
+                    //FirebaseCrash.report(e);
                     ninjaWebView.loadUrl("https://www.google.co.in");
                 }
 
@@ -2864,6 +2873,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                             tts.toStop();
                             tts.toShutDown();
                         }
+                        toExit();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -3399,7 +3409,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
     }
 
@@ -4113,7 +4123,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
     }
 
@@ -4144,7 +4154,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                                                 e.printStackTrace();
                                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                                                 Crashlytics.logException(e);
-                                                FirebaseCrash.report(e);
+                                                //FirebaseCrash.report(e);
                                             }
                                         }
                                     });
@@ -4154,7 +4164,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                         e.printStackTrace();
                         FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
                         Crashlytics.logException(e);
-                        FirebaseCrash.report(e);
+                        //FirebaseCrash.report(e);
                     }
 
                     return false;
@@ -4164,7 +4174,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
 
         super.onActionModeStarted(mode);
@@ -4172,30 +4182,39 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
     private void toSpeakFromWebPage(String text) {
         try {
-            CommonMethod.toCloseLoader();
-            //Log.d("WEB", "toSpeakWebPage  " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
-            if (text.trim().length() > 0) {
-//                tts = new TTS(BrowserActivity.this);
-                if (tts != null) {
-                    if (tts.isSpeaking()) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
-                }
-//                Speaker speaker = new Speaker(getApplication());
-//                speaker.play(text);
-//                tts = new TTS(BrowserActivity.this);
-                tts.SpeakLoud(text.replaceAll("Fetching data...", "\\s"));//, "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
-                CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
-//                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+
+            if (isAudioPlayerOpen) {
+                Log.d("TAG_ Web", "fdddf");
+                closeTtsFragment();
             } else {
-                CommonMethod.toDisplayToast(BrowserActivity.this, " Unable to fetch data ");
+                Log.d("TAG_ Web", "fdddf");
+                openTtsFragment(text);
             }
+//            CommonMethod.toCloseLoader();
+//            //Log.d("WEB", "toSpeakWebPage  " + stringBuilder.toString().length() + ":" + stringBuilder.toString());
+//            if (text.trim().length() > 0) {
+////                tts = new TTS(BrowserActivity.this);
+//                if (tts != null) {
+//                    if (tts.isSpeaking()) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+//                }
+//
+////                Speaker speaker = new Speaker(getApplication());
+////                speaker.play(text);
+////                tts = new TTS(BrowserActivity.this);
+//                tts.SpeakLoud(text.replaceAll("Fetching data...", "\\s"));//, "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+//                CommonMethod.toDisplayToast(BrowserActivity.this, "Sound will play...");
+////                tts.toSaveAudioFile(text.replaceAll("&nbsp;", "\\s"), "AUD_Web" + superWebView.getTitle() + System.currentTimeMillis());
+//            } else {
+//                CommonMethod.toDisplayToast(BrowserActivity.this, " Unable to fetch data ");
+//            }
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
@@ -4213,7 +4232,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
         }
     }
 
@@ -4254,7 +4273,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 //                                if (getSupportActionBar() != null) {
 //                                    CommonMethod.toSetTitle(getSupportActionBar(), BrowserActivity.this, webTitle);
 //                                }
-                                if (getSupportActionBar() != null){
+                                if (getSupportActionBar() != null) {
                                     getSupportActionBar().hide();
                                 }
 
@@ -4272,9 +4291,68 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             rlPB.setVisibility(View.GONE);
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             Crashlytics.logException(e);
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
             CommonMethod.toCloseLoader();
         }
     }
 
+    public void setTtsFragmentVisibility(final boolean visible) {
+        Log.d("TAG_ Web", "fdddf11" + visible + ":" + isAudioPlayerOpen);
+        final View ttsFrame = findViewById(R.id.tts_frame);
+        if (visible) {
+            ttsFrame.animate().alpha(DefaultRetryPolicy.DEFAULT_BACKOFF_MULT).setListener(new AnimatorListenerAdapter() {
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    ttsFrame.setVisibility(View.VISIBLE);
+                    isAudioPlayerOpen = true;
+                    Log.d("TAG_ Web", "fdddf12" + visible + ":" + isAudioPlayerOpen);
+                }
+            }).start();
+        } else {
+            ttsFrame.animate().alpha(0.0f).setListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    ttsFrame.setVisibility(View.GONE);
+                    isAudioPlayerOpen = false;
+                    Log.d("TAG_ Web", "fdddf13" + visible + ":" + isAudioPlayerOpen);
+                }
+            }).start();
+        }
+    }
+
+    public void openTtsFragment(String text) {
+        try {
+            Log.d("TAG_ Web", "fdddf31" + ":" + isAudioPlayerOpen + text.length());
+            Bundle bundle = new Bundle();
+            bundle.putString("Speak", text);
+            TtsFragment ttsFragment = new TtsFragment();
+            ttsFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_close_exit, R.anim.activity_open_enter, R.anim.activity_close_exit)
+                    .replace(R.id.tts_frame, ttsFragment, TtsFragment.TAG).commit();
+            setTtsFragmentVisibility(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void closeTtsFragment() {
+        try {
+            Log.d("TAG_ Web", "fdddf21" + ":" + isAudioPlayerOpen);
+            setTtsFragmentVisibility(false);
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(TtsFragment.TAG);
+            if (fragment != null) {
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

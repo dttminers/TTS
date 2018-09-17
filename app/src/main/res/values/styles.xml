@@ -11,6 +11,7 @@
         <item name="actionModeBackground">@drawable/bg_main</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Design.FloatingActionButton</item>
     </style>
 
 
@@ -25,6 +26,7 @@
         <item name="actionModeBackground">@drawable/bg_main</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Design.FloatingActionButton</item>
     </style>
 
     <!-- Splash Screen theme. -->
@@ -35,6 +37,7 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+
     </style>
 
     <!-- Splash Screen theme. -->
@@ -53,22 +56,12 @@
         <item name="colorAccent">@color/white</item> <!-- Whatever color you want-->
     </style>
 
-    <style name="AppTheme.GreyAccent">
-        <item name="colorAccent">@color/grey</item> <!-- Whatever color you want-->
-    </style>
-
     <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/ttsRed</item>
         <item name="colorPrimaryDark">@color/red1</item>
         <item name="colorAccent">@color/dark_pink_two</item>
         <item name="android:windowBackground">@color/white</item>
-    </style>
-
-    <style name="AppThemeDarkNoActionBar" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/ttsRed</item>
-        <item name="colorPrimaryDark">@color/red1</item>
-        <item name="colorAccent">@color/dark_pink_two</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Design.FloatingActionButton</item>
     </style>
 
 </resources>

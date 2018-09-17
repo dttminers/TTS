@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_main_tts_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
+    android:paddingTop="15dp"
+    tools:context=".browser.fragment.TtsFragment">
+
+    <RelativeLayout
+        android:id="@+id/rl_tts_main_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
+
+        <RelativeLayout
+            android:id="@+id/rl_tts_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="#eeeeee"
+            android:padding="10dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_tts_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/tts_settings"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_tune_black_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_tts_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:contentDescription="@string/play_pause"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_play_arrow_grey_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_tts_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_tts_toggle"
+                android:layout_toStartOf="@+id/iv_tts_toggle"
+                android:contentDescription="@string/tts_prev"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_chevron_left_grey_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_tts_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/iv_tts_toggle"
+                android:layout_toRightOf="@+id/iv_tts_toggle"
+                android:contentDescription="@string/tts_next"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_chevron_right_grey_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_tts_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:contentDescription="@string/tts_close"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_close_red_24dp" />
+        </RelativeLayout>
+
+        <SeekBar
+            android:id="@+id/sb_tts_progress"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:max="100"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:paddingEnd="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:progressDrawable="@drawable/read_seekbar"
+            android:thumbOffset="0dp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_tts_overflow_menu1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/rl_tts_overflow_content_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="#eeeeee"
+            android:paddingBottom="10dp"
+            android:paddingTop="16dp"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:id="@+id/rl_tts_rate_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/tts_rate">
+
+                <TextView
+                    android:id="@+id/tv_tts_rate_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shelf_read_other_settings_background"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/tts_rate"
+                    android:textIsSelectable="false"
+                    android:textColor="#6a6a6a"
+                    android:textSize="14sp" />
+
+                <SeekBar
+                    android:id="@+id/sb_tts_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_tts_rate_title"
+                    android:layout_margin="5dp"
+                    android:contentDescription="@string/tts_rate"
+                    android:maxHeight="4dp"
+                    android:minHeight="4dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:progressDrawable="@drawable/read_seekbar"
+                    android:thumbOffset="0dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_tts_pitch_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_tts_rate_parent"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/tts_pitch">
+
+                <TextView
+                    android:id="@+id/tv_tts_pitch_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shelf_read_other_settings_background"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:textIsSelectable="false"
+                    android:text="@string/tts_pitch"
+                    android:textColor="#6a6a6a"
+                    android:textSize="14sp" />
+
+                <SeekBar
+                    android:id="@+id/sb_tts_pitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_tts_pitch_title"
+                    android:layout_margin="5dp"
+                    android:contentDescription="@string/tts_rate"
+                    android:maxHeight="4dp"
+                    android:minHeight="4dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:progressDrawable="@drawable/read_seekbar"
+                    android:thumbOffset="0dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_tts_option_language"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_below="@+id/rl_tts_pitch_parent"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_tts_option_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/shelf_read_other_settings_background"
+                    android:drawablePadding="24dp"
+                    android:gravity="start|center"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:singleLine="true"
+                    android:text="@string/languages"
+                    android:textColor="#6a6a6a"
+                    android:textSize="14sp" />
+
+                <ProgressBar
+                    android:id="@+id/pb_tts_option_language"
+                    style="@android:style/Widget.Material.ProgressBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_tts_option_voices"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_below="@+id/ll_tts_option_language"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_tts_option_voices"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/shelf_read_other_settings_background"
+                    android:drawablePadding="24dp"
+                    android:gravity="start|center"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:singleLine="true"
+                    android:text="@string/voices"
+                    android:textIsSelectable="false"
+                    android:textColor="#6a6a6a"
+                    android:textSize="14sp" />
+
+                <ProgressBar
+                    android:id="@+id/pb_tts_option_voices"
+                    style="@android:style/Widget.Material.ProgressBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/lv_tts_values_list"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="15dp"
+            android:background="#efeeee"
+            android:visibility="gone" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_arrow_down"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

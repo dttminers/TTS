@@ -72,10 +72,6 @@ dependencies {
 
     implementation 'com.mobapphome.library:mah-encryptor-lib:1.0.1'
 
-//    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
-
-//    implementation 'com.mapzen.android:speakerbox:1.4.1'
-
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }

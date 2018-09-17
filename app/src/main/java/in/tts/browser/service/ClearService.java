@@ -17,7 +17,8 @@ public class ClearService extends Service {
 
     @Override
     public void onDestroy() {
-        System.exit(0); // For remove all WebView thread
+        clear();
+//        System.exit(0); // For remove all WebView thread
     }
 
     @Override

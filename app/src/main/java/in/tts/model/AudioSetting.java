@@ -2,6 +2,9 @@ package in.tts.model;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.speech.tts.Voice;
+
+import java.util.Locale;
 
 public class AudioSetting {
 
@@ -12,6 +15,11 @@ public class AudioSetting {
     private String LangSelection ;
     private String AccentSelection ;
     private int VoiceSpeed =0;
+
+    private Voice SelectedVoice;
+    private Locale SelectedLanguage;
+    private float SelectedPitch;
+    private int SelectedRate;
 
 
     private AudioSetting(Context context) {
@@ -65,4 +73,37 @@ public class AudioSetting {
     public void setVoiceSpeed(int voiceSpeed) {
         VoiceSpeed = voiceSpeed;
     }
+
+    public Voice getSelectedVoice() {
+        return SelectedVoice;
+    }
+
+    public void setSelectedVoice(Voice selectedVoice) {
+        SelectedVoice = selectedVoice;
+    }
+
+    public Locale getSelectedLanguage() {
+        return SelectedLanguage;
+    }
+
+    public void setSelectedLanguage(Locale selectedLanguage) {
+        SelectedLanguage = selectedLanguage;
+    }
+
+    public float getSelectedPitch() {
+        return SelectedPitch;
+    }
+
+    public void setSelectedPitch(float selectedPitch) {
+        SelectedPitch = selectedPitch;
+    }
+
+    public int getSelectedRate() {
+        return SelectedRate;
+    }
+
+    public void setSelectedRate(int selectedRate) {
+        SelectedRate = selectedRate;
+    }
+
 }

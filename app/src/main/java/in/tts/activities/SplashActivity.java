@@ -106,3 +106,5 @@ public class SplashActivity extends AppCompatActivity {
         CommonMethod.toReleaseMemory();
     }
 }
+
+
