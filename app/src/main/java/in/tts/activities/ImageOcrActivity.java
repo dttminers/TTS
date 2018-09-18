@@ -1,17 +1,22 @@
 package in.tts.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.vision.Frame;
@@ -32,6 +38,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import java.util.ArrayList;
 
 import in.tts.R;
+import in.tts.browser.fragment.TtsFragment;
 import in.tts.classes.TTS;
 import in.tts.classes.ToSetMore;
 import in.tts.model.PrefManager;
@@ -40,7 +47,7 @@ import in.tts.utils.CommonMethod;
 import in.tts.utils.FilePath;
 import in.tts.utils.ToCheckFileExists;
 
-public class ImageOcrActivity extends AppCompatActivity {
+public class ImageOcrActivity extends AppCompatActivity implements TtsFragment.OnFragmentInteractionListener {
 
     private String photoPath, name;
     private Bitmap bitmap;
@@ -52,7 +59,7 @@ public class ImageOcrActivity extends AppCompatActivity {
     private View view;
 
     private RelativeLayout mRl;
-    private TTS tts;
+//    private TTS tts;
 
     private TextView tvImgOcr;
     private ImageView ivSpeak, ivReload, mIvOcr;
@@ -169,7 +176,7 @@ public class ImageOcrActivity extends AppCompatActivity {
         try {
             //Log.d("TAG", "Resume Image "  );
             super.onResume();
-            tts = new TTS(ImageOcrActivity.this);
+//            tts = new TTS(ImageOcrActivity.this);
         } catch (Exception | Error e) {
             e.printStackTrace();
             FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -193,7 +200,6 @@ public class ImageOcrActivity extends AppCompatActivity {
             FirebaseCrash.report(e);
         }
     }
-
 
     @SuppressLint("StaticFieldLeak")
     private class toGetImage extends AsyncTask<Void, Void, Void> {
@@ -242,6 +248,8 @@ public class ImageOcrActivity extends AppCompatActivity {
                     ivSpeak = view.findViewById(R.id.ivSpeak);
                     ivReload = view.findViewById(R.id.ivReload);
 
+                    tvImgOcr.setMovementMethod(new ScrollingMovementMethod());
+
                     tvImgOcr.setText(stringBuilder);
 
                     ivReload.setOnClickListener(new View.OnClickListener() {
@@ -250,7 +258,7 @@ public class ImageOcrActivity extends AppCompatActivity {
                             try {
 
                                 tvImgOcr.setText("");
-                                tts.toStop();
+//                                tts.toStop();
 
                                 new toGetImage().execute();
 
@@ -275,9 +283,11 @@ public class ImageOcrActivity extends AppCompatActivity {
 //
 //                                ivSpeak.startAnimation(myAnim);
 
-                                tts.SpeakLoud(stringBuilder.toString());//, "AUD_Image" + name.substring(0, name.lastIndexOf(".")) + System.currentTimeMillis());
+//                                tts.SpeakLoud(stringBuilder.toString());//, "AUD_Image" + name.substring(0, name.lastIndexOf(".")) + System.currentTimeMillis());
 //                                tts.SpeakLoud(stringBuilder.toString(), "AUD_Image" + name.substring(0, (name.length() - 4)) + System.currentTimeMillis());
 //                                tts.toSaveAudioFile(stringBuilder.toString(), "AUD_Image"+name.substring(0, (name.length()-4) )+System.currentTimeMillis());
+
+                                openTtsFragment(stringBuilder.toString());
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
@@ -305,6 +315,64 @@ public class ImageOcrActivity extends AppCompatActivity {
                 e.printStackTrace();
                 FlurryAgent.onError(e.getMessage(), e.getLocalizedMessage(), e);
             }
+        }
+    }
+
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void openTtsFragment(String text) {
+        try {
+            Log.d("TAG_ Web", "fdddf31" + ":" + text.length());
+            Bundle bundle = new Bundle();
+            bundle.putString("Speak", text);
+            TtsFragment ttsFragment = new TtsFragment();
+            ttsFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_close_exit, R.anim.activity_open_enter, R.anim.activity_close_exit)
+                    .replace(R.id.ttsFrameImageOCR, ttsFragment, TtsFragment.TAG).commit();
+            setTtsFragmentVisibility(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeTtsFragment() {
+        try {
+            Log.d("TAG_ Web", "fdddf21" + ":");
+            setTtsFragmentVisibility(false);
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(TtsFragment.TAG);
+            if (fragment != null) {
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setTtsFragmentVisibility(final boolean visible) {
+        Log.d("TAG_ Web", "fdddf11" + visible + ":");
+        final View ttsFrame = findViewById(R.id.ttsFrameImageOCR);
+        if (visible) {
+            ttsFrame.animate().alpha(DefaultRetryPolicy.DEFAULT_BACKOFF_MULT).setListener(new AnimatorListenerAdapter() {
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    ttsFrame.setVisibility(View.VISIBLE);
+                    Log.d("TAG_ Web", "fdddf12" + visible + ":");
+                }
+            }).start();
+        } else {
+            ttsFrame.animate().alpha(0.0f).setListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    ttsFrame.setVisibility(View.GONE);
+                    Log.d("TAG_ Web", "fdddf13" + visible + ":");
+                }
+            }).start();
         }
     }
 
@@ -368,9 +436,10 @@ public class ImageOcrActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         try {
-            if (tts != null) {
-                tts.toStop();
-            }
+//            if (tts != null) {
+//                tts.toStop();
+//            }
+            closeTtsFragment();
             if (mRl != null) {
                 if (mRl.getChildCount() > 1) {
                     if (view != null) {
@@ -390,10 +459,11 @@ public class ImageOcrActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         try {
-            if (tts != null) {
-                tts.toStop();
-                tts.toShutDown();
-            }
+//            if (tts != null) {
+//                tts.toStop();
+//                tts.toShutDown();
+//            }
+            closeTtsFragment();
             if (mRl != null) {
                 if (mRl.getChildCount() > 1) {
                     if (view != null) {

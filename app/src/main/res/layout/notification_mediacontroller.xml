@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/spl">
+
+    <ImageView
+        android:id="@+id/ivAppIcon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/ivTtsClose"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/tts_close"
+        android:padding="5dp"
+        android:src="@drawable/ripple_close" />
+
+    <ImageView
+        android:id="@+id/ivTtsPlayPause"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@id/ivTtsClose"
+        android:layout_toStartOf="@id/ivTtsClose"
+        android:contentDescription="@string/tts_close"
+        android:padding="2dp"
+        android:src="@drawable/ripple_pause" />
+
+    <TextView
+        android:id="@+id/tvTtsName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/ivAppIcon"
+        android:layout_toLeftOf="@id/ivTtsPlayPause"
+        android:layout_toRightOf="@id/ivAppIcon"
+        android:layout_toStartOf="@id/ivTtsPlayPause"
+        android:maxLines="2" />
+
+</RelativeLayout>

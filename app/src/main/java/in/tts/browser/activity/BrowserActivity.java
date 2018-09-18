@@ -149,7 +149,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     public static final String TAG = BrowserActivity.class.getSimpleName();
 
     // Menus
-    private TTS tts;
+//    private TTS tts;
     private boolean isAudioPlayerOpen = false;
 
     private int currentPosition = 0, setBackPosition = 0;
@@ -298,10 +298,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             ninjaWebView = (NinjaWebView) currentAlbumController;
             if (ninjaWebView.canGoBack()) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+                    closeTtsFragment();
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -509,10 +510,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                     @Override
                     public void onClick(View v) {
                         try {
-                            if (tts != null) {
-                                tts.toStop();
-                                tts.toShutDown();
-                            }
+                            closeTtsFragment();
+//                            if (tts != null) {
+//                                tts.toStop();
+//                                tts.toShutDown();
+//                            }
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                         }
@@ -642,7 +644,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     public void onResume() {
         try {
             super.onResume();
-            tts = new TTS(BrowserActivity.this);
+//            tts = new TTS(BrowserActivity.this);
             IntentUnit.setContext(this);
             if (create) {
                 return;
@@ -749,10 +751,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     @Override
     public void onPause() {
         try {
-            if (tts != null) {
-                tts.toStop();
-                tts.toShutDown();
-            }
+//            if (tts != null) {
+//                tts.toStop();
+//                tts.toShutDown();
+//            }
+            closeTtsFragment();
 
             Intent toHolderService = new Intent(this, HolderService.class);
             IntentUnit.setClear(false);
@@ -786,10 +789,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     @Override
     public void onDestroy() {
         try {
-            if (tts != null) {
-                tts.toStop();
-                tts.toShutDown();
-            }
+            closeTtsFragment();
+//            if (tts != null) {
+//                tts.toStop();
+//                tts.toShutDown();
+//            }
             boolean clearIndexedDB = sp.getBoolean(("sp_clearIndexedDB"), false);
             if (clearIndexedDB) {
                 BrowserUnit.clearIndexedDB(this);
@@ -993,10 +997,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             case R.id.web_next:
                 if (ninjaWebView.canGoForward()) {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+                        closeTtsFragment();
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
+//                        }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -1531,9 +1536,10 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                                 public void onClick(View view) {
                                     bottomSheetDialog.cancel();
                                     try {
-                                        if (tts != null) {
-                                            tts.toStop();
-                                        }
+//                                        if (tts != null) {
+//                                            tts.toStop();
+//                                        }
+                                        closeTtsFragment();
                                     } catch (Exception | Error e) {
                                         e.printStackTrace();
                                     }
@@ -1545,9 +1551,10 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                                 @Override
                                 public void onClick(View view) {
                                     try {
-                                        if (tts != null) {
-                                            tts.toStop();
-                                        }
+//                                        if (tts != null) {
+//                                            tts.toStop();
+//                                        }
+                                        closeTtsFragment();
                                     } catch (Exception | Error e) {
                                         e.printStackTrace();
                                     }
@@ -2684,10 +2691,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         if (!foreground) {
             ViewUnit.bound(this, ninjaWebView);
             try {
-                if (tts != null) {
-                    tts.toStop();
-                    tts.toShutDown();
-                }
+                closeTtsFragment();
+//                if (tts != null) {
+//                    tts.toStop();
+//                    tts.toShutDown();
+//                }
             } catch (Exception | Error e) {
                 e.printStackTrace();
             }
@@ -2869,16 +2877,18 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 @Override
                 public void onClick(View view) {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+                        closeTtsFragment();
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
+//                        }
                         toExit();
+
+                        okAction.run();
+                        bottomSheetDialog.cancel();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
-                    okAction.run();
-                    bottomSheetDialog.cancel();
                 }
             });
             Button action_cancel = dialogView.findViewById(R.id.action_cancel);
@@ -2886,14 +2896,16 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 @Override
                 public void onClick(View view) {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
+//                        }
+                        closeTtsFragment();
+                        bottomSheetDialog.cancel();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
-                    bottomSheetDialog.cancel();
+
                 }
             });
             bottomSheetDialog.setContentView(dialogView);
@@ -3184,10 +3196,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3203,10 +3216,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3225,10 +3239,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3257,10 +3272,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             public void onClick(View v) {
                 try {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
+//                        }
+                        closeTtsFragment();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -3281,10 +3297,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
                         public void onClick(DialogInterface dialog, int whichButton) {
                             try {
-                                if (tts != null) {
-                                    tts.toStop();
-                                    tts.toShutDown();
-                                }
+                                closeTtsFragment();
+//                                if (tts != null) {
+//                                    tts.toStop();
+//                                    tts.toShutDown();
+//                                }
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                             }
@@ -3330,10 +3347,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                     builder.setNegativeButton(R.string.app_cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             try {
-                                if (tts != null) {
-                                    tts.toStop();
-                                    tts.toShutDown();
-                                }
+                                closeTtsFragment();
+//                                if (tts != null) {
+//                                    tts.toStop();
+//                                    tts.toShutDown();
+//                                }
                             } catch (Exception | Error e) {
                                 e.printStackTrace();
                             }
@@ -3367,10 +3385,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 @Override
                 public void onClick(View view) {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+                        closeTtsFragment();
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
+//                        }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -3382,10 +3401,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 @Override
                 public void onClick(View view) {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+                        closeTtsFragment();
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
+//                        }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -3400,10 +3420,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
     private void toExit() {
         try {
-            if (tts != null) {
-                tts.toStop();
-                tts.toShutDown();
-            }
+            closeTtsFragment();
+//            if (tts != null) {
+//                tts.toStop();
+//                tts.toShutDown();
+//            }
             finish();
         } catch (Exception | Error e) {
             e.printStackTrace();
@@ -3513,13 +3534,19 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         if (currentAlbumController != null && currentAlbumController instanceof NinjaRelativeLayout) {
             floatButton_shareLayout.setVisibility(View.GONE);
             floatButton_saveLayout.setVisibility(View.GONE);
+            floatButton_speakLayout.setVisibility(View.GONE);
+
             web_next.setVisibility(View.GONE);
             web_prev.setVisibility(View.GONE);
+
             showOmnibox();
+
             dialogTitle.setText(currentAlbumController.getAlbumTitle());
         } else if (currentAlbumController != null && currentAlbumController instanceof NinjaWebView) {
+
             floatButton_shareLayout.setVisibility(View.VISIBLE);
             floatButton_saveLayout.setVisibility(View.VISIBLE);
+            floatButton_speakLayout.setVisibility(View.VISIBLE);
 
             if (ninjaWebView.canGoBack()) {
                 web_prev.setVisibility(View.VISIBLE);
@@ -3689,10 +3716,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                     @Override
                     public void onClick(View view) {
                         try {
-                            if (tts != null) {
-                                tts.toStop();
-                                tts.toShutDown();
-                            }
+                            closeTtsFragment();
+//                            if (tts != null) {
+//                                tts.toStop();
+//                                tts.toShutDown();
+//                            }
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                         }
@@ -3711,10 +3739,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                     @Override
                     public void onClick(View view) {
                         try {
-                            if (tts != null) {
-                                tts.toStop();
-                                tts.toShutDown();
-                            }
+                            closeTtsFragment();
+//                            if (tts != null) {
+//                                tts.toStop();
+//                                tts.toShutDown();
+//                            }
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                         }
@@ -3732,10 +3761,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3764,10 +3794,12 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3784,10 +3816,12 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3802,10 +3836,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3839,10 +3874,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                     @Override
                     public void onClick(View view) {
                         try {
-                            if (tts != null) {
-                                tts.toStop();
-                                tts.toShutDown();
-                            }
+//                            if (tts != null) {
+//                                tts.toStop();
+//                                tts.toShutDown();
+//                            }
+                            closeTtsFragment();
                         } catch (Exception | Error e) {
                             e.printStackTrace();
                         }
@@ -3861,10 +3897,10 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 @Override
                 public void onClick(View v) {
                     try {
-                        if (tts != null) {
-                            tts.toStop();
-                            tts.toShutDown();
-                        }
+                        closeTtsFragment();
+//                        if (tts != null) {
+//                            tts.toStop();
+//                            tts.toShutDown();
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -3909,10 +3945,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+                    closeTtsFragment();
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3925,10 +3962,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             @Override
             public void onClick(View v) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+                    closeTtsFragment();
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3958,10 +3996,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+                    closeTtsFragment();
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -3983,10 +4022,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+                    closeTtsFragment();
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -4017,10 +4057,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+                    closeTtsFragment();
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }
@@ -4044,10 +4085,11 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 try {
-                    if (tts != null) {
-                        tts.toStop();
-                        tts.toShutDown();
-                    }
+//                    if (tts != null) {
+//                        tts.toStop();
+//                        tts.toShutDown();
+//                    }
+                    closeTtsFragment();
                 } catch (Exception | Error e) {
                     e.printStackTrace();
                 }

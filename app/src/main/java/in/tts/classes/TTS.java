@@ -28,6 +28,7 @@ import in.tts.utils.CommonMethod;
 public class TTS implements TextToSpeech.OnUtteranceCompletedListener {
 
     private static TextToSpeech tts;
+    public static Object toStop;
 
     private AudioSetting audioSetting;
     private ArrayList<String> male_voice_array = new ArrayList<String>(), female_voice_array = new ArrayList<String>();

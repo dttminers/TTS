@@ -1,7 +1,11 @@
 package in.tts.browser.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -36,8 +41,10 @@ import java.util.Locale;
 import java.util.Objects;
 
 import in.tts.R;
+import in.tts.activities.HomeActivity;
 import in.tts.model.AudioSetting;
 import in.tts.model.PrefManager;
+import in.tts.services.AudioPlayerBroadcastReceiver;
 import in.tts.utils.CommonMethod;
 
 @SuppressLint("RestrictedApi")
@@ -51,7 +58,8 @@ public class TtsFragment extends Fragment {
     private SeekBar sbRate, sbPitch;
     private ProgressBar pbLanguage, pbVoice;
     private ListView listView;
-    private FloatingActionButton fabBack;
+    //    private FloatingActionButton fabBack;
+    private ImageView fabBack;
 
     private TextToSpeech tts;
     private AudioSetting audioSetting;
@@ -60,8 +68,8 @@ public class TtsFragment extends Fragment {
     private ArrayList<Locale> localeList;
     private ArrayList<Voice> voiceList;
 
-    private int count = 0, status = 1, resume = 0;
-    private String[] a;
+    private int count = 0, sub_count = 0, status = 1, resume = 0;
+    private String[] a, text;
     private boolean isPaused = false, isVoiceList = false;
 
     private OnFragmentInteractionListener mListener;
@@ -101,7 +109,7 @@ public class TtsFragment extends Fragment {
                     Log.d("Tts_TAG", "Count 1 : " + text.split("\\.|\\?|\\!").length + " : " + count);
                     a = text.split("\\.|\\?|\\!");
                     Log.d("Tts_TAG", "Count 2 : " + a.length + " : " + count);
-                    toSpeak();
+                    toSpeak(count, sub_count);
 
                 }
             }
@@ -157,7 +165,7 @@ public class TtsFragment extends Fragment {
 //        }
 //    }
 
-    private void toSpeak() {
+    private void toSpeak(final int _count, final int _sub_count) {
         try {
 
             tts = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
@@ -189,7 +197,7 @@ public class TtsFragment extends Fragment {
                                 @Override
                                 public void onStart(String s) {
                                     try {
-                                        Log.d("Tts_TAG", "onStart : " + s.length());
+                                        Log.d("Tts_TAG", "onStart : " + s + ":" + s.length() + ":" + count + ":" + sub_count + ":" + text.length);
                                     } catch (Exception | Error e) {
                                         e.printStackTrace();
                                     }
@@ -198,10 +206,27 @@ public class TtsFragment extends Fragment {
                                 @Override
                                 public void onDone(String s) {
                                     try {
-                                        Log.d("Tts_TAG", "onDone : " + s.length());
-                                        count = count + 1;
-                                        if (count < a.length) {
-                                            toTtsSpeak(a[count]);
+                                        Log.d("Tts_TAG", "onDone : " + s + ":" + s.length() + ":" + count + ":" + sub_count + ":" + text.length);
+                                        if (text.length > sub_count) {
+                                            count = count + 1;
+                                            if (count < a.length) {
+                                                toTtsSpeak(a[count], sub_count);
+                                            } else {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        ivPlayPause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_play_arrow_grey_24dp));
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    ivPlayPause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_play_arrow_grey_24dp));
+                                                }
+                                            });
+                                            cancelNotification(getContext());
                                         }
                                     } catch (Exception | Error e) {
                                         e.printStackTrace();
@@ -211,14 +236,23 @@ public class TtsFragment extends Fragment {
                                 @Override
                                 public void onError(String s) {
                                     try {
-                                        Log.d("Tts_TAG", "onError : " + s.length());
+                                        Log.d("Tts_TAG", "onError : " + s + ":" + s.length() + ":" + count + ":" + sub_count + ":" + text.length);
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (ivPlayPause != null) {
+                                                    ivPlayPause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_play_arrow_grey_24dp));
+                                                }
+                                            }
+                                        });
+
                                     } catch (Exception | Error e) {
                                         e.printStackTrace();
                                     }
                                 }
                             });
                             Log.d("Tts_TAG", "Count 0 :" + count);
-                            toTtsSpeak(a[count]);
+                            toTtsSpeak(a[_count], _sub_count);
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -237,10 +271,102 @@ public class TtsFragment extends Fragment {
         }
     }
 
-    private void toTtsSpeak(String str) {
+    private void toTtsSpeak(String str, int _sub_count) {
         try {
-            Log.d("Tts_TAG", "Count 01 :" + count + str);
-            tts.speak(str, tts.isSpeaking() ? TextToSpeech.QUEUE_ADD : TextToSpeech.QUEUE_FLUSH, null, str);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ivPlayPause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_pause_grey_24dp));
+                }
+            });
+            text = str.split("\\s+");
+            Log.d("Tts_TAG", "Count 01 :" + count + ":" + str + ":" + text.length + ":" + sub_count + ":" + _sub_count);
+            for (int i = _sub_count; i < text.length; i++) {
+                Log.d("Tts_TAG", "ttsSpeak " + i + " : " + text[i] + ":" + sub_count + " : " + count + ":" + _sub_count);
+                sub_count = i;
+                tts.speak(text[i], tts.isSpeaking() ? TextToSpeech.QUEUE_ADD : TextToSpeech.QUEUE_FLUSH, null, text[i]);
+            }
+            setNotification();
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public void setNotification() {
+        try {
+            String ns = Context.NOTIFICATION_SERVICE;
+            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(ns);
+
+            @SuppressWarnings("deprecation")
+            Notification notification = new Notification(R.drawable.ic_launcher, null, System.currentTimeMillis());
+
+            RemoteViews notificationView = new RemoteViews(getActivity().getPackageName(), R.layout.notification_mediacontroller);
+
+            //the intent that is started when the notification is clicked (works)
+            Intent notificationIntent = new Intent(getContext(), HomeActivity.class);
+            Log.d("Tts_TAG", " pendingNotificationIntent ");
+            PendingIntent pendingNotificationIntent = PendingIntent.getActivity(getContext(), 0, notificationIntent, 0);
+
+            notification.contentView = notificationView;
+            notification.contentIntent = pendingNotificationIntent;
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+
+            //this is the intent that is supposed to be called when the button is clicked
+            Intent switchIntent = new Intent(getContext(), AudioPlayerBroadcastReceiver.class);
+            switchIntent.setAction("PlayPause");
+            Log.d("Tts_TAG", " pendingSwitchIntent ");
+            PendingIntent pendingSwitchIntent = PendingIntent.getBroadcast(getContext(), 0, switchIntent, 0);
+
+
+            //this is the intent that is supposed to be called when the button is clicked
+            Intent closeIntent = new Intent(getContext(), AudioPlayerBroadcastReceiver.class);
+            Log.d("Tts_TAG", "  closeSwitchIntent ");
+            switchIntent.setAction("Close");
+            PendingIntent closeSwitchIntent = PendingIntent.getBroadcast(getContext(), 0, closeIntent, 0);
+
+            //this is the intent that is supposed to be called when the button is clicked
+            Intent homeIntent = new Intent(getContext(), HomeActivity.class);
+            Log.d("Tts_TAG", "  closeSwitchIntent ");
+//            switchIntent.setAction("Close");
+            PendingIntent homeSwitchIntent = PendingIntent.getBroadcast(getContext(), 0, homeIntent, 0);
+
+            notificationView.setTextViewText(R.id.tvTtsName, "Reading Web Page");
+
+            notificationView.setOnClickPendingIntent(R.id.ivTtsPlayPause, pendingSwitchIntent);
+
+            notificationView.setOnClickPendingIntent(R.id.ivTtsClose, closeSwitchIntent);
+
+            notificationView.setOnClickPendingIntent(R.id.ivAppIcon, homeSwitchIntent);
+
+            notificationManager.notify(1, notification);
+        } catch (Exception | Error e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void cancelNotification(Context ctx) {
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (ivPlayPause != null) {
+                        ivPlayPause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_play_arrow_grey_24dp));
+                    }
+                }
+            });
+            Log.d("Tts_TAG", " Cancel : ");
+            String ns = Context.NOTIFICATION_SERVICE;
+            NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
+            if (nMgr != null) {
+                nMgr.cancel(1);
+            }
+            if (tts != null) {
+                if (tts.isSpeaking()) {
+                    tts.stop();
+                }
+            }
         } catch (Exception | Error e) {
             e.printStackTrace();
         }
@@ -277,22 +403,32 @@ public class TtsFragment extends Fragment {
 
             fabBack = Objects.requireNonNull(getActivity()).findViewById(R.id.fab_back);
 
+
+
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d("Tts_TAG", " onItemClick : " + i + " : " + l + " : " + isVoiceList + " : ");
-                    if (isVoiceList) {
+                    if (!isVoiceList) {
                         tts.setLanguage(localeList.get(i));
                         audioSetting = AudioSetting.getAudioSetting(getContext());
                         audioSetting.setSelectedLanguage(localeList.get(i));
-                        toSpeak();
+                        toSpeak(count, sub_count);
                     } else {
                         tts.setVoice(voiceList.get(i));
                         audioSetting = AudioSetting.getAudioSetting(getContext());
                         audioSetting.setSelectedVoice(voiceList.get(i));
-                        toSpeak();
+                        toSpeak(count, sub_count);
                     }
+
                     new PrefManager(getContext()).setAudioSetting();
+                    if (status == 1) {
+                        player1();
+                    } else if (status == 2) {
+                        player2();
+                    } else {
+                        player1();
+                    }
                 }
             });
 
@@ -322,8 +458,22 @@ public class TtsFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         localeList = new ArrayList<>(tts.getAvailableLanguages());
+                        Log.d("Tts_TAG", "localeList : " + localeList);
+
                         for (int i = 0; i < localeList.size(); i++) {
-                            localeNameList.add(localeList.get(i).getDisplayName());
+//                            Log.d("Tts_TAG", "localeList " + i + ": " + localeList.get(i).getDisplayName()
+//                                    + " : " + localeList.get(i).getCountry()
+//                                    + " : " + localeList.get(i).getDisplayLanguage()
+//                                    + " : " + localeList.get(i).getDisplayScript()
+//                                    + " : " + localeList.get(i).getLanguage()
+//                                    + " : " + localeList.get(i).getDisplayVariant()
+//                                    + " : " + localeList.get(i).getISO3Country()
+//                                    + " : " + localeList.get(i).getISO3Language()
+//                                    + " : " + localeList.get(i).getScript()
+//                                    + " : " + localeList.get(i).toLanguageTag()
+//                                    + " : " + localeList.get(i).getExtensionKeys()
+//                            );
+                            localeNameList.add(localeList.get(i).getDisplayLanguage());
                         }
                         isVoiceList = false;
                         listView.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, localeNameList));
@@ -339,8 +489,17 @@ public class TtsFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         voiceList = new ArrayList<>(tts.getVoices());
+                        Log.d("Tts_TAG", "voiceList : " + voiceList);
                         for (int i = 0; i < voiceList.size(); i++) {
-                            voiceNameList.add(voiceList.get(i).getName());
+//                            Log.d("Tts_TAG", "voiceList " + i
+//                                    + " : " + voiceList.get(i).getName()
+//                                    + " : " + voiceList.get(i).getLatency()
+//                                    + " : " + voiceList.get(i).getFeatures()
+//                                    + " : " + voiceList.get(i).getLocale()
+//                                    + " : " + voiceList.get(i).getLocale().getLanguage()
+//                                    + " : " + voiceList.get(i).getLocale().getDisplayLanguage()
+//                            );
+                            voiceNameList.add(voiceList.get(i).getLocale().getDisplayLanguage() + " ( " + voiceList.get(i).getName() + " ) ");
                         }
                         isVoiceList = true;
                         listView.setAdapter(new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, voiceNameList));
@@ -358,13 +517,13 @@ public class TtsFragment extends Fragment {
                         Log.d("Tts_TAG", " ivPrevious " + count + a.length);
                         count = count - 2;
                         if (count > 0) {
-                            toTtsSpeak(a[count]);
+                            toTtsSpeak(a[count], sub_count);
                             CommonMethod.toDisplayToast(getContext(), "You have jumped forward");
                         } else {
                             if (a != null) {
                                 CommonMethod.toDisplayToast(getContext(), "You have jumped to start");
                                 count = 0;
-                                toTtsSpeak(a[count]);
+                                toTtsSpeak(a[count], sub_count);
                             } else {
                                 count = count + 2;
                                 CommonMethod.toDisplayToast(getContext(), "You have jumped to start ..... ");
@@ -383,7 +542,7 @@ public class TtsFragment extends Fragment {
                         Log.d("Tts_TAG", " ivNext " + count + a.length);
                         count = count + 2;
                         if (count < a.length) {
-                            toTtsSpeak(a[count]);
+                            toTtsSpeak(a[count], sub_count);
                             CommonMethod.toDisplayToast(getContext(), "You have jumped backward");
                         } else {
                             count = count - 2;
@@ -406,16 +565,24 @@ public class TtsFragment extends Fragment {
                             tts.stop();
                             CommonMethod.toDisplayToast(getContext(), "Paused");
                         } else {
-                            if (resume != 0) {
+                            if (resume != 0 && resume < count) {
                                 if (a != null) {
-                                    toTtsSpeak(a[resume]);
+                                    count = resume;
+                                    sub_count = 0;
+                                    toTtsSpeak(a[count], sub_count);
                                     isPaused = false;
                                     CommonMethod.toDisplayToast(getContext(), "Resume");
                                 } else {
+                                    count = 0;
+                                    sub_count = 0;
+                                    toSpeak(count, sub_count);
                                     CommonMethod.toDisplayToast(getContext(), "Resume1");
                                 }
                             } else {
-                                CommonMethod.toDisplayToast(getContext(), "Resume2");
+                                count = 0;
+                                sub_count = 0;
+                                toSpeak(count, sub_count);
+                                CommonMethod.toDisplayToast(getContext(), "Resume");
                             }
                         }
                     } catch (Exception | Error e) {
@@ -446,11 +613,6 @@ public class TtsFragment extends Fragment {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
                     try {
                         Log.d("Tts_TAG", "onProgressChanged Rate : " + progress + " : " + b + " : " + count);
-                        tts.setPitch((float) progress);
-
-                        toSpeak();
-                        toTtsSpeak(a[count]);
-
                         SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.tts_rate));
                         builder.append(" - ")
                                 .append(String.valueOf(progress))
@@ -474,12 +636,25 @@ public class TtsFragment extends Fragment {
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    Log.d("Tts_TAG", "onStartTrackingTouch Rate: ");
+                    Log.d("Tts_TAG", "onStartTrackingTouch Rate: " + seekBar.getProgress());
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    Log.d("Tts_TAG", "onStopTrackingTouch Rate: ");
+                    try {
+                        Log.d("Tts_TAG", "onStopTrackingTouch Rate: " + seekBar.getProgress());
+                        tts.setSpeechRate((float) seekBar.getProgress());
+
+                        toSpeak(count, sub_count);
+                        toTtsSpeak(a[count], sub_count);
+
+                        audioSetting = AudioSetting.getAudioSetting(getContext());
+                        audioSetting.setSelectedPitch(seekBar.getProgress());
+
+                        new PrefManager(getContext()).setAudioSetting();
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -488,11 +663,6 @@ public class TtsFragment extends Fragment {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
                     try {
                         Log.d("Tts_TAG", "onProgressChanged Pitch : " + progress + " : " + b + " : " + count);
-                        tts.setSpeechRate((float) progress);
-
-                        toSpeak();
-                        toTtsSpeak(a[count]);
-
                         SpannableStringBuilder builder = new SpannableStringBuilder(getString(R.string.tts_pitch));
                         builder.append(" - ")
                                 .append(String.valueOf(progress))
@@ -505,11 +675,6 @@ public class TtsFragment extends Fragment {
 
                         tvLblPitch.setText(builder);
 
-                        audioSetting = AudioSetting.getAudioSetting(getContext());
-                        audioSetting.setSelectedPitch(progress);
-
-                        new PrefManager(getContext()).setAudioSetting();
-
                     } catch (Exception | Error e) {
                         e.printStackTrace();
                     }
@@ -517,12 +682,27 @@ public class TtsFragment extends Fragment {
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    Log.d("Tts_TAG", "onStartTrackingTouch Pitch: ");
+                    Log.d("Tts_TAG", "onStartTrackingTouch Pitch: " + seekBar.getProgress());
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    Log.d("Tts_TAG", "onStopTrackingTouch Pitch: ");
+                    try {
+                        Log.d("Tts_TAG", "onStopTrackingTouch Pitch: " + seekBar.getProgress());
+
+                        tts.setSpeechRate((float) seekBar.getProgress());
+
+                        toSpeak(count, sub_count);
+                        toTtsSpeak(a[count], sub_count);
+
+                        audioSetting = AudioSetting.getAudioSetting(getContext());
+                        audioSetting.setSelectedPitch(seekBar.getProgress());
+
+                        new PrefManager(getContext()).setAudioSetting();
+
+                    } catch (Exception | Error e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } catch (Exception | Error e) {
@@ -586,6 +766,11 @@ public class TtsFragment extends Fragment {
         mListener = null;
     }
 
+    public static void toStop(Context context) {
+        Log.d("Tts_TAG", " toStop : ");
+//        cancelNotification(context);
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
 
@@ -595,6 +780,7 @@ public class TtsFragment extends Fragment {
     @Override
     public void onPause() {
         try {
+            cancelNotification(getContext());
             if (tts != null) {
                 tts.stop();
                 tts.shutdown();
@@ -608,6 +794,7 @@ public class TtsFragment extends Fragment {
     @Override
     public void onDestroy() {
         try {
+            cancelNotification(getContext());
             if (tts != null) {
                 tts.stop();
                 tts.shutdown();

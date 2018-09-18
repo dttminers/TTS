@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlImageOcrActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/warm_grey1"
+    android:orientation="vertical"
     tools:context=".activities.ImageOcrActivity">
 
-    <ImageView
-        android:id="@+id/imgOcr"
+    <RelativeLayout
+        android:id="@+id/rlImageOcrActivity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/rl"
-        android:background="@color/black"
-        android:contentDescription="@string/app_name" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imgOcr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:contentDescription="@string/app_name" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/ttsFrameImageOCR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

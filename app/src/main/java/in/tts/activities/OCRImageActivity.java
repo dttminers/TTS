@@ -33,6 +33,7 @@ import in.tts.BuildConfig;
 import in.tts.R;
 
 public class OCRImageActivity extends AppCompatActivity {
+
     private static final String LOG_TAG = "Text API";
     private static final int PHOTO_REQUEST = 10;
     private TextView scanResults;

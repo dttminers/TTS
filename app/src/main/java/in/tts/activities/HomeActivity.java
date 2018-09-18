@@ -290,6 +290,7 @@ public class HomeActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(HomeActivity.this, CameraActivity.class));
+//                    startActivity(new Intent(HomeActivity.this, CameraOcrActivity.class));
                 }
             });
         } catch (Exception | Error e) {

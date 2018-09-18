@@ -2,6 +2,7 @@ package in.tts.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.speech.tts.Voice;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -166,6 +167,7 @@ public class PrefManager {
                 } else {
                     audioSetting.setVoiceSpeed(0);
                 }
+
             } else {
                 audioSetting.setVoiceSelection("Male");
                 audioSetting.setLangSelection(String.valueOf(Locale.US));

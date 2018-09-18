@@ -54,8 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/iv_tts_toggle"
-                android:layout_toStartOf="@+id/iv_tts_toggle"
+                android:layout_toLeftOf="@id/iv_tts_toggle"
+                android:layout_toStartOf="@id/iv_tts_toggle"
                 android:contentDescription="@string/tts_prev"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_chevron_left_grey_24dp" />
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_tts_toggle"
-                android:layout_toRightOf="@+id/iv_tts_toggle"
+                android:layout_toRightOf="@id/iv_tts_toggle"
                 android:contentDescription="@string/tts_next"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_chevron_right_grey_24dp" />
@@ -138,8 +138,8 @@
                     android:paddingRight="16dp"
                     android:paddingStart="16dp"
                     android:text="@string/tts_rate"
-                    android:textIsSelectable="false"
                     android:textColor="#6a6a6a"
+                    android:textIsSelectable="false"
                     android:textSize="14sp" />
 
                 <SeekBar
@@ -177,9 +177,9 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingStart="16dp"
-                    android:textIsSelectable="false"
                     android:text="@string/tts_pitch"
                     android:textColor="#6a6a6a"
+                    android:textIsSelectable="false"
                     android:textSize="14sp" />
 
                 <SeekBar
@@ -259,8 +259,8 @@
                     android:paddingStart="16dp"
                     android:singleLine="true"
                     android:text="@string/voices"
-                    android:textIsSelectable="false"
                     android:textColor="#6a6a6a"
+                    android:textIsSelectable="false"
                     android:textSize="14sp" />
 
                 <ProgressBar
@@ -282,14 +282,26 @@
             android:background="#efeeee"
             android:visibility="gone" />
 
-        <android.support.design.widget.FloatingActionButton
+        <ImageView
             android:id="@+id/fab_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/icon_arrow_down"
-            android:visibility="gone" />
+            android:background="@drawable/circle_accent"
+            android:contentDescription="@string/app_name"
+            android:padding="8dp"
+            android:src="@drawable/ripple_down"
+            android:visibility="visible" />
+
+        <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_back"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:src="@drawable/icon_arrow_down"-->
+        <!--android:visibility="gone" />-->
 
     </RelativeLayout>
 
